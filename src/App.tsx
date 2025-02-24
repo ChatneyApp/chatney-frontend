@@ -1,37 +1,29 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import { Button } from '@/components/ui/button';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router";
 
-function App() {
-  const [count, setCount] = useState(0)
+import { HomePage } from './pages/HomePage';
+import { DashboardLayout } from "./pages/dashboard/DashboardLayout";
+import { DashboardHomePage } from "./pages/dashboard/DashboardHomePage";
+import { DashboardPermissionsPage } from "./pages/dashboard/DashboardPermissionsPage";
+import { DashboardChannelTypesPage } from "./pages/dashboard/DashboardChannelTypesPage";
+import { DashboardChannelsPage } from "./pages/dashboard/DashboardChannelsPage";
+import { ClientLayout } from "./pages/client/ClientLayout";
+import { ClientHomePage } from "./pages/client/ClientHomePage";
+import { DashboardUsersPage } from "./pages/dashboard/DashboardUsersPage";
 
-  return (
-    <>
-      <Button>123</Button>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <Button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </Button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
-
-export default App;
+export const App = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route index element={<HomePage />} />
+      <Route path="dashboard" element={<DashboardLayout />}>
+        <Route index element={<DashboardHomePage />} />
+        <Route path="permissions" element={<DashboardPermissionsPage />} />
+        <Route path="channelTypes" element={<DashboardChannelTypesPage />} />
+        <Route path="channels" element={<DashboardChannelsPage />} />
+        <Route path="users" element={<DashboardUsersPage />} />
+      </Route>
+      <Route path="client" element={<ClientLayout />}>
+        <Route index element={<ClientHomePage />} />
+      </Route>
+    </Routes>
+  </BrowserRouter>
+);

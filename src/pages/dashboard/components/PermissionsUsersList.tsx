@@ -15,8 +15,12 @@ type ToDo = {
     }
 }
 
+type Data = {
+    todos: ToDo[];
+}
 
-const GET_TODOS_QUERY: TypedDocumentNode<ToDo[]> = gql`
+
+const GET_TODOS_QUERY: TypedDocumentNode<Data> = gql`
     {
   todos {
     id
@@ -33,7 +37,9 @@ const GET_TODOS_QUERY: TypedDocumentNode<ToDo[]> = gql`
 const ToDoEl = () => {
     const { data } = useSuspenseQuery(GET_TODOS_QUERY);
 
-    return <>Name: {data[0].user.name}</>;
+    console.log('loaded data', data);
+
+    return <>Name: {data.todos[0].user.name}</>;
 }
 
 export const PermissionsUsersList = () => (

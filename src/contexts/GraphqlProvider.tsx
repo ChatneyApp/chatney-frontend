@@ -8,9 +8,10 @@ const httpLink = new HttpLink({
 });
 
 export const GraphqlProvider = ({ children }: PropsWithChildren) => {
-    const authMiddleware = setContext((_, { headers = {} }) => {
-        console.log('headers', headers);
+    const authMiddleware = setContext((_, previousContext) => {
+        const { headers = {} } = previousContext;
         return ({
+            ...previousContext,
             headers: {
                 ...headers,
                 auth: '123',

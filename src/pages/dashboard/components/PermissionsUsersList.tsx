@@ -1,49 +1,54 @@
-import { Suspense } from 'react';
-import {
-    gql,
-    type TypedDocumentNode,
-    useSuspenseQuery
-} from '@apollo/client';
+import {Suspense} from 'react';
+import {gql, type TypedDocumentNode, useSuspenseQuery} from '@apollo/client';
 
-type ToDo = {
-    id: string;
-    text: string;
-    done: boolean;
-    user: {
-        id: string;
-        name: string;
-    }
+type PermissionGroup = {
+    label: string;
+    list: string[];
 }
 
-type Data = {
-    todos: ToDo[];
+type PermissionsGroupsList = {
+    groups: PermissionGroup[];
 }
 
+type GetPermissionsListResponse = {
+    getPermissionsList: PermissionsGroupsList;
+}
 
-const GET_TODOS_QUERY: TypedDocumentNode<Data> = gql`
+const GET_PERMISSIONS_QUERY: TypedDocumentNode<GetPermissionsListResponse> = gql`
     {
-  todos {
-    id
-    text
-    done
-    user {
-      id
-      name
+        getPermissionsList {
+            groups {
+                label
+                list
+            }
+        }
     }
-  }
-}
-  `;
+`;
 
 const ToDoEl = () => {
-    const { data } = useSuspenseQuery(GET_TODOS_QUERY);
+    const {data: {getPermissionsList: {groups}}} = useSuspenseQuery(GET_PERMISSIONS_QUERY);
 
-    console.log('loaded data', data);
+    console.log('loaded data', groups);
 
-    return <>Name: {data.todos[0].user.name}</>;
+    return <>
+        Groups:
+        <ul>
+            {groups.map(({label, list}) => (
+                <li key={label}>
+                    <b>{label}</b>
+                    <ul>
+                        {list.map(permission => (
+                            <li key={permission}>{permission}</li>
+                        ))}
+                    </ul>
+                </li>
+            ))}
+        </ul>
+    </>;
 }
 
 export const PermissionsUsersList = () => (
     <Suspense fallback={<div>Loading...</div>}>
-        <ToDoEl />
+        <ToDoEl/>
     </Suspense>
 );

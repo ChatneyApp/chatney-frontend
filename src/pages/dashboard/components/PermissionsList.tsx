@@ -25,7 +25,7 @@ const GET_PERMISSIONS_QUERY: TypedDocumentNode<GetPermissionsListResponse> = gql
     }
 `;
 
-const ToDoEl = () => {
+const PermissionsListCore = () => {
     const {data: {getPermissionsList: {groups}}} = useSuspenseQuery(GET_PERMISSIONS_QUERY);
 
     console.log('loaded data', groups);
@@ -47,8 +47,8 @@ const ToDoEl = () => {
     </>;
 }
 
-export const PermissionsUsersList = () => (
+export const PermissionsList = () => (
     <Suspense fallback={<div>Loading...</div>}>
-        <ToDoEl/>
+        <PermissionsListCore/>
     </Suspense>
 );

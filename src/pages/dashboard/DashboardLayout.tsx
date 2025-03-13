@@ -16,6 +16,9 @@ export const DashboardLayout = () => (
                 <Link to="/dashboard/permissions">Permissions</Link>
             </Button>
             <Button>
+                <Link to="/dashboard/roles">Roles</Link>
+            </Button>
+            <Button>
                 <Link to="/dashboard/channelTypes">Channel types</Link>
             </Button>
             <Button>

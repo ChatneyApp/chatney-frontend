@@ -1,8 +1,8 @@
-import { PermissionsUsersList } from './components/PermissionsUsersList';
+import {PermissionsList} from './components/PermissionsList';
 
 export const DashboardPermissionsPage = () => (
     <div>
         Permissions
-        <PermissionsUsersList/>
+        <PermissionsList/>
     </div>
 );

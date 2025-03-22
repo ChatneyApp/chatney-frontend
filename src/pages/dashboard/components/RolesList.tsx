@@ -1,36 +1,47 @@
-import {Suspense} from 'react';
+import {Suspense, useState} from 'react';
 import {gql, type TypedDocumentNode, useSuspenseQuery} from '@apollo/client';
 
-type Role = {
-    name: string;
-    settings: {
-        base: string;
-    }
-    permissions: string[];
-}
-
-type Roles = {
-    roles: Role[];
-}
+import {Role} from '@/types/roles';
+import {RoleEditor} from '@/pages/dashboard/components/RoleEditor';
+import {Button} from '@/components/ui/button';
 
 type GetRolesListResponse = {
-    getRoles: Roles;
+    getRolesList: Role[];
 }
 
 const GET_ROLES_QUERY: TypedDocumentNode<GetRolesListResponse> = gql`
     {
-        getRoles {
+        getRolesList {
+            Id
+            Name
+            Permissions
+            Settings {
+                Base
+            }
         }
     }
 `;
 
 const RolesListCore = () => {
-    const {data: {getRoles: {roles}}} = useSuspenseQuery(GET_ROLES_QUERY);
-
+    const {data: {getRolesList: roles}} = useSuspenseQuery(GET_ROLES_QUERY);
     console.log('loaded data', roles);
+    const [isAddDialogVisible, setIsAddDialogVisible] = useState(false);
+    const showDialog = () => setIsAddDialogVisible(true);
+    const hideDialog = () => setIsAddDialogVisible(false);
 
     return <>
-        Roles...
+        {!isAddDialogVisible && (
+            <Button onClick={showDialog}>Add role</Button>
+        )}
+        {isAddDialogVisible && (
+            <div>
+                TODO: add role dialog
+                <Button onClick={hideDialog}>Close</Button>
+            </div>
+        )}
+        {roles.map(role => (
+            <RoleEditor key={role.Id} role={role}/>
+        ))}
     </>;
 }
 

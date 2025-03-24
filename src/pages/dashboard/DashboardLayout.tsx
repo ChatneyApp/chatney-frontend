@@ -1,33 +1,31 @@
-import { Link, Outlet } from "react-router";
-import { HomeIcon } from 'lucide-react';
-
-import { Button } from "@/components/ui/button";
+import {Link, Outlet} from "react-router";
+import {HomeIcon} from 'lucide-react';
 
 export const DashboardLayout = () => (
     <div>
         <h1>Dashboard</h1>
         <div className="flex">
-            <Button>
+            <button>
                 <Link to="/dashboard">
-                    <HomeIcon />
+                    <HomeIcon/>
                 </Link>
-            </Button>
-            <Button>
+            </button>
+            <button>
                 <Link to="/dashboard/permissions">Permissions</Link>
-            </Button>
-            <Button>
+            </button>
+            <button>
                 <Link to="/dashboard/roles">Roles</Link>
-            </Button>
-            <Button>
+            </button>
+            <button>
                 <Link to="/dashboard/channelTypes">Channel types</Link>
-            </Button>
-            <Button>
+            </button>
+            <button>
                 <Link to="/dashboard/channels">Channels</Link>
-            </Button>
-            <Button>
+            </button>
+            <button>
                 <Link to="/dashboard/users">Users</Link>
-            </Button>
+            </button>
         </div>
-        <Outlet />
+        <Outlet/>
     </div>
 );

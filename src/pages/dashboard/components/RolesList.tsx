@@ -3,7 +3,6 @@ import {gql, type TypedDocumentNode, useSuspenseQuery} from '@apollo/client';
 
 import {Role} from '@/types/roles';
 import {RoleEditor} from '@/pages/dashboard/components/RoleEditor';
-import {Button} from '@/components/ui/button';
 
 type GetRolesListResponse = {
     getRolesList: Role[];
@@ -31,12 +30,12 @@ const RolesListCore = () => {
 
     return <>
         {!isAddDialogVisible && (
-            <Button onClick={showDialog}>Add role</Button>
+            <button onClick={showDialog}>Add role</button>
         )}
         {isAddDialogVisible && (
             <div>
                 TODO: add role dialog
-                <Button onClick={hideDialog}>Close</Button>
+                <button onClick={hideDialog}>Close</button>
             </div>
         )}
         {roles.map(role => (

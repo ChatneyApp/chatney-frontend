@@ -32,9 +32,9 @@ const PermissionsListCore = () => {
 
     return <>
         Groups:
-        <ul>
+        <ul className="flex flex-col">
             {groups.map(({label, list}) => (
-                <li key={label}>
+                <li key={label} className="p-4">
                     <b>{label}</b>
                     <ul>
                         {list.map(permission => (

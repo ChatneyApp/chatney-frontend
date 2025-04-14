@@ -1,7 +1,7 @@
 ﻿@reference "tailwindcss";
 
 .list {
-    @apply flex flex-col p-4;
+    @apply flex flex-col;
 }
 
 .group {

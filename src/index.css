@@ -45,13 +45,13 @@
 
 @layer base {
     h1 {
-        @apply p-4 text-amber-500 font-bold text-4xl;
+        @apply py-4 text-amber-500 font-bold text-4xl;
     }
     h2 {
-        @apply p-4 text-amber-500 font-bold text-3xl;
+        @apply py-4 text-amber-500 font-bold text-3xl;
     }
     h3 {
-        @apply p-4 text-amber-500 font-bold text-2xl;
+        @apply py-4 text-amber-500 font-bold text-2xl;
     }
 }
 

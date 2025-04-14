@@ -2,7 +2,7 @@
 import {Link} from 'react-router';
 import {HomeIcon} from 'lucide-react';
 
-import styles from './MenuItem.module.css';
+import styles from './MainMenu.module.css';
 
 const MenuItem = ({children}: PropsWithChildren) => (
     <button className={styles.menuItem}>

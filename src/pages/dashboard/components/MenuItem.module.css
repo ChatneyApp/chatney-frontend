@@ -1,0 +1,21 @@
+﻿@reference "tailwindcss";
+
+.menu {
+    @apply inline-flex items-stretch content-center flex-row gap-0 rounded-full overflow-hidden;
+}
+
+.menuItem {
+    @apply p-0 m-0 outline-0 bg-amber-800 text-white font-bold hover:bg-amber-600;
+}
+
+.menuItem:first-child {
+    @apply pl-4;
+}
+
+.menuItem:last-child {
+    @apply pr-4;
+}
+
+.menuItem > a {
+    @apply inline-block p-4 m-0 text-white font-bold;
+}

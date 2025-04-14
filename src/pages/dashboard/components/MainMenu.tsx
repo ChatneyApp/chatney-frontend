@@ -2,14 +2,16 @@
 import {Link} from 'react-router';
 import {HomeIcon} from 'lucide-react';
 
+import styles from './MenuItem.module.css';
+
 const MenuItem = ({children}: PropsWithChildren) => (
-    <button className="p-4 m-0 bg-amber-800 text-white font-bold hover:bg-amber-600">
+    <button className={styles.menuItem}>
         {children}
     </button>
 );
 
 export const MainMenu = () => (
-    <div className="inline-flex flex-row gap-0 rounded-full overflow-hidden">
+    <div className={styles.menu}>
         <MenuItem>
             <Link to="/dashboard">
                 <HomeIcon/>

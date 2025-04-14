@@ -13,7 +13,7 @@
 
 /* themes */
 :root {
-    --color-main-accent: #9043f1;
+    --color-main-accent: #3e939f;
     --color-black: #2A2451;
     --color-white: #FFFCFC;
     --color-gray: #423d62;
@@ -44,6 +44,9 @@
     }
     h2 {
         @apply p-4 text-amber-500 font-bold text-3xl;
+    }
+    h3 {
+        @apply p-4 text-amber-500 font-bold text-2xl;
     }
 }
 

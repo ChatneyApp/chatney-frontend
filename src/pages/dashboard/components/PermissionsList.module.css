@@ -1,0 +1,18 @@
+﻿@reference "tailwindcss";
+
+.list {
+    @apply flex flex-col p-4;
+}
+
+.group {
+    @apply flex flex-col mb-6;
+}
+
+.group > label {
+    @apply font-bold text-xl;
+    color: var(--color-main-accent);
+}
+
+.permission {
+    @apply px-4;
+}

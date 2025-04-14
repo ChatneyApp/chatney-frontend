@@ -1,6 +1,8 @@
 import {Suspense} from 'react';
 import {gql, type TypedDocumentNode, useSuspenseQuery} from '@apollo/client';
 
+import styles from './PermissionsList.module.css';
+
 type PermissionGroup = {
     label: string;
     list: string[];
@@ -25,23 +27,39 @@ const GET_PERMISSIONS_QUERY: TypedDocumentNode<GetPermissionsListResponse> = gql
     }
 `;
 
+const Permission = ({label}: {label: string}) => (
+    <li className={styles.permission}>{label}</li>
+);
+
+type PermissionGroupProps = {
+    label: string;
+    permissions: string[];
+};
+const PermissionGroup = ({label, permissions}: PermissionGroupProps) => (
+    <li key={label} className={styles.group}>
+        <label>{label}</label>
+        <ul>
+            {permissions.map(permission => (
+                <Permission
+                    key={permission}
+                    label={permission}
+                />
+            ))}
+        </ul>
+    </li>
+);
+
 const PermissionsListCore = () => {
     const {data: {getPermissionsList: {groups}}} = useSuspenseQuery(GET_PERMISSIONS_QUERY);
 
-    console.log('loaded data', groups);
-
     return <>
-        Groups:
-        <ul className="flex flex-col">
+        <ul className={styles.list}>
             {groups.map(({label, list}) => (
-                <li key={label} className="p-4">
-                    <b>{label}</b>
-                    <ul>
-                        {list.map(permission => (
-                            <li key={permission}>{permission}</li>
-                        ))}
-                    </ul>
-                </li>
+                <PermissionGroup
+                    key={label}
+                    label={label}
+                    permissions={list}
+                />
             ))}
         </ul>
     </>;

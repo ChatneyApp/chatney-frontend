@@ -1,5 +1,5 @@
 ﻿import {PropsWithChildren} from 'react';
-import {Link} from 'react-router';
+import {NavLink, type NavLinkRenderProps} from 'react-router';
 import {HomeIcon} from 'lucide-react';
 
 import styles from './MainMenu.module.css';
@@ -10,27 +10,30 @@ const MenuItem = ({children}: PropsWithChildren) => (
     </button>
 );
 
+const isActiveLink =
+    ({isActive}: NavLinkRenderProps) => isActive ? styles.activeLink : undefined;
+
 export const MainMenu = () => (
     <div className={styles.menu}>
         <MenuItem>
-            <Link to="/dashboard">
+            <NavLink to="/dashboard">
                 <HomeIcon/>
-            </Link>
+            </NavLink>
         </MenuItem>
         <MenuItem>
-            <Link to="/dashboard/permissions">Permissions</Link>
+            <NavLink to="/dashboard/permissions" className={isActiveLink}>Permissions</NavLink>
         </MenuItem>
         <MenuItem>
-            <Link to="/dashboard/roles">Roles</Link>
+            <NavLink to="/dashboard/roles" className={isActiveLink}>Roles</NavLink>
         </MenuItem>
         <MenuItem>
-            <Link to="/dashboard/channelTypes">Channel types</Link>
+            <NavLink to="/dashboard/channelTypes" className={isActiveLink}>Channel types</NavLink>
         </MenuItem>
         <MenuItem>
-            <Link to="/dashboard/channels">Channels</Link>
+            <NavLink to="/dashboard/channels" className={isActiveLink}>Channels</NavLink>
         </MenuItem>
         <MenuItem>
-            <Link to="/dashboard/users">Users</Link>
+            <NavLink to="/dashboard/users" className={isActiveLink}>Users</NavLink>
         </MenuItem>
     </div>
 );

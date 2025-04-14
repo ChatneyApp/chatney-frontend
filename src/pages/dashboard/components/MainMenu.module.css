@@ -1,21 +1,18 @@
 ﻿@reference "tailwindcss";
 
 .menu {
-    @apply inline-flex items-stretch content-center flex-row gap-0 rounded-full overflow-hidden;
+    @apply flex flex-col gap-0;
 }
 
 .menuItem {
-    @apply p-0 m-0 outline-0 bg-amber-800 text-white font-bold hover:bg-amber-600;
-}
-
-.menuItem:first-child {
-    @apply pl-4;
-}
-
-.menuItem:last-child {
-    @apply pr-4;
+    @apply flex flex-row items-stretch justify-items-stretch justify-stretch p-0 m-0 outline-0 bg-amber-800 text-white font-bold hover:bg-amber-600;
 }
 
 .menuItem > a {
-    @apply inline-block p-4 m-0 text-white font-bold;
+    flex: 1 1 auto;
+    @apply block text-left px-6 py-4 m-0 text-white font-bold;
+}
+
+.activeLink {
+    @apply bg-amber-100 text-black!;
 }

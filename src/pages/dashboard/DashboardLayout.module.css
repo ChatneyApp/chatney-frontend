@@ -1,0 +1,10 @@
+﻿@reference "tailwindcss";
+
+.root {
+    @apply flex flex-row;
+}
+
+.main {
+    @apply p-4;
+    flex: 1 1 auto;
+}

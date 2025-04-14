@@ -1,10 +1,13 @@
 import {Outlet} from 'react-router';
 
 import {MainMenu} from '@/pages/dashboard/components/MainMenu';
+import styles from './DashboardLayout.module.css';
 
 export const DashboardLayout = () => (
-    <div>
+    <div className={styles.root}>
         <MainMenu/>
-        <Outlet/>
+        <div className={styles.main}>
+            <Outlet/>
+        </div>
     </div>
 );

@@ -1,6 +1,19 @@
-﻿import {gql} from '@apollo/client';
+﻿import {gql, TypedDocumentNode} from '@apollo/client';
 
-export const GET_PERMISSIONS_LIST = gql`
+type PermissionGroup = {
+    label: string;
+    list: string[];
+}
+
+type PermissionsGroupsList = {
+    groups: PermissionGroup[];
+}
+
+type GetPermissionsListResponse = {
+    getPermissionsList: PermissionsGroupsList;
+}
+
+export const GET_PERMISSIONS_LIST: TypedDocumentNode<GetPermissionsListResponse> = gql`
     query getPermissionsList {
         getPermissionsList {
             groups {

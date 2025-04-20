@@ -1,31 +1,8 @@
 import {Suspense} from 'react';
-import {gql, type TypedDocumentNode, useSuspenseQuery} from '@apollo/client';
+import {useSuspenseQuery} from '@apollo/client';
 
 import styles from './PermissionsList.module.css';
-
-type PermissionGroup = {
-    label: string;
-    list: string[];
-}
-
-type PermissionsGroupsList = {
-    groups: PermissionGroup[];
-}
-
-type GetPermissionsListResponse = {
-    getPermissionsList: PermissionsGroupsList;
-}
-
-const GET_PERMISSIONS_QUERY: TypedDocumentNode<GetPermissionsListResponse> = gql`
-    {
-        getPermissionsList {
-            groups {
-                label
-                list
-            }
-        }
-    }
-`;
+import {GET_PERMISSIONS_LIST} from '@/graphql/permissions';
 
 const Permission = ({label}: {label: string}) => (
     <li className={styles.permission}>{label}</li>
@@ -50,7 +27,7 @@ const PermissionGroup = ({label, permissions}: PermissionGroupProps) => (
 );
 
 const PermissionsListCore = () => {
-    const {data: {getPermissionsList: {groups}}} = useSuspenseQuery(GET_PERMISSIONS_QUERY);
+    const {data: {getPermissionsList: {groups}}} = useSuspenseQuery(GET_PERMISSIONS_LIST);
 
     return <>
         <ul className={styles.list}>

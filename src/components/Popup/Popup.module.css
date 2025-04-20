@@ -1,0 +1,21 @@
+﻿@reference "tailwindcss";
+
+.container {
+    @apply
+        fixed left-1/2 top-1/2 max-h-[85vh] w-[90vw] max-w-[500px] -translate-x-1/2 -translate-y-1/2
+        rounded-md bg-gray-100 p-[25px] shadow-[var(--shadow-6)]
+        focus:outline-none;
+}
+.overlay {
+    @apply fixed inset-0;
+    background-color: rgba(0, 0, 0, 0.75);
+}
+.title {
+    @apply m-0 text-[17px] font-medium;
+}
+.description {
+    @apply mb-5 mt-2.5 text-[15px] leading-normal;
+}
+.bottomButtons {
+    @apply mt-4 flex flex-row items-center justify-end gap-2;
+}

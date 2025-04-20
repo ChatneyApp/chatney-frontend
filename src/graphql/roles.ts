@@ -19,6 +19,19 @@ export const CREATE_ROLE = gql`
     }
 `;
 
+export const EDIT_ROLE = gql`
+    mutation EditRole($roleData: EditRoleDTO!) {
+        editRole(RoleData: $roleData) {
+            Id
+            Name
+            Permissions
+            Settings {
+                Base
+            }
+        }
+    }
+`;
+
 export const GET_ROLES_QUERY: TypedDocumentNode<GetRolesListResponse> = gql`
     {
         getRolesList {

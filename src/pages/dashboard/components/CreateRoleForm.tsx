@@ -5,9 +5,10 @@ import {Dialog} from 'radix-ui';
 
 import styles from './CreateRoleForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
-import {CREATE_ROLE} from '@/graphql/roles';
+import {CREATE_ROLE, EDIT_ROLE} from '@/graphql/roles';
 import {GET_PERMISSIONS_LIST} from '@/graphql/permissions';
 import {Button} from '@/components/Button';
+import {Role} from '@/types/roles';
 
 type FormInputs = {
     name: string;
@@ -15,13 +16,12 @@ type FormInputs = {
     isBaseRole: boolean;
 };
 
-// Define the type for permission groups
-type PermissionGroup = {
-    label: string;
-    list: string[];
-};
-
-export const CreateRoleForm = () => {
+type Props = {
+    cta: string;
+    submitText: string;
+    role?: Role;
+}
+export const CreateRoleForm = ({cta, submitText, role}: Props) => {
     const [open, setOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -33,21 +33,31 @@ export const CreateRoleForm = () => {
         error: permissionsError
     } = useQuery(GET_PERMISSIONS_LIST);
 
-    const {register, handleSubmit, reset, formState: {errors}} = useForm<FormInputs>({
+    const {register, handleSubmit, formState: {errors}} = useForm<FormInputs>({
         defaultValues: {
-            name: '',
-            permissions: [],
-            isBaseRole: false
+            name: role?.Name ?? '',
+            permissions: role?.Permissions ?? [],
+            isBaseRole: role?.Settings?.Base ?? false
         }
     });
 
-    const [createRole, {loading}] = useMutation(CREATE_ROLE, {
+    const [createRole, {loading: createLoading}] = useMutation(CREATE_ROLE, {
         onCompleted: (data) => {
             setSuccessMessage(`Role "${data.createRole.Name}" created successfully!`);
             setErrorMessage(null);
-            reset();
-            // Clear success message after 3 seconds
-            setTimeout(() => setSuccessMessage(null), 3000);
+            setOpen(false);
+        },
+        onError: (error) => {
+            setErrorMessage(`Error creating role: ${error.message}`);
+            setSuccessMessage(null);
+        }
+    });
+
+    const [editRole, {loading: editLoading}] = useMutation(EDIT_ROLE, {
+        onCompleted: (data) => {
+            setSuccessMessage(`Role "${data.editRole.Name}" changed successfully!`);
+            setErrorMessage(null);
+            setOpen(false);
         },
         onError: (error) => {
             setErrorMessage(`Error creating role: ${error.message}`);
@@ -56,7 +66,20 @@ export const CreateRoleForm = () => {
     });
 
     const onSubmit = async (data: FormInputs) => {
-        try {
+        if (role) {
+            await editRole({
+                variables: {
+                    roleData: {
+                        Id: role.Id,
+                        Name: data.name,
+                        Permissions: data.permissions,
+                        Settings: {
+                            Base: data.isBaseRole
+                        }
+                    }
+                }
+            })
+        } else {
             await createRole({
                 variables: {
                     roleData: {
@@ -68,19 +91,16 @@ export const CreateRoleForm = () => {
                     }
                 }
             });
-            setOpen(false);
-        } catch (e) {
-            console.error('submit error', e);
         }
     };
 
     // Get permission groups from the query result or show loading/error state
-    const permissionGroups: PermissionGroup[] = permissionsData?.getPermissionsList?.groups || [];
+    const permissionGroups = permissionsData?.getPermissionsList?.groups || [];
 
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Trigger asChild>
-                <Button>Create role</Button>
+                <Button>{cta}</Button>
             </Dialog.Trigger>
             <Dialog.Portal>
                 <Dialog.Overlay className={dialogStyles.overlay}/>
@@ -159,9 +179,9 @@ export const CreateRoleForm = () => {
                                 </Dialog.Close>
                                 <Button
                                     type="submit"
-                                    disabled={loading || permissionsLoading}
+                                    disabled={createLoading || editLoading || permissionsLoading}
                                 >
-                                    {loading ? 'Creating...' : 'Create Role'}
+                                    {createLoading || editLoading ? 'Creating...' : submitText}
                                 </Button>
                             </div>
                         </form>

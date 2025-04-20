@@ -1,4 +1,5 @@
 ﻿import {Role} from '@/types/roles';
+import {CreateRoleForm} from '@/pages/dashboard/components/CreateRoleForm';
 
 type Props = {
     role: Role;
@@ -14,6 +15,9 @@ export const RoleEditor = ({role}: Props) => {
             </div>
             <div>
                 settings: <b>{role.Settings.Base ? 'Base' : 'non-Base'}</b>
+            </div>
+            <div>
+                <CreateRoleForm cta="Edit" submitText="Save Role" role={role}/>
             </div>
         </div>
     )

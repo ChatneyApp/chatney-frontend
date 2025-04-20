@@ -32,6 +32,12 @@ export const EDIT_ROLE = gql`
     }
 `;
 
+export const DELETE_ROLE = gql`
+    mutation($roleId: String) {
+        deleteRole(roleId: $roleId)
+    }
+`;
+
 export const GET_ROLES_QUERY: TypedDocumentNode<GetRolesListResponse> = gql`
     {
         getRolesList {

@@ -1,5 +1,5 @@
 ﻿import {useForm} from 'react-hook-form';
-import {useMutation, useQuery} from '@apollo/client';
+import {useMutation, useSuspenseQuery} from '@apollo/client';
 import {useState} from 'react';
 import {Dialog} from 'radix-ui';
 
@@ -9,6 +9,7 @@ import {CREATE_ROLE, EDIT_ROLE} from '@/graphql/roles';
 import {GET_PERMISSIONS_LIST} from '@/graphql/permissions';
 import {Button} from '@/components/Button';
 import {Role} from '@/types/roles';
+import {useRolesList} from '@/contexts/RolesListContext';
 
 type FormInputs = {
     name: string;
@@ -25,15 +26,10 @@ export const CreateRoleForm = ({cta, submitText, role}: Props) => {
     const [open, setOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const {data: permissionsData} = useSuspenseQuery(GET_PERMISSIONS_LIST);
+    const {refetch} = useRolesList();
 
-    // Fetch permissions list
-    const {
-        data: permissionsData,
-        loading: permissionsLoading,
-        error: permissionsError
-    } = useQuery(GET_PERMISSIONS_LIST);
-
-    const {register, handleSubmit, formState: {errors}} = useForm<FormInputs>({
+    const {register, handleSubmit, reset, formState: {errors}} = useForm<FormInputs>({
         defaultValues: {
             name: role?.Name ?? '',
             permissions: role?.Permissions ?? [],
@@ -42,10 +38,12 @@ export const CreateRoleForm = ({cta, submitText, role}: Props) => {
     });
 
     const [createRole, {loading: createLoading}] = useMutation(CREATE_ROLE, {
-        onCompleted: (data) => {
-            setSuccessMessage(`Role "${data.createRole.Name}" created successfully!`);
-            setErrorMessage(null);
+        onCompleted: () => {
+            // setSuccessMessage(`Role "${data.createRole.Name}" created successfully!`);
+            // setErrorMessage(null);
             setOpen(false);
+            reset();
+            refetch();
         },
         onError: (error) => {
             setErrorMessage(`Error creating role: ${error.message}`);
@@ -54,16 +52,27 @@ export const CreateRoleForm = ({cta, submitText, role}: Props) => {
     });
 
     const [editRole, {loading: editLoading}] = useMutation(EDIT_ROLE, {
-        onCompleted: (data) => {
-            setSuccessMessage(`Role "${data.editRole.Name}" changed successfully!`);
-            setErrorMessage(null);
+        onCompleted: () => {
+            // setSuccessMessage(`Role "${data.editRole.Name}" changed successfully!`);
+            // setErrorMessage(null);
             setOpen(false);
+            reset();
+            refetch();
         },
         onError: (error) => {
             setErrorMessage(`Error creating role: ${error.message}`);
             setSuccessMessage(null);
         }
     });
+
+    const handleOpenChange = (open: boolean) => {
+        setOpen(open);
+        if (!open) {
+            reset();
+            setSuccessMessage(null);
+            setErrorMessage(null);
+        }
+    }
 
     const onSubmit = async (data: FormInputs) => {
         if (role) {
@@ -94,11 +103,10 @@ export const CreateRoleForm = ({cta, submitText, role}: Props) => {
         }
     };
 
-    // Get permission groups from the query result or show loading/error state
     const permissionGroups = permissionsData?.getPermissionsList?.groups || [];
 
     return (
-        <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Root open={open} onOpenChange={handleOpenChange}>
             <Dialog.Trigger asChild>
                 <Button>{cta}</Button>
             </Dialog.Trigger>
@@ -118,11 +126,6 @@ export const CreateRoleForm = ({cta, submitText, role}: Props) => {
                         {errorMessage && (
                             <div className={styles.errorMessage}>{errorMessage}</div>
                         )}
-                        {permissionsError && (
-                            <div className={styles.errorMessage}>
-                                Error loading permissions: {permissionsError.message}
-                            </div>
-                        )}
 
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className={styles.formGroup}>
@@ -137,29 +140,25 @@ export const CreateRoleForm = ({cta, submitText, role}: Props) => {
 
                             <div className={styles.formGroup}>
                                 <label>Role Permissions</label>
-                                {permissionsLoading ? (
-                                    <div>Loading permissions...</div>
-                                ) : (
-                                    permissionGroups.map((group, groupIndex) => (
-                                        <div key={groupIndex} className={styles.permissionGroup}>
-                                            <h4>{group.label}</h4>
-                                            <div className={styles.permissionList}>
-                                                {group.list.map((permission, permIndex) => (
-                                                    <div key={permIndex} className={styles.permissionItem}>
-                                                        <label>
-                                                            <input
-                                                                type="checkbox"
-                                                                {...register("permissions")}
-                                                                value={permission}
-                                                            />
-                                                            {permission.split('.')[1]}
-                                                        </label>
-                                                    </div>
-                                                ))}
-                                            </div>
+                                {permissionGroups.map((group, groupIndex) => (
+                                    <div key={groupIndex} className={styles.permissionGroup}>
+                                        <h4>{group.label}</h4>
+                                        <div className={styles.permissionList}>
+                                            {group.list.map((permission, permIndex) => (
+                                                <div key={permIndex} className={styles.permissionItem}>
+                                                    <label>
+                                                        <input
+                                                            type="checkbox"
+                                                            {...register("permissions")}
+                                                            value={permission}
+                                                        />
+                                                        {permission.split('.')[1]}
+                                                    </label>
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))
-                                )}
+                                    </div>
+                                ))}
                             </div>
 
                             <div className={styles.formGroup}>
@@ -179,7 +178,7 @@ export const CreateRoleForm = ({cta, submitText, role}: Props) => {
                                 </Dialog.Close>
                                 <Button
                                     type="submit"
-                                    disabled={createLoading || editLoading || permissionsLoading}
+                                    disabled={createLoading || editLoading}
                                 >
                                     {createLoading || editLoading ? 'Creating...' : submitText}
                                 </Button>

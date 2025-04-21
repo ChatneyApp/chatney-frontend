@@ -4,25 +4,21 @@ import {Role} from '@/types/roles';
 import {CreateRoleForm} from '@/pages/dashboard/components/CreateRoleForm';
 import {Button} from '@/components/Button';
 import {DELETE_ROLE} from '@/graphql/roles';
+import {useRolesList} from '@/contexts/RolesListContext';
 
 type Props = {
     role: Role;
 }
 export const RoleEditor = ({role}: Props) => {
-    const [deleteRole, {loading: deleteLoading}] = useMutation(DELETE_ROLE, {
-        onCompleted: (data) => {
-            // setSuccessMessage(`Role "${data.editRole.Name}" changed successfully!`);
-            // setErrorMessage(null);
-            // setOpen(false);
+    const {refetch} = useRolesList();
+    const [deleteRole] = useMutation(DELETE_ROLE, {
+        onCompleted: () => {
+            refetch();
         },
-        onError: (error) => {
-            // setErrorMessage(`Error creating role: ${error.message}`);
-            // setSuccessMessage(null);
-        }
+        onError: () => {}
     });
 
     const handleDelete = async () => {
-        console.log(`Deleting role: ${role.Id}`);
         await deleteRole({
             variables: {
                 roleId: role.Id

@@ -1,12 +1,11 @@
 import {Suspense} from 'react';
-import {useSuspenseQuery} from '@apollo/client';
 
 import {RoleEditor} from '@/pages/dashboard/components/RoleEditor';
 import {CreateRoleForm} from '@/pages/dashboard/components/CreateRoleForm';
-import {GET_ROLES_QUERY} from '@/graphql/roles';
+import {RolesListProvider, useRolesList} from '@/contexts/RolesListContext';
 
 const RolesListCore = () => {
-    const {data: {getRolesList: roles}} = useSuspenseQuery(GET_ROLES_QUERY);
+    const {roles} = useRolesList();
 
     return <div>
         {roles.map(role => (
@@ -17,9 +16,11 @@ const RolesListCore = () => {
 
 export const RolesList = () => (
     <>
-        <CreateRoleForm cta="Create role" submitText="Create Role"/>
         <Suspense fallback={<div>Loading...</div>}>
-            <RolesListCore/>
+            <RolesListProvider>
+                <CreateRoleForm cta="Create role" submitText="Create Role"/>
+                <RolesListCore/>
+            </RolesListProvider>
         </Suspense>
     </>
 );

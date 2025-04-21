@@ -1,15 +1,15 @@
 ﻿import {gql, TypedDocumentNode} from '@apollo/client';
 
-type PermissionGroup = {
+export type PermissionGroup = {
     label: string;
     list: string[];
 }
 
-type PermissionsGroupsList = {
+export type PermissionsGroupsList = {
     groups: PermissionGroup[];
 }
 
-type GetPermissionsListResponse = {
+export type GetPermissionsListResponse = {
     getPermissionsList: PermissionsGroupsList;
 }
 

@@ -2,9 +2,13 @@
 
 .container {
     @apply
-        fixed left-1/2 top-1/2 max-h-[85vh] w-[90vw] max-w-[500px] -translate-x-1/2 -translate-y-1/2
-        rounded-md bg-gray-100 p-[25px] shadow-[var(--shadow-6)]
-        focus:outline-none;
+    fixed left-1/2 top-1/2 max-h-[85vh] w-[90vw] max-w-[500px] -translate-x-1/2 -translate-y-1/2
+    rounded-md p-[25px] shadow-[var(--shadow-6)]
+    focus:outline-none;
+    --dialog-background: var(--page-bg-color);
+    --dialog-text-color: var(--text-color);
+    background-color: var(--dialog-background);
+    color: var(--dialog-text-color);
 }
 .overlay {
     @apply fixed inset-0;

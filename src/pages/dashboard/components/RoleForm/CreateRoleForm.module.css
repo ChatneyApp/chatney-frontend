@@ -1,57 +1,43 @@
+@reference "tailwindcss";
+
 .formContainer {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+  @apply my-0 mx-auto p-5 rounded-lg;
+  background-color: var(--dialog-background);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .formGroup {
-  margin-bottom: 20px;
+  @apply mb-4;
 }
 
 .formGroup label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
+  @apply block mb-2 font-medium;
 }
 
 .input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
+  @apply w-full p-2 border border-gray-300 rounded-md;
 }
 
 .permissionGroup {
-  margin-bottom: 16px;
-  padding: 16px;
-  background-color: #fff;
-  border-radius: 4px;
+  @apply p-4 rounded-lg;
+  background-color: var(--dialog-background);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .permissionGroup h4 {
-  margin-top: 0;
-  margin-bottom: 12px;
-  color: #333;
+  @apply mt-0 mb-3;
 }
 
 .permissionList {
-  display: grid;
+  @apply grid gap-2;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 10px;
 }
 
 .permissionItem {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
+  @apply flex items-center mb-2;
 }
 
-.permissionItem label {
+.formGroup label {
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -59,13 +45,12 @@
   margin-bottom: 0;
 }
 
-.permissionItem input[type="checkbox"] {
+.formGroup input[type="checkbox"] {
   margin-right: 8px;
 }
 
 .successMessage {
   padding: 12px;
-  background-color: #e6f7e6;
   color: #2e7d32;
   border-radius: 4px;
   margin-bottom: 20px;
@@ -74,7 +59,6 @@
 
 .errorMessage {
   padding: 12px;
-  background-color: #ffebee;
   color: #c62828;
   border-radius: 4px;
   margin-bottom: 20px;

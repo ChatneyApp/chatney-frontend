@@ -1,7 +1,7 @@
 ﻿import {useMutation} from '@apollo/client';
 
 import {Role} from '@/types/roles';
-import {CreateRoleForm} from '@/pages/dashboard/components/CreateRoleForm';
+import {CreateRoleForm} from '@/pages/dashboard/components/RoleForm/CreateRoleForm';
 import {Button} from '@/components/Button';
 import {DELETE_ROLE} from '@/graphql/roles';
 import {useRolesList} from '@/contexts/RolesListContext';

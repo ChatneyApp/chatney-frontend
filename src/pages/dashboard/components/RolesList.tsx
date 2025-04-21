@@ -1,6 +1,6 @@
 import {Suspense} from 'react';
 
-import {RoleEditor} from '@/pages/dashboard/components/RoleEditor';
+import {RoleEditor} from '@/pages/dashboard/components/RoleEditor/RoleEditor';
 import {CreateRoleForm} from '@/pages/dashboard/components/RoleForm/CreateRoleForm';
 import {RolesListProvider, useRolesList} from '@/contexts/RolesListContext';
 

@@ -5,6 +5,7 @@ import {CreateRoleForm} from '@/pages/dashboard/components/RoleForm/CreateRoleFo
 import {Button} from '@/components/Button';
 import {DELETE_ROLE} from '@/graphql/roles';
 import {useRolesList} from '@/contexts/RolesListContext';
+import styles from './RoleEditor.module.css';
 
 type Props = {
     role: Role;
@@ -27,19 +28,19 @@ export const RoleEditor = ({role}: Props) => {
     };
 
     return (
-        <div>
-            <div>
-                name: <b>{role.Name}</b>
+        <div className={styles.container}>
+            <div className={styles.name}>
+                {role.Name}
             </div>
-            <div>
-                permissions: <b>{role.Permissions.join(', ')}</b>
+            <div className={styles.permissions}>
+                Permissions: <b>{role.Permissions.join(', ')}</b>
             </div>
-            <div>
-                settings: <b>{role.Settings.Base ? 'Base' : 'non-Base'}</b>
+            <div className={styles.settings}>
+                Settings: <b>{role.Settings.Base ? 'Base' : 'non-Base'}</b>
             </div>
-            <div>
+            <div className={styles.controls}>
                 <CreateRoleForm cta="Edit" submitText="Save Role" role={role}/>
-                <Button onClick={handleDelete}>
+                <Button onClick={handleDelete} className="text-red-400">
                     Delete
                 </Button>
             </div>

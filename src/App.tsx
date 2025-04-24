@@ -7,7 +7,7 @@ import {ClientLayout} from '@/pages/client/ClientLayout';
 import {ClientHomePage} from '@/pages/client/ClientHomePage';
 // dashboard
 import {HomePage} from '@/pages/HomePage';
-import {DashboardLayout} from '@/pages/dashboard/DashboardLayout';
+import {DashboardLayout} from '@/pages/dashboard/layout/DashboardLayout';
 import {DashboardHomePage} from '@/pages/dashboard/DashboardHomePage';
 import {DashboardPermissionsPage} from '@/pages/dashboard/DashboardPermissionsPage';
 import {DashboardChannelTypesPage} from '@/pages/dashboard/DashboardChannelTypesPage';

@@ -1,4 +1,4 @@
-import {PermissionsList} from './components/PermissionsList';
+import {PermissionsList} from './components/PermissionsList/PermissionsList';
 
 export const DashboardPermissionsPage = () => (
     <div>

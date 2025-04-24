@@ -1,0 +1,19 @@
+@reference "tailwindcss";
+
+.container {
+    @apply py-4 grid gap-2 items-center;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-between;
+    grid-template:
+        "name controls"
+;
+}
+
+.name {
+    @apply text-2xl font-bold;
+    grid-area: name;
+}
+
+.controls {
+    grid-area: controls;
+} 

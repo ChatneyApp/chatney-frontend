@@ -30,6 +30,9 @@ export const MainMenu = () => (
             <NavLink to="/dashboard/channelTypes" className={isActiveLink}>Channel types</NavLink>
         </MenuItem>
         <MenuItem>
+            <NavLink to="/dashboard/workspaces" className={isActiveLink}>Workspaces</NavLink>
+        </MenuItem>
+        <MenuItem>
             <NavLink to="/dashboard/channels" className={isActiveLink}>Channels</NavLink>
         </MenuItem>
         <MenuItem>

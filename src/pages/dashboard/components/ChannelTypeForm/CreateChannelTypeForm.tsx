@@ -19,11 +19,12 @@ type FormInputs = {
 
 type Props = {
     cta: string;
+    title: string;
     submitText: string;
     channelType?: ChannelType;
 }
 
-export const CreateChannelTypeForm = ({cta, submitText, channelType}: Props) => {
+export const CreateChannelTypeForm = ({cta, title, submitText, channelType}: Props) => {
     const [open, setOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -107,12 +108,8 @@ export const CreateChannelTypeForm = ({cta, submitText, channelType}: Props) => 
                 <Dialog.Overlay className={dialogStyles.overlay}/>
                 <Dialog.Content className={dialogStyles.container}>
                     <Dialog.Title className={dialogStyles.title}>
-                        {channelType ? `Edit Channel Type: ${channelType.Label}` : 'Create New Channel Type'}
+                        {title}
                     </Dialog.Title>
-                    <Dialog.Description className={dialogStyles.description}>
-                        {channelType ? 'Update channel type details' : 'Create a new channel type'}
-                    </Dialog.Description>
-
                     {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
                     {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
 

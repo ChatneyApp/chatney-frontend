@@ -20,7 +20,7 @@ export const ChannelTypesList = () => (
         <Suspense fallback={<div>Loading...</div>}>
             <RolesListProvider>
                 <ChannelTypesListProvider>
-                    <CreateChannelTypeForm cta="Create channel type" submitText="Create Channel Type"/>
+                    <CreateChannelTypeForm cta="Create channel type" title="Create Channel Type" submitText="Create Channel Type"/>
                     <ChannelTypesListCore/>
                 </ChannelTypesListProvider>
             </RolesListProvider>

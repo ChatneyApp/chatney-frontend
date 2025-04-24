@@ -18,7 +18,7 @@ export const RolesList = () => (
     <>
         <Suspense fallback={<div>Loading...</div>}>
             <RolesListProvider>
-                <CreateRoleForm cta="Create role" submitText="Create Role"/>
+                <CreateRoleForm cta="Create role" title="Create Role" submitText="Create Role"/>
                 <RolesListCore/>
             </RolesListProvider>
         </Suspense>

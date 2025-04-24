@@ -39,7 +39,7 @@ export const RoleEditor = ({role}: Props) => {
                 Settings: <b>{role.Settings.Base ? 'Base' : 'non-Base'}</b>
             </div>
             <div className={styles.controls}>
-                <CreateRoleForm cta="Edit" submitText="Save Role" role={role}/>
+                <CreateRoleForm cta="Edit" title="Edit Role" submitText="Save Changes" role={role}/>
                 <Button onClick={handleDelete} className="text-red-400">
                     Delete
                 </Button>

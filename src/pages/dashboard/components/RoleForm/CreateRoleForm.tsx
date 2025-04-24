@@ -19,10 +19,11 @@ type FormInputs = {
 
 type Props = {
     cta: string;
+    title: string;
     submitText: string;
     role?: Role;
 }
-export const CreateRoleForm = ({cta, submitText, role}: Props) => {
+export const CreateRoleForm = ({cta, title, submitText, role}: Props) => {
     const [open, setOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -114,11 +115,8 @@ export const CreateRoleForm = ({cta, submitText, role}: Props) => {
                 <Dialog.Overlay className={dialogStyles.overlay}/>
                 <Dialog.Content className={dialogStyles.container}>
                     <Dialog.Title className={dialogStyles.title}>
-                        Create Role
+                        {title}
                     </Dialog.Title>
-                    <Dialog.Description className={dialogStyles.description}>
-                        Create a new role with the specified permissions and settings.
-                    </Dialog.Description>
                     <div className={styles.formContainer}>
                         {successMessage && (
                             <div className={styles.successMessage}>{successMessage}</div>

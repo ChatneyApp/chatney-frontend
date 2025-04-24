@@ -46,7 +46,7 @@ export const ChannelTypeEditor = ({channelType}: Props) => {
                 <span className={styles.baseRoleTitle}>Base Role:</span> {baseRole?.Name || 'Unknown Role'}
             </div>
             <div className={styles.controls}>
-                <CreateChannelTypeForm cta="Edit" submitText="Save Changes" channelType={channelType}/>
+                <CreateChannelTypeForm cta="Edit" title="Edit Channel Type" submitText="Save Changes" channelType={channelType}/>
                 <Button onClick={handleDelete}>
                     Delete
                 </Button>

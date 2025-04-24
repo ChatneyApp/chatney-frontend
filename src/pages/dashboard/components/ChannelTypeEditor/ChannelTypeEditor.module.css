@@ -1,0 +1,22 @@
+.container {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background-color: white;
+}
+
+.label, .key, .baseRole {
+    margin-bottom: 8px;
+}
+
+.labelTitle, .keyTitle, .baseRoleTitle {
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+} 

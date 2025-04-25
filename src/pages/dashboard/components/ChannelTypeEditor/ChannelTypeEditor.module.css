@@ -6,6 +6,7 @@
     justify-content: space-between;
     grid-template:
         "label controls"
+        "uuid controls"
         "key controls"
         "baseRole controls"
 ;
@@ -14,6 +15,11 @@
 .label {
     @apply text-2xl font-bold;
     grid-area: label;
+}
+
+.uuid {
+    @apply text-gray-500;
+    grid-area: uuid;
 }
 
 .key {

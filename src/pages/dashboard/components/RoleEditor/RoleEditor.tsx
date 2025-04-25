@@ -32,6 +32,9 @@ export const RoleEditor = ({role}: Props) => {
             <div className={styles.name}>
                 {role.Name}
             </div>
+            <div className={styles.uuid}>
+                {role.Id}
+            </div>
             <div className={styles.permissions}>
                 Permissions: <b>{role.Permissions.join(', ')}</b>
             </div>

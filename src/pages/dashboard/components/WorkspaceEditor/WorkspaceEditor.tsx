@@ -34,6 +34,9 @@ export const WorkspaceEditor = ({workspace}: Props) => {
             <div className={styles.name}>
                 {workspace.Name}
             </div>
+            <div className={styles.uuid}>
+                {workspace.Id}
+            </div>
             <div className={styles.controls}>
                 <CreateWorkspaceForm 
                     cta="Edit" 

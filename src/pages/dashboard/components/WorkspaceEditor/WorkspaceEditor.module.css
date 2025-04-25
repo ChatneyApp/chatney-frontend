@@ -6,12 +6,18 @@
     justify-content: space-between;
     grid-template:
         "name controls"
+        "uuid controls"
 ;
 }
 
 .name {
     @apply text-2xl font-bold;
     grid-area: name;
+}
+
+.uuid {
+    @apply text-gray-500;
+    grid-area: uuid;
 }
 
 .controls {

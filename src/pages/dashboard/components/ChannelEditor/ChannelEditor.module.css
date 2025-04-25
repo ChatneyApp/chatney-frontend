@@ -1,0 +1,30 @@
+@reference "tailwindcss";
+
+.container {
+    @apply py-4 grid gap-2 items-center;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-between;
+    grid-template:
+        "name controls"
+        "uuid controls"
+        "channelType controls"
+;
+}
+
+.name {
+    @apply text-2xl font-bold;
+    grid-area: name;
+}
+
+.uuid {
+    @apply text-gray-500;
+    grid-area: uuid;
+}
+
+.channelType {
+    grid-area: channelType;
+}
+
+.controls {
+    grid-area: controls;
+}

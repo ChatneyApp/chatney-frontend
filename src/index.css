@@ -16,16 +16,9 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-@theme {
-    --color-main-accent: #3e939f;
-    --color-black: #2A2451;
-    --color-white: #FFFCFC;
-    --color-gray: #423d62;
-}
-
-/* themes */
 @layer theme {
     :root {
+        --color-main: #3e939f;
         --text-color: var(--color-zinc-800);
         --page-bg-color: var(--color-zinc-200);
 

@@ -10,7 +10,7 @@
 
 .group > label {
     @apply font-bold text-xl;
-    color: var(--color-main-accent);
+    color: var(--color-main);
 }
 
 .permission {

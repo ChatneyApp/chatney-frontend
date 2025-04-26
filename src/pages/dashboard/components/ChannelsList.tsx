@@ -7,6 +7,8 @@ import {useWorkspaceChannelsList, WorkspaceChannelsListProvider} from '@/context
 import {ChannelEditor} from '@/pages/dashboard/components/ChannelEditor/ChannelEditor';
 import {ChannelTypesListProvider} from '@/contexts/ChannelTypesListContext';
 import {CreateChannelForm} from '@/pages/dashboard/components/ChannelForm/CreateChannelForm';
+import {TabsContent, TabsList, TabsTrigger} from '@/pages/dashboard/components/Tabs/Tabs';
+import {EmptyListMessage} from '@/pages/dashboard/components/EmptyListMessage';
 
 const ChannelsListCore = () => {
     const {channels} = useWorkspaceChannelsList();
@@ -16,6 +18,11 @@ const ChannelsListCore = () => {
         {channels.map(channel => (
             <ChannelEditor key={channel.Id} channel={channel}/>
         ))}
+        {!channels.length && (
+            <EmptyListMessage>
+                No channels found. Create one using the form above.
+            </EmptyListMessage>
+        )}
     </div>;
 };
 
@@ -31,34 +38,29 @@ const WorkspaceChannelsList = () => {
     }
 
     return <Tabs.Root
-        className="flex w-[300px] flex-col shadow-[0_2px_10px] shadow-blackA2"
         defaultValue={defaultWorkspace.Id}
     >
-        <Tabs.List
-            className="flex shrink-0 border-b border-mauve6"
+        <TabsList
             aria-label="Manage your account"
         >
             {workspaces.map(workspace => (
-                <Tabs.Trigger
-                    className="flex h-[45px] flex-1 cursor-default select-none items-center justify-center bg-white px-5 text-[15px] leading-none text-mauve11 outline-none first:rounded-tl-md last:rounded-tr-md hover:text-violet11 data-[state=active]:text-violet11 data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0] data-[state=active]:shadow-current data-[state=active]:focus:relative data-[state=active]:focus:shadow-[0_0_0_2px] data-[state=active]:focus:shadow-black"
+                <TabsTrigger
                     key={workspace.Id}
                     value={workspace.Id}
                 >
                     {workspace.Name}
-                </Tabs.Trigger>
+                </TabsTrigger>
             ))}
-        </Tabs.List>
+        </TabsList>
         {workspaces.map(workspace => (
-            <Tabs.Content
-                className="grow rounded-b-md bg-white p-5 outline-none focus:shadow-[0_0_0_2px] focus:shadow-black"
+            <TabsContent
                 key={workspace.Id}
                 value={workspace.Id}
             >
                 <WorkspaceChannelsListProvider workspace={workspace}>
-                    {/*<CreateChannelTypeForm cta="Edit" title="Edit Channel Type" submitText="Save Changes" channelType={channelType}/>*/}
                     <ChannelsListCore key={workspace.Id}/>
                 </WorkspaceChannelsListProvider>
-            </Tabs.Content>
+            </TabsContent>
         ))}
     </Tabs.Root>
 }

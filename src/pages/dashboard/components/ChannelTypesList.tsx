@@ -4,6 +4,7 @@ import {ChannelTypeEditor} from '@/pages/dashboard/components/ChannelTypeEditor/
 import {CreateChannelTypeForm} from '@/pages/dashboard/components/ChannelTypeForm/CreateChannelTypeForm';
 import {ChannelTypesListProvider, useChannelTypesList} from '@/contexts/ChannelTypesListContext';
 import {RolesListProvider} from '@/contexts/RolesListContext';
+import {EmptyListMessage} from '@/pages/dashboard/components/EmptyListMessage';
 
 const ChannelTypesListCore = () => {
     const {channelTypes} = useChannelTypesList();
@@ -12,6 +13,11 @@ const ChannelTypesListCore = () => {
         {channelTypes.map(channelType => (
             <ChannelTypeEditor key={channelType.Id} channelType={channelType}/>
         ))}
+        {!channelTypes.length && (
+            <EmptyListMessage>
+                No channels types found. Create one using the form above.
+            </EmptyListMessage>
+        )}
     </div>;
 };
 
@@ -26,4 +32,4 @@ export const ChannelTypesList = () => (
             </RolesListProvider>
         </Suspense>
     </>
-); 
+);

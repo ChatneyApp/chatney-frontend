@@ -1,0 +1,42 @@
+﻿@reference "tailwindcss";
+
+@layer components {
+
+.tabsRoot {
+    @apply flex w-[300px] flex-col;
+}
+
+.tabsTrigger {
+    @apply flex flex-1 p-4 cursor-pointer select-none items-center justify-center
+        leading-none outline-none
+        shadow-none
+    ;
+    border: solid 1px var(--text-color);
+    border-right: none;
+}
+
+.tabsTrigger:first-child {
+    @apply rounded-tl-md;
+}
+
+.tabsTrigger:last-child {
+    @apply rounded-tr-md;
+    border-right: solid 1px var(--text-color);
+}
+
+.tabsTrigger:hover {
+    @apply text-amber-500;
+}
+
+.tabsTrigger[data-state=active] {
+    @apply font-bold text-amber-500;
+}
+
+.tabsList {
+    @apply flex shrink-0 border-b;
+}
+
+.tabsContent {
+    @apply grow rounded-b-md p-5 outline-none;
+}
+}

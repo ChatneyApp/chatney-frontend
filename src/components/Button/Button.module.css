@@ -1,5 +1,11 @@
 ﻿@reference "tailwindcss";
 
 .button {
-    @apply px-4 py-2 bg-amber-600 text-white font-bold rounded hover:bg-amber-700 cursor-pointer;
+    @apply px-4 py-2 font-bold rounded cursor-pointer;
+
+    color: var(--button-text-color);
+    background-color: var(--button-bg-color);
+}
+.button:hover {
+    background-color: var(--button-bg-color-hover);
 }

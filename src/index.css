@@ -16,30 +16,33 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* themes */
-:root {
+@theme {
     --color-main-accent: #3e939f;
     --color-black: #2A2451;
     --color-white: #FFFCFC;
     --color-gray: #423d62;
-
-    --text-color: #000;
-    --page-bg-color: #F6F6F6;
-
-    --main-menu-bg-color: var(--color-white);
-    --main-menu-text-color: var(--color-gray);
-    --main-menu-border-color: #dedede;
-
-    --button-bg-color: var(--color-main-accent);
-    --button-text-color: var(--color-white);
-    --switch-button-bg-color: #222222;
-    --switch-button-bg-color-selected: #563333;
 }
 
-@media (prefers-color-scheme: dark) {
+/* themes */
+@layer theme {
     :root {
-        --text-color: #afafaf;
-        --page-bg-color: #1B1A1E;
+        --text-color: var(--color-zinc-800);
+        --page-bg-color: var(--color-zinc-200);
+
+        --main-menu-bg-color: var(--color-amber-800);
+        --main-menu-bg-color-hover: var(--color-amber-600);
+        --main-menu-text-color: var(--color-white);
+
+        --button-bg-color: var(--color-amber-600);
+        --button-text-color: var(--color-white);
+        --button-bg-color-hover: var(--color-amber-700);
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --text-color: var(--color-zinc-200);
+            --page-bg-color: var(--color-zinc-800);
+        }
     }
 }
 

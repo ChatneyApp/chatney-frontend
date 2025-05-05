@@ -1,0 +1,43 @@
+@reference "tailwindcss";
+
+.container {
+    @apply py-4 grid gap-2 items-center;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-between;
+    grid-template:
+        "name controls"
+        "uuid controls"
+        "order controls"
+        "list controls"
+;
+}
+
+.name {
+    @apply text-2xl font-bold;
+    grid-area: name;
+}
+
+.uuid {
+    @apply text-gray-500;
+    grid-area: uuid;
+}
+
+.order {
+    grid-area: order;
+}
+
+.channels {
+    grid-area: list;
+}
+
+.channelList {
+    @apply flex flex-row gap-2;
+}
+
+.channelListItem {
+    @apply border-2 border-amber-600 p-2 rounded-lg;
+}
+
+.controls {
+    grid-area: controls;
+}

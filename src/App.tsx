@@ -15,6 +15,7 @@ import {DashboardWorkspacesPage} from '@/pages/dashboard/DashboardWorkspacesPage
 import {DashboardChannelsPage} from '@/pages/dashboard/DashboardChannelsPage';
 import {DashboardUsersPage} from '@/pages/dashboard/DashboardUsersPage';
 import {DashboardRolesPage} from '@/pages/dashboard/DashboardRolesPage';
+import {DashboardChannelGroupsPage} from '@/pages/dashboard/DashboardChannelGroupsPage';
 
 export const App = () => (
     <GraphqlProvider>
@@ -28,6 +29,7 @@ export const App = () => (
                     <Route path="channelTypes" element={<DashboardChannelTypesPage/>}/>
                     <Route path="workspaces" element={<DashboardWorkspacesPage/>}/>
                     <Route path="channels" element={<DashboardChannelsPage/>}/>
+                    <Route path="channelGroups" element={<DashboardChannelGroupsPage/>}/>
                     <Route path="users" element={<DashboardUsersPage/>}/>
                 </Route>
                 <Route path="client" element={<ClientLayout/>}>

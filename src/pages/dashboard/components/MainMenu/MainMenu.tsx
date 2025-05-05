@@ -36,6 +36,9 @@ export const MainMenu = () => (
             <NavLink to="/dashboard/channels" className={isActiveLink}>Channels</NavLink>
         </MenuItem>
         <MenuItem>
+            <NavLink to="/dashboard/channelGroups" className={isActiveLink}>Channel groups</NavLink>
+        </MenuItem>
+        <MenuItem>
             <NavLink to="/dashboard/users" className={isActiveLink}>Users</NavLink>
         </MenuItem>
     </div>

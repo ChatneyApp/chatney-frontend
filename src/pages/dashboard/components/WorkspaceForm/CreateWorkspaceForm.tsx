@@ -111,7 +111,7 @@ export const CreateWorkspaceForm = ({cta, title, submitText, workspace}: Props) 
                                 <label htmlFor="name">Workspace Name</label>
                                 <input
                                     id="name"
-                                    {...register("name", {required: "Workspace name is required"})}
+                                    {...register('name', {required: 'Workspace name is required'})}
                                     className={styles.input}
                                 />
                                 {errors.name && <span className={styles.errorText}>{errors.name.message}</span>}

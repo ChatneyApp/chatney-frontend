@@ -57,7 +57,7 @@ export const LoginForm = () => {
                         id="name"
                         type="email"
                         placeholder="Enter your email"
-                        {...register("email", {required: "Email is required"})}
+                        {...register('email', {required: 'Email is required'})}
                         className={styles.input}
                     />
                     {errors.email && <span className={styles.errorText}>{errors.email.message}</span>}
@@ -69,7 +69,7 @@ export const LoginForm = () => {
                         id="name"
                         type="password"
                         placeholder="Enter your password"
-                        {...register("password", {required: "Password is required"})}
+                        {...register('password', {required: 'Password is required'})}
                         className={styles.input}
                     />
                     {errors.password && <span className={styles.errorText}>{errors.password.message}</span>}

@@ -135,7 +135,7 @@ export const ChannelGroupForm = ({cta, title, submitText, channelGroup}: Props) 
                             <label htmlFor="name">Channel Group Name</label>
                             <input
                                 id="name"
-                                {...register("name", {required: "Channel group name is required"})}
+                                {...register('name', {required: 'Channel group name is required'})}
                                 className={styles.input}
                             />
                             {errors.name && <span className={styles.errorText}>{errors.name.message}</span>}
@@ -146,8 +146,8 @@ export const ChannelGroupForm = ({cta, title, submitText, channelGroup}: Props) 
                             <input
                                 id="order"
                                 type="number"
-                                {...register("order", {
-                                    required: "Order is required",
+                                {...register('order', {
+                                    required: 'Order is required',
                                     valueAsNumber: true
                                 })}
                                 className={styles.input}
@@ -173,7 +173,7 @@ export const ChannelGroupForm = ({cta, title, submitText, channelGroup}: Props) 
                             </div>
                             <input
                                 type="hidden"
-                                {...register("channelIds")}
+                                {...register('channelIds')}
                             />
                         </div>
 

@@ -72,7 +72,7 @@ export const CreateChannelForm = ({cta, title, submitText, channel}: Props) => {
 
     const onSubmit = async (data: FormInputs) => {
         const workspaceId = workspace.Id;
-        
+
         if (channel) {
             await updateChannel({
                 variables: {
@@ -117,7 +117,7 @@ export const CreateChannelForm = ({cta, title, submitText, channel}: Props) => {
                             <label htmlFor="name">Channel Name</label>
                             <input
                                 id="name"
-                                {...register("name", {required: "Channel name is required"})}
+                                {...register('name', {required: 'Channel name is required'})}
                                 className={styles.input}
                             />
                             {errors.name && <span className={styles.errorText}>{errors.name.message}</span>}
@@ -125,9 +125,9 @@ export const CreateChannelForm = ({cta, title, submitText, channel}: Props) => {
 
                         <div className={styles.formGroup}>
                             <label htmlFor="channelTypeId">Channel Type</label>
-                            <select 
+                            <select
                                 id="channelTypeId"
-                                {...register("channelTypeId", {required: "Channel type is required"})}
+                                {...register('channelTypeId', {required: 'Channel type is required'})}
                                 className={styles.select}
                             >
                                 <option value="">Select a channel type</option>
@@ -146,8 +146,8 @@ export const CreateChannelForm = ({cta, title, submitText, channel}: Props) => {
                                     Cancel
                                 </Button>
                             </Dialog.Close>
-                            <Button 
-                                type="submit" 
+                            <Button
+                                type="submit"
                                 disabled={createLoading || updateLoading}
                             >
                                 {createLoading || updateLoading ? 'Saving...' : submitText}
@@ -158,4 +158,4 @@ export const CreateChannelForm = ({cta, title, submitText, channel}: Props) => {
             </Dialog.Portal>
         </Dialog.Root>
     );
-}; 
+};

@@ -1,14 +1,15 @@
 ﻿import {Route} from 'react-router';
 
-import {DashboardLayout} from '@/pages/dashboard/layout/DashboardLayout.tsx';
-import {DashboardHomePage} from '@/pages/dashboard/DashboardHomePage.tsx';
-import {DashboardPermissionsPage} from '@/pages/dashboard/DashboardPermissionsPage.tsx';
-import {DashboardRolesPage} from '@/pages/dashboard/DashboardRolesPage.tsx';
-import {DashboardChannelTypesPage} from '@/pages/dashboard/DashboardChannelTypesPage.tsx';
-import {DashboardWorkspacesPage} from '@/pages/dashboard/DashboardWorkspacesPage.tsx';
-import {DashboardChannelsPage} from '@/pages/dashboard/DashboardChannelsPage.tsx';
-import {DashboardChannelGroupsPage} from '@/pages/dashboard/DashboardChannelGroupsPage.tsx';
-import {DashboardUsersPage} from '@/pages/dashboard/DashboardUsersPage.tsx';
+import {DashboardLayout} from '@/pages/dashboard/layout/DashboardLayout';
+import {DashboardHomePage} from '@/pages/dashboard/DashboardHomePage';
+import {DashboardPermissionsPage} from '@/pages/dashboard/DashboardPermissionsPage';
+import {DashboardRolesPage} from '@/pages/dashboard/DashboardRolesPage';
+import {DashboardChannelTypesPage} from '@/pages/dashboard/DashboardChannelTypesPage';
+import {DashboardWorkspacesPage} from '@/pages/dashboard/DashboardWorkspacesPage';
+import {DashboardChannelsPage} from '@/pages/dashboard/DashboardChannelsPage';
+import {DashboardChannelGroupsPage} from '@/pages/dashboard/DashboardChannelGroupsPage';
+import {DashboardUsersPage} from '@/pages/dashboard/DashboardUsersPage';
+import {DashboardConfigPage} from '@/pages/dashboard/DashboardConfigPage';
 
 export const dashboardRoutes = () => (
     <Route path="dashboard" element={<DashboardLayout/>}>
@@ -20,5 +21,6 @@ export const dashboardRoutes = () => (
         <Route path="channels" element={<DashboardChannelsPage/>}/>
         <Route path="channelGroups" element={<DashboardChannelGroupsPage/>}/>
         <Route path="users" element={<DashboardUsersPage/>}/>
+        <Route path="config" element={<DashboardConfigPage/>}/>
     </Route>
 );

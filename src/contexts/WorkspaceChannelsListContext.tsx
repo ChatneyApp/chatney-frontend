@@ -16,9 +16,10 @@ const WorkspaceChannelsListContext = createContext<WorkspaceChannelsListContextV
 type WorkspaceChannelsListProviderProps = {
     workspace: Workspace;
 } & PropsWithChildren;
-export function WorkspaceChannelsListProvider({ workspace, children }: WorkspaceChannelsListProviderProps) {
-    const { data, refetch } = useSuspenseQuery(GET_WORKSPACE_CHANNELS_QUERY, {
-        variables: { workspaceId: workspace.Id },
+
+export function WorkspaceChannelsListProvider({workspace, children}: WorkspaceChannelsListProviderProps) {
+    const {data, refetch} = useSuspenseQuery(GET_WORKSPACE_CHANNELS_QUERY, {
+        variables: {workspaceId: workspace.Id},
         fetchPolicy: 'cache-and-network',
     });
 
@@ -30,7 +31,7 @@ export function WorkspaceChannelsListProvider({ workspace, children }: Workspace
 
     return (
         <WorkspaceChannelsListContext.Provider
-            value={{ channels: data.getWorkspaceChannelsList, workspace, refetch: handleRefresh }}
+            value={{channels: data.getWorkspaceChannelsList, workspace, refetch: handleRefresh}}
         >
             {children}
         </WorkspaceChannelsListContext.Provider>

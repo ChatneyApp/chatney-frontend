@@ -11,8 +11,8 @@ interface RolesListContextValue {
 
 const RolesListContext = createContext<RolesListContextValue | null>(null);
 
-export function RolesListProvider({ children }: { children: ReactNode }) {
-    const { data, refetch } = useSuspenseQuery(GET_ROLES_QUERY, {
+export function RolesListProvider({children}: { children: ReactNode }) {
+    const {data, refetch} = useSuspenseQuery(GET_ROLES_QUERY, {
         fetchPolicy: 'cache-and-network',
     });
 
@@ -24,7 +24,7 @@ export function RolesListProvider({ children }: { children: ReactNode }) {
 
     return (
         <RolesListContext.Provider
-            value={{ roles: data.getRolesList, refetch: handleRefresh }}
+            value={{roles: data.getRolesList, refetch: handleRefresh}}
         >
             {children}
         </RolesListContext.Provider>

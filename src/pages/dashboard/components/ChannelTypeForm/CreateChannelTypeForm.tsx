@@ -118,7 +118,7 @@ export const CreateChannelTypeForm = ({cta, title, submitText, channelType}: Pro
                             <label htmlFor="label">Label</label>
                             <input
                                 id="label"
-                                {...register("label", {required: "Label is required"})}
+                                {...register('label', {required: 'Label is required'})}
                                 className={styles.input}
                             />
                             {errors.label && <span className={styles.errorText}>{errors.label.message}</span>}
@@ -128,7 +128,7 @@ export const CreateChannelTypeForm = ({cta, title, submitText, channelType}: Pro
                             <label htmlFor="key">Key</label>
                             <input
                                 id="key"
-                                {...register("key", {required: "Key is required"})}
+                                {...register('key', {required: 'Key is required'})}
                                 className={styles.input}
                             />
                             {errors.key && <span className={styles.errorText}>{errors.key.message}</span>}
@@ -138,7 +138,7 @@ export const CreateChannelTypeForm = ({cta, title, submitText, channelType}: Pro
                             <label htmlFor="baseRoleId">Base Role</label>
                             <select
                                 id="baseRoleId"
-                                {...register("baseRoleId", {required: "Base Role is required"})}
+                                {...register('baseRoleId', {required: 'Base Role is required'})}
                                 className={styles.input}
                             >
                                 <option value="">Select a role</option>
@@ -169,4 +169,4 @@ export const CreateChannelTypeForm = ({cta, title, submitText, channelType}: Pro
             </Dialog.Portal>
         </Dialog.Root>
     );
-}; 
+};

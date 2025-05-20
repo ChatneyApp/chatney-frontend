@@ -60,7 +60,7 @@ export const RegisterForm = () => {
                         id="name"
                         type="email"
                         placeholder="Enter your email"
-                        {...register("email", {required: "Email is required"})}
+                        {...register('email', {required: 'Email is required'})}
                         className={styles.input}
                     />
                     {errors.email && <span className={styles.errorText}>{errors.email.message}</span>}
@@ -72,7 +72,7 @@ export const RegisterForm = () => {
                         id="name"
                         type="password"
                         placeholder="Enter your password"
-                        {...register("password", {required: "Password is required"})}
+                        {...register('password', {required: 'Password is required'})}
                         className={styles.input}
                     />
                     {errors.password && <span className={styles.errorText}>{errors.password.message}</span>}
@@ -82,8 +82,8 @@ export const RegisterForm = () => {
                     <label htmlFor="name" className={styles.label}>Username</label>
                     <input
                         id="name"
-                        placeholder="Enter your username"
-                        {...register("username", {required: "Username is required"})}
+                        placeholder='Enter your username'
+                        {...register('username', {required: 'Username is required'})}
                         className={styles.input}
                     />
                     {errors.username && <span className={styles.errorText}>{errors.username.message}</span>}

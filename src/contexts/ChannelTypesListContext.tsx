@@ -11,8 +11,8 @@ interface ChannelTypesListContextValue {
 
 const ChannelTypesListContext = createContext<ChannelTypesListContextValue | null>(null);
 
-export function ChannelTypesListProvider({ children }: { children: ReactNode }) {
-    const { data, refetch } = useSuspenseQuery(GET_CHANNEL_TYPES_QUERY, {
+export function ChannelTypesListProvider({children}: { children: ReactNode }) {
+    const {data, refetch} = useSuspenseQuery(GET_CHANNEL_TYPES_QUERY, {
         fetchPolicy: 'cache-and-network',
     });
 
@@ -24,7 +24,7 @@ export function ChannelTypesListProvider({ children }: { children: ReactNode }) 
 
     return (
         <ChannelTypesListContext.Provider
-            value={{ channelTypes: data.getAllChannelTypesList, refetch: handleRefresh }}
+            value={{channelTypes: data.getAllChannelTypesList, refetch: handleRefresh}}
         >
             {children}
         </ChannelTypesListContext.Provider>
@@ -37,4 +37,4 @@ export function useChannelTypesList() {
         throw new Error('useChannelTypesList must be used within a ChannelTypesListProvider');
     }
     return ctx;
-} 
+}

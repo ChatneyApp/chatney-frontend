@@ -130,7 +130,7 @@ export const CreateRoleForm = ({cta, title, submitText, role}: Props) => {
                                 <label htmlFor="name">Role Name</label>
                                 <input
                                     id="name"
-                                    {...register("name", {required: "Role name is required"})}
+                                    {...register('name', {required: 'Role name is required'})}
                                     className={styles.input}
                                 />
                                 {errors.name && <span className={styles.errorText}>{errors.name.message}</span>}
@@ -147,7 +147,7 @@ export const CreateRoleForm = ({cta, title, submitText, role}: Props) => {
                                                     <label>
                                                         <input
                                                             type="checkbox"
-                                                            {...register("permissions")}
+                                                            {...register('permissions')}
                                                             value={permission}
                                                         />
                                                         {permission.split('.')[1]}
@@ -163,7 +163,7 @@ export const CreateRoleForm = ({cta, title, submitText, role}: Props) => {
                                 <label>
                                     <input
                                         type="checkbox"
-                                        {...register("isBaseRole")}
+                                        {...register('isBaseRole')}
                                     />
                                     Is Base Role
                                 </label>

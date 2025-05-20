@@ -41,5 +41,8 @@ export const MainMenu = () => (
         <MenuItem>
             <NavLink to="/dashboard/users" className={isActiveLink}>Users</NavLink>
         </MenuItem>
+        <MenuItem>
+            <NavLink to="/dashboard/config" className={isActiveLink}>Config</NavLink>
+        </MenuItem>
     </div>
 );

@@ -11,8 +11,8 @@ interface WorkspacesListContextValue {
 
 const WorkspacesListContext = createContext<WorkspacesListContextValue | null>(null);
 
-export function WorkspacesListProvider({ children }: { children: ReactNode }) {
-    const { data, refetch } = useSuspenseQuery(GET_WORKSPACES_QUERY, {
+export function WorkspacesListProvider({children}: { children: ReactNode }) {
+    const {data, refetch} = useSuspenseQuery(GET_WORKSPACES_QUERY, {
         fetchPolicy: 'cache-and-network',
     });
 
@@ -24,7 +24,7 @@ export function WorkspacesListProvider({ children }: { children: ReactNode }) {
 
     return (
         <WorkspacesListContext.Provider
-            value={{ workspaces: data.getWorkspacesList, refetch: handleRefresh }}
+            value={{workspaces: data.getWorkspacesList, refetch: handleRefresh}}
         >
             {children}
         </WorkspacesListContext.Provider>

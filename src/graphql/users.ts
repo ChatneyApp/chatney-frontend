@@ -2,6 +2,7 @@
 
 export type AuthorizeUserResponse = {
     AuthorizeUser: {
+        Id: string;
         Token: string;
     };
 }
@@ -19,7 +20,10 @@ export const REGISTER_USER = gql`
 export const LOGIN: TypedDocumentNode<AuthorizeUserResponse> = gql`
     query ($login: String!, $password: String!) {
         AuthorizeUser(login: $login, password: $password) {
+            Id
             Token
         }
     }
 `;
+
+

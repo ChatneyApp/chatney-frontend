@@ -6,6 +6,7 @@ import {LOGIN} from '@/graphql/users';
 import {Button} from '@/components/Button';
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './AuthForm.module.css';
+import {useNavigate} from 'react-router';
 
 type FormInputs = {
     email: string;
@@ -22,6 +23,7 @@ export const LoginForm = () => {
         }
     });
     const client = useApolloClient();
+    const navigate = useNavigate();
 
     const onSubmit = async (data: FormInputs) => {
         console.log('Submitting login form:', data);
@@ -35,6 +37,8 @@ export const LoginForm = () => {
                 },
             });
             localStorage.setItem('userToken', response.data.AuthorizeUser.Token);
+            localStorage.setItem('userId', response.data.AuthorizeUser.Id);
+            navigate('/client/workspaces', {replace: true});
             setErrorMessage(null);
         } catch (error) {
             console.error('Error during login:', error);

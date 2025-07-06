@@ -1,11 +1,11 @@
 ﻿import {useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {useMutation} from '@apollo/client';
+import {useApolloClient} from '@apollo/client';
 
 import {LOGIN} from '@/graphql/users';
 import {Button} from '@/components/Button';
 import dialogStyles from '@/components/Popup/Popup.module.css';
-import styles from '@/pages/client/AuthForm/AuthForm.module.css';
+import styles from './AuthForm.module.css';
 
 type FormInputs = {
     email: string;
@@ -13,42 +13,41 @@ type FormInputs = {
 };
 
 export const LoginForm = () => {
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const {register, handleSubmit, reset, formState: {errors}} = useForm<FormInputs>({
+    const [loading, setLoading] = useState(false);
+    const {register, handleSubmit, formState: {errors}} = useForm<FormInputs>({
         defaultValues: {
             email: '',
             password: '',
         }
     });
-
-    const [doLogin, {loading}] = useMutation(LOGIN, {
-        onCompleted: () => {
-            reset();
-        },
-        onError: (error) => {
-            setErrorMessage(`Login error: ${error.message}`);
-            setSuccessMessage(null);
-        }
-    });
-
+    const client = useApolloClient();
 
     const onSubmit = async (data: FormInputs) => {
-        await doLogin({
-            variables: {
-                input: {
-                    email: data.email,
+        console.log('Submitting login form:', data);
+        try {
+            setLoading(true);
+            const response = await client.query({
+                query: LOGIN,
+                variables: {
+                    login: data.email,
                     password: data.password,
-                }
-            }
-        });
+                },
+            });
+            localStorage.setItem('userToken', response.data.AuthorizeUser.Token);
+            setErrorMessage(null);
+        } catch (error) {
+            console.error('Error during login:', error);
+            setErrorMessage('Login failed. Please check your credentials.');
+            return;
+        } finally {
+            setLoading(false);
+        }
     };
-
 
     return (
         <div>
-            {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
-            {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
+            {errorMessage && <div className={styles.errorText}>{errorMessage}</div>}
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className={styles.formGroup}>

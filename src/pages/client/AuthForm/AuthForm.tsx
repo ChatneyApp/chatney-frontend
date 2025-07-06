@@ -8,7 +8,8 @@ enum AuthFormType {
     LOGIN = 'login',
     REGISTER = 'register',
 }
-const DEFAULT_FORM = AuthFormType.REGISTER;
+
+const DEFAULT_FORM = AuthFormType.LOGIN;
 
 export const AuthForm = () => {
     return (

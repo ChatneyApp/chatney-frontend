@@ -3,8 +3,33 @@ import {Tabs} from 'radix-ui';
 
 import {UserWorkspacesListProvider, useUserWorkspacesList} from '@/contexts/UserWorkspacesListContext';
 import {TabsContent, TabsList, TabsTrigger} from '@/pages/dashboard/components/Tabs/Tabs';
-import {WorkspaceChannelsListProvider} from '@/contexts/WorkspaceChannelsListContext';
 import {UserDataProvider} from '@/contexts/UserDataContext';
+import {
+    UserWorkspaceChannelsListContextProvider,
+    useUserWorkspaceChannelsList
+} from '@/contexts/UserWorkspaceChannelsListContext';
+import {Channel} from '@/types/channels';
+
+const UserChannel = ({channel}: {channel: Channel}) => (
+    <div className="p-2 flex flex-row gap-2 justify-center items-center">
+        <div className="text-lg font-bold text-amber-700">{channel.Name}</div>
+        <div className="mt-2">
+            <Link to={`/client/channel/${channel.Id}`} className="text-blue-500 hover:underline">
+                Open
+            </Link>
+        </div>
+    </div>
+);
+
+const ChannelsListCore = () => {
+    const {channels} = useUserWorkspaceChannelsList();
+
+    return <div className="flex flex-col gap-2">
+        {channels.map(channel => (
+            <UserChannel key={channel.Id} channel={channel}/>
+        ))}
+    </div>;
+};
 
 const WorkspaceChannelsList = () => {
     const {workspaces} = useUserWorkspacesList();
@@ -27,7 +52,9 @@ const WorkspaceChannelsList = () => {
                     key={workspace.Id}
                     value={workspace.Id}
                 >
-                    {workspace.Name}
+                    <span className="font-normal text-gray-600">[{workspace.Id}]</span>
+                    &nbsp;
+                    <span className="font-bold">{workspace.Name}</span>
                 </TabsTrigger>
             ))}
         </TabsList>
@@ -36,9 +63,9 @@ const WorkspaceChannelsList = () => {
                 key={workspace.Id}
                 value={workspace.Id}
             >
-                <WorkspaceChannelsListProvider workspace={workspace}>
-                    {workspace.Id} - {workspace.Name}
-                </WorkspaceChannelsListProvider>
+                <UserWorkspaceChannelsListContextProvider workspace={workspace}>
+                    <ChannelsListCore />
+                </UserWorkspaceChannelsListContextProvider>
             </TabsContent>
         ))}
     </Tabs.Root>
@@ -51,7 +78,6 @@ export const ClientWorkspacesPage = () => (
         </h1>
         <UserDataProvider>
             <UserWorkspacesListProvider>
-                user
                 <WorkspaceChannelsList/>
             </UserWorkspacesListProvider>
         </UserDataProvider>

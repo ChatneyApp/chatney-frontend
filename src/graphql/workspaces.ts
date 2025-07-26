@@ -6,6 +6,10 @@ export type GetWorkspacesListResponse = {
     getWorkspacesList: Workspace[];
 }
 
+export type GetUserWorkspacesListResponse = {
+    GetUserWorkspacesList: Workspace[];
+}
+
 export const CREATE_WORKSPACE = gql`
     mutation CreateWorkspace($input: MutateWorkspaceDTO!) {
         createWorkspace(input: $input) {
@@ -37,4 +41,13 @@ export const GET_WORKSPACES_QUERY: TypedDocumentNode<GetWorkspacesListResponse> 
             Name
         }
     }
-`; 
+`;
+
+export const GET_USER_WORKSPACES_QUERY: TypedDocumentNode<GetUserWorkspacesListResponse> = gql`
+    query ($userId: String!) {
+        GetUserWorkspacesList(userId: $userId) {
+            Id
+            Name
+        }
+    }
+`;

@@ -1,10 +1,13 @@
 ﻿import {gql, type TypedDocumentNode} from '@apollo/client';
 
+import type {UserAuthorization, User} from '@/types/users';
+
 export type AuthorizeUserResponse = {
-    AuthorizeUser: {
-        Id: string;
-        Token: string;
-    };
+    AuthorizeUser: UserAuthorization;
+}
+
+export type GetUserResponse = {
+    GetUser: User;
 }
 
 export const REGISTER_USER = gql`
@@ -26,4 +29,12 @@ export const LOGIN: TypedDocumentNode<AuthorizeUserResponse> = gql`
     }
 `;
 
-
+export const GET_USER_QUERY: TypedDocumentNode<GetUserResponse> = gql`
+    query ($id: String!) {
+        GetUser(userId: $id) {
+            Id
+            Name
+            Email
+        }
+    }
+`;

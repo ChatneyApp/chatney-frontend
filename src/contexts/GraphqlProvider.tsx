@@ -10,11 +10,16 @@ const httpLink = new HttpLink({
 export const GraphqlProvider = ({children}: PropsWithChildren) => {
     const authMiddleware = setContext((_, previousContext) => {
         const {headers = {}} = previousContext;
+        const userToken = localStorage.getItem('userToken');
+        const authHeaders = userToken ? {
+            Authorization: `Bearer ${userToken}`,
+        } : {};
+
         return ({
             ...previousContext,
             headers: {
                 ...headers,
-                auth: '123',
+                ...authHeaders,
             },
         });
     })

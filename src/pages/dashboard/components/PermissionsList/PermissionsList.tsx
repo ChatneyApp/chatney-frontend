@@ -27,7 +27,7 @@ const PermissionGroup = ({label, permissions}: PermissionGroupProps) => (
 );
 
 const PermissionsListCore = () => {
-    const {data: {getPermissionsList: {groups}}} = useSuspenseQuery(GET_PERMISSIONS_LIST);
+    const {data: {permissions: {list: groups}}} = useSuspenseQuery(GET_PERMISSIONS_LIST);
 
     return <>
         <ul className={styles.list}>

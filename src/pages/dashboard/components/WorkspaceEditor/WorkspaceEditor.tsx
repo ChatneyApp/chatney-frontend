@@ -24,7 +24,7 @@ export const WorkspaceEditor = ({workspace}: Props) => {
     const handleDelete = async () => {
         await deleteWorkspace({
             variables: {
-                workspaceId: workspace.Id
+                workspaceId: workspace.id
             }
         });
     };
@@ -32,10 +32,10 @@ export const WorkspaceEditor = ({workspace}: Props) => {
     return (
         <div className={styles.container}>
             <div className={styles.name}>
-                {workspace.Name}
+                {workspace.name}
             </div>
             <div className={styles.uuid}>
-                {workspace.Id}
+                {workspace.id}
             </div>
             <div className={styles.controls}>
                 <CreateWorkspaceForm 

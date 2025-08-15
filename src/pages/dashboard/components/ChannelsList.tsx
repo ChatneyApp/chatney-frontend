@@ -16,7 +16,7 @@ const ChannelsListCore = () => {
     return <div>
         <CreateChannelForm cta="Create channel" title="Create Channel" submitText="Create Channel"/>
         {channels.map(channel => (
-            <ChannelEditor key={channel.Id} channel={channel}/>
+            <ChannelEditor key={channel.id} channel={channel}/>
         ))}
         {!channels.length && (
             <EmptyListMessage>
@@ -38,27 +38,27 @@ const WorkspaceChannelsList = () => {
     }
 
     return <Tabs.Root
-        defaultValue={defaultWorkspace.Id}
+        defaultValue={defaultWorkspace.id}
     >
         <TabsList
             aria-label="Manage your account"
         >
             {workspaces.map(workspace => (
                 <TabsTrigger
-                    key={workspace.Id}
-                    value={workspace.Id}
+                    key={workspace.id}
+                    value={workspace.id}
                 >
-                    {workspace.Name}
+                    {workspace.name}
                 </TabsTrigger>
             ))}
         </TabsList>
         {workspaces.map(workspace => (
             <TabsContent
-                key={workspace.Id}
-                value={workspace.Id}
+                key={workspace.id}
+                value={workspace.id}
             >
                 <WorkspaceChannelsListProvider workspace={workspace}>
-                    <ChannelsListCore key={workspace.Id}/>
+                    <ChannelsListCore key={workspace.id}/>
                 </WorkspaceChannelsListProvider>
             </TabsContent>
         ))}

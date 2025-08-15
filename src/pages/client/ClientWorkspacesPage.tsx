@@ -12,9 +12,9 @@ import {Channel} from '@/types/channels';
 
 const UserChannel = ({channel}: {channel: Channel}) => (
     <div className="p-2 flex flex-row gap-2 justify-center items-center">
-        <div className="text-lg font-bold text-amber-700">{channel.Name}</div>
+        <div className="text-lg font-bold text-amber-700">{channel.name}</div>
         <div className="mt-2">
-            <Link to={`/client/channel/${channel.Id}`} className="text-blue-500 hover:underline">
+            <Link to={`/client/channel/${channel.id}`} className="text-blue-500 hover:underline">
                 Open
             </Link>
         </div>
@@ -26,7 +26,7 @@ const ChannelsListCore = () => {
 
     return <div className="flex flex-col gap-2">
         {channels.map(channel => (
-            <UserChannel key={channel.Id} channel={channel}/>
+            <UserChannel key={channel.id} channel={channel}/>
         ))}
     </div>;
 };
@@ -42,26 +42,26 @@ const WorkspaceChannelsList = () => {
     }
 
     return <Tabs.Root
-        defaultValue={defaultWorkspace.Id}
+        defaultValue={defaultWorkspace.id}
     >
         <TabsList
             aria-label="Manage your account"
         >
             {workspaces.map(workspace => (
                 <TabsTrigger
-                    key={workspace.Id}
-                    value={workspace.Id}
+                    key={workspace.id}
+                    value={workspace.id}
                 >
-                    <span className="font-normal text-gray-600">[{workspace.Id}]</span>
+                    <span className="font-normal text-gray-600">[{workspace.id}]</span>
                     &nbsp;
-                    <span className="font-bold">{workspace.Name}</span>
+                    <span className="font-bold">{workspace.name}</span>
                 </TabsTrigger>
             ))}
         </TabsList>
         {workspaces.map(workspace => (
             <TabsContent
-                key={workspace.Id}
-                value={workspace.Id}
+                key={workspace.id}
+                value={workspace.id}
             >
                 <UserWorkspaceChannelsListContextProvider workspace={workspace}>
                     <ChannelsListCore />

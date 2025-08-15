@@ -29,7 +29,7 @@ export const CreateWorkspaceForm = ({cta, title, submitText, workspace}: Props) 
 
     const {register, handleSubmit, reset, formState: {errors}} = useForm<FormInputs>({
         defaultValues: {
-            name: workspace?.Name ?? '',
+            name: workspace?.name ?? '',
         }
     });
 
@@ -70,7 +70,7 @@ export const CreateWorkspaceForm = ({cta, title, submitText, workspace}: Props) 
         if (workspace) {
             await updateWorkspace({
                 variables: {
-                    workspaceId: workspace.Id,
+                    workspaceId: workspace.id,
                     input: {
                         Name: data.name
                     }

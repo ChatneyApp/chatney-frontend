@@ -3,7 +3,9 @@ import {gql, type TypedDocumentNode} from '@apollo/client';
 import {Workspace} from '@/types/workspaces';
 
 export type GetWorkspacesListResponse = {
-    getWorkspacesList: Workspace[];
+    workspaces: {
+        list: Workspace[];
+    }
 }
 
 export type GetUserWorkspacesListResponse = {
@@ -36,11 +38,14 @@ export const DELETE_WORKSPACE = gql`
 
 export const GET_WORKSPACES_QUERY: TypedDocumentNode<GetWorkspacesListResponse> = gql`
     {
-        getWorkspacesList {
-            Id
-            Name
+        workspaces {
+            list {
+                id
+                name
+            }
         }
     }
+
 `;
 
 export const GET_USER_WORKSPACES_QUERY: TypedDocumentNode<GetUserWorkspacesListResponse> = gql`

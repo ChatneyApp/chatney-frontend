@@ -13,18 +13,18 @@ const WorkspacesListContext = createContext<WorkspacesListContextValue | null>(n
 
 export function WorkspacesListProvider({children}: { children: ReactNode }) {
     const {data, refetch} = useSuspenseQuery(GET_WORKSPACES_QUERY, {
-        fetchPolicy: 'cache-and-network',
+        fetchPolicy: 'no-cache',
     });
 
     const handleRefresh = () => {
         startTransition(async () => {
-            await refetch(); // Triggers a network request and re‐suspends if fetchPolicy dictates
+            await refetch();
         });
     };
 
     return (
         <WorkspacesListContext.Provider
-            value={{workspaces: data.getWorkspacesList, refetch: handleRefresh}}
+            value={{workspaces: data?.workspaces?.list, refetch: handleRefresh}}
         >
             {children}
         </WorkspacesListContext.Provider>

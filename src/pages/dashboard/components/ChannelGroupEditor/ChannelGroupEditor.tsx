@@ -26,14 +26,14 @@ export const ChannelGroupEditor = ({channelGroup}: Props) => {
     const handleDelete = async () => {
         await deleteChannelGroup({
             variables: {
-                channelGroupId: channelGroup.Id
+                id: channelGroup.id
             }
         });
     };
 
-    const groupChannels = channels.filter(channel => channelGroup.channels.includes(channel.Id));
+    const groupChannels = channels.filter(channel => channelGroup.channelIds.includes(channel.id));
     console.log('groupChannels', groupChannels);
-    const groupChannelNames = groupChannels.map(channel => channel.Name);
+    const groupChannelNames = groupChannels.map(channel => channel.name);
 
     return (
         <div className={styles.container}>
@@ -44,7 +44,7 @@ export const ChannelGroupEditor = ({channelGroup}: Props) => {
                 Order: {channelGroup.order}
             </div>
             <div className={styles.uuid}>
-                {channelGroup.Id}
+                {channelGroup.id}
             </div>
             <div className={styles.channels}>
                 <div className={styles.channelList}>

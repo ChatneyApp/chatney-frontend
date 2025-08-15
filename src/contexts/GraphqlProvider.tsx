@@ -4,7 +4,8 @@ import {setContext} from '@apollo/client/link/context';
 
 
 const httpLink = new HttpLink({
-    uri: 'http://localhost:8080/query'
+    uri: 'http://localhost:3001/query'
+    // uri: 'https://429a41a3f1a7.ngrok-free.app/query'
 });
 
 export const GraphqlProvider = ({children}: PropsWithChildren) => {

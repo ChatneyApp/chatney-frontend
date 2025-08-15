@@ -26,27 +26,27 @@ export const ChannelTypeEditor = ({channelType}: Props) => {
     const handleDelete = async () => {
         await deleteChannelType({
             variables: {
-                channelTypeId: channelType.Id
+                id: channelType.id
             }
         });
     };
 
     // Find the role name based on BaseRoleId
-    const baseRole = roles.find(role => role.Id === channelType.BaseRoleId);
+    const baseRole = roles.find(role => role.id === channelType.baseRoleId);
 
     return (
         <div className={styles.container}>
             <div className={styles.label}>
-                <span className={styles.labelTitle}>Label:</span> {channelType.Label}
+                <span className={styles.labelTitle}>Label:</span> {channelType.label}
             </div>
             <div className={styles.uuid}>
-                {channelType.Id}
+                {channelType.id}
             </div>
             <div className={styles.key}>
-                <span className={styles.keyTitle}>Key:</span> {channelType.Key}
+                <span className={styles.keyTitle}>Key:</span> {channelType.key}
             </div>
             <div className={styles.baseRole}>
-                <span className={styles.baseRoleTitle}>Base Role:</span> {baseRole?.Name || 'Unknown Role'}
+                <span className={styles.baseRoleTitle}>Base Role:</span> {baseRole?.name || 'Unknown Role'}
             </div>
             <div className={styles.controls}>
                 <CreateChannelTypeForm cta="Edit" title="Edit Channel Type" submitText="Save Changes" channelType={channelType}/>

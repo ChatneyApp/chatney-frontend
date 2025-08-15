@@ -10,7 +10,7 @@ const WorkspacesListCore = () => {
 
     return <div>
         {workspaces.map(workspace => (
-            <WorkspaceEditor key={workspace.Id} workspace={workspace}/>
+            <WorkspaceEditor key={workspace.id} workspace={workspace}/>
         ))}
         {!workspaces.length && (
             <EmptyListMessage>

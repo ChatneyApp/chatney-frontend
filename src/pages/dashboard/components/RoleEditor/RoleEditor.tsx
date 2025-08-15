@@ -22,7 +22,7 @@ export const RoleEditor = ({role}: Props) => {
     const handleDelete = async () => {
         await deleteRole({
             variables: {
-                roleId: role.Id
+                id: role.id
             }
         });
     };
@@ -30,16 +30,16 @@ export const RoleEditor = ({role}: Props) => {
     return (
         <div className={styles.container}>
             <div className={styles.name}>
-                {role.Name}
+                {role.name}
             </div>
             <div className={styles.uuid}>
-                {role.Id}
+                {role.id}
             </div>
             <div className={styles.permissions}>
-                Permissions: <b>{role.Permissions.join(', ')}</b>
+                Permissions: <b>{role.permissions.join(', ')}</b>
             </div>
             <div className={styles.settings}>
-                Settings: <b>{role.Settings.Base ? 'Base' : 'non-Base'}</b>
+                Settings: <b>{role.settings.base ? 'Base' : 'non-Base'}</b>
             </div>
             <div className={styles.controls}>
                 <CreateRoleForm cta="Edit" title="Edit Role" submitText="Save Changes" role={role}/>

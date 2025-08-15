@@ -18,13 +18,13 @@ export function ChannelTypesListProvider({children}: { children: ReactNode }) {
 
     const handleRefresh = () => {
         startTransition(async () => {
-            await refetch(); // Triggers a network request and re‐suspends if fetchPolicy dictates
+            await refetch();
         });
     };
 
     return (
         <ChannelTypesListContext.Provider
-            value={{channelTypes: data.getAllChannelTypesList, refetch: handleRefresh}}
+            value={{channelTypes: data?.channels?.channelTypeList, refetch: handleRefresh}}
         >
             {children}
         </ChannelTypesListContext.Provider>

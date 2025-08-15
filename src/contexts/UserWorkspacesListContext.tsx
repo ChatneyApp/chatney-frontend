@@ -18,7 +18,7 @@ type UserWorkspacesListProviderProps = {
 export function UserWorkspacesListProvider({children}: UserWorkspacesListProviderProps) {
     const {userData} = useUserData();
     const {data, refetch} = useSuspenseQuery(GET_USER_WORKSPACES_QUERY, {
-        fetchPolicy: 'cache-and-network',
+        fetchPolicy: 'no-cache',
         variables: {
             userId: userData!.Id
         },
@@ -26,7 +26,7 @@ export function UserWorkspacesListProvider({children}: UserWorkspacesListProvide
 
     const handleRefresh = () => {
         startTransition(async () => {
-            await refetch(); // Triggers a network request and re‐suspends if fetchPolicy dictates
+            await refetch();
         });
     };
 

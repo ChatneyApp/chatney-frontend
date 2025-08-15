@@ -11,7 +11,7 @@ const SystemConfigEditorCore = () => {
 
     return <div>
         {systemConfig.map(systemConfigValue => (
-            <SystemConfigValueEditor key={systemConfigValue.Name} systemConfigValue={systemConfigValue}/>
+            <SystemConfigValueEditor key={systemConfigValue.name} systemConfigValue={systemConfigValue}/>
         ))}
         {!systemConfig.length && (
             <EmptyListMessage>

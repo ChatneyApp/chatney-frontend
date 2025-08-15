@@ -32,9 +32,9 @@ export const CreateRoleForm = ({cta, title, submitText, role}: Props) => {
 
     const {register, handleSubmit, reset, formState: {errors}} = useForm<FormInputs>({
         defaultValues: {
-            name: role?.Name ?? '',
-            permissions: role?.Permissions ?? [],
-            isBaseRole: role?.Settings?.Base ?? false
+            name: role?.name ?? '',
+            permissions: role?.permissions ?? [],
+            isBaseRole: role?.settings?.base ?? false
         }
     });
 
@@ -79,12 +79,12 @@ export const CreateRoleForm = ({cta, title, submitText, role}: Props) => {
         if (role) {
             await editRole({
                 variables: {
-                    roleData: {
-                        Id: role.Id,
-                        Name: data.name,
-                        Permissions: data.permissions,
-                        Settings: {
-                            Base: data.isBaseRole
+                    role: {
+                        id: role.id,
+                        name: data.name,
+                        permissions: data.permissions,
+                        settings: {
+                            base: data.isBaseRole
                         }
                     }
                 }
@@ -92,11 +92,11 @@ export const CreateRoleForm = ({cta, title, submitText, role}: Props) => {
         } else {
             await createRole({
                 variables: {
-                    roleData: {
-                        Name: data.name,
-                        Permissions: data.permissions,
-                        Settings: {
-                            Base: data.isBaseRole
+                    roleDto: {
+                        name: data.name,
+                        permissions: data.permissions,
+                        settings: {
+                            base: data.isBaseRole
                         }
                     }
                 }
@@ -104,7 +104,7 @@ export const CreateRoleForm = ({cta, title, submitText, role}: Props) => {
         }
     };
 
-    const permissionGroups = permissionsData?.getPermissionsList?.groups || [];
+    const permissionGroups = permissionsData?.permissions?.list || [];
 
     return (
         <Dialog.Root open={open} onOpenChange={handleOpenChange}>

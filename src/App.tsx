@@ -1,19 +1,34 @@
-import {BrowserRouter, Route, Routes} from 'react-router';
+import { BrowserRouter, Route, Routes } from 'react-router';
 
-import {GraphqlProvider} from '@/contexts/GraphqlProvider';
+import { GraphqlProvider } from '@/contexts/GraphqlProvider';
 
-import {HomePage} from '@/pages/home/HomePage';
-import {dashboardRoutes} from '@/pages/dashboard/routes';
-import {clientRoutes} from '@/pages/client/routes';
+import { dashboardRoutes } from '@/pages/dashboard/routes';
+import { clientRoutes } from '@/pages/client/routes';
+import { UserProvider } from './contexts/UserContext';
+import { composeProviders } from './infra/composeProviders';
+import { WorkspacesListProvider } from './contexts/WorkspacesListContext';
+import { LoginRegisterPage } from './pages/login/ClientHomePage';
+import { ChatPage } from './pages/client/Chat/ChatPage';
 
-export const App = () => (
-    <GraphqlProvider>
-        <BrowserRouter>
+const providers = [
+    BrowserRouter,
+    UserProvider,
+    WorkspacesListProvider
+];
+
+const ComposedProviders = composeProviders(providers);
+
+export const App = () => {
+    const loginPage = window.location.pathname == '/login';
+
+    return <GraphqlProvider>
+        {loginPage && <LoginRegisterPage />}
+        {!loginPage && <ComposedProviders>
             <Routes>
-                <Route index element={<HomePage/>}/>
+                <Route index element={<ChatPage />} />
                 {dashboardRoutes()}
                 {clientRoutes()}
             </Routes>
-        </BrowserRouter>
+        </ComposedProviders>}
     </GraphqlProvider>
-);
+}

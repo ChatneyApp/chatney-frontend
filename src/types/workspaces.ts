@@ -1,4 +1,4 @@
 export type Workspace = {
-    Id: string;
-    Name: string;
+    id: string;
+    name: string;
 } 

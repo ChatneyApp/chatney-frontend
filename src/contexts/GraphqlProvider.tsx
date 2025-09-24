@@ -9,7 +9,7 @@ const httpLink = new HttpLink({
 
 
 import { onError } from '@apollo/client/link/error';
-import { userAuthTokenName } from '@/infra/consts';
+import { loginPageUrl, userAuthTokenName } from '@/infra/consts';
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
     const isUnauthorized =
@@ -19,12 +19,12 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
     const currentPath = window.location.pathname;
 
-    if (isUnauthorized && currentPath !== '/client/login') {
+    if (isUnauthorized && currentPath !== loginPageUrl) {
         // Clear any invalid token
         localStorage.removeItem(userAuthTokenName);
 
         // Redirect to login
-        window.location.href = '/client/login'; // Adjust this to your actual login route
+        window.location.href = loginPageUrl; // Adjust this to your actual login route
     }
 });
 

@@ -9,6 +9,7 @@ import { composeProviders } from './infra/composeProviders';
 import { WorkspacesListProvider } from './contexts/WorkspacesListContext';
 import { LoginRegisterPage } from './pages/login/ClientHomePage';
 import { ChatPage } from './pages/client/Chat/ChatPage';
+import { loginPageUrl } from './infra/consts';
 
 const providers = [
     BrowserRouter,
@@ -19,7 +20,7 @@ const providers = [
 const ComposedProviders = composeProviders(providers);
 
 export const App = () => {
-    const loginPage = window.location.pathname == '/login';
+    const loginPage = window.location.pathname == loginPageUrl;
 
     return <GraphqlProvider>
         {loginPage && <LoginRegisterPage />}

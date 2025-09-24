@@ -6,7 +6,7 @@ import { LOGIN } from '@/graphql/users';
 import { Button } from '@/components/Button';
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './AuthForm.module.css';
-import { userAuthTokenName } from '@/infra/consts';
+import { userAuthTokenName, userAuthId } from '@/infra/consts';
 
 type FormInputs = {
     login: string;
@@ -25,7 +25,8 @@ export const LoginForm = () => {
     const [doLogin, { loading }] = useMutation(LOGIN, {
         onCompleted: (data) => {
             localStorage.setItem(userAuthTokenName, data.users.login.token);
-            window.location.href = '/client/chat'
+            localStorage.setItem(userAuthId, data.users.login.id);
+            window.location.href = '/'
         },
         onError: (error) => {
             setErrorMessage(`Login error: ${error.message}`);

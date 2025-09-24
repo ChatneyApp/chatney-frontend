@@ -20,3 +20,20 @@ export const LOGIN = gql`
         }
     }
 `;
+
+export const GET_USER_BY_ID = gql`
+  query GetUserById($id: String!) {
+    users {
+      userById(id: $id) {
+        id
+        name
+        active
+        verified
+        banned
+        muted
+        email
+        workspaces
+      }
+    }
+  }
+`;

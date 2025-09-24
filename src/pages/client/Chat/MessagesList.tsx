@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { MessageInput } from './MessageInput';
+import { channel } from './ChannelsList';
 
 const initialMessages = [
     {
@@ -18,7 +19,7 @@ const initialMessages = [
     },
 ];
 
-export function MessagesList({ activeChannel }: any) {
+export function MessagesList({ activeChannel }: { activeChannel: channel }) {
     const [messages, setMessages] = useState(initialMessages);
 
     const handleSend = (text: string) => {
@@ -35,7 +36,7 @@ export function MessagesList({ activeChannel }: any) {
     return (
         <div className="flex-1 flex flex-col bg-gray-900">
             <div className="flex-1 p-4 overflow-y-auto space-y-4">
-                <h2 className="text-lg font-semibold mb-4"># {activeChannel}</h2>
+                <h2 className="text-lg font-semibold mb-4"># {activeChannel.name}</h2>
                 {messages.map((msg) => (
                     <div key={msg.id} className="flex items-start space-x-4">
                         <img src={msg.avatar} alt={msg.user} className="w-10 h-10 rounded-full" />

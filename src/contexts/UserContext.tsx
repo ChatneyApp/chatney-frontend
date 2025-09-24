@@ -1,60 +1,76 @@
-import { GET_WORKSPACES_QUERY } from '@/graphql/workspaces';
+import { GET_USER_BY_ID } from '@/graphql/users';
+import { loginPageUrl, userAuthId, userAuthTokenName } from '@/infra/consts';
+import { Workspace } from '@/types/workspaces';
 import { useApolloClient } from '@apollo/client';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
-const UserContext = createContext({});
+const UserContext = createContext<UserContextData | null>(null);
+
+export type UserContextData = {
+    user: {
+        id: string
+        name: string
+        active: boolean
+        verified: boolean
+        banned: boolean
+        muted: boolean
+        email: string
+        workspaces: Workspace[]
+    } | null,
+    logout: typeof logoutFunction
+}
+
+const logoutFunction = () => {
+    localStorage.removeItem(userAuthId);
+    localStorage.removeItem(userAuthTokenName);
+    window.location.reload()
+}
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState({});
+    const [userCtx, setUser] = useState<UserContextData | null>({
+        user: null, logout: logoutFunction
+    });
     const client = useApolloClient();
 
     // Application start
     useEffect(() => {
         const fetchStartupData = async () => {
             try {
-                // 1. Get Current User
+                const userid = localStorage.getItem(userAuthId);
+
+                if (!userid) {
+                    window.location.href = loginPageUrl;
+                    return;
+                }
+
                 const { data: userData } = await client.query({
-                    query: GET_WORKSPACES_QUERY,
+                    query: GET_USER_BY_ID,
+                    variables: {
+                        id: userid
+                    },
+                    fetchPolicy: 'network-only', // Optional: avoids cache
                 });
 
-                console.log(userData);
+                if (userData) {
+                    setUser({ user: userData.users.userById, logout: logoutFunction });
+                    return;
+                } else {
+                    window.location.href = loginPageUrl;
+                    return;
+                }
 
-                // // 2. Get Workspaces
-                // const { data: workspacesData } = await client.query({
-                //     query: GET_WORKSPACES_QUERY,
-                //     variables: { userId },
-                // });
-
-                // const firstWorkspaceId = workspacesData.getWorkspacesList[0]?.Id;
-
-                // // 3. Get Workspace Settings
-                // if (firstWorkspaceId) {
-                //     const { data: settingsData } = await client.query({
-                //         query: GET_WORKSPACE_SETTINGS,
-                //         variables: { workspaceId: firstWorkspaceId },
-                //     });
-
-                //     console.log('Settings:', settingsData);
-                // }
-
-                //setLoading(false);
             } catch (err: any) {
                 console.error(err);
-                // setError(err.message);
-                // setLoading(false);
+                window.location.href = loginPageUrl;
             }
         };
 
-        // fetchStartupData();
-    }, []);
-
+        fetchStartupData();
+    }, [userCtx]);
 
     return (
-        <UserContext.Provider value={{
-            user,
-            setContext: setUser
-        }} >
-            {children}
+        <UserContext.Provider value={userCtx} >
+            {userCtx?.user && children}
         </UserContext.Provider >
     );
 };

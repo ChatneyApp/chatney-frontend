@@ -32,8 +32,8 @@ export const CreateChannelForm = ({cta, title, submitText, channel}: Props) => {
 
     const {register, handleSubmit, reset, formState: {errors}} = useForm<FormInputs>({
         defaultValues: {
-            name: channel?.Name ?? '',
-            channelTypeId: channel?.ChannelTypeId ?? '',
+            name: channel?.name ?? '',
+            channelTypeId: channel?.channelTypeId ?? '',
         }
     });
 
@@ -71,26 +71,26 @@ export const CreateChannelForm = ({cta, title, submitText, channel}: Props) => {
     }
 
     const onSubmit = async (data: FormInputs) => {
-        const workspaceId = workspace.Id;
+        const workspaceId = workspace.id;
 
         if (channel) {
             await updateChannel({
                 variables: {
-                    channelId: channel.Id,
-                    input: {
-                        Name: data.name,
-                        ChannelTypeId: data.channelTypeId,
-                        WorkspaceId: workspaceId
+                    channel: {
+                        id: channel.id,
+                        name: data.name,
+                        channelTypeId: data.channelTypeId,
+                        workspaceId: workspaceId
                     }
                 }
             });
         } else {
             await createChannel({
                 variables: {
-                    input: {
-                        Name: data.name,
-                        ChannelTypeId: data.channelTypeId,
-                        WorkspaceId: workspaceId
+                    channelDto: {
+                        name: data.name,
+                        channelTypeId: data.channelTypeId,
+                        workspaceId: workspaceId
                     }
                 }
             });
@@ -132,8 +132,8 @@ export const CreateChannelForm = ({cta, title, submitText, channel}: Props) => {
                             >
                                 <option value="">Select a channel type</option>
                                 {channelTypes.map(type => (
-                                    <option key={type.Id} value={type.Id}>
-                                        {type.Label}
+                                    <option key={type.id} value={type.id}>
+                                        {type.label}
                                     </option>
                                 ))}
                             </select>

@@ -14,7 +14,6 @@ type FormInputs = {
 };
 
 export const LoginForm = () => {
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
@@ -30,7 +29,6 @@ export const LoginForm = () => {
         },
         onError: (error) => {
             setErrorMessage(`Login error: ${error.message}`);
-            setSuccessMessage(null);
         },
     });
 
@@ -46,11 +44,9 @@ export const LoginForm = () => {
         });
     };
 
-
     return (
         <div>
-            {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
-            {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
+            {errorMessage && <div className={styles.errorText}>{errorMessage}</div>}
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className={styles.formGroup}>

@@ -33,9 +33,9 @@ export const CreateChannelTypeForm = ({cta, title, submitText, channelType}: Pro
 
     const {register, handleSubmit, reset, formState: {errors}} = useForm<FormInputs>({
         defaultValues: {
-            label: channelType?.Label ?? '',
-            key: channelType?.Key ?? '',
-            baseRoleId: channelType?.BaseRoleId ?? ''
+            label: channelType?.label ?? '',
+            key: channelType?.key ?? '',
+            baseRoleId: channelType?.baseRoleId ?? ''
         }
     });
 
@@ -76,21 +76,21 @@ export const CreateChannelTypeForm = ({cta, title, submitText, channelType}: Pro
         if (channelType) {
             await editChannelType({
                 variables: {
-                    input: {
-                        Label: data.label,
-                        Key: data.key,
-                        BaseRoleId: data.baseRoleId
+                    channelType: {
+                        id: channelType.id,
+                        label: data.label,
+                        key: data.key,
+                        baseRoleId: data.baseRoleId
                     },
-                    channelTypeId: channelType.Id,
                 }
             });
         } else {
             await createChannelType({
                 variables: {
-                    input: {
-                        Label: data.label,
-                        Key: data.key,
-                        BaseRoleId: data.baseRoleId
+                    channelTypeDto: {
+                        label: data.label,
+                        key: data.key,
+                        baseRoleId: data.baseRoleId
                     }
                 }
             });
@@ -143,8 +143,8 @@ export const CreateChannelTypeForm = ({cta, title, submitText, channelType}: Pro
                             >
                                 <option value="">Select a role</option>
                                 {roles.map(role => (
-                                    <option key={role.Id} value={role.Id}>
-                                        {role.Name}
+                                    <option key={role.id} value={role.id}>
+                                        {role.name}
                                     </option>
                                 ))}
                             </select>

@@ -3,49 +3,59 @@
 import {Role} from '@/types/roles';
 
 export type GetRolesListResponse = {
-    getRolesList: Role[];
+    roles: {
+        list: Role[];
+    }
 }
 
 export const CREATE_ROLE = gql`
-    mutation CreateRole($roleData: CreateRoleDTO!) {
-        createRole(RoleData: $roleData) {
-            Id
-            Name
-            Permissions
-            Settings {
-                Base
+    mutation ($roleDto: RoleDTOInput!) {
+        roles {
+            addRole (roleDto: $roleDto) {
+                id
+                name
+                settings {
+                    base
+                }
+                permissions
             }
         }
     }
 `;
 
 export const EDIT_ROLE = gql`
-    mutation EditRole($roleData: EditRoleDTO!) {
-        editRole(RoleData: $roleData) {
-            Id
-            Name
-            Permissions
-            Settings {
-                Base
+    mutation ($role: RoleInput!) {
+        roles {
+            updateRole (role: $role) {
+                id
+                name
+                settings {
+                    base
+                }
+                permissions
             }
         }
     }
 `;
 
 export const DELETE_ROLE = gql`
-    mutation($roleId: String) {
-        deleteRole(roleId: $roleId)
+    mutation($id: String!) {
+        roles {
+            deleteRole(id: $id)
+        }
     }
 `;
 
 export const GET_ROLES_QUERY: TypedDocumentNode<GetRolesListResponse> = gql`
     {
-        getRolesList {
-            Id
-            Name
-            Permissions
-            Settings {
-                Base
+        roles {
+            list {
+                id
+                name
+                settings {
+                    base
+                }
+                permissions
             }
         }
     }

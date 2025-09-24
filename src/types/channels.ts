@@ -1,6 +1,6 @@
 export type Channel = {
-    Id: string;
-    Name: string;
-    ChannelTypeId: string;
-    WorkspaceId: string;
+    id: string;
+    name: string;
+    channelTypeId: string;
+    workspaceId: string;
 }

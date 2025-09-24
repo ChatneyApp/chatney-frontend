@@ -13,18 +13,18 @@ const SystemConfigContext = createContext<SystemConfigContextValue | null>(null)
 
 export function SystemConfigProvider({children}: { children: ReactNode }) {
     const {data, refetch} = useSuspenseQuery(GET_SYSTEM_CONFIG_QUERY, {
-        fetchPolicy: 'cache-and-network',
+        fetchPolicy: 'no-cache',
     });
 
     const handleRefresh = () => {
         startTransition(async () => {
-            await refetch(); // Triggers a network request and re‐suspends if fetchPolicy dictates
+            await refetch();
         });
     };
 
     return (
         <SystemConfigContext.Provider
-            value={{systemConfig: data.getSystemConfig, refetch: handleRefresh}}
+            value={{systemConfig: data?.configs?.list, refetch: handleRefresh}}
         >
             {children}
         </SystemConfigContext.Provider>

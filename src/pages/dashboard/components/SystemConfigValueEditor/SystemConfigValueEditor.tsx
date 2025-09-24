@@ -10,13 +10,13 @@ export const SystemConfigValueEditor = ({systemConfigValue}: Props) => {
     return (
         <div className={styles.container}>
             <div className={styles.name}>
-                {systemConfigValue.Name}
+                {systemConfigValue.name}
             </div>
             <div className={styles.value}>
-                {systemConfigValue.Value}
+                {systemConfigValue.value}
             </div>
             <div className={styles.controls}>
-                <SystemConfigValueForm cta="Edit" title={`Edit ${systemConfigValue.Name}`} submitText="Save Changes" systemConfigValue={systemConfigValue}/>
+                <SystemConfigValueForm cta="Edit" title={`Edit ${systemConfigValue.name}`} submitText="Save Changes" systemConfigValue={systemConfigValue}/>
             </div>
         </div>
     );

@@ -1,8 +1,8 @@
-﻿import { gql } from '@apollo/client';
+import { gql } from '@apollo/client';
 
 export const REGISTER_USER = gql`
     mutation RegisterUser($input: CreateUserDTO!) {
-        registerUser(input: $input) {
+        CreateUser(input: $input) {
             Id
             Email
             Username

@@ -3,12 +3,30 @@ import {gql, type TypedDocumentNode} from '@apollo/client';
 import {Channel} from '@/types/channels';
 
 export type GetChannelsListResponse = {
-    getWorkspaceChannelsList: Channel[];
+    channels: {
+        workspaceChannelList: Channel[];
+    }
+}
+export type GetChannelResponse = {
+    GetChannel: Channel;
 }
 
 export const CREATE_CHANNEL = gql`
-    mutation CreateChannel($input: MutateChannelDTO!) {
-        createChannel(input: $input) {
+    mutation($channelDto: ChannelDTOInput!) {
+        channels {
+            addChannel(channelDto: $channelDto) {
+                id
+                name
+                channelTypeId
+                workspaceId
+            }
+        }
+    }
+`;
+
+export const GET_CHANNEL: TypedDocumentNode<GetChannelResponse> = gql`
+    query ($channelId: String!) {
+        GetChannel(channelId: $channelId) {
             Id
             Name
             ChannelTypeId
@@ -18,29 +36,35 @@ export const CREATE_CHANNEL = gql`
 `;
 
 export const UPDATE_CHANNEL = gql`
-    mutation UpdateChannel($channelId: String!, $input: MutateChannelDTO!) {
-        updateChannel(channelId: $channelId, input: $input) {
-            Id
-            Name
-            ChannelTypeId
-            WorkspaceId
+    mutation ($channel: ChannelInput!) {
+        channels {
+            updateChannel(channel: $channel) {
+                id
+                name
+                channelTypeId
+                workspaceId
+            }
         }
     }
 `;
 
 export const DELETE_CHANNEL = gql`
-    mutation DeleteChannel($channelId: String!) {
-        deleteChannel(channelId: $channelId)
+    mutation ($id: String!) {
+        channels {
+            deleteChannel(id: $id)
+        }
     }
 `;
 
 export const GET_WORKSPACE_CHANNELS_QUERY: TypedDocumentNode<GetChannelsListResponse> = gql`
     query ($workspaceId: String!) {
-        getWorkspaceChannelsList(workspaceId: $workspaceId) {
-            Id
-            Name
-            ChannelTypeId
-            WorkspaceId
+        channels {
+            workspaceChannelList(workspaceId: $workspaceId) {
+                id
+                name
+                channelTypeId
+                workspaceId
+            }
         }
     }
 `;

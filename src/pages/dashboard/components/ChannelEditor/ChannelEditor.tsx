@@ -26,23 +26,23 @@ export const ChannelEditor = ({channel}: Props) => {
     const handleDelete = async () => {
         await deleteChannel({
             variables: {
-                channelId: channel.Id
+                id: channel.id
             }
         });
     };
 
-    const channelType = channelTypes.find(type => type.Id === channel.ChannelTypeId);
+    const channelType = channelTypes.find(type => type.id === channel.channelTypeId);
 
     return (
         <div className={styles.container}>
             <div className={styles.name}>
-                {channel.Name}
+                {channel.name}
             </div>
             <div className={styles.uuid}>
-                {channel.Id}
+                {channel.id}
             </div>
             <div className={styles.channelType}>
-                Channel type: {channelType?.Label ?? 'Unknown Channel Type'}
+                Channel type: {channelType?.label ?? 'Unknown Channel Type'}
             </div>
             <div className={styles.controls}>
                 <CreateChannelForm cta="Edit" title="Edit Channel" submitText="Save Changes" channel={channel}/>

@@ -19,19 +19,21 @@ type WorkspaceChannelGroupsListProviderProps = {
 
 export function WorkspaceChannelGroupsListProvider({workspace, children}: WorkspaceChannelGroupsListProviderProps) {
     const {data, refetch} = useSuspenseQuery(GET_WORKSPACE_CHANNEL_GROUPS_QUERY, {
-        variables: {workspaceId: workspace.Id},
-        fetchPolicy: 'cache-and-network',
+        variables: {
+            workspaceId: workspace.id,
+        },
+        fetchPolicy: 'no-cache',
     });
 
     const handleRefresh = () => {
         startTransition(async () => {
-            await refetch(); // Triggers a network request and re‐suspends if fetchPolicy dictates
+            await refetch();
         });
     };
 
     return (
         <WorkspaceChannelGroupsListContext.Provider
-            value={{channelGroups: data.listChannelGroups, workspace, refetch: handleRefresh}}
+            value={{channelGroups: data?.channels?.workspaceChannelGroupList, workspace, refetch: handleRefresh}}
         >
             {children}
         </WorkspaceChannelGroupsListContext.Provider>

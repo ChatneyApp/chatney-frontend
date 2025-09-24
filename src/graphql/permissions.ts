@@ -5,18 +5,16 @@ export type PermissionGroup = {
     list: string[];
 }
 
-export type PermissionsGroupsList = {
-    groups: PermissionGroup[];
-}
-
 export type GetPermissionsListResponse = {
-    getPermissionsList: PermissionsGroupsList;
+    permissions: {
+        list: PermissionGroup[];
+    }
 }
 
 export const GET_PERMISSIONS_LIST: TypedDocumentNode<GetPermissionsListResponse> = gql`
     query getPermissionsList {
-        getPermissionsList {
-            groups {
+        permissions {
+            list {
                 label
                 list
             }

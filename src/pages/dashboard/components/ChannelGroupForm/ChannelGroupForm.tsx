@@ -35,7 +35,7 @@ export const ChannelGroupForm = ({cta, title, submitText, channelGroup}: Props) 
         defaultValues: {
             name: channelGroup?.name ?? '',
             order: channelGroup?.order ?? 0,
-            channelIds: channelGroup?.channels ?? [],
+            channelIds: channelGroup?.channelIds ?? [],
         }
     });
 
@@ -75,27 +75,28 @@ export const ChannelGroupForm = ({cta, title, submitText, channelGroup}: Props) 
     };
 
     const onSubmit = async (data: FormInputs) => {
-        const workspaceId = workspace.Id;
+        const workspaceId = workspace.id;
 
         if (channelGroup) {
             await updateChannelGroup({
                 variables: {
-                    input: {
-                        Id: channelGroup.Id,
+                    channelGroup: {
+                        id: channelGroup.id,
                         name: data.name,
-                        channels: data.channelIds,
+                        channelIds: data.channelIds,
                         order: data.order,
+                        workspaceId,
                     }
                 }
             });
         } else {
             await createChannelGroup({
                 variables: {
-                    input: {
+                    channelGroupDto: {
                         name: data.name,
-                        channels: data.channelIds,
+                        channelIds: data.channelIds,
                         order: data.order,
-                        workspace: workspaceId
+                        workspaceId
                     }
                 }
             });
@@ -159,15 +160,15 @@ export const ChannelGroupForm = ({cta, title, submitText, channelGroup}: Props) 
                             <label>Channels</label>
                             <div className={styles.channelsContainer}>
                                 {channels.map(channel => (
-                                    <div key={channel.Id} className={styles.channelItem}>
+                                    <div key={channel.id} className={styles.channelItem}>
                                         <input
                                             type="checkbox"
-                                            id={`channel-${channel.Id}`}
-                                            value={channel.Id}
-                                            checked={selectedChannels.includes(channel.Id)}
-                                            onChange={() => handleChannelToggle(channel.Id)}
+                                            id={`channel-${channel.id}`}
+                                            value={channel.id}
+                                            checked={selectedChannels.includes(channel.id)}
+                                            onChange={() => handleChannelToggle(channel.id)}
                                         />
-                                        <label htmlFor={`channel-${channel.Id}`}>{channel.Name}</label>
+                                        <label htmlFor={`channel-${channel.id}`}>{channel.name}</label>
                                     </div>
                                 ))}
                             </div>

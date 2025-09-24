@@ -5,22 +5,24 @@ import {Workspace} from '@/types/workspaces';
 import {Channel} from '@/types/channels';
 import {GET_WORKSPACE_CHANNELS_QUERY} from '@/graphql/channels';
 
-interface WorkspaceChannelsListContextValue {
+interface UserWorkspaceChannelsListContextValue {
     workspace: Workspace;
     channels: Channel[];
     refetch: () => void;
 }
 
-const WorkspaceChannelsListContext = createContext<WorkspaceChannelsListContextValue | null>(null);
+const UserWorkspaceChannelsListContext = createContext<UserWorkspaceChannelsListContextValue | null>(null);
 
-type WorkspaceChannelsListProviderProps = {
+type UserWorkspaceChannelsListProviderProps = {
     workspace: Workspace;
 } & PropsWithChildren;
 
-export function WorkspaceChannelsListProvider({workspace, children}: WorkspaceChannelsListProviderProps) {
+export function UserWorkspaceChannelsListContextProvider({workspace, children}: UserWorkspaceChannelsListProviderProps) {
     const {data, refetch} = useSuspenseQuery(GET_WORKSPACE_CHANNELS_QUERY, {
-        variables: {workspaceId: workspace.id},
         fetchPolicy: 'no-cache',
+        variables: {
+            workspaceId: workspace.id,
+        },
     });
 
     const handleRefresh = () => {
@@ -30,18 +32,18 @@ export function WorkspaceChannelsListProvider({workspace, children}: WorkspaceCh
     };
 
     return (
-        <WorkspaceChannelsListContext.Provider
+        <UserWorkspaceChannelsListContext.Provider
             value={{channels: data?.channels?.workspaceChannelList, workspace, refetch: handleRefresh}}
         >
             {children}
-        </WorkspaceChannelsListContext.Provider>
+        </UserWorkspaceChannelsListContext.Provider>
     );
 }
 
-export function useWorkspaceChannelsList() {
-    const ctx = useContext(WorkspaceChannelsListContext);
+export function useUserWorkspaceChannelsList() {
+    const ctx = useContext(UserWorkspaceChannelsListContext);
     if (!ctx) {
-        throw new Error('useWorkspaceChannelsList must be used within a WorkspacesListProvider');
+        throw new Error('useUserWorkspaceChannelsList must be used within a UserWorkspaceChannelsListContextProvider');
     }
     return ctx;
 }

@@ -3,50 +3,55 @@ import {gql, type TypedDocumentNode} from '@apollo/client';
 import {ChannelType} from '@/types/channelTypes';
 
 export type GetChannelTypesListResponse = {
-    getAllChannelTypesList: ChannelType[];
+    channels: {
+        channelTypeList: ChannelType[];
+    }
 }
 
 export const CREATE_CHANNEL_TYPE = gql`
-    mutation CreateChannelType($input: MutateChannelTypeDTO!) {
-        createChannelType(input: $input) {
-            Id
-            Label
-            Key
-            BaseRoleId
+    mutation ($channelTypeDto: ChannelTypeDTOInput!) {
+        channels {
+            addChannelType(channelTypeDto: $channelTypeDto) {
+                id
+                label
+                key
+                baseRoleId
+            }
         }
     }
 `;
 
 export const EDIT_CHANNEL_TYPE = gql`
-  mutation UpdateChannelType(
-    $channelTypeId: String!
-    $input: MutateChannelTypeDTO!
-  ) {
-    updateChannelType(
-      input: $input
-      channelTypeId: $channelTypeId
-    ) {
-      Id
-      Label
-      Key
-      BaseRoleId
+    mutation ($channelType: ChannelTypeInput!) {
+        channels {
+            updateChannelType(channelType: $channelType) {
+                id
+                label
+                key
+                baseRoleId
+            }
+        }
     }
-  }
 `;
 
 export const DELETE_CHANNEL_TYPE = gql`
-    mutation($channelTypeId: String!) {
-        deleteChannelType(channelTypeId: $channelTypeId)
+    mutation($id: String!) {
+        channels {
+            deleteChannelType(id: $id)
+        }
     }
 `;
 
 export const GET_CHANNEL_TYPES_QUERY: TypedDocumentNode<GetChannelTypesListResponse> = gql`
     {
-        getAllChannelTypesList {
-            Id
-            Label
-            Key
-            BaseRoleId
+        channels {
+            channelTypeList {
+                id
+                label
+                key
+                baseRoleId
+            }
         }
     }
+
 `; 

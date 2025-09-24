@@ -1,8 +1,8 @@
 ﻿export type Role = {
-    Id: string;
-    Name: string;
-    Permissions: [];
-    Settings: {
-        Base: boolean;
+    id: string;
+    name: string;
+    permissions: [];
+    settings: {
+        base: boolean;
     };
 }

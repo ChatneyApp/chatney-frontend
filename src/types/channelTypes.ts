@@ -1,6 +1,6 @@
 export type ChannelType = {
-    Id: string;
-    Label: string;
-    Key: string;
-    BaseRoleId: string;
+    id: string;
+    label: string;
+    key: string;
+    baseRoleId: string;
 } 

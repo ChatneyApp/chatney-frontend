@@ -32,11 +32,16 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 export const GraphqlProvider = ({ children }: PropsWithChildren) => {
     const authMiddleware = setContext((_, previousContext) => {
         const { headers = {} } = previousContext;
+        const userToken = localStorage.getItem(userAuthTokenName);
+        const authHeaders = userToken ? {
+            Authorization: `Bearer ${userToken}`,
+        } : {};
+
         return ({
             ...previousContext,
             headers: {
                 ...headers,
-                Authorization: 'Bearer ' + localStorage.getItem(userAuthTokenName),
+                ...authHeaders,
             },
         });
     })

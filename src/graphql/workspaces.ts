@@ -43,4 +43,4 @@ export const GET_WORKSPACES_QUERY: TypedDocumentNode<GetWorkspacesListResponse> 
             }
         }
     }
-`; 
+`;

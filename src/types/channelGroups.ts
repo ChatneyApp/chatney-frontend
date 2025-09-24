@@ -1,7 +1,7 @@
 export type ChannelGroup = {
-    Id: string;
+    id: string;
     name: string;
-    channels: string[];
+    channelIds: string[];
     workspace: string;
     order: number;
 }

@@ -29,7 +29,7 @@ export const SystemConfigValueForm = ({cta, title, submitText, systemConfigValue
 
     const {register, handleSubmit, reset, formState: {errors}} = useForm<FormInputs>({
         defaultValues: {
-            value: systemConfigValue.Value,
+            value: systemConfigValue.value,
         }
     });
 
@@ -57,8 +57,12 @@ export const SystemConfigValueForm = ({cta, title, submitText, systemConfigValue
     const onSubmit = async (data: FormInputs) => {
         await updateValue({
             variables: {
-                configName: systemConfigValue.Name,
-                configValue: data.value,
+                config: {
+                    id: systemConfigValue.id,
+                    name: systemConfigValue.name,
+                    value: data.value,
+                    type: systemConfigValue.type,
+                }
             }
         });
     };

@@ -10,7 +10,7 @@ const RolesListCore = () => {
 
     return <div>
         {roles.map(role => (
-            <RoleEditor key={role.Id} role={role}/>
+            <RoleEditor key={role.id} role={role}/>
         ))}
         {!roles.length && (
             <EmptyListMessage>

@@ -1,4 +1,6 @@
 ﻿export type SystemConfigValue = {
-    Name: string;
-    Value: string;
+    id: string;
+    name: string;
+    value: string;
+    type: string;
 }

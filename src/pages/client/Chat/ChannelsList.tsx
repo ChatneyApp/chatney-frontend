@@ -1,11 +1,6 @@
-const channels = [{ id: 'ty', name: 'general' }, { id: '43', name: 'random' }, { name: 'tech', id: '1232' }, { name: 'design', id: 'qwe' }];
+import { channelListItem } from "./ChatPage";
 
-export type channel = {
-    name: string,
-    id: string
-}
-
-export function ChannelList({ activeChannel, setActiveChannel }: { activeChannel: channel, setActiveChannel: any }) {
+export function ChannelList({ activeChannel, setActiveChannel, channels }: { activeChannel: channelListItem, setActiveChannel: any, channels: channelListItem[] }) {
     return (
         <div className="w-48 bg-gray-850 border-r border-gray-700 p-4 space-y-2">
             {channels.map((channel) => (

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MessageInput } from './MessageInput';
-import { channel } from './ChannelsList';
+import { channelListItem } from './ChatPage';
 
 const initialMessages = [
     {
@@ -19,7 +19,7 @@ const initialMessages = [
     },
 ];
 
-export function MessagesList({ activeChannel }: { activeChannel: channel }) {
+export function MessagesList({ activeChannel, onSend }: { activeChannel: channelListItem, onSend: any }) {
     const [messages, setMessages] = useState(initialMessages);
 
     const handleSend = (text: string) => {
@@ -30,6 +30,7 @@ export function MessagesList({ activeChannel }: { activeChannel: channel }) {
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             text,
         };
+        onSend(newMessage)
         setMessages((prev) => [...prev, newMessage]);
     };
 

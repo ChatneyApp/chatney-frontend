@@ -5,14 +5,16 @@ import { GET_WORKSPACES_QUERY } from '@/graphql/workspaces';
 
 interface WorkspacesListContextValue {
     workspaces: Workspace[];
+    setWsList(list: Workspace[]): void;
+    activeWorkspace: Workspace | null;
+    setActiveWs(ws: Workspace): void;
 }
 
 const WorkspacesListContext = createContext<WorkspacesListContextValue | null>(null);
 
 export function WorkspacesListProvider({ children }: { children: ReactNode }) {
-    const [wsList, setWs] = useState({
-        workspaces: { list: [] }
-    });
+    const [wsList, setWs] = useState<Workspace[]>([]);
+    const [activeWs, setActiveWs] = useState<Workspace | null>(null);
     const client = useApolloClient();
 
     // Application start
@@ -23,7 +25,7 @@ export function WorkspacesListProvider({ children }: { children: ReactNode }) {
                     query: GET_WORKSPACES_QUERY,
                 });
 
-                setWs(ws as any);
+                setWs(ws.workspaces.list);
             } catch (err: any) {
                 console.error(err);
                 // setError(err.message);
@@ -34,10 +36,14 @@ export function WorkspacesListProvider({ children }: { children: ReactNode }) {
         fetchData();
     }, []);
 
-
     return (
         <WorkspacesListContext.Provider
-            value={{ workspaces: wsList.workspaces.list }}
+            value={{
+                workspaces: wsList,
+                setWsList: setWs,
+                activeWorkspace: activeWs,
+                setActiveWs
+            }}
         >
             {children}
         </WorkspacesListContext.Provider>

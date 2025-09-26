@@ -1,4 +1,4 @@
-import { GET_USER_BY_ID } from '@/graphql/users';
+import { getUserById } from '@/graphql/users';
 import { loginPageUrl, userAuthId, userAuthTokenName } from '@/infra/consts';
 import { Workspace } from '@/types/workspaces';
 import { useApolloClient } from '@apollo/client';
@@ -27,10 +27,10 @@ const logoutFunction = () => {
 }
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
+    const apollo = useApolloClient();
     const [userCtx, setUser] = useState<UserContextData | null>({
         user: null, logout: logoutFunction
     });
-    const client = useApolloClient();
 
     // Application start
     useEffect(() => {
@@ -43,16 +43,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
                     return;
                 }
 
-                const { data: userData } = await client.query({
-                    query: GET_USER_BY_ID,
-                    variables: {
-                        id: userid
-                    },
-                    fetchPolicy: 'network-only', // Optional: avoids cache
-                });
+                const userData = await getUserById({ client: apollo, id: userid });
 
                 if (userData) {
-                    setUser({ user: userData.users.userById, logout: logoutFunction });
+                    setUser({ user: userData, logout: logoutFunction });
                     return;
                 } else {
                     window.location.href = loginPageUrl;
@@ -66,7 +60,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         };
 
         fetchStartupData();
-    }, [userCtx]);
+    }, []);
 
     return (
         <UserContext.Provider value={userCtx} >

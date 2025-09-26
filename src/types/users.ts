@@ -1,9 +1,16 @@
-﻿export type UserAuthorization = {
+﻿import { Workspace } from "./workspaces";
+
+export type UserAuthorization = {
     Id: string;
     Token: string;
 }
 export type User = {
-    Id: string;
-    Name: string;
-    Email: string;
+    id: string;
+    name: string;
+    active: boolean;
+    verified: boolean;
+    banned: boolean;
+    muted: boolean;
+    email: string;
+    workspaces: Workspace[];
 }

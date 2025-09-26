@@ -10,7 +10,6 @@ export type channelListItem = {
 
 const dummyChannels: channelListItem[] = [{ id: 'ty', name: 'general' }, { id: '43', name: 'random' }, { name: 'tech', id: '1232' }, { name: 'design', id: 'qwe' }];
 
-
 export function ChatPage() {
     const [activeChannel, setActiveChannel] = useState({ id: "ty", name: 'general' });
     const [channels] = useState<channelListItem[]>(dummyChannels)

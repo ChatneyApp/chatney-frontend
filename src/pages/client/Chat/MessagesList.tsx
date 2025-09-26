@@ -30,7 +30,7 @@ export function MessagesList({ activeChannel, onSend }: { activeChannel: channel
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             text,
         };
-        onSend(newMessage)
+        //onSend(newMessage)
         setMessages((prev) => [...prev, newMessage]);
     };
 

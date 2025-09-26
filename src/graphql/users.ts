@@ -1,39 +1,43 @@
-import { gql } from '@apollo/client';
+import { User } from '@/types/users';
+import { ApolloClient, gql } from '@apollo/client';
 
-export const REGISTER_USER = gql`
-    mutation RegisterUser($input: CreateUserDTO!) {
-        CreateUser(input: $input) {
-            Id
-            Email
-            Username
-        }
-    }
-`;
-
-export const LOGIN = gql`
-    mutation Login($login: String!, $password: String!) {
-        users {
-            login(login: $login, password: $password) {
-                id
-                token
+export const getUserById = async ({
+  client,
+  id,
+}: {
+  client: ApolloClient<any>,
+  id: string,
+}): Promise<User> => {
+  try {
+    const { data } = await client.query({
+      query: gql`
+        query GetUserById($id: String!) {
+          users {
+            userById(id: $id) {
+              id
+              name
+              active
+              verified
+              banned
+              muted
+              email
+              workspaces
             }
+          }
         }
-    }
-`;
+      `,
+      variables: { id },
+      fetchPolicy: 'no-cache', // Optional: Prevents caching if you want always fresh data
+    });
 
-export const GET_USER_BY_ID = gql`
-  query GetUserById($id: String!) {
-    users {
-      userById(id: $id) {
-        id
-        name
-        active
-        verified
-        banned
-        muted
-        email
-        workspaces
-      }
+    const user = data?.users?.userById;
+
+    if (!user) {
+      throw new Error('User not found');
     }
+
+    return user;
+  } catch (error: any) {
+    throw new Error(`Fetching user failed: ${error.message}`);
   }
-`;
+};

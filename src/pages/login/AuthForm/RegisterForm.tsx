@@ -1,11 +1,11 @@
 ﻿import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client';
 
-import { REGISTER_USER } from '@/graphql/users';
 import { Button } from '@/components/Button';
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './AuthForm.module.css';
+import { registerUser } from './auth.gql';
 
 type FormInputs = {
     email: string;
@@ -14,6 +14,8 @@ type FormInputs = {
 };
 
 export const RegisterForm = () => {
+    const apollo = useApolloClient();
+    const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
@@ -24,29 +26,23 @@ export const RegisterForm = () => {
         }
     });
 
-    const [doRegister, { loading }] = useMutation(REGISTER_USER, {
-        onCompleted: () => {
+    const onSubmit = async (data: FormInputs) => {
+        setLoading(true);
+        try {
+            await registerUser({
+                client: apollo,
+                email: data.email,
+                password: data.password,
+                username: data.username,
+            });
             reset();
-        },
-        onError: (error) => {
+        } catch (error: any) {
             setErrorMessage(`Error registering: ${error.message}`);
             setSuccessMessage(null);
         }
-    });
 
-
-    const onSubmit = async (data: FormInputs) => {
-        await doRegister({
-            variables: {
-                input: {
-                    email: data.email,
-                    password: data.password,
-                    username: data.username,
-                }
-            }
-        });
+        setLoading(false);
     };
-
 
     return (
         <div>

@@ -1,12 +1,11 @@
 ﻿import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@apollo/client';
-
-import { LOGIN } from '@/graphql/users';
+import { useApolloClient } from '@apollo/client';
 import { Button } from '@/components/Button';
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './AuthForm.module.css';
 import { userAuthTokenName, userAuthId } from '@/infra/consts';
+import { loginUser } from './auth.gql';
 
 type FormInputs = {
     login: string;
@@ -14,35 +13,35 @@ type FormInputs = {
 };
 
 export const LoginForm = () => {
+    const apollo = useApolloClient();
+    const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
+    const { register, handleSubmit, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             login: '',
             password: '',
         }
     });
 
-    const [doLogin, { loading }] = useMutation(LOGIN, {
-        onCompleted: (data) => {
-            localStorage.setItem(userAuthTokenName, data.users.login.token);
-            localStorage.setItem(userAuthId, data.users.login.id);
-            window.location.href = '/'
-        },
-        onError: (error) => {
-            setErrorMessage(`Login error: ${error.message}`);
-        },
-    });
-
-
     const onSubmit = async (data: FormInputs) => {
         console.log("Form data:", data);
+        setLoading(true);
 
-        await doLogin({
-            variables: {
+        try {
+            const out = await loginUser({
+                client: apollo,
                 login: data.login,
                 password: data.password,
-            }
-        });
+            });
+
+            localStorage.setItem(userAuthTokenName, out.token);
+            localStorage.setItem(userAuthId, out.id);
+            window.location.href = '/'
+        } catch (error: any) {
+            setErrorMessage(`Login error: ${error.message}`);
+        }
+
+        setLoading(false);
     };
 
     return (

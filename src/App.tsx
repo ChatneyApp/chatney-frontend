@@ -10,11 +10,13 @@ import { WorkspacesListProvider } from './contexts/WorkspacesListContext';
 import { LoginRegisterPage } from './pages/login/ClientHomePage';
 import { ChatPage } from './pages/client/Chat/ChatPage';
 import { loginPageUrl } from './infra/consts';
+import { WorkspaceChannelsListProvider } from './contexts/WorkspaceChannelsListContext';
 
 const providers = [
     BrowserRouter,
     UserProvider,
-    WorkspacesListProvider
+    WorkspacesListProvider,
+    WorkspaceChannelsListProvider
 ];
 
 const ComposedProviders = composeProviders(providers);

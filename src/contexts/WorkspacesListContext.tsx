@@ -10,7 +10,12 @@ interface WorkspacesListContextValue {
     setActiveWs(ws: Workspace): void;
 }
 
-const WorkspacesListContext = createContext<WorkspacesListContextValue | null>(null);
+export const WorkspacesListContext = createContext<WorkspacesListContextValue>({
+    workspaces: [],
+    setActiveWs: () => { },
+    activeWorkspace: null,
+    setWsList: () => { }
+});
 
 export function WorkspacesListProvider({ children }: { children: ReactNode }) {
     const [wsList, setWs] = useState<Workspace[]>([]);
@@ -19,6 +24,7 @@ export function WorkspacesListProvider({ children }: { children: ReactNode }) {
 
     // Application start
     useEffect(() => {
+        console.log('sfdsds')
         const fetchData = async () => {
             try {
                 const { data: ws } = await client.query({

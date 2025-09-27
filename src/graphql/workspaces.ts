@@ -2,12 +2,6 @@ import { ApolloClient, gql, type TypedDocumentNode } from '@apollo/client';
 
 import { Workspace } from '@/types/workspaces';
 
-export type GetWorkspacesListResponse = {
-    workspaces: {
-        list: Workspace[];
-    }
-}
-
 export const addWorkspace = async ({
     client,
     name,
@@ -64,7 +58,13 @@ export const DELETE_WORKSPACE = gql`
     }
 `;
 
-export const GET_WORKSPACES_QUERY: TypedDocumentNode<GetWorkspacesListResponse> = gql`
+type GetWorkspacesListResponse = {
+    workspaces: {
+        list: Workspace[];
+    }
+}
+export const getWorkspacesQuery = async (client: ApolloClient<object>) => {
+    const GET_WORKSPACES_QUERY: TypedDocumentNode<GetWorkspacesListResponse> = gql`
     {
         workspaces {
             list {
@@ -76,3 +76,9 @@ export const GET_WORKSPACES_QUERY: TypedDocumentNode<GetWorkspacesListResponse> 
         }
     }
 `;
+    const { data } = await client.query({
+        query: GET_WORKSPACES_QUERY,
+    });
+
+    return data.workspaces.list;
+}

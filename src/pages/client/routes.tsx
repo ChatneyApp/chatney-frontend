@@ -5,8 +5,9 @@ import { ChatPage } from './Chat/ChatPage';
 
 export const clientRoutes = () => (
     <>
-        <Route path="client" element={<ClientLayout />}>
-            <Route path="chat" index element={<ChatPage />} />
+        <Route path="client" element={<ClientLayout/>}>
+            <Route index element={<ChatPage/>}/>
+            <Route path="chat" index element={<ChatPage/>}/>
         </Route>
     </>
 );

@@ -14,7 +14,7 @@ export default function WorkspacesList() {
 
     const handleWorkspaceCreated = (newWs: Workspace) => {
         workspacesList.setWorkspacesList([...workspacesList.workspacesList, newWs]);
-        workspacesList.setActiveWorkspaceId(newWs);
+        workspacesList.setActiveWorkspaceId(newWs.id);
         setIsModalOpen(false);
     };
 
@@ -45,10 +45,10 @@ export default function WorkspacesList() {
                     <div
                         title={ws.name}
                         key={idx}
-                        onClick={() => workspacesList.setActiveWorkspaceId(ws)}
-                        className={`${workspacesList.activeWorkspaceId === ws ? "bg-gray-500" : "bg-gray-700"} w-10 h-10 flex items-center justify-center rounded-full text-sm hover:bg-gray-500 cursor-pointer`}
+                        onClick={() => workspacesList.setActiveWorkspaceId(ws.id)}
+                        className={`${workspacesList.activeWorkspaceId === ws.id ? "bg-gray-500" : "bg-gray-700"} w-10 h-10 flex items-center justify-center rounded-full text-sm hover:bg-gray-500 cursor-pointer`}
                     >
-                        <span className={workspacesList.activeWorkspaceId === ws ? "font-bold" : ""}>{ws.name[0].toUpperCase()}</span>
+                        <span className={workspacesList.activeWorkspaceId === ws.id ? "font-bold" : ""}>{ws.name[0].toUpperCase()}</span>
                     </div>
                 ))}
                 <div

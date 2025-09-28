@@ -1,12 +1,12 @@
-import {Suspense} from 'react';
+import { Suspense } from 'react';
 
-import {WorkspaceEditor} from '@/pages/dashboard/components/WorkspaceEditor/WorkspaceEditor';
-import {CreateWorkspaceForm} from '@/pages/dashboard/components/WorkspaceForm/CreateWorkspaceForm';
-import {WorkspacesListProvider, useWorkspacesList} from '@/contexts/WorkspacesListContext';
-import {EmptyListMessage} from '@/pages/dashboard/components/EmptyListMessage';
+import { WorkspaceEditor } from '@/pages/dashboard/components/WorkspaceEditor/WorkspaceEditor';
+import { CreateWorkspaceForm } from '@/pages/dashboard/components/WorkspaceForm/CreateWorkspaceForm';
+import { WorkspacesListProvider, useWorkspacesList } from '@/contexts/WorkspacesListContext';
+import { EmptyListMessage } from '@/pages/dashboard/components/EmptyListMessage';
 
 const WorkspacesListCore = () => {
-    const {workspacesList} = useWorkspacesList();
+    const { workspacesList } = useWorkspacesList();
 
     return <div>
         {workspacesList.map(workspace => (

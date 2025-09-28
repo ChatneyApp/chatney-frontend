@@ -12,7 +12,7 @@ interface UserDataContextValue {
 const UserDataListContext = createContext<UserDataContextValue | null>(null);
 
 export function UserDataProvider({ children }: { children: ReactNode }) {
-    const [data, setData] = useState<User | null>(null);
+    const [ data, setData ] = useState<User | null>(null);
 
     const client = useApolloClient();
     const navigate = useNavigate();
@@ -33,7 +33,7 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
                 navigate('/client', { replace: true });
             }
         })();
-    }, [client, navigate]);
+    }, [ client, navigate ]);
 
     if (!data) {
         return null; // or a loading spinner

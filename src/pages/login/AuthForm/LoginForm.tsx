@@ -14,8 +14,8 @@ type FormInputs = {
 
 export const LoginForm = () => {
     const apollo = useApolloClient();
-    const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [ loading, setLoading ] = useState(false);
+    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
     const { register, handleSubmit, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             login: '',
@@ -37,8 +37,8 @@ export const LoginForm = () => {
             localStorage.setItem(userAuthTokenName, out.token);
             localStorage.setItem(userAuthId, out.id);
             window.location.href = '/'
-        } catch (error: any) {
-            setErrorMessage(`Login error: ${error.message}`);
+        } catch (error) {
+            setErrorMessage(`Login error: ${(error as Error).message}`);
         }
 
         setLoading(false);

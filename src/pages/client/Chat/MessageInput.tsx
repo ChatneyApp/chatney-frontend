@@ -1,11 +1,16 @@
-import { useState } from 'react';
+import { FormEventHandler, useState } from 'react';
 
-export function MessageInput({ onSend }: { onSend: any }) {
-    const [text, setText] = useState('');
+type Props = {
+    onSend(text: string): void;
+}
+export function MessageInput({ onSend }: Props) {
+    const [ text, setText ] = useState('');
 
-    const handleSend = (e: any) => {
+    const handleSend: FormEventHandler = (e) => {
         e.preventDefault();
-        if (!text.trim()) return;
+        if (!text.trim()) {
+            return;
+        }
         onSend(text);
         setText('');
     };

@@ -1,7 +1,7 @@
 import { ApolloClient, gql } from "@apollo/client";
 
 export const loginUser = async ({ client, login, password }: {
-    client: ApolloClient<any>,
+    client: ApolloClient<object>,
     login: string,
     password: string,
 }): Promise<{ token: string, id: string }> => {
@@ -28,8 +28,8 @@ export const loginUser = async ({ client, login, password }: {
         }
 
         return { token, id };
-    } catch (error: any) {
-        throw new Error(`Login failed: ${error.message}`);
+    } catch (error) {
+        throw new Error(`Login failed: ${(error as Error).message}`);
     }
 };
 
@@ -37,7 +37,7 @@ export const registerUser = async ({ client, email,
     password,
     username
 }: {
-    client: ApolloClient<any>,
+    client: ApolloClient<object>,
     email: string,
     username: string,
     password: string,
@@ -63,7 +63,7 @@ export const registerUser = async ({ client, email,
         if (!id) {
             throw new Error('Invalid register response');
         }
-    } catch (error: any) {
-        throw new Error(`Login failed: ${error.message}`);
+    } catch (error) {
+        throw new Error(`Login failed: ${(error as Error).message}`);
     }
 };

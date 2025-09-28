@@ -1,6 +1,6 @@
-import {gql, type TypedDocumentNode} from '@apollo/client';
+import { gql, type TypedDocumentNode } from '@apollo/client';
 
-import {ChannelGroup} from '@/types/channelGroups';
+import { ChannelGroup } from '@/types/channelGroups';
 
 export type GetChannelGroupsListResponse = {
     channels: {

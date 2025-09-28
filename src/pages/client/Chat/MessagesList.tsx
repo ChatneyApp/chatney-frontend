@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MessageInput } from './MessageInput';
-import { channelListItem } from './ChatPage';
+import { ChannelListItem } from './ChatPage';
 
 const initialMessages = [
     {
@@ -19,8 +19,12 @@ const initialMessages = [
     },
 ];
 
-export function MessagesList({ activeChannel, onSend }: { activeChannel: channelListItem, onSend: any }) {
-    const [messages, setMessages] = useState(initialMessages);
+type Props = {
+    activeChannel: ChannelListItem;
+    onSend(): void;
+};
+export function MessagesList({ activeChannel }: Props) {
+    const [ messages, setMessages ] = useState(initialMessages);
 
     const handleSend = (text: string) => {
         const newMessage = {
@@ -31,7 +35,7 @@ export function MessagesList({ activeChannel, onSend }: { activeChannel: channel
             text,
         };
         //onSend(newMessage)
-        setMessages((prev) => [...prev, newMessage]);
+        setMessages((prev) => [ ...prev, newMessage ]);
     };
 
     return (

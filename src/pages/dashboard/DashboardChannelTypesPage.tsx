@@ -1,4 +1,4 @@
-import {ChannelTypesList} from '@/pages/dashboard/components/ChannelTypesList';
+import { ChannelTypesList } from '@/pages/dashboard/components/ChannelTypesList';
 
 export const DashboardChannelTypesPage = () => (
     <div>

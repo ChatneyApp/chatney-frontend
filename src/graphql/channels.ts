@@ -60,7 +60,7 @@ export const getWorkspaceChannels = async ({
     client,
     workspaceId,
 }: {
-    client: ApolloClient<any>,
+    client: ApolloClient<object>,
     workspaceId: string,
 }): Promise<Array<{
     id: string;
@@ -93,7 +93,7 @@ export const getWorkspaceChannels = async ({
         }
 
         return channels;
-    } catch (error: any) {
-        throw new Error(`Fetching channels failed: ${error.message}`);
+    } catch (error) {
+        throw new Error(`Fetching channels failed: ${(error as Error).message}`);
     }
 };

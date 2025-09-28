@@ -1,13 +1,13 @@
-import {Suspense} from 'react';
+import { Suspense } from 'react';
 
-import {SystemConfigProvider, useSystemConfig} from '@/contexts/SystemConfigProvider';
+import { SystemConfigProvider, useSystemConfig } from '@/contexts/SystemConfigProvider';
 import {
     SystemConfigValueEditor
 } from '@/pages/dashboard/components/SystemConfigValueEditor/SystemConfigValueEditor';
-import {EmptyListMessage} from '@/pages/dashboard/components/EmptyListMessage';
+import { EmptyListMessage } from '@/pages/dashboard/components/EmptyListMessage';
 
 const SystemConfigEditorCore = () => {
-    const {systemConfig} = useSystemConfig();
+    const { systemConfig } = useSystemConfig();
 
     return <div>
         {systemConfig.map(systemConfigValue => (

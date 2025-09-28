@@ -4,7 +4,7 @@ import { ChannelList } from './ChannelsList';
 import { MessagesList } from './MessagesList';
 import { useWorkspaceChannelsList } from '@/contexts/WorkspaceChannelsListContext';
 
-export type channelListItem = {
+export type ChannelListItem = {
     name: string,
     id: string
 }
@@ -12,13 +12,17 @@ export type channelListItem = {
 export function ChatPage() {
     const wsChannelsCtx = useWorkspaceChannelsList();
 
-    const [activeChannel, setActiveChannel] = useState(wsChannelsCtx.channels[0]);
+    const [ activeChannel, setActiveChannel ] = useState(wsChannelsCtx.channels[0]);
+
+    const handleSend = () => {
+        // TODO: implement send message
+    };
 
     return (
         <div className="h-screen flex bg-gray-900 text-white">
             <WorkspacesList />
             <ChannelList channels={wsChannelsCtx.channels} activeChannel={activeChannel} setActiveChannel={setActiveChannel} />
-            <MessagesList onSend activeChannel={activeChannel} />
+            <MessagesList onSend={handleSend} activeChannel={activeChannel} />
         </div>
     );
 }

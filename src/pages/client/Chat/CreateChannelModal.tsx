@@ -11,7 +11,7 @@ interface CreateChannelModalProps {
 export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelModalProps) {
     const wsCtx = useWorkspacesList();
     const client = useApolloClient();
-    const [channelName, setChannelName] = useState("");
+    const [ channelName, setChannelName ] = useState("");
     const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -25,10 +25,12 @@ export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelM
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [onClose]);
+    }, [ onClose ]);
 
     const handleCreate = async () => {
-        if (!channelName.trim()) return;
+        if (!channelName.trim()) {
+            return;
+        }
         const activeWorkspaceId = wsCtx.activeWorkspaceId;
         if (!activeWorkspaceId) {
             throw new Error("Active Workspace is not set");

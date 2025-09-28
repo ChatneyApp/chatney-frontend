@@ -13,27 +13,31 @@ interface WorkspaceChannelsListContextValue {
 const WorkspaceChannelsListContext = createContext<WorkspaceChannelsListContextValue | null>(null);
 
 export function WorkspaceChannelsListProvider({ children }: { children: ReactNode }) {
-    const { activeWorkspace } = useContext(WorkspacesListContext);
-    const [channels, setChannels] = useState<Channel[]>([]);
+    const { activeWorkspaceId } = useContext(WorkspacesListContext);
+    const [ channels, setChannels ] = useState<Channel[]>([]);
     const client = useApolloClient();
 
     const handleRefresh = () => {
         startTransition(async () => {
-            if (activeWorkspace === null) return;
+            if (activeWorkspaceId === null) {
+                return;
+            }
             try {
-                const channelsList = await getWorkspaceChannels({ client, workspaceId: activeWorkspace.id });
+                const channelsList = await getWorkspaceChannels({ client, workspaceId: activeWorkspaceId });
                 setChannels(channelsList);
-            } catch (error) {
-
+            } catch (_error) {
+                /* swallow error */
             }
         });
     };
 
     useEffect(() => {
-        if (activeWorkspace === null) return;
-        console.log(activeWorkspace)
+        if (activeWorkspaceId === null) {
+            return;
+        }
+        console.log(activeWorkspaceId);
         handleRefresh();
-    }, [activeWorkspace])
+    }, [ activeWorkspaceId ]);
 
     return (
         <WorkspaceChannelsListContext.Provider

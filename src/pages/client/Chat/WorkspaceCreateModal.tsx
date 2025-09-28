@@ -8,7 +8,7 @@ interface WorkspaceCreateModalProps {
 }
 
 export function WorkspaceCreateModal({ onClose, onWorkspaceCreated }: WorkspaceCreateModalProps) {
-    const [workspaceName, setWorkspaceName] = useState("");
+    const [ workspaceName, setWorkspaceName ] = useState("");
     const modalRef = useRef<HTMLDivElement>(null);
     const client = useApolloClient()
 
@@ -23,10 +23,12 @@ export function WorkspaceCreateModal({ onClose, onWorkspaceCreated }: WorkspaceC
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [onClose]);
+    }, [ onClose ]);
 
     const handleCreate = async () => {
-        if (!workspaceName.trim()) return;
+        if (!workspaceName.trim()) {
+            return;
+        }
 
         try {
             const newWorkspace = await addWorkspace({ name: workspaceName.trim(), client });

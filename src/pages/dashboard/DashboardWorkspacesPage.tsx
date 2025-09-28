@@ -1,4 +1,4 @@
-import {WorkspacesList} from '@/pages/dashboard/components/WorkspacesList';
+import { WorkspacesList } from '@/pages/dashboard/components/WorkspacesList';
 
 export const DashboardWorkspacesPage = () => (
     <div>

@@ -1,14 +1,14 @@
-import {useForm} from 'react-hook-form';
-import {useMutation} from '@apollo/client';
-import {useState} from 'react';
-import {Dialog} from 'radix-ui';
+import { useForm } from 'react-hook-form';
+import { useMutation } from '@apollo/client';
+import { useState } from 'react';
+import { Dialog } from 'radix-ui';
 
 import styles from './SystemConfigValueForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
-import {UDPATE_SYSTEM_CONFIG_VALUE} from '@/graphql/systemConfig';
-import {Button} from '@/components/Button';
-import {SystemConfigValue} from '@/types/systemConfig';
-import {useSystemConfig} from '@/contexts/SystemConfigProvider';
+import { UDPATE_SYSTEM_CONFIG_VALUE } from '@/graphql/systemConfig';
+import { Button } from '@/components/Button';
+import { SystemConfigValue } from '@/types/systemConfig';
+import { useSystemConfig } from '@/contexts/SystemConfigProvider';
 
 type FormInputs = {
     value: string;
@@ -21,19 +21,19 @@ type Props = {
     systemConfigValue: SystemConfigValue;
 };
 
-export const SystemConfigValueForm = ({cta, title, submitText, systemConfigValue}: Props) => {
-    const [open, setOpen] = useState(false);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const {refetch} = useSystemConfig();
+export const SystemConfigValueForm = ({ cta, title, submitText, systemConfigValue }: Props) => {
+    const [ open, setOpen ] = useState(false);
+    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
+    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const { refetch } = useSystemConfig();
 
-    const {register, handleSubmit, reset, formState: {errors}} = useForm<FormInputs>({
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             value: systemConfigValue.value,
         }
     });
 
-    const [updateValue, {loading}] = useMutation(UDPATE_SYSTEM_CONFIG_VALUE, {
+    const [ updateValue, { loading } ] = useMutation(UDPATE_SYSTEM_CONFIG_VALUE, {
         onCompleted: () => {
             setOpen(false);
             reset();
@@ -87,7 +87,7 @@ export const SystemConfigValueForm = ({cta, title, submitText, systemConfigValue
                             <label htmlFor="value">Value</label>
                             <input
                                 id="value"
-                                {...register('value', {required: 'Value is required'})}
+                                {...register('value', { required: 'Value is required' })}
                                 className={styles.input}
                             />
                             {errors.value && <span className={styles.errorText}>{errors.value.message}</span>}

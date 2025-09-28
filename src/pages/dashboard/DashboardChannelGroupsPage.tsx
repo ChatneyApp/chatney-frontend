@@ -1,4 +1,4 @@
-import {ChannelGroupsList} from '@/pages/dashboard/components/ChannelGroupsList';
+import { ChannelGroupsList } from '@/pages/dashboard/components/ChannelGroupsList';
 
 export const DashboardChannelGroupsPage = () => (
     <div>

@@ -1,20 +1,20 @@
-import {Suspense} from 'react';
-import {Link} from 'react-router';
-import {Tabs} from 'radix-ui';
+import { Suspense } from 'react';
+import { Link } from 'react-router';
+import { Tabs } from 'radix-ui';
 
-import {useWorkspacesList, WorkspacesListProvider} from '@/contexts/WorkspacesListContext';
+import { useWorkspacesList, WorkspacesListProvider } from '@/contexts/WorkspacesListContext';
 import {
     useWorkspaceChannelGroupsList,
     WorkspaceChannelGroupsListProvider
 } from '@/contexts/WorkspaceChannelGroupsListContext';
-import {WorkspaceChannelsListProvider} from '@/contexts/WorkspaceChannelsListContext';
-import {ChannelGroupEditor} from './ChannelGroupEditor/ChannelGroupEditor';
-import {TabsContent, TabsList, TabsTrigger} from '@/pages/dashboard/components/Tabs/Tabs';
-import {EmptyListMessage} from '@/pages/dashboard/components/EmptyListMessage';
-import {ChannelGroupForm} from '@/pages/dashboard/components/ChannelGroupForm/ChannelGroupForm';
+import { WorkspaceChannelsListProvider } from '@/contexts/WorkspaceChannelsListContext';
+import { ChannelGroupEditor } from './ChannelGroupEditor/ChannelGroupEditor';
+import { TabsContent, TabsList, TabsTrigger } from '@/pages/dashboard/components/Tabs/Tabs';
+import { EmptyListMessage } from '@/pages/dashboard/components/EmptyListMessage';
+import { ChannelGroupForm } from '@/pages/dashboard/components/ChannelGroupForm/ChannelGroupForm';
 
 const ChannelGroupsListCore = () => {
-    const {channelGroups} = useWorkspaceChannelGroupsList();
+    const { channelGroups } = useWorkspaceChannelGroupsList();
 
     return <div>
         <ChannelGroupForm cta="Create channel group" title="Create Channel Group" submitText="Create Channel Group"/>
@@ -30,7 +30,7 @@ const ChannelGroupsListCore = () => {
 };
 
 const WorkspaceChannelsList = () => {
-    const {workspacesList} = useWorkspacesList();
+    const { workspacesList } = useWorkspacesList();
 
     const defaultWorkspace = workspacesList[0];
 

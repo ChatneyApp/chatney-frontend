@@ -1,15 +1,15 @@
-import {useForm} from 'react-hook-form';
-import {useMutation} from '@apollo/client';
-import {useState} from 'react';
-import {Dialog} from 'radix-ui';
+import { useForm } from 'react-hook-form';
+import { useMutation } from '@apollo/client';
+import { useState } from 'react';
+import { Dialog } from 'radix-ui';
 
 import styles from './CreateChannelForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
-import {CREATE_CHANNEL, UPDATE_CHANNEL} from '@/graphql/channels';
-import {Button} from '@/components/Button';
-import {Channel} from '@/types/channels';
-import {useWorkspaceChannelsList} from '@/contexts/WorkspaceChannelsListContext';
-import {useChannelTypesList} from '@/contexts/ChannelTypesListContext';
+import { CREATE_CHANNEL, UPDATE_CHANNEL } from '@/graphql/channels';
+import { Button } from '@/components/Button';
+import { Channel } from '@/types/channels';
+import { useWorkspaceChannelsList } from '@/contexts/WorkspaceChannelsListContext';
+import { useChannelTypesList } from '@/contexts/ChannelTypesListContext';
 
 type FormInputs = {
     name: string;
@@ -23,21 +23,21 @@ type Props = {
     channel?: Channel;
 };
 
-export const CreateChannelForm = ({cta, title, submitText, channel}: Props) => {
-    const [open, setOpen] = useState(false);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const {refetch, workspace} = useWorkspaceChannelsList();
-    const {channelTypes} = useChannelTypesList();
+export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) => {
+    const [ open, setOpen ] = useState(false);
+    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
+    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const { refetch, workspace } = useWorkspaceChannelsList();
+    const { channelTypes } = useChannelTypesList();
 
-    const {register, handleSubmit, reset, formState: {errors}} = useForm<FormInputs>({
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             name: channel?.name ?? '',
             channelTypeId: channel?.channelTypeId ?? '',
         }
     });
 
-    const [createChannel, {loading: createLoading}] = useMutation(CREATE_CHANNEL, {
+    const [ createChannel, { loading: createLoading } ] = useMutation(CREATE_CHANNEL, {
         onCompleted: () => {
             setOpen(false);
             reset();
@@ -49,7 +49,7 @@ export const CreateChannelForm = ({cta, title, submitText, channel}: Props) => {
         }
     });
 
-    const [updateChannel, {loading: updateLoading}] = useMutation(UPDATE_CHANNEL, {
+    const [ updateChannel, { loading: updateLoading } ] = useMutation(UPDATE_CHANNEL, {
         onCompleted: () => {
             setOpen(false);
             reset();
@@ -117,7 +117,7 @@ export const CreateChannelForm = ({cta, title, submitText, channel}: Props) => {
                             <label htmlFor="name">Channel Name</label>
                             <input
                                 id="name"
-                                {...register('name', {required: 'Channel name is required'})}
+                                {...register('name', { required: 'Channel name is required' })}
                                 className={styles.input}
                             />
                             {errors.name && <span className={styles.errorText}>{errors.name.message}</span>}
@@ -127,7 +127,7 @@ export const CreateChannelForm = ({cta, title, submitText, channel}: Props) => {
                             <label htmlFor="channelTypeId">Channel Type</label>
                             <select
                                 id="channelTypeId"
-                                {...register('channelTypeId', {required: 'Channel type is required'})}
+                                {...register('channelTypeId', { required: 'Channel type is required' })}
                                 className={styles.select}
                             >
                                 <option value="">Select a channel type</option>

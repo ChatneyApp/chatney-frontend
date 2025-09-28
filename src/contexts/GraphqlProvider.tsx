@@ -46,7 +46,7 @@ export const GraphqlProvider = ({ children }: PropsWithChildren) => {
         });
     })
     const client = new ApolloClient({
-        link: from([errorLink, authMiddleware, httpLink]),
+        link: from([ errorLink, authMiddleware, httpLink ]),
         cache: new InMemoryCache(),
     });
 

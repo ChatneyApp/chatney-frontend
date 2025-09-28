@@ -1,4 +1,4 @@
-import {RolesList} from '@/pages/dashboard/components/RolesList';
+import { RolesList } from '@/pages/dashboard/components/RolesList';
 
 export const DashboardRolesPage = () => (
     <div>

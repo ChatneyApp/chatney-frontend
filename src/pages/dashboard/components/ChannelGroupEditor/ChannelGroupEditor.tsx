@@ -1,22 +1,22 @@
-import {useMutation} from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
-import {Button} from '@/components/Button';
-import {DELETE_CHANNEL_GROUP} from '@/graphql/channelGroups';
-import {useWorkspaceChannelGroupsList} from '@/contexts/WorkspaceChannelGroupsListContext';
-import {ChannelGroupForm} from '@/pages/dashboard/components/ChannelGroupForm/ChannelGroupForm';
-import {ChannelGroup} from '@/types/channelGroups';
+import { Button } from '@/components/Button';
+import { DELETE_CHANNEL_GROUP } from '@/graphql/channelGroups';
+import { useWorkspaceChannelGroupsList } from '@/contexts/WorkspaceChannelGroupsListContext';
+import { ChannelGroupForm } from '@/pages/dashboard/components/ChannelGroupForm/ChannelGroupForm';
+import { ChannelGroup } from '@/types/channelGroups';
 import styles from './ChannelGroupEditor.module.css';
-import {useWorkspaceChannelsList} from '@/contexts/WorkspaceChannelsListContext';
+import { useWorkspaceChannelsList } from '@/contexts/WorkspaceChannelsListContext';
 
 type Props = {
     channelGroup: ChannelGroup;
 }
 
-export const ChannelGroupEditor = ({channelGroup}: Props) => {
-    const {refetch} = useWorkspaceChannelGroupsList();
-    const {channels} = useWorkspaceChannelsList();
+export const ChannelGroupEditor = ({ channelGroup }: Props) => {
+    const { refetch } = useWorkspaceChannelGroupsList();
+    const { channels } = useWorkspaceChannelsList();
 
-    const [deleteChannelGroup] = useMutation(DELETE_CHANNEL_GROUP, {
+    const [ deleteChannelGroup ] = useMutation(DELETE_CHANNEL_GROUP, {
         onCompleted: () => {
             refetch();
         },

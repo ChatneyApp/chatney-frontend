@@ -1,4 +1,4 @@
-﻿import {gql, TypedDocumentNode} from '@apollo/client';
+﻿import { gql, TypedDocumentNode } from '@apollo/client';
 
 export type PermissionGroup = {
     label: string;

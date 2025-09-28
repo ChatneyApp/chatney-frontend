@@ -17,7 +17,7 @@ export const dashboardRoutes = () => (
         <Route path="permissions" element={<DashboardPermissionsPage />} />
         <Route path="roles" element={<DashboardRolesPage />} />
         <Route path="channelTypes" element={<DashboardChannelTypesPage />} />
-        {/*<!Route path="workspaces" element={<DashboardWorkspacesPage/>}/>*/}
+        <Route path="workspaces" element={<DashboardWorkspacesPage/>}/>
         <Route path="channels" element={<DashboardChannelsPage />} />
         <Route path="channelGroups" element={<DashboardChannelGroupsPage />} />
         <Route path="users" element={<DashboardUsersPage />} />

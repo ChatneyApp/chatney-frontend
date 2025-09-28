@@ -1,10 +1,10 @@
-﻿import {ComponentProps} from 'react';
-import {Tabs} from 'radix-ui';
+﻿import { ComponentProps } from 'react';
+import { Tabs } from 'radix-ui';
 
 import styles from './Tabs.module.css';
 
 type RootProps = ComponentProps<typeof Tabs.Root>;
-export const TabsRoot = ({children, ...rest}: RootProps) => (
+export const TabsRoot = ({ children, ...rest }: RootProps) => (
     <Tabs.Root
         {...rest}
         className={styles.tabsRoot}
@@ -14,7 +14,7 @@ export const TabsRoot = ({children, ...rest}: RootProps) => (
 );
 
 type TriggerProps = ComponentProps<typeof Tabs.Trigger>;
-export const TabsTrigger = ({children, ...rest}: TriggerProps) => (
+export const TabsTrigger = ({ children, ...rest }: TriggerProps) => (
     <Tabs.Trigger
         {...rest}
         className={styles.tabsTrigger}
@@ -24,7 +24,7 @@ export const TabsTrigger = ({children, ...rest}: TriggerProps) => (
 );
 
 type ListProps = ComponentProps<typeof Tabs.List>;
-export const TabsList = ({children, ...rest}: ListProps) => (
+export const TabsList = ({ children, ...rest }: ListProps) => (
     <Tabs.List
         {...rest}
         className={styles.tabsList}
@@ -34,7 +34,7 @@ export const TabsList = ({children, ...rest}: ListProps) => (
 );
 
 type ContentProps = ComponentProps<typeof Tabs.Content>;
-export const TabsContent = ({children, ...rest}: ContentProps) => (
+export const TabsContent = ({ children, ...rest }: ContentProps) => (
     <Tabs.Content
         {...rest}
         className={styles.tabsContent}

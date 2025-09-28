@@ -5,7 +5,7 @@ export const getUserById = async ({
   client,
   id,
 }: {
-  client: ApolloClient<any>,
+  client: ApolloClient<object>,
   id: string,
 }): Promise<User> => {
   try {
@@ -37,7 +37,7 @@ export const getUserById = async ({
     }
 
     return user;
-  } catch (error: any) {
-    throw new Error(`Fetching user failed: ${error.message}`);
+  } catch (error) {
+    throw new Error(`Fetching user failed: ${(error as Error).message}`);
   }
 };

@@ -1,18 +1,18 @@
-﻿import {useMutation} from '@apollo/client';
+﻿import { useMutation } from '@apollo/client';
 
-import {Role} from '@/types/roles';
-import {CreateRoleForm} from '@/pages/dashboard/components/RoleForm/CreateRoleForm';
-import {Button} from '@/components/Button';
-import {DELETE_ROLE} from '@/graphql/roles';
-import {useRolesList} from '@/contexts/RolesListContext';
+import { Role } from '@/types/roles';
+import { CreateRoleForm } from '@/pages/dashboard/components/RoleForm/CreateRoleForm';
+import { Button } from '@/components/Button';
+import { DELETE_ROLE } from '@/graphql/roles';
+import { useRolesList } from '@/contexts/RolesListContext';
 import styles from './RoleEditor.module.css';
 
 type Props = {
     role: Role;
 }
-export const RoleEditor = ({role}: Props) => {
-    const {refetch} = useRolesList();
-    const [deleteRole] = useMutation(DELETE_ROLE, {
+export const RoleEditor = ({ role }: Props) => {
+    const { refetch } = useRolesList();
+    const [ deleteRole ] = useMutation(DELETE_ROLE, {
         onCompleted: () => {
             refetch();
         },

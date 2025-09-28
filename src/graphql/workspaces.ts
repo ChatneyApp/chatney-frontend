@@ -6,7 +6,7 @@ export const addWorkspace = async ({
     client,
     name,
 }: {
-    client: ApolloClient<any>,
+    client: ApolloClient<object>,
     name: string,
 }): Promise<{
     id: string;
@@ -38,8 +38,8 @@ export const addWorkspace = async ({
         }
 
         return workspace;
-    } catch (error: any) {
-        throw new Error(`Adding workspace failed: ${error.message}`);
+    } catch (error) {
+        throw new Error(`Adding workspace failed: ${(error as Error).message}`);
     }
 };
 

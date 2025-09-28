@@ -1,6 +1,6 @@
-import {gql, type TypedDocumentNode} from '@apollo/client';
+import { gql, type TypedDocumentNode } from '@apollo/client';
 
-import {SystemConfigValue} from '@/types/systemConfig';
+import { SystemConfigValue } from '@/types/systemConfig';
 
 export type GetChannelTypesListResponse = {
     configs: {

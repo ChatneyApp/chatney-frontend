@@ -1,15 +1,15 @@
-import {useForm} from 'react-hook-form';
-import {useMutation} from '@apollo/client';
-import {useState} from 'react';
-import {Dialog} from 'radix-ui';
+import { useForm } from 'react-hook-form';
+import { useMutation } from '@apollo/client';
+import { useState } from 'react';
+import { Dialog } from 'radix-ui';
 
 import styles from './CreateChannelTypeForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
-import {CREATE_CHANNEL_TYPE, EDIT_CHANNEL_TYPE} from '@/graphql/channelTypes';
-import {Button} from '@/components/Button';
-import {ChannelType} from '@/types/channelTypes';
-import {useChannelTypesList} from '@/contexts/ChannelTypesListContext';
-import {useRolesList} from '@/contexts/RolesListContext';
+import { CREATE_CHANNEL_TYPE, EDIT_CHANNEL_TYPE } from '@/graphql/channelTypes';
+import { Button } from '@/components/Button';
+import { ChannelType } from '@/types/channelTypes';
+import { useChannelTypesList } from '@/contexts/ChannelTypesListContext';
+import { useRolesList } from '@/contexts/RolesListContext';
 
 type FormInputs = {
     label: string;
@@ -24,14 +24,14 @@ type Props = {
     channelType?: ChannelType;
 }
 
-export const CreateChannelTypeForm = ({cta, title, submitText, channelType}: Props) => {
-    const [open, setOpen] = useState(false);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const {refetch} = useChannelTypesList();
-    const {roles} = useRolesList();
+export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: Props) => {
+    const [ open, setOpen ] = useState(false);
+    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
+    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const { refetch } = useChannelTypesList();
+    const { roles } = useRolesList();
 
-    const {register, handleSubmit, reset, formState: {errors}} = useForm<FormInputs>({
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             label: channelType?.label ?? '',
             key: channelType?.key ?? '',
@@ -39,7 +39,7 @@ export const CreateChannelTypeForm = ({cta, title, submitText, channelType}: Pro
         }
     });
 
-    const [createChannelType, {loading: createLoading}] = useMutation(CREATE_CHANNEL_TYPE, {
+    const [ createChannelType, { loading: createLoading } ] = useMutation(CREATE_CHANNEL_TYPE, {
         onCompleted: () => {
             setOpen(false);
             reset();
@@ -51,7 +51,7 @@ export const CreateChannelTypeForm = ({cta, title, submitText, channelType}: Pro
         }
     });
 
-    const [editChannelType, {loading: editLoading}] = useMutation(EDIT_CHANNEL_TYPE, {
+    const [ editChannelType, { loading: editLoading } ] = useMutation(EDIT_CHANNEL_TYPE, {
         onCompleted: () => {
             setOpen(false);
             reset();
@@ -118,7 +118,7 @@ export const CreateChannelTypeForm = ({cta, title, submitText, channelType}: Pro
                             <label htmlFor="label">Label</label>
                             <input
                                 id="label"
-                                {...register('label', {required: 'Label is required'})}
+                                {...register('label', { required: 'Label is required' })}
                                 className={styles.input}
                             />
                             {errors.label && <span className={styles.errorText}>{errors.label.message}</span>}
@@ -128,7 +128,7 @@ export const CreateChannelTypeForm = ({cta, title, submitText, channelType}: Pro
                             <label htmlFor="key">Key</label>
                             <input
                                 id="key"
-                                {...register('key', {required: 'Key is required'})}
+                                {...register('key', { required: 'Key is required' })}
                                 className={styles.input}
                             />
                             {errors.key && <span className={styles.errorText}>{errors.key.message}</span>}
@@ -138,7 +138,7 @@ export const CreateChannelTypeForm = ({cta, title, submitText, channelType}: Pro
                             <label htmlFor="baseRoleId">Base Role</label>
                             <select
                                 id="baseRoleId"
-                                {...register('baseRoleId', {required: 'Base Role is required'})}
+                                {...register('baseRoleId', { required: 'Base Role is required' })}
                                 className={styles.input}
                             >
                                 <option value="">Select a role</option>

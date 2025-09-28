@@ -1,21 +1,18 @@
 import { useState } from "react";
-import { channelListItem } from "./ChatPage";
+import { ChannelListItem } from "./ChatPage";
 import { CreateChannelModal } from "./CreateChannelModal";
 
-export function ChannelList({
-    activeChannel,
-    setActiveChannel,
-    channels,
-}: {
-    activeChannel: channelListItem;
-    setActiveChannel: any;
-    channels: channelListItem[];
-}) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [localChannels, setLocalChannels] = useState(channels);
+type Props = {
+    activeChannel: ChannelListItem;
+    setActiveChannel(channel: ChannelListItem): void;
+    channels: ChannelListItem[];
+};
+export function ChannelList({ activeChannel, setActiveChannel, channels }: Props) {
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [ localChannels, setLocalChannels ] = useState(channels);
 
-    const handleChannelCreated = (newChannel: channelListItem) => {
-        setLocalChannels([...localChannels, newChannel]);
+    const handleChannelCreated = (newChannel: ChannelListItem) => {
+        setLocalChannels([ ...localChannels, newChannel ]);
         setActiveChannel(newChannel);
         setIsModalOpen(false);
     };

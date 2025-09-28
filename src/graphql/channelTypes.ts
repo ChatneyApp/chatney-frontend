@@ -1,6 +1,6 @@
-import {gql, type TypedDocumentNode} from '@apollo/client';
+import { gql, type TypedDocumentNode } from '@apollo/client';
 
-import {ChannelType} from '@/types/channelTypes';
+import { ChannelType } from '@/types/channelTypes';
 
 export type GetChannelTypesListResponse = {
     channels: {

@@ -6,7 +6,7 @@ export const addChannel = async ({
     channelTypeId,
     workspaceId,
 }: {
-    client: ApolloClient<any>,
+    client: ApolloClient<object>,
     name: string,
     channelTypeId: string,
     workspaceId: string,
@@ -52,7 +52,7 @@ export const addChannel = async ({
         }
 
         return channel;
-    } catch (error: any) {
-        throw new Error(`Adding channel failed: ${error.message}`);
+    } catch (error) {
+        throw new Error(`Adding channel failed: ${(error as Error).message}`);
     }
 };

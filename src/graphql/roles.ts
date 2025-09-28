@@ -1,6 +1,6 @@
-﻿import {gql, type TypedDocumentNode} from '@apollo/client';
+﻿import { gql, type TypedDocumentNode } from '@apollo/client';
 
-import {Role} from '@/types/roles';
+import { Role } from '@/types/roles';
 
 export type GetRolesListResponse = {
     roles: {

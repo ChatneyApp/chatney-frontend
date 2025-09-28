@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useApolloClient, useMutation } from '@apollo/client';
+import { useApolloClient } from '@apollo/client';
 
 import { Button } from '@/components/Button';
 import dialogStyles from '@/components/Popup/Popup.module.css';
@@ -15,9 +15,9 @@ type FormInputs = {
 
 export const RegisterForm = () => {
     const apollo = useApolloClient();
-    const [loading, setLoading] = useState(false);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [ loading, setLoading ] = useState(false);
+    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
+    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             email: '',
@@ -36,8 +36,8 @@ export const RegisterForm = () => {
                 username: data.username,
             });
             reset();
-        } catch (error: any) {
-            setErrorMessage(`Error registering: ${error.message}`);
+        } catch (error) {
+            setErrorMessage(`Error registering: ${(error as Error).message}`);
             setSuccessMessage(null);
         }
 

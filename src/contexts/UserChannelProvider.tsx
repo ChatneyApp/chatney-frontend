@@ -1,8 +1,8 @@
-import {createContext, PropsWithChildren, startTransition, useContext} from 'react';
-import {useSuspenseQuery} from '@apollo/client';
+import { createContext, PropsWithChildren, startTransition, useContext } from 'react';
+import { useSuspenseQuery } from '@apollo/client';
 
-import {Channel} from '@/types/channels';
-import {GET_CHANNEL} from '@/graphql/channels';
+import { Channel } from '@/types/channels';
+import { GET_CHANNEL } from '@/graphql/channels';
 
 interface UserWorkspaceChannelsListContextValue {
     channel: Channel;
@@ -15,8 +15,8 @@ type UserWorkspaceChannelsListProviderProps = {
     channelId: string;
 } & PropsWithChildren;
 
-export function UserChannelProvider({channelId, children}: UserWorkspaceChannelsListProviderProps) {
-    const {data, refetch} = useSuspenseQuery(GET_CHANNEL, {
+export function UserChannelProvider({ channelId, children }: UserWorkspaceChannelsListProviderProps) {
+    const { data, refetch } = useSuspenseQuery(GET_CHANNEL, {
         fetchPolicy: 'no-cache',
         variables: {
             channelId,
@@ -31,7 +31,7 @@ export function UserChannelProvider({channelId, children}: UserWorkspaceChannels
 
     return (
         <UserChannelContext.Provider
-            value={{channel: data?.GetChannel, refetch: handleRefresh}}
+            value={{ channel: data?.GetChannel, refetch: handleRefresh }}
         >
             {children}
         </UserChannelContext.Provider>

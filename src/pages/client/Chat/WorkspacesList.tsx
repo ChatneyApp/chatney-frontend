@@ -5,15 +5,15 @@ import { WorkspaceCreateModal } from "./WorkspaceCreateModal";
 import { Workspace } from "@/types/workspaces";
 
 export default function WorkspacesList() {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
     const workspacesList = useWorkspacesList();
     const userCtx = UseUser();
-    const [showPopup, setShowPopup] = useState(false);
+    const [ showPopup, setShowPopup ] = useState(false);
     const popupRef = useRef<HTMLDivElement>(null);
     const avatarRef = useRef<HTMLDivElement>(null);
 
     const handleWorkspaceCreated = (newWs: Workspace) => {
-        workspacesList.setWorkspacesList([...workspacesList.workspacesList, newWs]);
+        workspacesList.setWorkspacesList([ ...workspacesList.workspacesList, newWs ]);
         workspacesList.setActiveWorkspaceId(newWs.id);
         setIsModalOpen(false);
     };
@@ -35,7 +35,7 @@ export default function WorkspacesList() {
         return () => {
             document.removeEventListener("mouseup", handleClickOutside);
         };
-    }, [showPopup]);
+    }, [ showPopup ]);
 
     return (
         <div className="relative w-16 bg-gray-800 flex flex-col justify-between items-center py-4">

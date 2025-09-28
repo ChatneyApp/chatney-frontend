@@ -1,6 +1,6 @@
-import {Outlet} from 'react-router';
+import { Outlet } from 'react-router';
 
-import {MainMenu} from '@/pages/dashboard/components/MainMenu/MainMenu';
+import { MainMenu } from '@/pages/dashboard/components/MainMenu/MainMenu';
 import styles from './DashboardLayout.module.css';
 
 export const DashboardLayout = () => (

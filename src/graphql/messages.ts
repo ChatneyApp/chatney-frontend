@@ -1,6 +1,6 @@
-import {gql, type TypedDocumentNode} from '@apollo/client';
+import { gql, type TypedDocumentNode } from '@apollo/client';
 
-import {Message} from '@/types/messages';
+import { Message } from '@/types/messages';
 
 export type GetMessagesResponse = {
     messages: {

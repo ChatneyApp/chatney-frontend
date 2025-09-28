@@ -1,5 +1,6 @@
+export type ChannelTypeId = string;
 export type ChannelType = {
-    id: string;
+    id: ChannelTypeId;
     label: string;
     key: string;
     baseRoleId: string;

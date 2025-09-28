@@ -29,7 +29,7 @@ export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelM
 
     const handleCreate = async () => {
         if (!channelName.trim()) return;
-        const activeWorkspaceId = wsCtx.activeWorkspace?.id;
+        const activeWorkspaceId = wsCtx.activeWorkspaceId;
         if (!activeWorkspaceId) {
             throw new Error("Active Workspace is not set");
         }

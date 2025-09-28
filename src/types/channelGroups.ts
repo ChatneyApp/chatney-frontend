@@ -1,5 +1,6 @@
+export type ChannelGroupId = string;
 export type ChannelGroup = {
-    id: string;
+    id: ChannelGroupId;
     name: string;
     channelIds: string[];
     workspace: string;

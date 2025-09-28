@@ -30,9 +30,9 @@ const ChannelGroupsListCore = () => {
 };
 
 const WorkspaceChannelsList = () => {
-    const {workspaces} = useWorkspacesList();
+    const {workspacesList} = useWorkspacesList();
 
-    const defaultWorkspace = workspaces[0];
+    const defaultWorkspace = workspacesList[0];
 
     if (!defaultWorkspace) {
         return <div>
@@ -46,7 +46,7 @@ const WorkspaceChannelsList = () => {
         <TabsList
             aria-label="Manage your account"
         >
-            {workspaces.map(workspace => (
+            {workspacesList.map(workspace => (
                 <TabsTrigger
                     key={workspace.id}
                     value={workspace.id}
@@ -55,7 +55,7 @@ const WorkspaceChannelsList = () => {
                 </TabsTrigger>
             ))}
         </TabsList>
-        {workspaces.map(workspace => (
+        {workspacesList.map(workspace => (
             <TabsContent
                 key={workspace.id}
                 value={workspace.id}

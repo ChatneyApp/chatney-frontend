@@ -6,13 +6,13 @@ import {WorkspacesListProvider, useWorkspacesList} from '@/contexts/WorkspacesLi
 import {EmptyListMessage} from '@/pages/dashboard/components/EmptyListMessage';
 
 const WorkspacesListCore = () => {
-    const {workspaces} = useWorkspacesList();
+    const {workspacesList} = useWorkspacesList();
 
     return <div>
-        {workspaces.map(workspace => (
+        {workspacesList.map(workspace => (
             <WorkspaceEditor key={workspace.id} workspace={workspace}/>
         ))}
-        {!workspaces.length && (
+        {!workspacesList.length && (
             <EmptyListMessage>
                 No workspaces found. Create one using the form above.
             </EmptyListMessage>

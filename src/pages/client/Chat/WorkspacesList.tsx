@@ -13,8 +13,8 @@ export default function WorkspacesList() {
     const avatarRef = useRef<HTMLDivElement>(null);
 
     const handleWorkspaceCreated = (newWs: Workspace) => {
-        workspacesList.setWsList([...workspacesList.workspaces, newWs]);
-        workspacesList.setActiveWs(newWs);
+        workspacesList.setWorkspacesList([...workspacesList.workspacesList, newWs]);
+        workspacesList.setActiveWorkspaceId(newWs);
         setIsModalOpen(false);
     };
 
@@ -41,14 +41,14 @@ export default function WorkspacesList() {
         <div className="relative w-16 bg-gray-800 flex flex-col justify-between items-center py-4">
             {/* Workspaces */}
             <div className="space-y-4">
-                {workspacesList.workspaces.map((ws, idx) => (
+                {workspacesList.workspacesList.map((ws, idx) => (
                     <div
                         title={ws.name}
                         key={idx}
-                        onClick={() => workspacesList.setActiveWs(ws)}
-                        className={`${workspacesList.activeWorkspace === ws ? "bg-gray-500" : "bg-gray-700"} w-10 h-10 flex items-center justify-center rounded-full text-sm hover:bg-gray-500 cursor-pointer`}
+                        onClick={() => workspacesList.setActiveWorkspaceId(ws)}
+                        className={`${workspacesList.activeWorkspaceId === ws ? "bg-gray-500" : "bg-gray-700"} w-10 h-10 flex items-center justify-center rounded-full text-sm hover:bg-gray-500 cursor-pointer`}
                     >
-                        <span className={workspacesList.activeWorkspace === ws ? "font-bold" : ""}>{ws.name[0].toUpperCase()}</span>
+                        <span className={workspacesList.activeWorkspaceId === ws ? "font-bold" : ""}>{ws.name[0].toUpperCase()}</span>
                     </div>
                 ))}
                 <div

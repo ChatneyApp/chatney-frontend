@@ -1,5 +1,6 @@
-﻿export type Message = {
-    id: string;
+﻿export type MessageId = string;
+export type Message = {
+    id: MessageId;
     channelId: string;
     userId: string;
     content: string;

@@ -1,11 +1,12 @@
-﻿import { Workspace } from "./workspaces";
+﻿import { Workspace } from './workspaces';
 
+export type UserId = string;
 export type UserAuthorization = {
-    Id: string;
+    Id: UserId;
     Token: string;
 }
 export type User = {
-    id: string;
+    id: UserId;
     name: string;
     active: boolean;
     verified: boolean;

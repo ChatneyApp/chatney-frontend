@@ -1,4 +1,6 @@
+export type WorkspaceId = string;
+
 export type Workspace = {
-    id: string;
+    id: WorkspaceId;
     name: string;
 } 

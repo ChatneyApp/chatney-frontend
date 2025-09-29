@@ -39,8 +39,6 @@ export function MessagesList({ activeChannel }: Props) {
         loadMessages();
     }, [ activeChannel ]);
 
-    console.log('messages', messages, messages.map(m => new Date(m.createdAt).getTime()));
-
     return (
         <div className="flex-1 flex flex-col bg-gray-900">
             <div className="flex-1 p-4 overflow-y-auto space-y-4">

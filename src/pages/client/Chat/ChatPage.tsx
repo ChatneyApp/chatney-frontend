@@ -17,8 +17,6 @@ export function ChatPage() {
     const [ activeChannel, setActiveChannel ] = useState<Channel | null>(null);
 
     useEffect(() => {
-        console.log('workspacesList', workspacesList);
-        console.log('channels', channels);
         if (workspacesList.length > 0 && channels.length > 0) {
             setActiveChannel(channels[0]);
         }

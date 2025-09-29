@@ -35,7 +35,6 @@ export function WorkspaceChannelsListProvider({ children }: { children: ReactNod
         if (activeWorkspaceId === null) {
             return;
         }
-        console.log(activeWorkspaceId);
         handleRefresh();
     }, [ activeWorkspaceId ]);
 

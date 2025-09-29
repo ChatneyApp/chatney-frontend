@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useApolloClient } from '@apollo/client';
+
 import { MessageInput } from './MessageInput';
 import { ChannelListItem } from './ChatPage';
 import { Message } from '@/types/messages';
 import { getChannelMessagesList, postNewMessage } from '@/graphql/messages';
-import { useApolloClient } from '@apollo/client';
+import { useUser } from '@/contexts/UserContext';
+import { useWebsocket } from './hooks/useWebsocket';
 
 type Props = {
     activeChannel: ChannelListItem;
@@ -11,6 +14,29 @@ type Props = {
 export function MessagesList({ activeChannel }: Props) {
     const apolloClient = useApolloClient();
     const [ messages, setMessages ] = useState<Message[]>([]);
+    const userCtx = useUser();
+
+    const { socket, disconnect } = useWebsocket(userCtx!.user!.id);
+
+    useEffect(() => {
+        console.log('socket init');
+        socket.addEventListener('open', function (event) {
+            console.log('WebSocket is connected!');
+        });
+
+        socket.addEventListener('message', function (event) {
+        });
+
+        socket.addEventListener('error', function (event) {
+            console.error('WebSocket error:', event);
+        });
+
+        socket.addEventListener('close', function (event) {
+            console.log('WebSocket is closed!');
+        });
+
+        return disconnect;
+    }, [ socket, disconnect ]);
 
     const handleSend = async (text: string) => {
         const newMessage = {
@@ -19,6 +45,11 @@ export function MessagesList({ activeChannel }: Props) {
             attachments: [],
             parentId: null,
         };
+        try {
+            socket.send(JSON.stringify(newMessage));
+        } catch (error) {
+            console.log('socket err', error);
+        }
         const mRes = await postNewMessage(apolloClient, newMessage);
         setMessages((prev) => [ ...prev, mRes ]);
     };

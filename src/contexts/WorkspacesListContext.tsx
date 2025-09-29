@@ -12,7 +12,7 @@ interface WorkspacesListContextValue {
     refetch(): void;
 }
 
-export const WorkspacesListContext = createContext<WorkspacesListContextValue | null>(null);
+export const WorkspacesListContext = createContext<WorkspacesListContextValue>(null as unknown as WorkspacesListContextValue);
 
 export function WorkspacesListProvider({ children }: { children: ReactNode }) {
     const [ workspacesList, setWorkspacesList ] = useState<Workspace[]>([]);
@@ -28,6 +28,7 @@ export function WorkspacesListProvider({ children }: { children: ReactNode }) {
             isLoading.current = true;
             const list = await getWorkspacesQuery(client);
             setWorkspacesList(list);
+            setActiveWorkspaceId(list?.[0]?.id ?? null);
         } catch (err) {
             console.error(err);
         } finally {

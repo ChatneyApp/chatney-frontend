@@ -1,19 +1,18 @@
-import { useState } from "react";
-import { ChannelListItem } from "./ChatPage";
-import { CreateChannelModal } from "./CreateChannelModal";
+import { useState } from 'react';
+
+import { ChannelListItem } from './ChatPage';
+import { CreateChannelModal } from './CreateChannelModal';
+import { Channel } from '@/types/channels';
 
 type Props = {
-    activeChannel: ChannelListItem;
-    setActiveChannel(channel: ChannelListItem): void;
-    channels: ChannelListItem[];
+    activeChannel: Channel | null;
+    setActiveChannel(channel: Channel): void;
+    channels: Channel[];
 };
 export function ChannelList({ activeChannel, setActiveChannel, channels }: Props) {
     const [ isModalOpen, setIsModalOpen ] = useState(false);
-    const [ localChannels, setLocalChannels ] = useState(channels);
 
     const handleChannelCreated = (newChannel: ChannelListItem) => {
-        setLocalChannels([ ...localChannels, newChannel ]);
-        setActiveChannel(newChannel);
         setIsModalOpen(false);
     };
 
@@ -26,11 +25,11 @@ export function ChannelList({ activeChannel, setActiveChannel, channels }: Props
                 + Create channel
             </div>
 
-            {localChannels.map((channel) => (
+            {channels.map((channel) => (
                 <div
                     key={channel.id}
                     onClick={() => setActiveChannel(channel)}
-                    className={`cursor-pointer px-2 py-1 rounded hover:bg-gray-700 ${activeChannel.id === channel.id ? "font-bold text-white" : "text-gray-400"
+                    className={`cursor-pointer px-2 py-1 rounded hover:bg-gray-700 ${activeChannel?.id === channel.id ? "font-bold text-white" : "text-gray-400"
                         }`}
                 >
                     {channel.name}

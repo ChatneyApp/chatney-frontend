@@ -4,7 +4,7 @@ import { useWorkspacesList } from "@/contexts/WorkspacesListContext";
 import { WorkspaceCreateModal } from "./WorkspaceCreateModal";
 import { Workspace } from "@/types/workspaces";
 
-export default function WorkspacesList() {
+export function WorkspacesList() {
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const workspacesList = useWorkspacesList();
     const userCtx = UseUser();

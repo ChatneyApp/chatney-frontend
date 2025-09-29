@@ -10,7 +10,7 @@ interface WorkspaceChannelsListContextValue {
     refetch: () => void;
 }
 
-const WorkspaceChannelsListContext = createContext<WorkspaceChannelsListContextValue | null>(null);
+const WorkspaceChannelsListContext = createContext<WorkspaceChannelsListContextValue>(null as unknown as WorkspaceChannelsListContextValue);
 
 export function WorkspaceChannelsListProvider({ children }: { children: ReactNode }) {
     const { activeWorkspaceId } = useContext(WorkspacesListContext);

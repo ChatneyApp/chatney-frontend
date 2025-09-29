@@ -12,6 +12,8 @@ export type Message = {
     parentId: string | null;
 }
 
+export type CreateMessageDto = Pick<Message, 'channelId' | 'content' | 'attachments' | 'parentId'>;
+
 export type Reaction = {
     userId: string;
     reactionText: string;

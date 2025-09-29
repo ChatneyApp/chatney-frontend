@@ -1,16 +1,13 @@
-﻿import {Route} from 'react-router';
+﻿import { Route } from 'react-router';
 
-import {ClientLayout} from '@/pages/client/ClientLayout';
-import {ClientHomePage} from '@/pages/client/ClientHomePage';
-import {ClientWorkspacesPage} from '@/pages/client/ClientWorkspacesPage';
-import {ClientChannelPage} from '@/pages/client/ClientChannelPage';
+import { ClientLayout } from '@/pages/client/ClientLayout';
+import { ChatPage } from './Chat/ChatPage';
 
 export const clientRoutes = () => (
     <>
         <Route path="client" element={<ClientLayout/>}>
-            <Route index element={<ClientHomePage/>}/>
-            <Route path="workspaces" element={<ClientWorkspacesPage/>}/>
-            <Route path="channel/:uuid" element={<ClientChannelPage/>}/>
+            <Route index element={<ChatPage/>}/>
+            <Route path="chat" index element={<ChatPage/>}/>
         </Route>
     </>
 );

@@ -1,16 +1,16 @@
-import {Link} from 'react-router';
-import {Tabs} from 'radix-ui';
+import { Link } from 'react-router';
+import { Tabs } from 'radix-ui';
 
-import {UserWorkspacesListProvider, useUserWorkspacesList} from '@/contexts/UserWorkspacesListContext';
-import {TabsContent, TabsList, TabsTrigger} from '@/pages/dashboard/components/Tabs/Tabs';
-import {UserDataProvider} from '@/contexts/UserDataContext';
+import { UserWorkspacesListProvider, useUserWorkspacesList } from '@/contexts/UserWorkspacesListContext';
+import { TabsContent, TabsList, TabsTrigger } from '@/pages/dashboard/components/Tabs/Tabs';
+import { UserDataProvider } from '@/contexts/UserDataContext';
 import {
     UserWorkspaceChannelsListContextProvider,
     useUserWorkspaceChannelsList
 } from '@/contexts/UserWorkspaceChannelsListContext';
-import {Channel} from '@/types/channels';
+import { Channel } from '@/types/channels';
 
-const UserChannel = ({channel}: {channel: Channel}) => (
+const UserChannel = ({ channel }: {channel: Channel}) => (
     <div className="p-2 flex flex-row gap-2 justify-center items-center">
         <div className="text-lg font-bold text-amber-700">{channel.name}</div>
         <div className="mt-2">
@@ -22,7 +22,7 @@ const UserChannel = ({channel}: {channel: Channel}) => (
 );
 
 const ChannelsListCore = () => {
-    const {channels} = useUserWorkspaceChannelsList();
+    const { channels } = useUserWorkspaceChannelsList();
 
     return <div className="flex flex-col gap-2">
         {channels.map(channel => (
@@ -32,7 +32,7 @@ const ChannelsListCore = () => {
 };
 
 const WorkspaceChannelsList = () => {
-    const {workspaces} = useUserWorkspacesList();
+    const { workspaces } = useUserWorkspacesList();
     const defaultWorkspace = workspaces?.[0];
 
     if (!defaultWorkspace) {

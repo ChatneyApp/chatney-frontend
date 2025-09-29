@@ -1,11 +1,11 @@
-﻿import {useState} from 'react';
-import {useForm} from 'react-hook-form';
-import {useMutation} from '@apollo/client';
+﻿import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useApolloClient } from '@apollo/client';
 
-import {REGISTER_USER} from '@/graphql/users';
-import {Button} from '@/components/Button';
+import { Button } from '@/components/Button';
 import dialogStyles from '@/components/Popup/Popup.module.css';
-import styles from '@/pages/client/AuthForm/AuthForm.module.css';
+import styles from './AuthForm.module.css';
+import { registerUser } from './auth.gql';
 
 type FormInputs = {
     email: string;
@@ -14,9 +14,11 @@ type FormInputs = {
 };
 
 export const RegisterForm = () => {
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const {register, handleSubmit, reset, formState: {errors}} = useForm<FormInputs>({
+    const apollo = useApolloClient();
+    const [ loading, setLoading ] = useState(false);
+    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
+    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             email: '',
             password: '',
@@ -24,29 +26,23 @@ export const RegisterForm = () => {
         }
     });
 
-    const [doRegister, {loading}] = useMutation(REGISTER_USER, {
-        onCompleted: () => {
+    const onSubmit = async (data: FormInputs) => {
+        setLoading(true);
+        try {
+            await registerUser({
+                client: apollo,
+                email: data.email,
+                password: data.password,
+                username: data.username,
+            });
             reset();
-        },
-        onError: (error) => {
-            setErrorMessage(`Error registering: ${error.message}`);
+        } catch (error) {
+            setErrorMessage(`Error registering: ${(error as Error).message}`);
             setSuccessMessage(null);
         }
-    });
 
-
-    const onSubmit = async (data: FormInputs) => {
-        await doRegister({
-            variables: {
-                input: {
-                    email: data.email,
-                    password: data.password,
-                    username: data.username,
-                }
-            }
-        });
+        setLoading(false);
     };
-
 
     return (
         <div>
@@ -55,35 +51,35 @@ export const RegisterForm = () => {
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className={styles.formGroup}>
-                    <label htmlFor="name" className={styles.label}>Email</label>
+                    <label htmlFor="email" className={styles.label}>Email</label>
                     <input
-                        id="name"
+                        id="email"
                         type="email"
                         placeholder="Enter your email"
-                        {...register('email', {required: 'Email is required'})}
+                        {...register('email', { required: 'Email is required' })}
                         className={styles.input}
                     />
                     {errors.email && <span className={styles.errorText}>{errors.email.message}</span>}
                 </div>
 
                 <div className={styles.formGroup}>
-                    <label htmlFor="name" className={styles.label}>Password</label>
+                    <label htmlFor="password" className={styles.label}>Password</label>
                     <input
-                        id="name"
+                        id="password"
                         type="password"
                         placeholder="Enter your password"
-                        {...register('password', {required: 'Password is required'})}
+                        {...register('password', { required: 'Password is required' })}
                         className={styles.input}
                     />
                     {errors.password && <span className={styles.errorText}>{errors.password.message}</span>}
                 </div>
 
                 <div className={styles.formGroup}>
-                    <label htmlFor="name" className={styles.label}>Username</label>
+                    <label htmlFor="username" className={styles.label}>Username</label>
                     <input
-                        id="name"
+                        id="username"
                         placeholder='Enter your username'
-                        {...register('username', {required: 'Username is required'})}
+                        {...register('username', { required: 'Username is required' })}
                         className={styles.input}
                     />
                     {errors.username && <span className={styles.errorText}>{errors.username.message}</span>}

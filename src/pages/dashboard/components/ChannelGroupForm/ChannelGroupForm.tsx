@@ -1,13 +1,13 @@
-import {useForm} from 'react-hook-form';
-import {useMutation} from '@apollo/client';
-import {useState} from 'react';
-import {Dialog} from 'radix-ui';
+import { useForm } from 'react-hook-form';
+import { useMutation } from '@apollo/client';
+import { useState } from 'react';
+import { Dialog } from 'radix-ui';
 
-import {CREATE_CHANNEL_GROUP, UPDATE_CHANNEL_GROUP} from '@/graphql/channelGroups';
-import {Button} from '@/components/Button';
-import {ChannelGroup} from '@/types/channelGroups';
-import {useWorkspaceChannelGroupsList} from '@/contexts/WorkspaceChannelGroupsListContext';
-import {useWorkspaceChannelsList} from '@/contexts/WorkspaceChannelsListContext';
+import { CREATE_CHANNEL_GROUP, UPDATE_CHANNEL_GROUP } from '@/graphql/channelGroups';
+import { Button } from '@/components/Button';
+import { ChannelGroup } from '@/types/channelGroups';
+import { useWorkspaceChannelGroupsList } from '@/contexts/WorkspaceChannelGroupsListContext';
+import { useWorkspaceChannelsList } from '@/contexts/WorkspaceChannelsListContext';
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './ChannelGroupForm.module.css';
 
@@ -24,14 +24,14 @@ type Props = {
     channelGroup?: ChannelGroup;
 };
 
-export const ChannelGroupForm = ({cta, title, submitText, channelGroup}: Props) => {
-    const [open, setOpen] = useState(false);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const {refetch, workspace} = useWorkspaceChannelGroupsList();
-    const {channels} = useWorkspaceChannelsList();
+export const ChannelGroupForm = ({ cta, title, submitText, channelGroup }: Props) => {
+    const [ open, setOpen ] = useState(false);
+    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
+    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const { refetch, workspace } = useWorkspaceChannelGroupsList();
+    const { channels } = useWorkspaceChannelsList();
 
-    const {register, handleSubmit, reset, formState: {errors}, setValue, watch} = useForm<FormInputs>({
+    const { register, handleSubmit, reset, formState: { errors }, setValue, watch } = useForm<FormInputs>({
         defaultValues: {
             name: channelGroup?.name ?? '',
             order: channelGroup?.order ?? 0,
@@ -41,7 +41,7 @@ export const ChannelGroupForm = ({cta, title, submitText, channelGroup}: Props) 
 
     const selectedChannels = watch('channelIds') || [];
 
-    const [createChannelGroup, {loading: createLoading}] = useMutation(CREATE_CHANNEL_GROUP, {
+    const [ createChannelGroup, { loading: createLoading } ] = useMutation(CREATE_CHANNEL_GROUP, {
         onCompleted: () => {
             setOpen(false);
             reset();
@@ -53,7 +53,7 @@ export const ChannelGroupForm = ({cta, title, submitText, channelGroup}: Props) 
         }
     });
 
-    const [updateChannelGroup, {loading: updateLoading}] = useMutation(UPDATE_CHANNEL_GROUP, {
+    const [ updateChannelGroup, { loading: updateLoading } ] = useMutation(UPDATE_CHANNEL_GROUP, {
         onCompleted: () => {
             setOpen(false);
             reset();
@@ -110,7 +110,7 @@ export const ChannelGroupForm = ({cta, title, submitText, channelGroup}: Props) 
         if (currentChannels.includes(channelId)) {
             newChannels = currentChannels.filter(id => id !== channelId);
         } else {
-            newChannels = [...currentChannels, channelId];
+            newChannels = [ ...currentChannels, channelId ];
         }
 
         setValue('channelIds', newChannels);
@@ -136,7 +136,7 @@ export const ChannelGroupForm = ({cta, title, submitText, channelGroup}: Props) 
                             <label htmlFor="name">Channel Group Name</label>
                             <input
                                 id="name"
-                                {...register('name', {required: 'Channel group name is required'})}
+                                {...register('name', { required: 'Channel group name is required' })}
                                 className={styles.input}
                             />
                             {errors.name && <span className={styles.errorText}>{errors.name.message}</span>}

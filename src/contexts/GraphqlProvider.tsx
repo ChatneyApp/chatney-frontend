@@ -1,17 +1,37 @@
-import {PropsWithChildren} from 'react';
-import {ApolloClient, ApolloProvider, from, HttpLink, InMemoryCache} from '@apollo/client';
-import {setContext} from '@apollo/client/link/context';
-
+import { PropsWithChildren } from 'react';
+import { ApolloClient, ApolloProvider, from, HttpLink, InMemoryCache } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 
 const httpLink = new HttpLink({
-    uri: 'http://localhost:3001/query'
-    // uri: 'https://429a41a3f1a7.ngrok-free.app/query'
+    uri: import.meta.env.VITE_API_URL
 });
 
-export const GraphqlProvider = ({children}: PropsWithChildren) => {
+
+import { onError } from '@apollo/client/link/error';
+import { loginPageUrl, userAuthTokenName } from '@/infra/consts';
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+    const isUnauthorized =
+        (graphQLErrors &&
+            graphQLErrors.some(err => err.extensions?.code === "AUTH_NOT_AUTHENTICATED")) ||
+        (networkError && 'statusCode' in networkError && networkError.statusCode === 401);
+
+    const currentPath = window.location.pathname;
+
+    if (isUnauthorized && currentPath !== loginPageUrl) {
+        // Clear any invalid token
+        localStorage.removeItem(userAuthTokenName);
+
+        // Redirect to login
+        window.location.href = loginPageUrl; // Adjust this to your actual login route
+    }
+});
+
+
+export const GraphqlProvider = ({ children }: PropsWithChildren) => {
     const authMiddleware = setContext((_, previousContext) => {
-        const {headers = {}} = previousContext;
-        const userToken = localStorage.getItem('userToken');
+        const { headers = {} } = previousContext;
+        const userToken = localStorage.getItem(userAuthTokenName);
         const authHeaders = userToken ? {
             Authorization: `Bearer ${userToken}`,
         } : {};
@@ -25,7 +45,7 @@ export const GraphqlProvider = ({children}: PropsWithChildren) => {
         });
     })
     const client = new ApolloClient({
-        link: from([authMiddleware, httpLink]),
+        link: from([ errorLink, authMiddleware, httpLink ]),
         cache: new InMemoryCache(),
     });
 

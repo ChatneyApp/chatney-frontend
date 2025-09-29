@@ -1,8 +1,8 @@
-import {createContext, ReactNode, startTransition, useContext} from 'react';
-import {useSuspenseQuery} from '@apollo/client';
+import { createContext, ReactNode, startTransition, useContext } from 'react';
+import { useSuspenseQuery } from '@apollo/client';
 
-import {ChannelType} from '@/types/channelTypes';
-import {GET_CHANNEL_TYPES_QUERY} from '@/graphql/channelTypes';
+import { ChannelType } from '@/types/channelTypes';
+import { GET_CHANNEL_TYPES_QUERY } from '@/graphql/channelTypes';
 
 interface ChannelTypesListContextValue {
     channelTypes: ChannelType[];
@@ -11,8 +11,8 @@ interface ChannelTypesListContextValue {
 
 const ChannelTypesListContext = createContext<ChannelTypesListContextValue | null>(null);
 
-export function ChannelTypesListProvider({children}: { children: ReactNode }) {
-    const {data, refetch} = useSuspenseQuery(GET_CHANNEL_TYPES_QUERY, {
+export function ChannelTypesListProvider({ children }: { children: ReactNode }) {
+    const { data, refetch } = useSuspenseQuery(GET_CHANNEL_TYPES_QUERY, {
         fetchPolicy: 'cache-and-network',
     });
 
@@ -24,7 +24,7 @@ export function ChannelTypesListProvider({children}: { children: ReactNode }) {
 
     return (
         <ChannelTypesListContext.Provider
-            value={{channelTypes: data?.channels?.channelTypeList, refetch: handleRefresh}}
+            value={{ channelTypes: data?.channels?.channelTypeList, refetch: handleRefresh }}
         >
             {children}
         </ChannelTypesListContext.Provider>

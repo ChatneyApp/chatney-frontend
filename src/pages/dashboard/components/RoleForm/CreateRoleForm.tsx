@@ -1,15 +1,15 @@
-﻿import {useForm} from 'react-hook-form';
-import {useMutation, useSuspenseQuery} from '@apollo/client';
-import {useState} from 'react';
-import {Dialog} from 'radix-ui';
+﻿import { useForm } from 'react-hook-form';
+import { useMutation, useSuspenseQuery } from '@apollo/client';
+import { useState } from 'react';
+import { Dialog } from 'radix-ui';
 
 import styles from './CreateRoleForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
-import {CREATE_ROLE, EDIT_ROLE} from '@/graphql/roles';
-import {GET_PERMISSIONS_LIST} from '@/graphql/permissions';
-import {Button} from '@/components/Button';
-import {Role} from '@/types/roles';
-import {useRolesList} from '@/contexts/RolesListContext';
+import { CREATE_ROLE, EDIT_ROLE } from '@/graphql/roles';
+import { GET_PERMISSIONS_LIST } from '@/graphql/permissions';
+import { Button } from '@/components/Button';
+import { Role } from '@/types/roles';
+import { useRolesList } from '@/contexts/RolesListContext';
 
 type FormInputs = {
     name: string;
@@ -23,14 +23,14 @@ type Props = {
     submitText: string;
     role?: Role;
 }
-export const CreateRoleForm = ({cta, title, submitText, role}: Props) => {
-    const [open, setOpen] = useState(false);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const {data: permissionsData} = useSuspenseQuery(GET_PERMISSIONS_LIST);
-    const {refetch} = useRolesList();
+export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
+    const [ open, setOpen ] = useState(false);
+    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
+    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const { data: permissionsData } = useSuspenseQuery(GET_PERMISSIONS_LIST);
+    const { refetch } = useRolesList();
 
-    const {register, handleSubmit, reset, formState: {errors}} = useForm<FormInputs>({
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             name: role?.name ?? '',
             permissions: role?.permissions ?? [],
@@ -38,7 +38,7 @@ export const CreateRoleForm = ({cta, title, submitText, role}: Props) => {
         }
     });
 
-    const [createRole, {loading: createLoading}] = useMutation(CREATE_ROLE, {
+    const [ createRole, { loading: createLoading } ] = useMutation(CREATE_ROLE, {
         onCompleted: () => {
             // setSuccessMessage(`Role "${data.createRole.Name}" created successfully!`);
             // setErrorMessage(null);
@@ -52,7 +52,7 @@ export const CreateRoleForm = ({cta, title, submitText, role}: Props) => {
         }
     });
 
-    const [editRole, {loading: editLoading}] = useMutation(EDIT_ROLE, {
+    const [ editRole, { loading: editLoading } ] = useMutation(EDIT_ROLE, {
         onCompleted: () => {
             // setSuccessMessage(`Role "${data.editRole.Name}" changed successfully!`);
             // setErrorMessage(null);
@@ -130,7 +130,7 @@ export const CreateRoleForm = ({cta, title, submitText, role}: Props) => {
                                 <label htmlFor="name">Role Name</label>
                                 <input
                                     id="name"
-                                    {...register('name', {required: 'Role name is required'})}
+                                    {...register('name', { required: 'Role name is required' })}
                                     className={styles.input}
                                 />
                                 {errors.name && <span className={styles.errorText}>{errors.name.message}</span>}

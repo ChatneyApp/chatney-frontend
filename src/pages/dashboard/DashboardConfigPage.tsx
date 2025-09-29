@@ -1,4 +1,4 @@
-import {SystemConfigEditor} from '@/pages/dashboard/components/SystemConfigEditor';
+import { SystemConfigEditor } from '@/pages/dashboard/components/SystemConfigEditor';
 
 export const DashboardConfigPage = () => (
     <div>

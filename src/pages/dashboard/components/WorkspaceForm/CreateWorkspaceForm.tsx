@@ -1,14 +1,14 @@
-import {useForm} from 'react-hook-form';
-import {useMutation} from '@apollo/client';
-import {useState} from 'react';
-import {Dialog} from 'radix-ui';
+import { useForm } from 'react-hook-form';
+import { useApolloClient, useMutation } from '@apollo/client';
+import { useState } from 'react';
+import { Dialog } from 'radix-ui';
 
 import styles from './CreateWorkspaceForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
-import {CREATE_WORKSPACE, UPDATE_WORKSPACE} from '@/graphql/workspaces';
-import {Button} from '@/components/Button';
-import {Workspace} from '@/types/workspaces';
-import {useWorkspacesList} from '@/contexts/WorkspacesListContext';
+import { addWorkspace, UPDATE_WORKSPACE } from '@/graphql/workspaces';
+import { Button } from '@/components/Button';
+import { Workspace } from '@/types/workspaces';
+import { useWorkspacesList } from '@/contexts/WorkspacesListContext';
 
 type FormInputs = {
     name: string;
@@ -21,31 +21,19 @@ type Props = {
     workspace?: Workspace;
 }
 
-export const CreateWorkspaceForm = ({cta, title, submitText, workspace}: Props) => {
-    const [open, setOpen] = useState(false);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const {refetch} = useWorkspacesList();
-
-    const {register, handleSubmit, reset, formState: {errors}} = useForm<FormInputs>({
+export const CreateWorkspaceForm = ({ cta, title, submitText, workspace }: Props) => {
+    const [ open, setOpen ] = useState(false);
+    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
+    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const { refetch } = useWorkspacesList();
+    const apolloClient = useApolloClient();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             name: workspace?.name ?? '',
         }
     });
 
-    const [createWorkspace, {loading: createLoading}] = useMutation(CREATE_WORKSPACE, {
-        onCompleted: () => {
-            setOpen(false);
-            reset();
-            refetch();
-        },
-        onError: (error) => {
-            setErrorMessage(`Error creating workspace: ${error.message}`);
-            setSuccessMessage(null);
-        }
-    });
-
-    const [updateWorkspace, {loading: updateLoading}] = useMutation(UPDATE_WORKSPACE, {
+    const [ updateWorkspace, { loading: updateLoading } ] = useMutation(UPDATE_WORKSPACE, {
         onCompleted: () => {
             setOpen(false);
             reset();
@@ -77,13 +65,16 @@ export const CreateWorkspaceForm = ({cta, title, submitText, workspace}: Props) 
                 }
             });
         } else {
-            await createWorkspace({
-                variables: {
-                    input: {
-                        Name: data.name
-                    }
-                }
-            });
+            try {
+                await addWorkspace({ client: apolloClient, name: data.name });
+            } catch (error) {
+                setErrorMessage(`Error creating workspace: ${(error as Error).message}`);
+                setSuccessMessage(null);
+            } finally {
+                setOpen(false);
+                reset();
+                refetch();
+            }
         }
     };
 
@@ -111,7 +102,7 @@ export const CreateWorkspaceForm = ({cta, title, submitText, workspace}: Props) 
                                 <label htmlFor="name">Workspace Name</label>
                                 <input
                                     id="name"
-                                    {...register('name', {required: 'Workspace name is required'})}
+                                    {...register('name', { required: 'Workspace name is required' })}
                                     className={styles.input}
                                 />
                                 {errors.name && <span className={styles.errorText}>{errors.name.message}</span>}

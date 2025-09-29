@@ -1,40 +1,43 @@
-﻿import {gql, type TypedDocumentNode} from '@apollo/client';
+import { User } from '@/types/users';
+import { ApolloClient, gql } from '@apollo/client';
 
-import type {UserAuthorization, User} from '@/types/users';
-
-export type AuthorizeUserResponse = {
-    AuthorizeUser: UserAuthorization;
-}
-
-export type GetUserResponse = {
-    GetUser: User;
-}
-
-export const REGISTER_USER = gql`
-    mutation RegisterUser($input: CreateUserDTO!) {
-        CreateUser(input: $input) {
-            Id
-            Email
-            Username
+export const getUserById = async ({
+  client,
+  id,
+}: {
+  client: ApolloClient<object>,
+  id: string,
+}): Promise<User> => {
+  try {
+    const { data } = await client.query({
+      query: gql`
+        query GetUserById($id: String!) {
+          users {
+            userById(id: $id) {
+              id
+              name
+              active
+              verified
+              banned
+              muted
+              email
+              workspaces
+            }
+          }
         }
-    }
-`;
+      `,
+      variables: { id },
+      fetchPolicy: 'no-cache', // Optional: Prevents caching if you want always fresh data
+    });
 
-export const LOGIN: TypedDocumentNode<AuthorizeUserResponse> = gql`
-    query ($login: String!, $password: String!) {
-        AuthorizeUser(login: $login, password: $password) {
-            Id
-            Token
-        }
-    }
-`;
+    const user = data?.users?.userById;
 
-export const GET_USER_QUERY: TypedDocumentNode<GetUserResponse> = gql`
-    query ($id: String!) {
-        GetUser(userId: $id) {
-            Id
-            Name
-            Email
-        }
+    if (!user) {
+      throw new Error('User not found');
     }
-`;
+
+    return user;
+  } catch (error) {
+    throw new Error(`Fetching user failed: ${(error as Error).message}`);
+  }
+};

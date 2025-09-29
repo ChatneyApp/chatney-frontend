@@ -1,8 +1,8 @@
-﻿import {createContext, ReactNode, startTransition, useContext} from 'react';
-import {useSuspenseQuery} from '@apollo/client';
+﻿import { createContext, ReactNode, startTransition, useContext } from 'react';
+import { useSuspenseQuery } from '@apollo/client';
 
-import {Role} from '@/types/roles';
-import {GET_ROLES_QUERY} from '@/graphql/roles';
+import { Role } from '@/types/roles';
+import { GET_ROLES_QUERY } from '@/graphql/roles';
 
 interface RolesListContextValue {
     roles: Role[];
@@ -11,8 +11,8 @@ interface RolesListContextValue {
 
 const RolesListContext = createContext<RolesListContextValue | null>(null);
 
-export function RolesListProvider({children}: { children: ReactNode }) {
-    const {data, refetch} = useSuspenseQuery(GET_ROLES_QUERY, {
+export function RolesListProvider({ children }: { children: ReactNode }) {
+    const { data, refetch } = useSuspenseQuery(GET_ROLES_QUERY, {
         fetchPolicy: 'no-cache',
     });
 
@@ -24,7 +24,7 @@ export function RolesListProvider({children}: { children: ReactNode }) {
 
     return (
         <RolesListContext.Provider
-            value={{roles: data.roles.list, refetch: handleRefresh}}
+            value={{ roles: data.roles.list, refetch: handleRefresh }}
         >
             {children}
         </RolesListContext.Provider>

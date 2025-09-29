@@ -1,17 +1,17 @@
-﻿import {PropsWithChildren} from 'react';
-import {NavLink, type NavLinkRenderProps} from 'react-router';
-import {HomeIcon} from 'lucide-react';
+﻿import { PropsWithChildren } from 'react';
+import { NavLink, type NavLinkRenderProps } from 'react-router';
+import { HomeIcon } from 'lucide-react';
 
 import styles from './MainMenu.module.css';
 
-const MenuItem = ({children}: PropsWithChildren) => (
+const MenuItem = ({ children }: PropsWithChildren) => (
     <button className={styles.menuItem}>
         {children}
     </button>
 );
 
 const isActiveLink =
-    ({isActive}: NavLinkRenderProps) => isActive ? styles.activeLink : undefined;
+    ({ isActive }: NavLinkRenderProps) => isActive ? styles.activeLink : undefined;
 
 export const MainMenu = () => (
     <div className={styles.menu}>

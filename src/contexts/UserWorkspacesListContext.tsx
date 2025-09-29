@@ -1,9 +1,9 @@
-import {createContext, PropsWithChildren, startTransition, useContext} from 'react';
-import {useSuspenseQuery} from '@apollo/client';
+import { createContext, PropsWithChildren, startTransition, useContext } from 'react';
+import { useSuspenseQuery } from '@apollo/client';
 
-import {Workspace} from '@/types/workspaces';
-import {GET_USER_WORKSPACES_QUERY} from '@/graphql/workspaces';
-import {useUserData} from '@/contexts/UserDataContext';
+import { Workspace } from '@/types/workspaces';
+import { useUserData } from '@/contexts/UserDataContext';
+import { GET_WORKSPACES_QUERY } from '@/graphql/workspaces';
 
 interface UserWorkspacesListContextValue {
     workspaces: Workspace[];
@@ -15,12 +15,12 @@ const UserWorkspacesListContext = createContext<UserWorkspacesListContextValue |
 type UserWorkspacesListProviderProps = {
 } & PropsWithChildren;
 
-export function UserWorkspacesListProvider({children}: UserWorkspacesListProviderProps) {
-    const {userData} = useUserData();
-    const {data, refetch} = useSuspenseQuery(GET_USER_WORKSPACES_QUERY, {
+export function UserWorkspacesListProvider({ children }: UserWorkspacesListProviderProps) {
+    const { userData } = useUserData();
+    const { data, refetch } = useSuspenseQuery(GET_WORKSPACES_QUERY, {
         fetchPolicy: 'no-cache',
         variables: {
-            userId: userData!.Id
+            userId: userData!.id
         },
     });
 
@@ -32,7 +32,7 @@ export function UserWorkspacesListProvider({children}: UserWorkspacesListProvide
 
     return (
         <UserWorkspacesListContext.Provider
-            value={{workspaces: data?.GetUserWorkspacesList, refetch: handleRefresh}}
+            value={{ workspaces: data?.workspaces.list, refetch: handleRefresh }}
         >
             {children}
         </UserWorkspacesListContext.Provider>

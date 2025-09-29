@@ -1,6 +1,6 @@
-import {gql, type TypedDocumentNode} from '@apollo/client';
+import { ApolloClient, gql, type TypedDocumentNode } from '@apollo/client';
 
-import {Channel} from '@/types/channels';
+import { Channel } from '@/types/channels';
 
 export type GetChannelsListResponse = {
     channels: {
@@ -56,15 +56,44 @@ export const DELETE_CHANNEL = gql`
     }
 `;
 
-export const GET_WORKSPACE_CHANNELS_QUERY: TypedDocumentNode<GetChannelsListResponse> = gql`
-    query ($workspaceId: String!) {
-        channels {
-            workspaceChannelList(workspaceId: $workspaceId) {
-                id
-                name
-                channelTypeId
-                workspaceId
-            }
+export const getWorkspaceChannels = async ({
+    client,
+    workspaceId,
+}: {
+    client: ApolloClient<object>,
+    workspaceId: string,
+}): Promise<Array<{
+    id: string;
+    name: string;
+    channelTypeId: string;
+    workspaceId: string;
+}>> => {
+    try {
+        const { data } = await client.query({
+            query: gql`
+                query GetWorkspaceChannels($workspaceId: String!) {
+                    channels {
+                        workspaceChannelList(workspaceId: $workspaceId) {
+                            id
+                            name
+                            channelTypeId
+                            workspaceId
+                        }
+                    }
+                }
+            `,
+            variables: { workspaceId },
+            fetchPolicy: 'no-cache', // Optional: Ensures fresh data
+        });
+
+        const channels = data?.channels?.workspaceChannelList;
+
+        if (!Array.isArray(channels)) {
+            throw new Error('Invalid workspaceChannelList response');
         }
+
+        return channels;
+    } catch (error) {
+        throw new Error(`Fetching channels failed: ${(error as Error).message}`);
     }
-`;
+};

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+</head>
+
+<body>
+    <h1>WebSocket Client</h1>
+    <button id="connectButton">Connect</button>
+    <div>
+        <textarea id="messageInput" placeholder="Enter message..."></textarea><br>
+        <button id="sendMessageButton">Send Message</button>
+    </div>
+    <div id="messages"></div>
+
+    <script>
+        let socket;
+
+        // Connect to the WebSocket server
+        document.getElementById("connectButton").addEventListener("click", function () {
+            socket = new WebSocket("ws://localhost:3001/ws?userId=33123123123123");
+
+            socket.onopen = function (event) {
+                console.log("WebSocket is connected!");
+            };
+
+            socket.onmessage = function (event) {
+                const messagesDiv = document.getElementById("messages");
+                messagesDiv.innerHTML += "<p>Received: " + event.data + "</p>";
+            };
+
+            socket.onerror = function (event) {
+                console.error("WebSocket error:", event);
+            };
+
+            socket.onclose = function (event) {
+                console.log("WebSocket is closed!");
+            };
+        });
+
+        // Send a message to the server when the "Send Message" button is clicked
+        document.getElementById("sendMessageButton").addEventListener("click", function () {
+            const message = document.getElementById("messageInput").value;
+
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ message }));
+                console.log("Sent message:", message);
+            } else {
+                console.log("WebSocket is not open.");
+            }
+        });
+    </script>
+</body>
+
+</html>

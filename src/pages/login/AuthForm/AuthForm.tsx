@@ -1,14 +1,13 @@
-﻿import {Tabs} from 'radix-ui';
+﻿import { Tabs } from 'radix-ui';
 
-import {TabsContent, TabsList, TabsTrigger} from '@/pages/dashboard/components/Tabs/Tabs';
-import {RegisterForm} from '@/pages/client/AuthForm/RegisterForm';
-import {LoginForm} from '@/pages/client/AuthForm/LoginForm';
+import { TabsContent, TabsList, TabsTrigger } from '@/pages/dashboard/components/Tabs/Tabs';
+import { LoginForm } from './LoginForm';
+import { RegisterForm } from './RegisterForm';
 
 enum AuthFormType {
     LOGIN = 'login',
     REGISTER = 'register',
 }
-
 const DEFAULT_FORM = AuthFormType.LOGIN;
 
 export const AuthForm = () => {
@@ -22,10 +21,10 @@ export const AuthForm = () => {
                     <TabsTrigger value={AuthFormType.REGISTER}>Register</TabsTrigger>
                 </TabsList>
                 <TabsContent value={AuthFormType.LOGIN}>
-                    <LoginForm/>
+                    <LoginForm />
                 </TabsContent>
                 <TabsContent value={AuthFormType.REGISTER}>
-                    <RegisterForm/>
+                    <RegisterForm />
                 </TabsContent>
             </Tabs.Root>
         </div>

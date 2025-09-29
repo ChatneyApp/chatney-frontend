@@ -1,37 +1,46 @@
-import {createContext, PropsWithChildren, startTransition, useContext} from 'react';
-import {useSuspenseQuery} from '@apollo/client';
+import { createContext, ReactNode, startTransition, useContext, useEffect, useState } from 'react';
+import { useApolloClient } from '@apollo/client';
 
-import {Workspace} from '@/types/workspaces';
-import {Channel} from '@/types/channels';
-import {GET_WORKSPACE_CHANNELS_QUERY} from '@/graphql/channels';
+import { Channel } from '@/types/channels';
+import { WorkspacesListContext } from './WorkspacesListContext';
+import { getWorkspaceChannels } from '@/graphql/channels';
 
 interface WorkspaceChannelsListContextValue {
-    workspace: Workspace;
     channels: Channel[];
     refetch: () => void;
 }
 
-const WorkspaceChannelsListContext = createContext<WorkspaceChannelsListContextValue | null>(null);
+const WorkspaceChannelsListContext = createContext<WorkspaceChannelsListContextValue>(null as unknown as WorkspaceChannelsListContextValue);
 
-type WorkspaceChannelsListProviderProps = {
-    workspace: Workspace;
-} & PropsWithChildren;
-
-export function WorkspaceChannelsListProvider({workspace, children}: WorkspaceChannelsListProviderProps) {
-    const {data, refetch} = useSuspenseQuery(GET_WORKSPACE_CHANNELS_QUERY, {
-        variables: {workspaceId: workspace.id},
-        fetchPolicy: 'no-cache',
-    });
+export function WorkspaceChannelsListProvider({ children }: { children: ReactNode }) {
+    const { activeWorkspaceId } = useContext(WorkspacesListContext);
+    const [ channels, setChannels ] = useState<Channel[]>([]);
+    const client = useApolloClient();
 
     const handleRefresh = () => {
         startTransition(async () => {
-            await refetch();
+            if (activeWorkspaceId === null) {
+                return;
+            }
+            try {
+                const channelsList = await getWorkspaceChannels({ client, workspaceId: activeWorkspaceId });
+                setChannels(channelsList);
+            } catch (_error) {
+                /* swallow error */
+            }
         });
     };
 
+    useEffect(() => {
+        if (activeWorkspaceId === null) {
+            return;
+        }
+        handleRefresh();
+    }, [ activeWorkspaceId ]);
+
     return (
         <WorkspaceChannelsListContext.Provider
-            value={{channels: data?.channels?.workspaceChannelList, workspace, refetch: handleRefresh}}
+            value={{ channels: channels, refetch: handleRefresh }}
         >
             {children}
         </WorkspaceChannelsListContext.Provider>

@@ -1,22 +1,22 @@
-import {useMutation} from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
-import {ChannelType} from '@/types/channelTypes';
-import {CreateChannelTypeForm} from '@/pages/dashboard/components/ChannelTypeForm/CreateChannelTypeForm';
-import {Button} from '@/components/Button';
-import {DELETE_CHANNEL_TYPE} from '@/graphql/channelTypes';
-import {useChannelTypesList} from '@/contexts/ChannelTypesListContext';
-import {useRolesList} from '@/contexts/RolesListContext';
+import { ChannelType } from '@/types/channelTypes';
+import { CreateChannelTypeForm } from '@/pages/dashboard/components/ChannelTypeForm/CreateChannelTypeForm';
+import { Button } from '@/components/Button';
+import { DELETE_CHANNEL_TYPE } from '@/graphql/channelTypes';
+import { useChannelTypesList } from '@/contexts/ChannelTypesListContext';
+import { useRolesList } from '@/contexts/RolesListContext';
 import styles from './ChannelTypeEditor.module.css';
 
 type Props = {
     channelType: ChannelType;
 }
 
-export const ChannelTypeEditor = ({channelType}: Props) => {
-    const {refetch} = useChannelTypesList();
-    const {roles} = useRolesList();
+export const ChannelTypeEditor = ({ channelType }: Props) => {
+    const { refetch } = useChannelTypesList();
+    const { roles } = useRolesList();
     
-    const [deleteChannelType] = useMutation(DELETE_CHANNEL_TYPE, {
+    const [ deleteChannelType ] = useMutation(DELETE_CHANNEL_TYPE, {
         onCompleted: () => {
             refetch();
         },

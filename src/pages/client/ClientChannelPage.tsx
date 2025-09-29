@@ -1,19 +1,19 @@
-import {useState} from 'react';
-import {Link, useParams, useNavigate} from 'react-router';
+import { useState } from 'react';
+import { Link, useParams, useNavigate } from 'react-router';
 
-import {UserDataProvider, useUserData} from '@/contexts/UserDataContext';
-import {UserChannelProvider, useUserChannel} from '@/contexts/UserChannelProvider';
-import {useMutation} from '@apollo/client';
-import {POST_MESSAGE} from '@/graphql/messages';
-import {CreateMessageInput, Message} from '@/types/messages';
+import { UserDataProvider, useUserData } from '@/contexts/UserDataContext';
+import { UserChannelProvider, useUserChannel } from '@/contexts/UserChannelProvider';
+import { useMutation } from '@apollo/client';
+import { POST_MESSAGE } from '@/graphql/messages';
+import { CreateMessageInput, Message } from '@/types/messages';
 
 const MessageEditor = () => {
-    const {userData} = useUserData();
-    const {channel} = useUserChannel();
-    const [text, setText] = useState('');
-    const [isPosting, setIsPosting] = useState(false);
+    const { userData } = useUserData();
+    const { channel } = useUserChannel();
+    const [ text, setText ] = useState('');
+    const [ isPosting, setIsPosting ] = useState(false);
 
-    const [postMessage] = useMutation<Message, {messageDto: CreateMessageInput}>(POST_MESSAGE, {
+    const [ postMessage ] = useMutation<Message, {messageDto: CreateMessageInput}>(POST_MESSAGE, {
         onCompleted: () => {
             setIsPosting(false);
         },
@@ -64,7 +64,7 @@ const MessageEditor = () => {
 };
 
 const ChannelCore = () => {
-    const {channel} = useUserChannel();
+    const { channel } = useUserChannel();
 
     if (!channel) {
         return null;
@@ -78,7 +78,7 @@ const ChannelCore = () => {
 };
 
 export const ClientChannelPage = () => {
-    const {uuid} = useParams<{ uuid: string }>();
+    const { uuid } = useParams<{ uuid: string }>();
     const navigate = useNavigate();
 
     if (!uuid) {

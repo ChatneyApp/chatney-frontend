@@ -1,30 +1,59 @@
-import {createContext, ReactNode, startTransition, useContext} from 'react';
-import {useSuspenseQuery} from '@apollo/client';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
-import {Workspace} from '@/types/workspaces';
-import {GET_WORKSPACES_QUERY} from '@/graphql/workspaces';
+import type { Workspace, WorkspaceId } from '@/types/workspaces';
+import { useApolloClient } from '@apollo/client';
+import { getWorkspacesQuery } from '@/graphql/workspaces';
 
 interface WorkspacesListContextValue {
-    workspaces: Workspace[];
-    refetch: () => void;
+    workspacesList: Workspace[];
+    setWorkspacesList(list: Workspace[]): void;
+    activeWorkspaceId: WorkspaceId | null;
+    setActiveWorkspaceId(id: WorkspaceId | null): void;
+    refetch(): void;
 }
 
-const WorkspacesListContext = createContext<WorkspacesListContextValue | null>(null);
+export const WorkspacesListContext = createContext<WorkspacesListContextValue>(null as unknown as WorkspacesListContextValue);
 
-export function WorkspacesListProvider({children}: { children: ReactNode }) {
-    const {data, refetch} = useSuspenseQuery(GET_WORKSPACES_QUERY, {
-        fetchPolicy: 'no-cache',
-    });
+export function WorkspacesListProvider({ children }: { children: ReactNode }) {
+    const [ workspacesList, setWorkspacesList ] = useState<Workspace[]>([]);
+    const isLoading = useRef(false);
+    const [ activeWorkspaceId, setActiveWorkspaceId ] = useState<WorkspaceId | null>(null);
+    const client = useApolloClient();
 
-    const handleRefresh = () => {
-        startTransition(async () => {
-            await refetch();
-        });
+    const fetchData = useCallback(async () => {
+        if (isLoading.current) {
+            return;
+        }
+        try {
+            isLoading.current = true;
+            const list = await getWorkspacesQuery(client);
+            setWorkspacesList(list);
+            setActiveWorkspaceId(list?.[0]?.id ?? null);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            isLoading.current = false;
+        }
+    }, [ client, setWorkspacesList ]);
+
+    const refetch = () => {
+        fetchData();
     };
+
+    // Application start
+    useEffect(() => {
+        fetchData();
+    }, [ ]);
 
     return (
         <WorkspacesListContext.Provider
-            value={{workspaces: data?.workspaces?.list, refetch: handleRefresh}}
+            value={{
+                workspacesList,
+                setWorkspacesList,
+                activeWorkspaceId,
+                setActiveWorkspaceId,
+                refetch,
+            }}
         >
             {children}
         </WorkspacesListContext.Provider>

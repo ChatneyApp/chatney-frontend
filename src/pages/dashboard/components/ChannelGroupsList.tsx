@@ -1,20 +1,20 @@
-import {Suspense} from 'react';
-import {Link} from 'react-router';
-import {Tabs} from 'radix-ui';
+import { Suspense } from 'react';
+import { Link } from 'react-router';
+import { Tabs } from 'radix-ui';
 
-import {useWorkspacesList, WorkspacesListProvider} from '@/contexts/WorkspacesListContext';
+import { useWorkspacesList, WorkspacesListProvider } from '@/contexts/WorkspacesListContext';
 import {
     useWorkspaceChannelGroupsList,
     WorkspaceChannelGroupsListProvider
 } from '@/contexts/WorkspaceChannelGroupsListContext';
-import {WorkspaceChannelsListProvider} from '@/contexts/WorkspaceChannelsListContext';
-import {ChannelGroupEditor} from './ChannelGroupEditor/ChannelGroupEditor';
-import {TabsContent, TabsList, TabsTrigger} from '@/pages/dashboard/components/Tabs/Tabs';
-import {EmptyListMessage} from '@/pages/dashboard/components/EmptyListMessage';
-import {ChannelGroupForm} from '@/pages/dashboard/components/ChannelGroupForm/ChannelGroupForm';
+import { WorkspaceChannelsListProvider } from '@/contexts/WorkspaceChannelsListContext';
+import { ChannelGroupEditor } from './ChannelGroupEditor/ChannelGroupEditor';
+import { TabsContent, TabsList, TabsTrigger } from '@/pages/dashboard/components/Tabs/Tabs';
+import { EmptyListMessage } from '@/pages/dashboard/components/EmptyListMessage';
+import { ChannelGroupForm } from '@/pages/dashboard/components/ChannelGroupForm/ChannelGroupForm';
 
 const ChannelGroupsListCore = () => {
-    const {channelGroups} = useWorkspaceChannelGroupsList();
+    const { channelGroups } = useWorkspaceChannelGroupsList();
 
     return <div>
         <ChannelGroupForm cta="Create channel group" title="Create Channel Group" submitText="Create Channel Group"/>
@@ -30,9 +30,9 @@ const ChannelGroupsListCore = () => {
 };
 
 const WorkspaceChannelsList = () => {
-    const {workspaces} = useWorkspacesList();
+    const { workspacesList } = useWorkspacesList();
 
-    const defaultWorkspace = workspaces[0];
+    const defaultWorkspace = workspacesList[0];
 
     if (!defaultWorkspace) {
         return <div>
@@ -46,7 +46,7 @@ const WorkspaceChannelsList = () => {
         <TabsList
             aria-label="Manage your account"
         >
-            {workspaces.map(workspace => (
+            {workspacesList.map(workspace => (
                 <TabsTrigger
                     key={workspace.id}
                     value={workspace.id}
@@ -55,7 +55,7 @@ const WorkspaceChannelsList = () => {
                 </TabsTrigger>
             ))}
         </TabsList>
-        {workspaces.map(workspace => (
+        {workspacesList.map(workspace => (
             <TabsContent
                 key={workspace.id}
                 value={workspace.id}

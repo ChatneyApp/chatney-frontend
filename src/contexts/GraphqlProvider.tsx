@@ -2,9 +2,8 @@ import { PropsWithChildren } from 'react';
 import { ApolloClient, ApolloProvider, from, HttpLink, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
-
 const httpLink = new HttpLink({
-    uri: 'http://localhost:3001/query'
+    uri: import.meta.env.VITE_API_URL
 });
 
 

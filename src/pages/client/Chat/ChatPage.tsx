@@ -5,6 +5,8 @@ import { MessagesList } from './MessagesList';
 import { useWorkspaceChannelsList } from '@/contexts/WorkspaceChannelsListContext';
 import { useWorkspacesList } from '@/contexts/WorkspacesListContext';
 import { Channel } from '@/types/channels';
+import { useUser } from '@/contexts/UserContext';
+import { useWebsocket } from '@/contexts/WebSocketProvider';
 
 export type ChannelListItem = {
     name: string,
@@ -13,14 +15,16 @@ export type ChannelListItem = {
 
 export function ChatPage() {
     const { workspacesList } = useWorkspacesList();
+    const { setNewMessageReceived } = useWebsocket();
     const { channels } = useWorkspaceChannelsList();
-    const [ activeChannel, setActiveChannel ] = useState<Channel | null>(null);
+    const [activeChannel, setActiveChannel] = useState<Channel | null>(null);
+
 
     useEffect(() => {
         if (workspacesList.length > 0 && channels.length > 0) {
             setActiveChannel(channels[0]);
         }
-    }, [ workspacesList, channels ])
+    }, [workspacesList, channels])
 
     return (
         <div className="h-screen flex bg-gray-900 text-white">
@@ -32,6 +36,7 @@ export function ChatPage() {
             />
             {activeChannel && (
                 <MessagesList
+                    setNewMessageReceived={setNewMessageReceived}
                     activeChannel={activeChannel}
                 />
             )}

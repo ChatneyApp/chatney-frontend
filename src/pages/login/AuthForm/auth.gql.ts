@@ -35,17 +35,17 @@ export const loginUser = async ({ client, login, password }: {
 
 export const registerUser = async ({ client, email,
     password,
-    username
+    name
 }: {
     client: ApolloClient<object>,
     email: string,
-    username: string,
+    name: string,
     password: string,
 }): Promise<void> => {
     try {
         const { data } = await client.mutate({
             mutation: gql`
-                mutation RegisterUser($input: CreateUserDTO!) {
+                mutation RegisterUser($input: UserRegisterDTOInput!) {
                     users {
                         register(userDTO: $input) {
                             id
@@ -55,7 +55,7 @@ export const registerUser = async ({ client, email,
                     }
                 }
             `,
-            variables: { email, username, password },
+            variables: { input: { email, name, password } },
         });
 
         const id = data?.users?.register?.id;

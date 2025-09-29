@@ -1,42 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useApolloClient } from '@apollo/client';
 
 import { MessageInput } from './MessageInput';
 import { ChannelListItem } from './ChatPage';
 import { Message } from '@/types/messages';
 import { getChannelMessagesList, postNewMessage } from '@/graphql/messages';
-import { useUser } from '@/contexts/UserContext';
-import { useWebsocket } from './hooks/useWebsocket';
 
 type Props = {
     activeChannel: ChannelListItem;
+    setNewMessageReceived: Function
 };
-export function MessagesList({ activeChannel }: Props) {
+export function MessagesList({ activeChannel, setNewMessageReceived }: Props) {
     const apolloClient = useApolloClient();
-    const [ messages, setMessages ] = useState<Message[]>([]);
-    const userCtx = useUser();
-
-    const { socket, disconnect } = useWebsocket(userCtx!.user!.id);
-
-    useEffect(() => {
-        console.log('socket init');
-        socket.addEventListener('open', function (event) {
-            console.log('WebSocket is connected!');
-        });
-
-        socket.addEventListener('message', function (event) {
-        });
-
-        socket.addEventListener('error', function (event) {
-            console.error('WebSocket error:', event);
-        });
-
-        socket.addEventListener('close', function (event) {
-            console.log('WebSocket is closed!');
-        });
-
-        return disconnect;
-    }, [ socket, disconnect ]);
+    const [messages, setMessages] = useState<Message[]>([]);
 
     const handleSend = async (text: string) => {
         const newMessage = {
@@ -45,19 +21,24 @@ export function MessagesList({ activeChannel }: Props) {
             attachments: [],
             parentId: null,
         };
-        try {
-            socket.send(JSON.stringify(newMessage));
-        } catch (error) {
-            console.log('socket err', error);
-        }
+        // try {
+        //     socket.send(JSON.stringify(newMessage));
+        // } catch (error) {
+        //     console.log('socket err', error);
+        // }
         const mRes = await postNewMessage(apolloClient, newMessage);
-        setMessages((prev) => [ ...prev, mRes ]);
+        //setMessages((prev) => [...prev, mRes]);
     };
+
+    const newMessageReceivedClient = (message: Message) => {
+        if (message?.id)
+            setMessages((prev) => [...prev, message]);
+    }
 
     const loadMessages = async () => {
         try {
             const listRes = await getChannelMessagesList(apolloClient, activeChannel.id);
-            const list = [ ...listRes ];
+            const list = [...listRes];
             list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
             setMessages(list);
         } catch (err) {
@@ -67,8 +48,15 @@ export function MessagesList({ activeChannel }: Props) {
     };
 
     useEffect(() => {
+        setNewMessageReceived(newMessageReceivedClient);
         loadMessages();
-    }, [ activeChannel ]);
+    }, [activeChannel]);
+
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
 
     return (
         <div className="flex-1 flex flex-col bg-gray-900">
@@ -86,6 +74,7 @@ export function MessagesList({ activeChannel }: Props) {
                         </div>
                     </div>
                 ))}
+                <div ref={messagesEndRef} />
             </div>
 
             <MessageInput onSend={handleSend} />

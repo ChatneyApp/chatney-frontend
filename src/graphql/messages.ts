@@ -5,7 +5,7 @@ import { ChannelId } from '@/types/channels';
 
 export const postNewMessage = async (client: ApolloClient<object>, messageDto: CreateMessageDto): Promise<Message> => {
     const POST_MESSAGE = gql`
-        mutation CreateChannel($messageDto: MessageDTOInput!) {
+        mutation CreateMessage($messageDto: MessageDTOInput!) {
             messages {
                 addMessage(messageDto: $messageDto) {
                     id

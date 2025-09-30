@@ -5,14 +5,15 @@ import { MessageInput } from './MessageInput';
 import { ChannelListItem } from './ChatPage';
 import { Message } from '@/types/messages';
 import { getChannelMessagesList, postNewMessage } from '@/graphql/messages';
+import { ISetNewMessageReceived } from '@/contexts/WebSocketProvider';
 
 type Props = {
     activeChannel: ChannelListItem;
-    setNewMessageReceived: Function
+    setNewMessageReceived: ISetNewMessageReceived;
 };
 export function MessagesList({ activeChannel, setNewMessageReceived }: Props) {
     const apolloClient = useApolloClient();
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [ messages, setMessages ] = useState<Message[]>([]);
 
     const handleSend = async (text: string) => {
         const newMessage = {
@@ -21,24 +22,19 @@ export function MessagesList({ activeChannel, setNewMessageReceived }: Props) {
             attachments: [],
             parentId: null,
         };
-        // try {
-        //     socket.send(JSON.stringify(newMessage));
-        // } catch (error) {
-        //     console.log('socket err', error);
-        // }
-        const mRes = await postNewMessage(apolloClient, newMessage);
-        //setMessages((prev) => [...prev, mRes]);
+        await postNewMessage(apolloClient, newMessage);
     };
 
     const newMessageReceivedClient = (message: Message) => {
-        if (message?.id)
-            setMessages((prev) => [...prev, message]);
+        if (message?.id) {
+            setMessages((prev) => [ ...prev, message ]);
+        }
     }
 
     const loadMessages = async () => {
         try {
             const listRes = await getChannelMessagesList(apolloClient, activeChannel.id);
-            const list = [...listRes];
+            const list = [ ...listRes ];
             list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
             setMessages(list);
         } catch (err) {
@@ -50,13 +46,13 @@ export function MessagesList({ activeChannel, setNewMessageReceived }: Props) {
     useEffect(() => {
         setNewMessageReceived(newMessageReceivedClient);
         loadMessages();
-    }, [activeChannel]);
+    }, [ activeChannel, setNewMessageReceived ]);
 
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    }, [ messages ]);
 
     return (
         <div className="flex-1 flex flex-col bg-gray-900">

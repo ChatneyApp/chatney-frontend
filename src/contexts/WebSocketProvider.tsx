@@ -1,47 +1,76 @@
-import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useRef } from 'react';
 
 import { useUser } from './UserContext';
 
-interface WebSocketContext {
-    setNewMessageReceived: Function
+type WebSocketMessage = string | object;
+export interface INewMessageCallback {
+    (message: WebSocketMessage): void;
+}
+export interface ISetNewMessageReceived {
+    (fn: INewMessageCallback): void;
+}
+export interface WebSocketContext {
+    setNewMessageReceived: ISetNewMessageReceived;
 }
 
 export const WebSocketContext = createContext<WebSocketContext>(null as unknown as WebSocketContext);
 
 export function WebSocketContextProvider({ children }: { children: ReactNode }) {
     const userCtx = useUser();
-    const newMessageReceivedRef = useRef<(message: any) => void>(() => { });
+    const newMessageReceivedRef = useRef<INewMessageCallback>(() => { });
+    const abortControllerRef = useRef(new AbortController());
+    const webSocketRef = useRef<WebSocket | null>(null);
+    const userId = userCtx?.user?.id ?? null;
+    console.log('WSContext - userId', userId);
 
-    useEffect(() => {
+    const connect = useCallback(() => {
+        if (!userId) {
+            return;
+        }
+
+        console.log('connecting to websocket...');
+
         const url = new URL(`${import.meta.env.VITE_WEBSOCKET_URL}`);
-        url.searchParams.set('userId', `${userCtx?.user?.id ?? ''}-${Math.random()}`);
+        const deviceId = sessionStorage.getItem('deviceId')!;
+        url.searchParams.set('userId', `${userId}--${deviceId}`);
 
-        const socket = new WebSocket(url.toString());
+        const ws = new WebSocket(url);
+        webSocketRef.current = ws;
 
-        socket.addEventListener('open', () => {
+        abortControllerRef.current = new AbortController();
+        const { signal } = abortControllerRef.current;
+        ws.addEventListener('open', () => {
             console.log('WebSocket connected');
-        });
+        }, { signal });
 
-        socket.addEventListener('message', (event) => {
-            console.log('OOLOLO', event.data)
+        ws.addEventListener('message', (event) => {
             const message = JSON.parse(event.data);
             newMessageReceivedRef.current(message);
-        });
+        }, { signal });
 
-        socket.addEventListener('error', (event) => {
+        ws.addEventListener('error', (event) => {
             console.error('WebSocket error:', event);
-        });
+        }, { signal });
 
-        socket.addEventListener('close', () => {
+        ws.addEventListener('close', () => {
             console.log('WebSocket closed');
-        });
+        }, { signal });
+    }, [ userId ]);
 
-        return () => {
-            socket.close();
-        };
+    const close = useCallback(() => {
+        abortControllerRef.current.abort();
+        if (webSocketRef.current) {
+            webSocketRef.current.close();
+            webSocketRef.current = null;
+        }
     }, []);
 
-    const setNewMessageReceived = (fn: (message: any) => void) => {
+    useEffect(() => {
+        connect();
+        return close;
+    }, [ userId ]);
+
+    const setNewMessageReceived = (fn: INewMessageCallback) => {
         newMessageReceivedRef.current = fn;
     };
 

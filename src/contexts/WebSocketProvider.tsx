@@ -1,8 +1,9 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useRef } from 'react';
 
 import { useUser } from './UserContext';
+import { MessageWithUser } from '@/types/messages';
 
-type WebSocketMessage = string | object;
+type WebSocketMessage = MessageWithUser;
 export interface INewMessageCallback {
     (message: WebSocketMessage): void;
 }

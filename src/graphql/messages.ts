@@ -1,6 +1,6 @@
 import { ApolloClient, gql, type TypedDocumentNode } from '@apollo/client';
 
-import { CreateMessageDto, Message } from '@/types/messages';
+import { CreateMessageDto, Message, MessageWithUser } from '@/types/messages';
 import { ChannelId } from '@/types/channels';
 
 export const postNewMessage = async (client: ApolloClient<object>, messageDto: CreateMessageDto): Promise<Message> => {
@@ -45,11 +45,11 @@ export const postNewMessage = async (client: ApolloClient<object>, messageDto: C
 
 type GetMessagesResponse = {
     messages: {
-        listChannelMessages: Message[];
+        listChannelMessages: MessageWithUser[];
     }
 }
 
-export const getChannelMessagesList = async (client: ApolloClient<object>, channelId: ChannelId): Promise<Message[]> => {
+export const getChannelMessagesList = async (client: ApolloClient<object>, channelId: ChannelId): Promise<MessageWithUser[]> => {
     const GET_MESSAGES: TypedDocumentNode<GetMessagesResponse> = gql`
     query ($channelId: String!) {
         messages {
@@ -62,6 +62,11 @@ export const getChannelMessagesList = async (client: ApolloClient<object>, chann
                 status
                 createdAt
                 updatedAt
+                user {
+                    id
+                    name
+                    avatarUrl
+                }
                 reactions {
                     userId
                     reactionText

@@ -1,4 +1,9 @@
 ﻿export type MessageId = string;
+export type MessageUser = {
+    id: string;
+    name: string;
+    avatarUrl: string;
+}
 export type Message = {
     id: MessageId;
     channelId: string;
@@ -10,6 +15,9 @@ export type Message = {
     updatedAt: Date;
     reactions: Reaction[];
     parentId: string | null;
+}
+export type MessageWithUser = Message & {
+    user?: MessageUser;
 }
 
 export type CreateMessageDto = Pick<Message, 'channelId' | 'content' | 'attachments' | 'parentId'>;

@@ -46,7 +46,12 @@ export function WebSocketContextProvider({ children }: { children: ReactNode }) 
 
         ws.addEventListener('message', (event) => {
             const message = JSON.parse(event.data);
-            newMessageReceivedRef.current(message);
+            const type = message?.type;
+            switch (type) {
+                case 'newMessage':
+                    newMessageReceivedRef.current(message.payload);
+                    break;
+            }
         }, { signal });
 
         ws.addEventListener('error', (event) => {

@@ -36,6 +36,8 @@ export const RegisterForm = () => {
                 name: data.username,
             });
             reset();
+            window.location.href = '/login';
+
         } catch (error) {
             setErrorMessage(`Error registering: ${(error as Error).message}`);
             setSuccessMessage(null);

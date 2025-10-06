@@ -10,10 +10,10 @@ import { CreateMessageInput, Message } from '@/types/messages';
 const MessageEditor = () => {
     const { userData } = useUserData();
     const { channel } = useUserChannel();
-    const [ text, setText ] = useState('');
-    const [ isPosting, setIsPosting ] = useState(false);
+    const [text, setText] = useState('');
+    const [isPosting, setIsPosting] = useState(false);
 
-    const [ postMessage ] = useMutation<Message, {messageDto: CreateMessageInput}>(POST_MESSAGE, {
+    const [postMessage] = useMutation<Message, { messageDto: CreateMessageInput }>(POST_MESSAGE, {
         onCompleted: () => {
             setIsPosting(false);
         },
@@ -73,7 +73,7 @@ const ChannelCore = () => {
     return <div className="flex flex-col gap-2">
         <Link to="/client/workspaces">Go back to workspaces</Link>
         <div>{channel?.name}</div>
-        <MessageEditor/>
+        <MessageEditor />
     </div>;
 };
 
@@ -93,7 +93,7 @@ export const ClientChannelPage = () => {
             </h1>
             <UserDataProvider>
                 <UserChannelProvider channelId={uuid}>
-                    <ChannelCore/>
+                    <ChannelCore />
                 </UserChannelProvider>
             </UserDataProvider>
         </div>

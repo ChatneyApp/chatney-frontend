@@ -8,12 +8,14 @@ type Props = {
     activeChannel: Channel | null;
     setActiveChannel(channel: Channel): void;
     channels: Channel[];
+    refetch: (channelId?: string) => void;
 };
-export function ChannelList({ activeChannel, setActiveChannel, channels }: Props) {
-    const [ isModalOpen, setIsModalOpen ] = useState(false);
+export function ChannelList({ activeChannel, setActiveChannel, channels, refetch }: Props) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleChannelCreated = (newChannel: ChannelListItem) => {
         setIsModalOpen(false);
+        refetch(newChannel.id);
     };
 
     return (

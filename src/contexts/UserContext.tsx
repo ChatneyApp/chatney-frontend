@@ -62,11 +62,15 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         fetchStartupData();
     }, [ ]);
 
+    if (!userCtx) {
+        return null;
+    }
+
     return (
         <UserContext.Provider value={userCtx} >
-            {userCtx?.user && children}
+            {children}
         </UserContext.Provider >
     );
 };
 
-export const UseUser = () => useContext(UserContext);
+export const useUser = () => useContext(UserContext);

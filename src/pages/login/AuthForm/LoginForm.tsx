@@ -4,7 +4,7 @@ import { useApolloClient } from '@apollo/client';
 import { Button } from '@/components/Button';
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './AuthForm.module.css';
-import { userAuthTokenName, userAuthId } from '@/infra/consts';
+import { clientStartPageUrl, userAuthTokenName, userAuthId } from '@/infra/consts';
 import { loginUser } from './auth.gql';
 
 type FormInputs = {
@@ -36,7 +36,7 @@ export const LoginForm = () => {
 
             localStorage.setItem(userAuthTokenName, out.token);
             localStorage.setItem(userAuthId, out.id);
-            window.location.href = '/'
+            window.location.href = clientStartPageUrl;
         } catch (error) {
             setErrorMessage(`Login error: ${(error as Error).message}`);
         }

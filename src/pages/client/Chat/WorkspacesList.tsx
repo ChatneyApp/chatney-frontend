@@ -1,13 +1,13 @@
-import { useState, useRef, useEffect } from "react";
-import { UseUser } from "@/contexts/UserContext";
-import { useWorkspacesList } from "@/contexts/WorkspacesListContext";
-import { WorkspaceCreateModal } from "./WorkspaceCreateModal";
-import { Workspace } from "@/types/workspaces";
+import { useState, useRef, useEffect } from 'react';
+import { useUser } from '@/contexts/UserContext';
+import { useWorkspacesList } from '@/contexts/WorkspacesListContext';
+import { WorkspaceCreateModal } from './WorkspaceCreateModal';
+import { Workspace } from '@/types/workspaces';
 
 export function WorkspacesList() {
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const workspacesList = useWorkspacesList();
-    const userCtx = UseUser();
+    const userCtx = useUser();
     const [ showPopup, setShowPopup ] = useState(false);
     const popupRef = useRef<HTMLDivElement>(null);
     const avatarRef = useRef<HTMLDivElement>(null);

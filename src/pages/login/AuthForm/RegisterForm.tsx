@@ -15,9 +15,9 @@ type FormInputs = {
 
 export const RegisterForm = () => {
     const apollo = useApolloClient();
-    const [ loading, setLoading ] = useState(false);
-    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
-    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             email: '',
@@ -33,9 +33,11 @@ export const RegisterForm = () => {
                 client: apollo,
                 email: data.email,
                 password: data.password,
-                username: data.username,
+                name: data.username,
             });
             reset();
+            window.location.href = '/login';
+
         } catch (error) {
             setErrorMessage(`Error registering: ${(error as Error).message}`);
             setSuccessMessage(null);

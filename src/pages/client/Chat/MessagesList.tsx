@@ -1,16 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useApolloClient } from '@apollo/client';
+
 import { MessageInput } from './MessageInput';
 import { ChannelListItem } from './ChatPage';
-import { Message } from '@/types/messages';
+import { MessageWithUser } from '@/types/messages';
 import { getChannelMessagesList, postNewMessage } from '@/graphql/messages';
-import { useApolloClient } from '@apollo/client';
+import { ISetNewMessageReceived } from '@/contexts/WebSocketProvider';
 
 type Props = {
     activeChannel: ChannelListItem;
+    setNewMessageReceived: ISetNewMessageReceived;
 };
-export function MessagesList({ activeChannel }: Props) {
+export function MessagesList({ activeChannel, setNewMessageReceived }: Props) {
     const apolloClient = useApolloClient();
-    const [ messages, setMessages ] = useState<Message[]>([]);
+    const [ messages, setMessages ] = useState<MessageWithUser[]>([]);
 
     const handleSend = async (text: string) => {
         const newMessage = {
@@ -19,9 +22,14 @@ export function MessagesList({ activeChannel }: Props) {
             attachments: [],
             parentId: null,
         };
-        const mRes = await postNewMessage(apolloClient, newMessage);
-        setMessages((prev) => [ ...prev, mRes ]);
+        await postNewMessage(apolloClient, newMessage);
     };
+
+    const newMessageReceivedClient = (message: MessageWithUser) => {
+        if (message?.id) {
+            setMessages((prev) => [ ...prev, message ]);
+        }
+    }
 
     const loadMessages = async () => {
         try {
@@ -36,8 +44,15 @@ export function MessagesList({ activeChannel }: Props) {
     };
 
     useEffect(() => {
+        setNewMessageReceived(newMessageReceivedClient);
         loadMessages();
-    }, [ activeChannel ]);
+    }, [ activeChannel, setNewMessageReceived ]);
+
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [ messages ]);
 
     return (
         <div className="flex-1 flex flex-col bg-gray-900">
@@ -45,16 +60,17 @@ export function MessagesList({ activeChannel }: Props) {
                 <h2 className="text-lg font-semibold mb-4"># {activeChannel?.name}</h2>
                 {messages.map((msg) => (
                     <div key={msg.id} className="flex items-start space-x-4">
-                        <img src="https://i.pravatar.cc/40?img=1" alt={msg.userId} className="w-10 h-10 rounded-full" />
+                        <img src={msg.user?.avatarUrl ?? 'https://i.pravatar.cc/40?img=1'} alt={msg.userId} className="w-10 h-10 rounded-full" />
                         <div>
                             <div className="flex items-center space-x-2">
-                                <span className="font-medium">{msg.userId}</span>
+                                <span className="font-medium">{msg.user?.name ?? msg.userId}</span>
                                 <span className="text-xs text-gray-500">{new Date(msg.createdAt).toISOString()}</span>
                             </div>
                             <p className="text-gray-200">{msg.content}</p>
                         </div>
                     </div>
                 ))}
+                <div ref={messagesEndRef} />
             </div>
 
             <MessageInput onSend={handleSend} />

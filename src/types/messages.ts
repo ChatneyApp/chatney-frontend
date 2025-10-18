@@ -17,7 +17,7 @@ export type Message = {
     parentId: string | null;
 }
 export type MessageWithUser = Message & {
-    user?: MessageUser;
+    user: MessageUser;
 }
 
 export type CreateMessageDto = Pick<Message, 'channelId' | 'content' | 'attachments' | 'parentId'>;

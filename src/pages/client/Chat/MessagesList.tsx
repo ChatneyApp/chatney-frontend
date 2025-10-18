@@ -4,16 +4,24 @@ import { useApolloClient } from '@apollo/client';
 import { MessageInput } from './MessageInput';
 import { ChannelListItem } from './ChatPage';
 import { MessageWithUser } from '@/types/messages';
-import { getChannelMessagesList, postNewMessage } from '@/graphql/messages';
-import { ISetNewMessageReceived } from '@/contexts/WebSocketProvider';
+import { deleteMessage, getChannelMessagesList, postNewMessage } from '@/graphql/messages';
+import {
+    MessageDeletedPayload,
+    WebSocketEvent,
+    WebSocketEventEmitter,
+    WebSocketEventType
+} from '@/communication/WebSocketEventEmitter';
+import { MessageComponent } from '@/pages/client/Chat/MessageComponent';
 
 type Props = {
     activeChannel: ChannelListItem;
-    setNewMessageReceived: ISetNewMessageReceived;
+    eventEmitter: WebSocketEventEmitter;
 };
-export function MessagesList({ activeChannel, setNewMessageReceived }: Props) {
+export function MessagesList({ activeChannel, eventEmitter }: Props) {
     const apolloClient = useApolloClient();
     const [ messages, setMessages ] = useState<MessageWithUser[]>([]);
+
+    console.log(import.meta.env.VITE_ENV === 'development');
 
     const handleSend = async (text: string) => {
         const newMessage = {
@@ -25,11 +33,34 @@ export function MessagesList({ activeChannel, setNewMessageReceived }: Props) {
         await postNewMessage(apolloClient, newMessage);
     };
 
-    const newMessageReceivedClient = (message: MessageWithUser) => {
-        if (message?.id) {
-            setMessages((prev) => [ ...prev, message ]);
+    const handleOnDeleteClick = async (id: string) => {
+        console.log(`delete message id = ${id}`);
+        await deleteMessage(apolloClient, id);
+    };
+
+    const handleWebSocketEvent = (event: WebSocketEvent) => {
+        const { type, payload } = event;
+        console.log('->> event', type, payload);
+        switch (type) {
+            case WebSocketEventType.NEW_MESSAGE: {
+                const message = payload as MessageWithUser;
+                if (message.channelId === activeChannel.id) {
+                    console.log('message received!', message);
+                    setMessages((prev) => [ ...prev, message ]);
+                }
+            }
+                break;
+            case WebSocketEventType.DELETED_MESSAGE: {
+                const { channelId, messageId } = payload as MessageDeletedPayload;
+                console.log('should we delete message?', channelId, messageId);
+                if (channelId === activeChannel.id) {
+                    console.log('message deleted!', messageId);
+                    setMessages((prev) => prev.filter(m => m.id !== messageId));
+                }
+            }
+                break;
         }
-    }
+    };
 
     const loadMessages = async () => {
         try {
@@ -44,9 +75,15 @@ export function MessagesList({ activeChannel, setNewMessageReceived }: Props) {
     };
 
     useEffect(() => {
-        setNewMessageReceived(newMessageReceivedClient);
+        const abortController = new AbortController();
+        const { signal } = abortController;
+        eventEmitter.addEventListener(WebSocketEventType.NEW_MESSAGE, handleWebSocketEvent, { signal });
+        eventEmitter.addEventListener(WebSocketEventType.DELETED_MESSAGE, handleWebSocketEvent, { signal });
         loadMessages();
-    }, [ activeChannel, setNewMessageReceived ]);
+        return () => {
+            abortController.abort();
+        }
+    }, [ activeChannel, eventEmitter ]);
 
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -58,17 +95,12 @@ export function MessagesList({ activeChannel, setNewMessageReceived }: Props) {
         <div className="flex-1 flex flex-col bg-gray-900">
             <div className="flex-1 p-4 overflow-y-auto space-y-4">
                 <h2 className="text-lg font-semibold mb-4"># {activeChannel?.name}</h2>
-                {messages.map((msg) => (
-                    <div key={msg.id} className="flex items-start space-x-4">
-                        <img src={msg.user?.avatarUrl ?? 'https://i.pravatar.cc/40?img=1'} alt={msg.userId} className="w-10 h-10 rounded-full" />
-                        <div>
-                            <div className="flex items-center space-x-2">
-                                <span className="font-medium">{msg.user?.name ?? msg.userId}</span>
-                                <span className="text-xs text-gray-500">{new Date(msg.createdAt).toISOString()}</span>
-                            </div>
-                            <p className="text-gray-200">{msg.content}</p>
-                        </div>
-                    </div>
+                {messages.map((message) => (
+                    <MessageComponent
+                        key={message.id}
+                        message={message}
+                        onDelete={handleOnDeleteClick}
+                    />
                 ))}
                 <div ref={messagesEndRef} />
             </div>

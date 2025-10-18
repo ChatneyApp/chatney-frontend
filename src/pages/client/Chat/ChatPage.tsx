@@ -10,7 +10,7 @@ export type ChannelListItem = {
 }
 
 export function ChatPage() {
-    const { setNewMessageReceived } = useWebsocket();
+    const { eventEmitter } = useWebsocket();
     const { channels, refetch, activeChannel, setActiveChannel } = useWorkspaceChannelsList();
 
     return (
@@ -24,7 +24,7 @@ export function ChatPage() {
             />
             {activeChannel && (
                 <MessagesList
-                    setNewMessageReceived={setNewMessageReceived}
+                    eventEmitter={eventEmitter}
                     activeChannel={activeChannel}
                 />
             )}

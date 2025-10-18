@@ -43,6 +43,32 @@ export const postNewMessage = async (client: ApolloClient<object>, messageDto: C
     }
 };
 
+export const deleteMessage = async (client: ApolloClient<object>, messageId: string): Promise<boolean> => {
+    const DELETE_MESSAGE = gql`
+        mutation DeleteMessage($id: String!) {
+            messages {
+                deleteMessage(id: $id)
+            }
+        }
+    `;
+    try {
+        const { data } = await client.mutate({
+            mutation: DELETE_MESSAGE,
+            variables: { id: messageId },
+        });
+
+        const result = data?.messages?.deleteMessage;
+
+        if (typeof result !== 'boolean') {
+            throw new Error('Invalid deleteMessage response');
+        }
+
+        return result;
+    } catch (error) {
+        throw new Error(`Deleting message failed: ${(error as Error).message}`);
+    }
+};
+
 type GetMessagesResponse = {
     messages: {
         listChannelMessages: MessageWithUser[];

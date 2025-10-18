@@ -1,24 +1,17 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useRef } from 'react';
 
 import { useUser } from './UserContext';
-import { MessageWithUser } from '@/types/messages';
+import { WebSocketEvent, WebSocketEventEmitter, WebSocketEventRaw } from '@/communication/WebSocketEventEmitter';
 
-type WebSocketMessage = MessageWithUser;
-export interface INewMessageCallback {
-    (message: WebSocketMessage): void;
-}
-export interface ISetNewMessageReceived {
-    (fn: INewMessageCallback): void;
-}
 export interface WebSocketContext {
-    setNewMessageReceived: ISetNewMessageReceived;
+    eventEmitter: WebSocketEventEmitter;
 }
 
 export const WebSocketContext = createContext<WebSocketContext>(null as unknown as WebSocketContext);
 
 export function WebSocketContextProvider({ children }: { children: ReactNode }) {
     const userCtx = useUser();
-    const newMessageReceivedRef = useRef<INewMessageCallback>(() => { });
+    const eventEmitter = useRef(new WebSocketEventEmitter());
     const abortControllerRef = useRef(new AbortController());
     const webSocketRef = useRef<WebSocket | null>(null);
     const userId = userCtx?.user?.id ?? null;
@@ -44,13 +37,13 @@ export function WebSocketContextProvider({ children }: { children: ReactNode }) 
             console.log('WebSocket connected');
         }, { signal });
 
-        ws.addEventListener('message', (event) => {
-            const message = JSON.parse(event.data);
-            const type = message?.type;
-            switch (type) {
-                case 'newMessage':
-                    newMessageReceivedRef.current(message.payload);
-                    break;
+        ws.addEventListener('message', (event: MessageEvent<string>) => {
+            try {
+                const message = JSON.parse(event.data) as WebSocketEventRaw;
+                const { type, payload } = message;
+                eventEmitter.current.dispatchEvent(new WebSocketEvent(type, payload));
+            } catch (err) {
+                console.error('WebSocket error', err);
             }
         }, { signal });
 
@@ -76,12 +69,8 @@ export function WebSocketContextProvider({ children }: { children: ReactNode }) 
         return close;
     }, [ userId ]);
 
-    const setNewMessageReceived = (fn: INewMessageCallback) => {
-        newMessageReceivedRef.current = fn;
-    };
-
     return (
-        <WebSocketContext.Provider value={{ setNewMessageReceived }}>
+        <WebSocketContext.Provider value={{ eventEmitter: eventEmitter.current }}>
             {children}
         </WebSocketContext.Provider>
     );

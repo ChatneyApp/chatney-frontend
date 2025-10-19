@@ -1,7 +1,7 @@
 ﻿import { Reaction } from '@/types/messages';
 
 import styles from './MessageReactions.module.css';
-import { ReactionSelectionDialog } from '@/pages/client/Chat/ReactionSelectionDialog.tsx';
+import { ReactionSelectionDialog } from '@/pages/client/Chat/ReactionSelectionDialog';
 
 type Props = {
     reactions: Reaction[];
@@ -27,7 +27,6 @@ export const MessageReactions = ({ reactions, myReactions, onAddReaction, onDele
                 }
             >{reaction.code}</div>
         ))}
-        <div className={styles.addReaction}>+</div>
         <ReactionSelectionDialog
             reactions={[ 'fire', 'smile', 'fff' ]}
             onSelect={onAddReaction}

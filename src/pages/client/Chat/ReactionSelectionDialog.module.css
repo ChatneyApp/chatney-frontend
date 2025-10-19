@@ -8,7 +8,7 @@
 }
 
 .popoverContent {
-    @apply w-[260px] rounded bg-gray-500 p-5 will-change-[transform,opacity];
+    @apply max-w-[20em] rounded bg-gray-500 p-5 will-change-[transform,opacity];
 }
 
 .reactionsList {

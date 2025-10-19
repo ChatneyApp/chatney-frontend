@@ -1,7 +1,6 @@
 ﻿import { useState } from 'react';
 import { Popover } from 'radix-ui';
 
-import { Cross2Icon } from '@radix-ui/react-icons';
 import styles from './ReactionSelectionDialog.module.css';
 
 type Props = {
@@ -42,12 +41,6 @@ export const ReactionSelectionDialog = ({ reactions, onSelect }: Props) => {
                             </div>
                         ))}
                     </div>
-                    <Popover.Close
-                        className="absolute right-[5px] top-[5px] inline-flex size-[25px] cursor-default items-center justify-center rounded-full text-violet11 outline-none hover:bg-violet4 focus:shadow-[0_0_0_2px] focus:shadow-violet7"
-                        aria-label="Close"
-                    >
-                        <Cross2Icon/>
-                    </Popover.Close>
                     <Popover.Arrow className={styles.popupArrow}/>
                 </Popover.Content>
             </Popover.Portal>

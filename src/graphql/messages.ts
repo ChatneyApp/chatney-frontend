@@ -17,8 +17,8 @@ export const postNewMessage = async (client: ApolloClient<object>, messageDto: C
                     createdAt
                     updatedAt
                     reactions {
-                        userId
-                        reactionText
+                        code
+                        count
                     }
                     parentId
                 }
@@ -94,8 +94,8 @@ export const getChannelMessagesList = async (client: ApolloClient<object>, chann
                     avatarUrl
                 }
                 reactions {
-                    userId
-                    reactionText
+                    code
+                    count
                 }
                 parentId
             }

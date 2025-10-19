@@ -21,8 +21,6 @@ export function MessagesList({ activeChannel, eventEmitter }: Props) {
     const apolloClient = useApolloClient();
     const [ messages, setMessages ] = useState<MessageWithUser[]>([]);
 
-    console.log(import.meta.env.VITE_ENV === 'development');
-
     const handleSend = async (text: string) => {
         const newMessage = {
             channelId: activeChannel.id,
@@ -36,6 +34,14 @@ export function MessagesList({ activeChannel, eventEmitter }: Props) {
     const handleOnDeleteClick = async (id: string) => {
         console.log(`delete message id = ${id}`);
         await deleteMessage(apolloClient, id);
+    };
+
+    const handleAddReaction = async (code: string) => {
+        console.log(`add reaction id ${code}`);
+    };
+
+    const handleDeleteReaction = async (code: string) => {
+        console.log(`delete reaction id ${code}`);
     };
 
     const handleWebSocketEvent = (event: WebSocketEvent) => {
@@ -100,6 +106,8 @@ export function MessagesList({ activeChannel, eventEmitter }: Props) {
                         key={message.id}
                         message={message}
                         onDelete={handleOnDeleteClick}
+                        onAddReaction={handleAddReaction}
+                        onDeleteReaction={handleDeleteReaction}
                     />
                 ))}
                 <div ref={messagesEndRef} />

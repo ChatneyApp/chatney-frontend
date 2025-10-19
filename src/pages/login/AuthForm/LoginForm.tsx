@@ -24,7 +24,7 @@ export const LoginForm = () => {
     });
 
     const onSubmit = async (data: FormInputs) => {
-        console.log("Form data:", data);
+        console.log('Form data:', data);
         setLoading(true);
 
         try {

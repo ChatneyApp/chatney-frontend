@@ -1,4 +1,4 @@
-import { ApolloClient, gql } from "@apollo/client";
+import { ApolloClient, gql } from '@apollo/client';
 
 export const loginUser = async ({ client, login, password }: {
     client: ApolloClient<object>,
@@ -47,7 +47,7 @@ export const registerUser = async ({ client, email,
             mutation: gql`
                 mutation RegisterUser($input: UserRegisterDTOInput!) {
                     users {
-                        register(userDTO: $input) {
+                        register(userDto: $input) {
                             id
                             name
                             email

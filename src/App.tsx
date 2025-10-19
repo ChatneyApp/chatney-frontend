@@ -7,7 +7,8 @@ import { dashboardRoutes } from '@/pages/dashboard/routes';
 import { clientRoutes } from '@/pages/client/routes';
 import { LoginRegisterPage } from '@/pages/login/ClientHomePage';
 import { composeProviders } from '@/infra/composeProviders';
-import { loginPageUrl } from '@/infra/consts';
+import { installSystemPageUrl, loginPageUrl } from '@/infra/consts';
+import { InstallSystemPage } from './pages/installation/InstallSystemPage';
 
 const providers = [
     BrowserRouter,
@@ -22,6 +23,12 @@ const LoginPageRouterSelector = () => {
     if (isLoginPage) {
         return (
             <LoginRegisterPage/>
+        );
+    }
+
+    if (window.location.pathname === installSystemPageUrl) {
+        return (
+            <InstallSystemPage/>
         );
     }
 

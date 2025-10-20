@@ -1,0 +1,24 @@
+﻿@reference "tailwindcss";
+
+.form {
+    @apply w-1/2 mx-auto p-6 bg-white rounded-lg shadow-md text-gray-700;
+}
+
+.formGroup {
+    @apply mb-4;
+}
+
+.input {
+    @apply w-full p-2 border border-gray-300 rounded mb-4;
+}
+
+.label {
+    @apply block mb-2;
+}
+.label:after {
+    @apply content-['*'] text-red-500;
+}
+
+.errorText {
+    @apply text-red-500 text-sm;
+}

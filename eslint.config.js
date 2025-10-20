@@ -35,7 +35,7 @@ export default [
                 }
             ],
             'quotes': ['error', 'single', { avoidEscape: true }],
-            'array-bracket-spacing': ['error', 'always'],
+            'array-bracket-spacing': ['error', 'never'],
             'object-curly-spacing': ['error', 'always'],
             'block-spacing': ['error', 'always'],
             'computed-property-spacing': ['error', 'never'],

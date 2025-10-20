@@ -4,7 +4,7 @@ import { useApolloClient } from '@apollo/client';
 import { MessageInput } from './MessageInput';
 import { ChannelListItem } from './ChatPage';
 import { MessageWithUser } from '@/types/messages';
-import { deleteMessage, getChannelMessagesList, postNewMessage } from '@/graphql/messages';
+import { addReaction, deleteMessage, deleteReaction, getChannelMessagesList, postNewMessage } from '@/graphql/messages';
 import {
     MessageDeletedPayload,
     WebSocketEvent,
@@ -36,12 +36,14 @@ export function MessagesList({ activeChannel, eventEmitter }: Props) {
         await deleteMessage(apolloClient, id);
     };
 
-    const handleAddReaction = async (code: string) => {
+    const handleAddReaction = async (messageId: string, code: string) => {
         console.log(`add reaction id ${code}`);
+        await addReaction(apolloClient, messageId, code);
     };
 
-    const handleDeleteReaction = async (code: string) => {
+    const handleDeleteReaction = async (messageId: string, code: string) => {
         console.log(`delete reaction id ${code}`);
+        await deleteReaction(apolloClient, messageId, code);
     };
 
     const handleWebSocketEvent = (event: WebSocketEvent) => {

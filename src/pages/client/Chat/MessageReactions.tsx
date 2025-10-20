@@ -25,7 +25,7 @@ export const MessageReactions = ({ reactions, myReactions, onAddReaction, onDele
                         }
                     }
                 }
-            >{reaction.code}</div>
+            >[{reaction.count}] {reaction.code}</div>
         ))}
         <ReactionSelectionDialog
             reactions={[ 'fire', 'smile', 'fff' ]}

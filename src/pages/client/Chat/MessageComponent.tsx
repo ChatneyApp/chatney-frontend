@@ -11,8 +11,8 @@ const DeleteButton = ({ children, onClick }: PropsWithChildren & HTMLProps<HTMLB
 type Props = {
     message: MessageWithUser;
     onDelete(id: string): void;
-    onAddReaction(code: string): void;
-    onDeleteReaction(code: string): void;
+    onAddReaction(messageId: string, code: string): void;
+    onDeleteReaction(messageId: string, code: string): void;
 };
 export const MessageComponent = ({ message, onDelete, onAddReaction, onDeleteReaction }: Props) => (
     <div data-id={isDev ? message.id : null} key={message.id} className="flex items-start space-x-4">
@@ -27,8 +27,8 @@ export const MessageComponent = ({ message, onDelete, onAddReaction, onDeleteRea
             <MessageReactions
                 reactions={message.reactions}
                 myReactions={[]}
-                onAddReaction={onAddReaction}
-                onDeleteReaction={onDeleteReaction}
+                onAddReaction={(code) => onAddReaction(message.id, code)}
+                onDeleteReaction={code => onDeleteReaction(message.id, code)}
             />
         </div>
     </div>

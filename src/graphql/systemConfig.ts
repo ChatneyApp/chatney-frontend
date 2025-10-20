@@ -37,7 +37,7 @@ export const GET_SYSTEM_CONFIG_QUERY: TypedDocumentNode<GetChannelTypesListRespo
 export const installSystem = async (client: ApolloClient<object>): Promise<boolean> => {
     const INSTALL_SYSTEM = gql`
         mutation {
-            configs {
+            installWizard {
                 installSystem {
                     status
                     message

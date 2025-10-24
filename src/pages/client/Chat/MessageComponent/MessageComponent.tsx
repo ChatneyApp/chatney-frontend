@@ -1,7 +1,7 @@
 ﻿import { HTMLProps, PropsWithChildren } from 'react';
 import { MessageWithUser } from '@/types/messages';
 import { isDev } from '@/helpers/env';
-import { MessageReactions } from '@/pages/client/Chat/MessageReactions.tsx';
+import { MessageReactions } from '@/pages/client/Chat/MessageReactions';
 
 const DeleteButton = ({ children, onClick }: PropsWithChildren & HTMLProps<HTMLButtonElement>) => (
     <button className="inline-block text-amber-700 p-2 cursor-pointer" onClick={onClick}>
@@ -26,7 +26,7 @@ export const MessageComponent = ({ message, onDelete, onAddReaction, onDeleteRea
             <p className="text-gray-200">{message.content}</p>
             <MessageReactions
                 reactions={message.reactions}
-                myReactions={[]}
+                myReactions={message.myReactions}
                 onAddReaction={(code) => onAddReaction(message.id, code)}
                 onDeleteReaction={code => onDeleteReaction(message.id, code)}
             />

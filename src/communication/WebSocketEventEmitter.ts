@@ -1,14 +1,28 @@
-﻿import { MessageWithUser } from '@/types/messages';
+﻿import { MessageId, MessageWithUser } from '@/types/messages';
+import { UserId } from '@/types/users';
+import { ChannelId } from '@/types/channels';
 
 export type MessageDeletedPayload = {
-    messageId: string;
-    channelId: string;
+    messageId: MessageId;
+    channelId: ChannelId;
 };
-export type WebSocketMessagePayload = MessageWithUser | MessageDeletedPayload;
+
+export type ReactionChangedPayload = {
+    code: string;
+    messageId: MessageId;
+    channelId: ChannelId;
+    userId: UserId;
+}
+export type WebSocketMessagePayload =
+    MessageWithUser |
+    MessageDeletedPayload |
+    ReactionChangedPayload;
 
 export enum WebSocketEventType {
     NEW_MESSAGE = 'newMessage',
     DELETED_MESSAGE = 'deletedMessage',
+    NEW_REACTION = 'newReaction',
+    DELETED_REACTION = 'deletedReaction',
 }
 
 export type WebSocketEventRaw = {
@@ -17,6 +31,9 @@ export type WebSocketEventRaw = {
 } | {
     type: WebSocketEventType.DELETED_MESSAGE;
     payload: MessageDeletedPayload;
+} | {
+    type: WebSocketEventType.NEW_REACTION | WebSocketEventType.DELETED_REACTION;
+    payload: ReactionChangedPayload;
 }
 
 export class WebSocketEvent extends Event {

@@ -5,14 +5,20 @@ import styles from './ReactionSelectionDialog.module.css';
 
 type Props = {
     reactions: string[];
+    myReactions: string[];
     onSelect(code: string): void;
 }
-export const ReactionSelectionDialog = ({ reactions, onSelect }: Props) => {
+export const ReactionSelectionDialog = ({ reactions, myReactions, onSelect }: Props) => {
     const [ isOpen, setIsOpen ] = useState(false);
     const handleClose = (code: string) => {
         onSelect(code);
         setIsOpen(false);
     };
+
+    const reactionsToShow = reactions.filter(reaction => !myReactions.includes(reaction));
+    if (reactionsToShow.length === 0) {
+        return null;
+    }
 
     return (
         <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -30,7 +36,7 @@ export const ReactionSelectionDialog = ({ reactions, onSelect }: Props) => {
                     sideOffset={5}
                 >
                     <div className={styles.reactionsList}>
-                        {reactions.map(reaction => (
+                        {reactionsToShow.map(reaction => (
                             <div
                                 key={reaction}
                                 aria-label="Close"

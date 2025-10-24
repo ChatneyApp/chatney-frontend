@@ -20,6 +20,7 @@ export const postNewMessage = async (client: ApolloClient<object>, messageDto: C
                         code
                         count
                     }
+                    myReactions
                     parentId
                 }
             }
@@ -123,7 +124,7 @@ export const deleteReaction = async (client: ApolloClient<object>, messageId: st
             variables: { code, messageId },
         });
 
-        const result = data?.messages?.addReaction as ChangeReactionResponse;
+        const result = data?.messages?.deleteReaction as ChangeReactionResponse;
 
         if (!result) {
             throw new Error('Invalid deleteReaction response');
@@ -167,6 +168,7 @@ export const getChannelMessagesList = async (client: ApolloClient<object>, chann
                     code
                     count
                 }
+                myReactions
                 parentId
             }
         }

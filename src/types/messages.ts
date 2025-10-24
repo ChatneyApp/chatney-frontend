@@ -14,6 +14,7 @@ export type Message = {
     createdAt: Date;
     updatedAt: Date;
     reactions: Reaction[];
+    myReactions: string[];
     parentId: string | null;
 }
 export type MessageWithUser = Message & {

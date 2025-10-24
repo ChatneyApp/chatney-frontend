@@ -7,17 +7,20 @@ import { MessageWithUser } from '@/types/messages';
 import { addReaction, deleteMessage, deleteReaction, getChannelMessagesList, postNewMessage } from '@/graphql/messages';
 import {
     MessageDeletedPayload,
+    ReactionChangedPayload,
     WebSocketEvent,
     WebSocketEventEmitter,
     WebSocketEventType
 } from '@/communication/WebSocketEventEmitter';
 import { MessageComponent } from '@/pages/client/Chat/MessageComponent';
+import { useUser } from '@/contexts/UserContext.tsx';
 
 type Props = {
     activeChannel: ChannelListItem;
     eventEmitter: WebSocketEventEmitter;
 };
 export function MessagesList({ activeChannel, eventEmitter }: Props) {
+    const userCtx = useUser();
     const apolloClient = useApolloClient();
     const [ messages, setMessages ] = useState<MessageWithUser[]>([]);
 
@@ -67,6 +70,42 @@ export function MessagesList({ activeChannel, eventEmitter }: Props) {
                 }
             }
                 break;
+            case WebSocketEventType.NEW_REACTION:
+            case WebSocketEventType.DELETED_REACTION: {
+                const { messageId, channelId, code, userId } = payload as ReactionChangedPayload;
+                if (channelId === activeChannel.id) {
+                    const isNew = type === WebSocketEventType.NEW_REACTION;
+                    setMessages(prev => prev.map(msg => {
+                        if (msg.id !== messageId) {
+                            return msg;
+                        }
+
+                        const newReactions = msg.reactions.map(r => ({ ...r }));
+                        const codeBlock = newReactions.find(r => r.code === code);
+                        if (codeBlock) {
+                            codeBlock.count += isNew ? 1 : -1;
+                        } else if (isNew) {
+                            newReactions.push({ code, count: 1 });
+                        }
+
+                        let newMyReactions = [ ...msg.myReactions ];
+                        if (userId === userCtx?.user?.id) {
+                            if (isNew) {
+                                newMyReactions = [ ...new Set([ ...newMyReactions, code ]) ];
+                            } else {
+                                newMyReactions = newMyReactions.filter(c => c !== code);
+                            }
+                        }
+
+                        return {
+                            ...msg,
+                            reactions: newReactions,
+                            myReactions: newMyReactions,
+                        }
+                    }));
+                }
+            }
+                break;
         }
     };
 
@@ -87,6 +126,8 @@ export function MessagesList({ activeChannel, eventEmitter }: Props) {
         const { signal } = abortController;
         eventEmitter.addEventListener(WebSocketEventType.NEW_MESSAGE, handleWebSocketEvent, { signal });
         eventEmitter.addEventListener(WebSocketEventType.DELETED_MESSAGE, handleWebSocketEvent, { signal });
+        eventEmitter.addEventListener(WebSocketEventType.NEW_REACTION, handleWebSocketEvent, { signal });
+        eventEmitter.addEventListener(WebSocketEventType.DELETED_REACTION, handleWebSocketEvent, { signal });
         loadMessages();
         return () => {
             abortController.abort();

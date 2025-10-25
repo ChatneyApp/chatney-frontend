@@ -17,9 +17,10 @@ export const postNewMessage = async (client: ApolloClient<object>, messageDto: C
                     createdAt
                     updatedAt
                     reactions {
-                        userId
-                        reactionText
+                        code
+                        count
                     }
+                    myReactions
                     parentId
                 }
             }
@@ -69,6 +70,76 @@ export const deleteMessage = async (client: ApolloClient<object>, messageId: str
     }
 };
 
+type ChangeReactionResponse = {
+    status: 'error' | 'success';
+    error?: string;
+};
+export const addReaction = async (client: ApolloClient<object>, messageId: string, code: string): Promise<boolean> => {
+    const GQL_MUTATION = gql`
+        mutation AddReaction($code: String!, $messageId: String!) {
+            messages {
+                addReaction(code: $code, messageId: $messageId) {
+                    status
+                    message
+                }
+            }
+        }
+    `;
+    try {
+        const { data } = await client.mutate({
+            mutation: GQL_MUTATION,
+            variables: { code, messageId },
+        });
+
+        const result = data?.messages?.addReaction as ChangeReactionResponse;
+
+        if (!result) {
+            throw new Error('Invalid addReaction response');
+        }
+
+        if (result?.status === 'error') {
+            throw new Error(result.error);
+        }
+
+        return result.status === 'success';
+    } catch (error) {
+        throw new Error(`Adding reaction failed: ${(error as Error).message}`);
+    }
+};
+
+export const deleteReaction = async (client: ApolloClient<object>, messageId: string, code: string): Promise<boolean> => {
+    const GQL_MUTATION = gql`
+        mutation DeleteReaction($code: String!, $messageId: String!) {
+            messages {
+                deleteReaction(code: $code, messageId: $messageId) {
+                    status
+                    message
+                }
+            }
+        }
+    `;
+    try {
+        const { data } = await client.mutate({
+            mutation: GQL_MUTATION,
+            variables: { code, messageId },
+        });
+
+        const result = data?.messages?.deleteReaction as ChangeReactionResponse;
+
+        if (!result) {
+            throw new Error('Invalid deleteReaction response');
+        }
+
+        if (result?.status === 'error') {
+            throw new Error(result.error);
+        }
+
+        return result.status === 'success';
+    } catch (error) {
+        throw new Error(`Deleting reaction failed: ${(error as Error).message}`);
+    }
+};
+
 type GetMessagesResponse = {
     messages: {
         listChannelMessages: MessageWithUser[];
@@ -94,9 +165,10 @@ export const getChannelMessagesList = async (client: ApolloClient<object>, chann
                     avatarUrl
                 }
                 reactions {
-                    userId
-                    reactionText
+                    code
+                    count
                 }
+                myReactions
                 parentId
             }
         }

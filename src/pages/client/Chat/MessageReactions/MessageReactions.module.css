@@ -1,0 +1,5 @@
+﻿@reference "tailwindcss";
+
+.reactionsList {
+    @apply flex flex-row gap-1 my-1;
+}

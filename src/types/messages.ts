@@ -14,6 +14,7 @@ export type Message = {
     createdAt: Date;
     updatedAt: Date;
     reactions: Reaction[];
+    myReactions: string[];
     parentId: string | null;
 }
 export type MessageWithUser = Message & {
@@ -23,8 +24,8 @@ export type MessageWithUser = Message & {
 export type CreateMessageDto = Pick<Message, 'channelId' | 'content' | 'attachments' | 'parentId'>;
 
 export type Reaction = {
-    userId: string;
-    reactionText: string;
+    code: string;
+    count: number;
 }
 
 export type CreateMessageInput = Omit<Message, 'id' | 'createdAt' | 'updatedAt' | 'status' | 'reactions'>;

@@ -1,0 +1,20 @@
+﻿@reference "tailwindcss";
+
+.popupArrow {
+    @apply fill-gray-500;
+}
+.triggerButton {
+    @apply inline-flex size-[35px] cursor-default items-center justify-center rounded-full hover:bg-amber-300;
+}
+
+.popoverContent {
+    @apply max-w-[20em] rounded bg-gray-500 p-5 will-change-[transform,opacity];
+}
+
+.reactionsList {
+    @apply flex flex-row flex-wrap gap-2.5;
+}
+
+.reaction {
+    @apply bg-gray-700 border-transparent hover:border-blue-400 border-2 py-1 px-2 rounded-full cursor-pointer hover:bg-gray-600;
+}

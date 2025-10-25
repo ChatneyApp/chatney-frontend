@@ -4,24 +4,25 @@ import { useApolloClient } from '@apollo/client';
 import { MessageInput } from './MessageInput';
 import { ChannelListItem } from './ChatPage';
 import { MessageWithUser } from '@/types/messages';
-import { deleteMessage, getChannelMessagesList, postNewMessage } from '@/graphql/messages';
+import { addReaction, deleteMessage, deleteReaction, getChannelMessagesList, postNewMessage } from '@/graphql/messages';
 import {
     MessageDeletedPayload,
+    ReactionChangedPayload,
     WebSocketEvent,
     WebSocketEventEmitter,
     WebSocketEventType
 } from '@/communication/WebSocketEventEmitter';
 import { MessageComponent } from '@/pages/client/Chat/MessageComponent';
+import { useUser } from '@/contexts/UserContext.tsx';
 
 type Props = {
     activeChannel: ChannelListItem;
     eventEmitter: WebSocketEventEmitter;
 };
 export function MessagesList({ activeChannel, eventEmitter }: Props) {
+    const userCtx = useUser();
     const apolloClient = useApolloClient();
     const [ messages, setMessages ] = useState<MessageWithUser[]>([]);
-
-    console.log(import.meta.env.VITE_ENV === 'development');
 
     const handleSend = async (text: string) => {
         const newMessage = {
@@ -36,6 +37,16 @@ export function MessagesList({ activeChannel, eventEmitter }: Props) {
     const handleOnDeleteClick = async (id: string) => {
         console.log(`delete message id = ${id}`);
         await deleteMessage(apolloClient, id);
+    };
+
+    const handleAddReaction = async (messageId: string, code: string) => {
+        console.log(`add reaction id ${code}`);
+        await addReaction(apolloClient, messageId, code);
+    };
+
+    const handleDeleteReaction = async (messageId: string, code: string) => {
+        console.log(`delete reaction id ${code}`);
+        await deleteReaction(apolloClient, messageId, code);
     };
 
     const handleWebSocketEvent = (event: WebSocketEvent) => {
@@ -59,6 +70,42 @@ export function MessagesList({ activeChannel, eventEmitter }: Props) {
                 }
             }
                 break;
+            case WebSocketEventType.NEW_REACTION:
+            case WebSocketEventType.DELETED_REACTION: {
+                const { messageId, channelId, code, userId } = payload as ReactionChangedPayload;
+                if (channelId === activeChannel.id) {
+                    const isNew = type === WebSocketEventType.NEW_REACTION;
+                    setMessages(prev => prev.map(msg => {
+                        if (msg.id !== messageId) {
+                            return msg;
+                        }
+
+                        const newReactions = msg.reactions.map(r => ({ ...r }));
+                        const codeBlock = newReactions.find(r => r.code === code);
+                        if (codeBlock) {
+                            codeBlock.count += isNew ? 1 : -1;
+                        } else if (isNew) {
+                            newReactions.push({ code, count: 1 });
+                        }
+
+                        let newMyReactions = [ ...msg.myReactions ];
+                        if (userId === userCtx?.user?.id) {
+                            if (isNew) {
+                                newMyReactions = [ ...new Set([ ...newMyReactions, code ]) ];
+                            } else {
+                                newMyReactions = newMyReactions.filter(c => c !== code);
+                            }
+                        }
+
+                        return {
+                            ...msg,
+                            reactions: newReactions,
+                            myReactions: newMyReactions,
+                        }
+                    }));
+                }
+            }
+                break;
         }
     };
 
@@ -79,6 +126,8 @@ export function MessagesList({ activeChannel, eventEmitter }: Props) {
         const { signal } = abortController;
         eventEmitter.addEventListener(WebSocketEventType.NEW_MESSAGE, handleWebSocketEvent, { signal });
         eventEmitter.addEventListener(WebSocketEventType.DELETED_MESSAGE, handleWebSocketEvent, { signal });
+        eventEmitter.addEventListener(WebSocketEventType.NEW_REACTION, handleWebSocketEvent, { signal });
+        eventEmitter.addEventListener(WebSocketEventType.DELETED_REACTION, handleWebSocketEvent, { signal });
         loadMessages();
         return () => {
             abortController.abort();
@@ -100,6 +149,8 @@ export function MessagesList({ activeChannel, eventEmitter }: Props) {
                         key={message.id}
                         message={message}
                         onDelete={handleOnDeleteClick}
+                        onAddReaction={handleAddReaction}
+                        onDeleteReaction={handleDeleteReaction}
                     />
                 ))}
                 <div ref={messagesEndRef} />

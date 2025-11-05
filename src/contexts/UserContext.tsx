@@ -1,23 +1,24 @@
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { useApolloClient } from '@apollo/client';
 import { getUserById } from '@/graphql/users';
 import { loginPageUrl, userAuthId, userAuthTokenName } from '@/infra/consts';
 import { Workspace } from '@/types/workspaces';
-import { useApolloClient } from '@apollo/client';
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { UserId } from '@/types/users';
 
 const UserContext = createContext<UserContextData | null>(null);
 
 export type UserContextData = {
     user: {
-        id: string
-        name: string
-        active: boolean
-        verified: boolean
-        banned: boolean
-        muted: boolean
-        email: string
-        workspaces: Workspace[]
-    } | null,
-    logout: typeof logoutFunction
+        id: UserId;
+        name: string;
+        active: boolean;
+        verified: boolean;
+        banned: boolean;
+        muted: boolean;
+        email: string;
+        workspaces: Workspace[];
+    } | null;
+    logout: typeof logoutFunction;
 }
 
 const logoutFunction = () => {

@@ -1,0 +1,9 @@
+﻿@reference "tailwindcss";
+
+.container {
+    @apply box-border bg-[#336699] rounded-lg p-2 flex items-start space-x-4 max-w-[30em];
+}
+
+.isMine {
+    @apply self-end;
+}

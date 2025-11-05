@@ -11,11 +11,35 @@ export const postNewMessage = async (client: ApolloClient<object>, messageDto: C
                     id
                     channelId
                     userId
+                    user {
+                        id
+                        name
+                        avatarUrl
+                    }
                     content
                     attachments
                     status
                     createdAt
                     updatedAt
+                    urlPreviews {
+                        id
+                        createdAt
+                        updatedAt
+                        url
+                        title
+                        description
+                        imageUrl
+                        videoUrl
+                        siteName
+                        favIconUrl
+                        type
+                        author
+                        mediaSize {
+                            width
+                            height
+                        }
+                        domain
+                    }
                     reactions {
                         code
                         count
@@ -163,6 +187,25 @@ export const getChannelMessagesList = async (client: ApolloClient<object>, chann
                     id
                     name
                     avatarUrl
+                }
+                urlPreviews {
+                    id
+                    createdAt
+                    updatedAt
+                    url
+                    title
+                    description
+                    imageUrl
+                    videoUrl
+                    siteName
+                    favIconUrl
+                    type
+                    author
+                    mediaSize {
+                        width
+                        height
+                    }
+                    domain
                 }
                 reactions {
                     code

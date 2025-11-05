@@ -22,7 +22,7 @@ type Props = {
 export function MessagesList({ activeChannel, eventEmitter }: Props) {
     const userCtx = useUser();
     const apolloClient = useApolloClient();
-    const [ messages, setMessages ] = useState<MessageWithUser[]>([]);
+    const [messages, setMessages] = useState<MessageWithUser[]>([]);
 
     const handleSend = async (text: string) => {
         const newMessage = {
@@ -57,7 +57,7 @@ export function MessagesList({ activeChannel, eventEmitter }: Props) {
                 const message = payload as MessageWithUser;
                 if (message.channelId === activeChannel.id) {
                     console.log('message received!', message);
-                    setMessages((prev) => [ ...prev, message ]);
+                    setMessages((prev) => [...prev, message]);
                 }
             }
                 break;
@@ -88,10 +88,10 @@ export function MessagesList({ activeChannel, eventEmitter }: Props) {
                             newReactions.push({ code, count: 1 });
                         }
 
-                        let newMyReactions = [ ...msg.myReactions ];
+                        let newMyReactions = [...msg.myReactions];
                         if (userId === userCtx?.user?.id) {
                             if (isNew) {
-                                newMyReactions = [ ...new Set([ ...newMyReactions, code ]) ];
+                                newMyReactions = [...new Set([...newMyReactions, code])];
                             } else {
                                 newMyReactions = newMyReactions.filter(c => c !== code);
                             }
@@ -112,12 +112,11 @@ export function MessagesList({ activeChannel, eventEmitter }: Props) {
     const loadMessages = async () => {
         try {
             const listRes = await getChannelMessagesList(apolloClient, activeChannel.id);
-            const list = [ ...listRes ];
+            const list = [...listRes];
             list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
             setMessages(list);
         } catch (err) {
             console.log('Failed to load messages', err);
-            /* swallow */
         }
     };
 
@@ -132,21 +131,22 @@ export function MessagesList({ activeChannel, eventEmitter }: Props) {
         return () => {
             abortController.abort();
         }
-    }, [ activeChannel, eventEmitter ]);
+    }, [activeChannel, eventEmitter]);
 
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [ messages ]);
+    }, [messages]);
 
     return (
         <div className="flex-1 flex flex-col bg-gray-900">
-            <div className="flex-1 p-4 overflow-y-auto space-y-4">
+            <div className="flex-1 flex flex-col items-start p-4 overflow-y-auto space-y-4">
                 <h2 className="text-lg font-semibold mb-4"># {activeChannel?.name}</h2>
                 {messages.map((message) => (
                     <MessageComponent
                         key={message.id}
+                        currentUserId={userCtx?.user?.id}
                         message={message}
                         onDelete={handleOnDeleteClick}
                         onAddReaction={handleAddReaction}

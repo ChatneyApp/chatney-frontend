@@ -1,0 +1,24 @@
+﻿@reference "tailwindcss";
+
+.container {
+    @apply block p-2
+        bg-[#19334d]
+        border border-gray-700 rounded-lg
+        border-l-amber-500 border-l-6;
+}
+
+.siteName {
+    @apply font-bold text-[#699cce];
+}
+
+.title {
+    @apply text-white;
+}
+
+.description {
+    @apply text-gray-400;
+}
+
+.image {
+    @apply mt-2 max-w-full rounded w-100 h-auto;
+}

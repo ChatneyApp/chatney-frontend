@@ -1,8 +1,31 @@
-﻿export type MessageId = string;
+﻿import { UserId } from '@/types/users';
+
+export type MessageId = string;
+export type UrlPreviewId = string;
 export type MessageUser = {
-    id: string;
+    id: UserId;
     name: string;
     avatarUrl: string;
+}
+export type UrlPreviewMediaSize = {
+    width: number;
+    height: number;
+}
+export type UrlPreview = {
+    id: UrlPreviewId;
+    createdAt: Date;
+    updatedAt: Date;
+    url: string;
+    title: string | null;
+    description: string | null;
+    imageUrl: string | null;
+    videoUrl: string | null;
+    siteName: string | null;
+    favIconUrl: string | null;
+    type: string | null;
+    author: string | null;
+    mediaSize: UrlPreviewMediaSize | null;
+    domain: string | null;
 }
 export type Message = {
     id: MessageId;
@@ -15,6 +38,7 @@ export type Message = {
     updatedAt: Date;
     reactions: Reaction[];
     myReactions: string[];
+    urlPreviews: UrlPreview[];
     parentId: string | null;
 }
 export type MessageWithUser = Message & {

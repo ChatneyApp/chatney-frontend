@@ -5,6 +5,7 @@ import { isDev } from '@/helpers/env';
 import { MessageReactions } from '@/pages/client/Chat/MessageReactions';
 import { MessageUrlPreviewsComponent } from '@/pages/client/Chat/MessageUrlPreviewsComponent';
 import { UserId } from '@/types/users';
+import { formatTimestamp } from '@/helpers/formatTimestamp';
 
 import styles from './MessageComponent.module.css';
 
@@ -39,7 +40,7 @@ export const MessageComponent = ({ message, currentUserId, onDelete, onAddReacti
                     {!isMine && (
                         <span className="font-medium">{message.user?.name ?? message.userId}</span>
                     )}
-                    <span className="text-xs text-yellow-500">{new Date(message.createdAt).toISOString()}</span>
+                    <span className="text-xs text-yellow-500">{formatTimestamp(new Date(message.createdAt))}</span>
                     <DeleteButton onClick={() => onDelete(message.id)}>x</DeleteButton>
                 </div>
                 <p className="text-gray-200 break-all">{message.content}</p>

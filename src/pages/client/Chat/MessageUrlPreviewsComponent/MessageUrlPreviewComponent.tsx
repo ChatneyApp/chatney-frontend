@@ -6,14 +6,12 @@ type Props = {
     preview: UrlPreview;
 }
 export const MessageUrlPreviewComponent = ({ preview }: Props) => {
-    const { title, description, imageUrl, url, siteName, mediaSize } = preview;
+    const { title, description, imageUrl, url, siteName, imageWidth, imageHeight } = preview;
 
     if (!title && !description && !imageUrl) {
         return null;
     }
 
-    const imageWidth = mediaSize?.width;
-    const imageHeight = mediaSize?.height;
     const imageAspectRatio = typeof imageWidth === 'number' && typeof imageHeight === 'number' && imageHeight > 0
         ? `${imageWidth} / ${imageHeight}` : undefined;
 

@@ -24,7 +24,8 @@ export type UrlPreview = {
     favIconUrl: string | null;
     type: string | null;
     author: string | null;
-    mediaSize: UrlPreviewMediaSize | null;
+    imageWidth: number | null;
+    imageHeight: number | null;
     domain: string | null;
 }
 export type Message = {

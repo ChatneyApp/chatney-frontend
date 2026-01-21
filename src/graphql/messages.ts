@@ -34,10 +34,8 @@ export const postNewMessage = async (client: ApolloClient<object>, messageDto: C
                         favIconUrl
                         type
                         author
-                        mediaSize {
-                            width
-                            height
-                        }
+                        imageWidth
+                        imageHeight
                         domain
                     }
                     reactions {
@@ -201,10 +199,8 @@ export const getChannelMessagesList = async (client: ApolloClient<object>, chann
                     favIconUrl
                     type
                     author
-                    mediaSize {
-                        width
-                        height
-                    }
+                    imageWidth
+                    imageHeight
                     domain
                 }
                 reactions {

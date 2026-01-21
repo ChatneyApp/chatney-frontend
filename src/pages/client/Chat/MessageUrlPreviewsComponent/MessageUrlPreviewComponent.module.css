@@ -1,10 +1,28 @@
 ﻿@reference "tailwindcss";
 
 .container {
-    @apply block p-2
+    @apply relative block p-2 pl-6
         bg-[#19334d]
-        border border-gray-700 rounded-lg
-        border-l-amber-500 border-l-6;
+        border border-gray-700 rounded-lg;
+}
+
+.container::before {
+    @apply w-2 rounded-bl-lg rounded-tl-lg;
+    content: '';
+    --size: 5px;
+    --color: #ffb325;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--size);
+    bottom: 0;
+    background: repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent var(--size),
+            var(--color) var(--size),
+            var(--color) calc(var(--size) * 2)
+    );
 }
 
 .siteName {

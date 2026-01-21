@@ -22,12 +22,17 @@ type Props = {
 };
 export const MessageComponent = ({ message, currentUserId, onDelete, onAddReaction, onDeleteReaction }: Props) => {
     const isMine = message.userId === currentUserId;
+    const avatarUrl = message.user.avatarUrl ?? `https://i.pravatar.cc/?img=${message.userId.substring(0, 1)}`;
+
     return (
         <div data-id={isDev ? message.id : null} key={message.id}
              className={clsx(styles.container, { [styles.isMine]: isMine })}>
             {!isMine && (
-                <img src={message.user?.avatarUrl ?? 'https://i.pravatar.cc/40?img=1'} alt={message.userId}
-                     className="w-10 h-10 rounded-full"/>
+                <img
+                    src={avatarUrl}
+                    alt={message.user.name}
+                    className={styles.avatar}
+                />
             )}
             <div>
                 <div className="flex items-center space-x-2">

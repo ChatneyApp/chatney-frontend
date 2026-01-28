@@ -1,5 +1,5 @@
-﻿import dayjs from 'dayjs';
+﻿import { DateTime } from 'luxon';
 
 export function formatTimestamp(timestamp: Date): string {
-    return dayjs(timestamp).format('DD.MM.YYYY HH:mm');
+    return DateTime.fromJSDate(timestamp).toFormat('dd.MM.yyyy HH:mm');
 }

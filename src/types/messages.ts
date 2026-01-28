@@ -18,14 +18,14 @@ export type UrlPreview = {
     url: string;
     title: string | null;
     description: string | null;
-    imageUrl: string | null;
-    videoUrl: string | null;
+    thumbnailUrl: string | null;
+    videoThumbnailUrl: string | null;
     siteName: string | null;
     favIconUrl: string | null;
     type: string | null;
     author: string | null;
-    mediaSize: UrlPreviewMediaSize | null;
-    domain: string | null;
+    thumbnailWidth: number | null;
+    thumbnailHeight: number | null;
 }
 export type Message = {
     id: MessageId;

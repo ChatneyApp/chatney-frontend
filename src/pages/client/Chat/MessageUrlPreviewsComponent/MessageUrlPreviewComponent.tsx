@@ -6,16 +6,14 @@ type Props = {
     preview: UrlPreview;
 }
 export const MessageUrlPreviewComponent = ({ preview }: Props) => {
-    const { title, description, imageUrl, url, siteName, mediaSize } = preview;
+    const { title, description, thumbnailUrl, url, siteName, thumbnailWidth, thumbnailHeight } = preview;
 
-    if (!title && !description && !imageUrl) {
+    if (!title && !description && !thumbnailUrl) {
         return null;
     }
 
-    const imageWidth = mediaSize?.width;
-    const imageHeight = mediaSize?.height;
-    const imageAspectRatio = typeof imageWidth === 'number' && typeof imageHeight === 'number' && imageHeight > 0
-        ? `${imageWidth} / ${imageHeight}` : undefined;
+    const imageAspectRatio = typeof thumbnailWidth === 'number' && typeof thumbnailHeight === 'number' && thumbnailHeight > 0
+        ? `${thumbnailWidth} / ${thumbnailHeight}` : undefined;
 
     return (
         <a href={url} target="_blank" rel="noopener noreferrer" className={styles.container}>
@@ -28,9 +26,9 @@ export const MessageUrlPreviewComponent = ({ preview }: Props) => {
             {description && (
                 <div className={styles.description}>{description}</div>
             )}
-            {imageUrl && (
+            {thumbnailUrl && (
                 <img
-                    src={imageUrl}
+                    src={thumbnailUrl}
                     alt={title ?? undefined}
                     className={styles.image}
                     style={{

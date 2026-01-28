@@ -1,9 +1,18 @@
 ﻿@reference "tailwindcss";
 
 .container {
-    @apply box-border bg-[#336699] rounded-lg p-2 flex items-start space-x-4 max-w-[30em];
+    --bg-color-1: #366aaa;
+    --bg-color-2: #2a496c;
+    --bg-color-3: #2a496c;
+    @apply box-border rounded-lg p-2 flex items-start space-x-4 max-w-[30em];
+    background-image: linear-gradient(to bottom, var(--bg-color-1) 0%, var(--bg-color-2) 60%, var(--bg-color-3) 100%);
+    background-attachment: fixed;
 }
 
 .isMine {
     @apply self-end;
+}
+
+.avatar {
+    @apply w-10 h-10 rounded-full;
 }

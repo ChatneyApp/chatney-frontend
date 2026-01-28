@@ -5,6 +5,7 @@ import { isDev } from '@/helpers/env';
 import { MessageReactions } from '@/pages/client/Chat/MessageReactions';
 import { MessageUrlPreviewsComponent } from '@/pages/client/Chat/MessageUrlPreviewsComponent';
 import { UserId } from '@/types/users';
+import { formatTimestamp } from '@/helpers/formatTimestamp';
 
 import styles from './MessageComponent.module.css';
 
@@ -22,19 +23,24 @@ type Props = {
 };
 export const MessageComponent = ({ message, currentUserId, onDelete, onAddReaction, onDeleteReaction }: Props) => {
     const isMine = message.userId === currentUserId;
+    const avatarUrl = message.user.avatarUrl ?? `https://i.pravatar.cc/?img=${message.userId.substring(0, 1)}`;
+
     return (
         <div data-id={isDev ? message.id : null} key={message.id}
              className={clsx(styles.container, { [styles.isMine]: isMine })}>
             {!isMine && (
-                <img src={message.user?.avatarUrl ?? 'https://i.pravatar.cc/40?img=1'} alt={message.userId}
-                     className="w-10 h-10 rounded-full"/>
+                <img
+                    src={avatarUrl}
+                    alt={message.user.name}
+                    className={styles.avatar}
+                />
             )}
             <div>
                 <div className="flex items-center space-x-2">
                     {!isMine && (
                         <span className="font-medium">{message.user?.name ?? message.userId}</span>
                     )}
-                    <span className="text-xs text-yellow-500">{new Date(message.createdAt).toISOString()}</span>
+                    <span className="text-xs text-yellow-500">{formatTimestamp(new Date(message.createdAt))}</span>
                     <DeleteButton onClick={() => onDelete(message.id)}>x</DeleteButton>
                 </div>
                 <p className="text-gray-200 break-all">{message.content}</p>

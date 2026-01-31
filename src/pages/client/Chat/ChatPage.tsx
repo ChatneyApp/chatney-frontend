@@ -1,8 +1,11 @@
+import { useState } from 'react';
+import { useWorkspaceChannelsList } from '@/contexts/WorkspaceChannelsListContext';
+import { useWebsocket } from '@/contexts/WebSocketProvider';
+import { Thread } from '@/pages/client/Chat/Thread';
+import { MessageWithUser } from '@/types/messages';
 import { WorkspacesList } from './WorkspacesList';
 import { ChannelList } from './ChannelsList';
 import { MessagesList } from './MessagesList';
-import { useWorkspaceChannelsList } from '@/contexts/WorkspaceChannelsListContext';
-import { useWebsocket } from '@/contexts/WebSocketProvider';
 
 export type ChannelListItem = {
     name: string,
@@ -12,10 +15,19 @@ export type ChannelListItem = {
 export function ChatPage() {
     const { eventEmitter } = useWebsocket();
     const { channels, refetch, activeChannel, setActiveChannel } = useWorkspaceChannelsList();
+    const [threadMessage, setThreadMessage] = useState<MessageWithUser | null>(null);
+
+    const handleToggleThread = (value: MessageWithUser) => {
+        if (threadMessage?.id === value.id) {
+            setThreadMessage(null);
+        } else {
+            setThreadMessage(value);
+        }
+    }
 
     return (
         <div className="h-screen flex bg-gray-900 text-white">
-            <WorkspacesList />
+            <WorkspacesList/>
             <ChannelList
                 channels={channels}
                 refetch={refetch}
@@ -26,6 +38,13 @@ export function ChatPage() {
                 <MessagesList
                     eventEmitter={eventEmitter}
                     activeChannel={activeChannel}
+                    onOpenThread={handleToggleThread}
+                />
+            )}
+            {threadMessage && (
+                <Thread
+                    rootMessage={threadMessage}
+                    eventEmitter={eventEmitter}
                 />
             )}
         </div>

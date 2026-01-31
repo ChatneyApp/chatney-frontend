@@ -1,10 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { useApolloClient } from '@apollo/client';
-
-import { MessageInput } from './MessageInput';
-import { ChannelListItem } from './ChatPage';
+import { useUser } from '@/contexts/UserContext';
 import { MessageWithUser } from '@/types/messages';
-import { addReaction, deleteMessage, deleteReaction, getChannelMessagesList, postNewMessage } from '@/graphql/messages';
+import { addReaction, deleteMessage, deleteReaction, getThreadMessagesList, postNewMessage } from '@/graphql/messages';
 import {
     MessageChildrenCountUpdatedPayload,
     MessageDeletedPayload,
@@ -14,24 +12,26 @@ import {
     WebSocketEventType
 } from '@/communication/WebSocketEventEmitter';
 import { MessageComponent } from '@/pages/client/Chat/MessageComponent';
-import { useUser } from '@/contexts/UserContext';
+
+import styles from './Thread.module.css';
+import { MessageInput } from '@/pages/client/Chat/MessageInput.tsx';
 
 type Props = {
-    activeChannel: ChannelListItem;
+    rootMessage: MessageWithUser;
     eventEmitter: WebSocketEventEmitter;
-    onOpenThread(parentId: MessageWithUser): void;
-};
-export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Props) {
+}
+
+export const Thread = ({ rootMessage, eventEmitter }: Props) => {
     const userCtx = useUser();
     const apolloClient = useApolloClient();
     const [messages, setMessages] = useState<MessageWithUser[]>([]);
 
     const handleSend = async (text: string) => {
         const newMessage = {
-            channelId: activeChannel.id,
+            channelId: rootMessage.channelId,
             content: text,
             attachments: [],
-            parentId: null,
+            parentId: rootMessage.id,
         };
         await postNewMessage(apolloClient, newMessage);
     };
@@ -49,25 +49,14 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
     };
 
     useEffect(() => {
-        const loadMessages = async () => {
-            try {
-                const listRes = await getChannelMessagesList(apolloClient, activeChannel.id);
-                const list = [...listRes];
-                list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-                setMessages(list);
-            } catch (err) {
-                console.log('Failed to load messages', err);
-            }
-        };
-
         const handleWebSocketEvent = (event: WebSocketEvent) => {
             const { type, payload } = event;
             console.log('->> event', type, payload);
             switch (type) {
                 case WebSocketEventType.NEW_MESSAGE: {
                     const message = payload as MessageWithUser;
-                    if (message.channelId === activeChannel.id && !message.parentId) {
-                        console.log('message received!', message);
+                    if (message.parentId === rootMessage.id) {
+                        console.log('message received in thread!', message);
                         setMessages((prev) => [...prev, message]);
                     }
                 }
@@ -75,7 +64,7 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
                 case WebSocketEventType.DELETED_MESSAGE: {
                     const { channelId, messageId } = payload as MessageDeletedPayload;
                     console.log('should we delete message?', channelId, messageId);
-                    if (channelId === activeChannel.id) {
+                    if (channelId === channelId) {
                         console.log('message deleted!', messageId);
                         setMessages((prev) => prev.filter(m => m.id !== messageId));
                     }
@@ -84,7 +73,7 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
                 case WebSocketEventType.NEW_REACTION:
                 case WebSocketEventType.DELETED_REACTION: {
                     const { messageId, channelId, code, userId } = payload as ReactionChangedPayload;
-                    if (channelId === activeChannel.id) {
+                    if (channelId === channelId) {
                         const isNew = type === WebSocketEventType.NEW_REACTION;
                         setMessages(prev => prev.map(msg => {
                             if (msg.id !== messageId) {
@@ -134,6 +123,17 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
             }
         };
 
+        const loadMessages = async () => {
+            try {
+                const listRes = await getThreadMessagesList(apolloClient, rootMessage.id);
+                const list = [...listRes];
+                list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+                setMessages(list);
+            } catch (err) {
+                console.log('Failed to load messages', err);
+            }
+        };
+
         const abortController = new AbortController();
         const { signal } = abortController;
         eventEmitter.addEventListener(WebSocketEventType.NEW_MESSAGE, handleWebSocketEvent, { signal });
@@ -145,19 +145,14 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
         return () => {
             abortController.abort();
         }
-    }, [activeChannel, apolloClient, eventEmitter, userCtx?.user?.id]);
-
-    const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
-    useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    }, [rootMessage, eventEmitter, userCtx?.user?.id, apolloClient]);
 
     return (
-        <div className="flex-1 flex flex-col bg-gray-900">
-            <div className="flex-1 flex flex-col items-start p-4 overflow-y-auto space-y-4">
-                <div className="text-lg text-orange-400 font-bold mb-4"># {activeChannel?.name}</div>
-                {messages.map((message) => (
+        <div className={styles.container}>
+            thread for {rootMessage.id}
+            <div className={styles.messageList}>
+                messages in thread
+                {messages.map(message => (
                     <MessageComponent
                         key={message.id}
                         currentUserId={userCtx?.user?.id}
@@ -165,12 +160,9 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
                         onDelete={handleOnDeleteClick}
                         onAddReaction={handleAddReaction}
                         onDeleteReaction={handleDeleteReaction}
-                        onOpenThread={onOpenThread}
                     />
                 ))}
-                <div ref={messagesEndRef} />
             </div>
-
             <MessageInput onSend={handleSend} />
         </div>
     );

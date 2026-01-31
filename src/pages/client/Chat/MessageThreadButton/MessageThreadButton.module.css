@@ -1,0 +1,17 @@
+﻿@reference "tailwindcss";
+
+.container {
+    @apply flex flex-row items-center;
+}
+
+.button {
+    @apply flex flex-row gap-1 bg-blue-500 border-blue-400 border-2 rounded-lg px-2 py-0.5 cursor-pointer hover:bg-blue-700;
+
+    &.mine {
+        @apply bg-green-500 border-green-400 hover:bg-green-700;
+    }
+}
+
+.counter {
+    @apply text-yellow-700 px-1;
+}

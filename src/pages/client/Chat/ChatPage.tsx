@@ -37,6 +37,8 @@ export function ChatPage() {
                 <MessagesList
                     eventEmitter={eventEmitter}
                     activeChannel={activeChannel}
+                    activeThreadId={threadMessage?.id}
+                    onCloseThread={handleCloseThread}
                     onOpenThread={handleToggleThread}
                 />
             )}

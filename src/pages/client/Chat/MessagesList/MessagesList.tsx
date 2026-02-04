@@ -5,7 +5,7 @@ import { useApolloClient } from '@apollo/client';
 import { useUser } from '@/contexts/UserContext';
 import { MessageInput } from '@/pages/client/Chat/MessageInput';
 import { ChannelListItem } from '@/pages/client/Chat/types';
-import { MessageWithUser } from '@/types/messages';
+import { MessageId, MessageWithUser } from '@/types/messages';
 import { addReaction, deleteMessage, deleteReaction, getChannelMessagesList, postNewMessage } from '@/graphql/messages';
 import {
     MessageChildrenCountUpdatedPayload,
@@ -21,10 +21,12 @@ import styles from './MessagesList.module.css';
 
 type Props = {
     activeChannel: ChannelListItem;
+    activeThreadId?: MessageId;
+    onCloseThread(): void;
     eventEmitter: WebSocketEventEmitter;
     onOpenThread(parentId: MessageWithUser): void;
 };
-export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Props) {
+export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCloseThread, onOpenThread }: Props) {
     const userCtx = useUser();
     const apolloClient = useApolloClient();
     const [messages, setMessages] = useState<MessageWithUser[] | null>(null);
@@ -84,6 +86,9 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
                     const { channelId, messageId } = payload as MessageDeletedPayload;
                     if (channelId === activeChannel.id) {
                         setMessages((prev) => prev?.filter(m => m.id !== messageId) ?? null);
+                        if (messageId === activeThreadId) {
+                            onCloseThread();
+                        }
                     }
                 }
                     break;
@@ -151,7 +156,7 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
         return () => {
             abortController.abort();
         }
-    }, [activeChannel, apolloClient, eventEmitter, userCtx?.user?.id]);
+    }, [activeChannel, activeThreadId, apolloClient, eventEmitter, onCloseThread, userCtx?.user?.id]);
 
     useEffect(() => {
         if (messages !== null && !autoScrollDone.current) {

@@ -66,27 +66,23 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
                 list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
                 setMessages(list);
             } catch (err) {
-                console.log('Failed to load messages', err);
+                console.error('Failed to load messages', err);
             }
         };
 
         const handleWebSocketEvent = (event: WebSocketEvent) => {
             const { type, payload } = event;
-            console.log('->> event', type, payload);
             switch (type) {
                 case WebSocketEventType.NEW_MESSAGE: {
                     const message = payload as MessageWithUser;
                     if (message.parentId === rootMessage.id) {
-                        console.log('message received in thread!', message);
                         setMessages((prev) => [...prev ?? [], message]);
                     }
                 }
                     break;
                 case WebSocketEventType.DELETED_MESSAGE: {
                     const { channelId, messageId } = payload as MessageDeletedPayload;
-                    console.log('should we delete message?', channelId, messageId);
                     if (channelId === rootMessage.channelId) {
-                        console.log('message deleted!', messageId);
                         setMessages((prev) => prev?.filter(m => m.id !== messageId) ?? null);
                     }
                 }

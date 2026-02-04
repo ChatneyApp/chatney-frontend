@@ -22,7 +22,6 @@ export const MessageComponent = ({ message, currentUserId, onDelete, onAddReacti
     const isMine = message.userId === currentUserId;
     const avatarUrl = message.user.avatarUrl ?? `https://i.pravatar.cc/?img=${message.userId.substring(0, 1)}`;
     const handleToggleThread = () => {
-        console.log('toggle thread for message id = ', message.id);
         onOpenThread?.(message);
     };
 

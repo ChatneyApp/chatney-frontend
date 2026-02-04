@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { ChannelListItem } from './ChatPage';
+import { ChannelListItem } from './types';
 import { CreateChannelModal } from './CreateChannelModal';
 import { Channel } from '@/types/channels';
 

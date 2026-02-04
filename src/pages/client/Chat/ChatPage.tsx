@@ -7,11 +7,6 @@ import { WorkspacesList } from './WorkspacesList';
 import { ChannelList } from './ChannelsList';
 import { MessagesList } from './MessagesList';
 
-export type ChannelListItem = {
-    name: string,
-    id: string
-}
-
 export function ChatPage() {
     const { eventEmitter } = useWebsocket();
     const { channels, refetch, activeChannel, setActiveChannel } = useWorkspaceChannelsList();
@@ -23,7 +18,11 @@ export function ChatPage() {
         } else {
             setThreadMessage(value);
         }
-    }
+    };
+
+    const handleCloseThread = () => {
+        setThreadMessage(null);
+    };
 
     return (
         <div className="h-screen flex bg-gray-900 text-white">
@@ -45,6 +44,7 @@ export function ChatPage() {
                 <Thread
                     rootMessage={threadMessage}
                     eventEmitter={eventEmitter}
+                    onCloseThread={handleCloseThread}
                 />
             )}
         </div>

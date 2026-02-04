@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import { ArrowDownToLine } from 'lucide-react';
 import { useApolloClient } from '@apollo/client';
 
-import { MessageInput } from './MessageInput';
-import { ChannelListItem } from './ChatPage';
+import { useUser } from '@/contexts/UserContext';
+import { MessageInput } from '@/pages/client/Chat/MessageInput';
+import { ChannelListItem } from '@/pages/client/Chat/types';
 import { MessageWithUser } from '@/types/messages';
 import { addReaction, deleteMessage, deleteReaction, getChannelMessagesList, postNewMessage } from '@/graphql/messages';
 import {
@@ -14,7 +16,8 @@ import {
     WebSocketEventType
 } from '@/communication/WebSocketEventEmitter';
 import { MessageComponent } from '@/pages/client/Chat/MessageComponent';
-import { useUser } from '@/contexts/UserContext';
+
+import styles from './MessagesList.module.css';
 
 type Props = {
     activeChannel: ChannelListItem;
@@ -24,7 +27,10 @@ type Props = {
 export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Props) {
     const userCtx = useUser();
     const apolloClient = useApolloClient();
-    const [messages, setMessages] = useState<MessageWithUser[]>([]);
+    const [messages, setMessages] = useState<MessageWithUser[] | null>(null);
+    const [isBottomVisible, setIsBottomVisible] = useState(true);
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const autoScrollDone = useRef(false);
 
     const handleSend = async (text: string) => {
         const newMessage = {
@@ -48,6 +54,10 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
         await deleteReaction(apolloClient, messageId, code);
     };
 
+    const handleScrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
+    };
+
     useEffect(() => {
         const loadMessages = async () => {
             try {
@@ -68,7 +78,7 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
                     const message = payload as MessageWithUser;
                     if (message.channelId === activeChannel.id && !message.parentId) {
                         console.log('message received!', message);
-                        setMessages((prev) => [...prev, message]);
+                        setMessages((prev) => [...prev ?? [], message]);
                     }
                 }
                     break;
@@ -77,7 +87,7 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
                     console.log('should we delete message?', channelId, messageId);
                     if (channelId === activeChannel.id) {
                         console.log('message deleted!', messageId);
-                        setMessages((prev) => prev.filter(m => m.id !== messageId));
+                        setMessages((prev) => prev?.filter(m => m.id !== messageId) ?? null);
                     }
                 }
                     break;
@@ -86,7 +96,7 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
                     const { messageId, channelId, code, userId } = payload as ReactionChangedPayload;
                     if (channelId === activeChannel.id) {
                         const isNew = type === WebSocketEventType.NEW_REACTION;
-                        setMessages(prev => prev.map(msg => {
+                        setMessages(prev => prev?.map(msg => {
                             if (msg.id !== messageId) {
                                 return msg;
                             }
@@ -113,13 +123,13 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
                                 reactions: newReactions,
                                 myReactions: newMyReactions,
                             }
-                        }));
+                        }) ?? null);
                     }
                 }
                     break;
                 case WebSocketEventType.MESSAGE_CHILDREN_COUNT_UPDATED: {
                     const { messageId, childrenCount } = payload as MessageChildrenCountUpdatedPayload;
-                    setMessages(prev => prev.map(msg => {
+                    setMessages(prev => prev?.map(msg => {
                         if (msg.id !== messageId) {
                             return msg;
                         }
@@ -128,7 +138,7 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
                             ...msg,
                             childrenCount,
                         }
-                    }));
+                    }) ?? null);
                 }
                     break;
             }
@@ -147,17 +157,36 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
         }
     }, [activeChannel, apolloClient, eventEmitter, userCtx?.user?.id]);
 
-    const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        if (messages !== null && !autoScrollDone.current) {
+            autoScrollDone.current = true;
+            handleScrollToBottom();
+        }
     }, [messages]);
 
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                setIsBottomVisible(entries?.[0].isIntersecting ?? false);
+            },
+            {
+                root: null,        // null => viewport браузера
+                threshold: 0.0,    // 0.0 => достаточно хотя бы 1 пикселя
+            }
+        );
+
+        observer.observe(messagesEndRef.current!);
+
+        return () => {
+            observer.disconnect();
+        };
+    });
+
     return (
-        <div className="flex-1 flex flex-col bg-gray-900">
-            <div className="flex-1 flex flex-col items-start p-4 overflow-y-auto space-y-4">
-                <div className="text-lg text-orange-400 font-bold mb-4"># {activeChannel?.name}</div>
-                {messages.map((message) => (
+        <div className={styles.container}>
+            <div className={styles.header}># {activeChannel?.name}</div>
+            <div className={styles.scrollArea}>
+                {messages?.map(message => (
                     <MessageComponent
                         key={message.id}
                         currentUserId={userCtx?.user?.id}
@@ -171,6 +200,11 @@ export function MessagesList({ activeChannel, eventEmitter, onOpenThread }: Prop
                 <div ref={messagesEndRef} />
             </div>
 
+            {!isBottomVisible && (
+                <div className={styles.scrollUpFab} onClick={handleScrollToBottom} title="Scroll to bottom">
+                    <ArrowDownToLine/>
+                </div>
+            )}
             <MessageInput onSend={handleSend} />
         </div>
     );

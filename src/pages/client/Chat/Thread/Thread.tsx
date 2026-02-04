@@ -1,6 +1,9 @@
-﻿import { useEffect, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
+import { ArrowDownToLine, PanelRightClose } from 'lucide-react';
 import { useApolloClient } from '@apollo/client';
+
 import { useUser } from '@/contexts/UserContext';
+import { MessageInput } from '@/pages/client/Chat/MessageInput';
 import { MessageWithUser } from '@/types/messages';
 import { addReaction, deleteMessage, deleteReaction, getThreadMessagesList, postNewMessage } from '@/graphql/messages';
 import {
@@ -14,17 +17,20 @@ import {
 import { MessageComponent } from '@/pages/client/Chat/MessageComponent';
 
 import styles from './Thread.module.css';
-import { MessageInput } from '@/pages/client/Chat/MessageInput.tsx';
 
 type Props = {
     rootMessage: MessageWithUser;
     eventEmitter: WebSocketEventEmitter;
+    onCloseThread(): void;
 }
 
-export const Thread = ({ rootMessage, eventEmitter }: Props) => {
+export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
     const userCtx = useUser();
     const apolloClient = useApolloClient();
-    const [messages, setMessages] = useState<MessageWithUser[]>([]);
+    const [messages, setMessages] = useState<MessageWithUser[] | null>(null);
+    const [isBottomVisible, setIsBottomVisible] = useState(true);
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const autoScrollDone = useRef(false);
 
     const handleSend = async (text: string) => {
         const newMessage = {
@@ -48,7 +54,22 @@ export const Thread = ({ rootMessage, eventEmitter }: Props) => {
         await deleteReaction(apolloClient, messageId, code);
     };
 
+    const handleScrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
+    };
+
     useEffect(() => {
+        const loadMessages = async () => {
+            try {
+                const listRes = await getThreadMessagesList(apolloClient, rootMessage.id);
+                const list = [...listRes];
+                list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+                setMessages(list);
+            } catch (err) {
+                console.log('Failed to load messages', err);
+            }
+        };
+
         const handleWebSocketEvent = (event: WebSocketEvent) => {
             const { type, payload } = event;
             console.log('->> event', type, payload);
@@ -57,25 +78,25 @@ export const Thread = ({ rootMessage, eventEmitter }: Props) => {
                     const message = payload as MessageWithUser;
                     if (message.parentId === rootMessage.id) {
                         console.log('message received in thread!', message);
-                        setMessages((prev) => [...prev, message]);
+                        setMessages((prev) => [...prev ?? [], message]);
                     }
                 }
                     break;
                 case WebSocketEventType.DELETED_MESSAGE: {
                     const { channelId, messageId } = payload as MessageDeletedPayload;
                     console.log('should we delete message?', channelId, messageId);
-                    if (channelId === channelId) {
+                    if (channelId === rootMessage.channelId) {
                         console.log('message deleted!', messageId);
-                        setMessages((prev) => prev.filter(m => m.id !== messageId));
+                        setMessages((prev) => prev?.filter(m => m.id !== messageId) ?? null);
                     }
                 }
                     break;
                 case WebSocketEventType.NEW_REACTION:
                 case WebSocketEventType.DELETED_REACTION: {
                     const { messageId, channelId, code, userId } = payload as ReactionChangedPayload;
-                    if (channelId === channelId) {
+                    if (channelId === rootMessage.channelId) {
                         const isNew = type === WebSocketEventType.NEW_REACTION;
-                        setMessages(prev => prev.map(msg => {
+                        setMessages(prev => prev?.map(msg => {
                             if (msg.id !== messageId) {
                                 return msg;
                             }
@@ -102,13 +123,13 @@ export const Thread = ({ rootMessage, eventEmitter }: Props) => {
                                 reactions: newReactions,
                                 myReactions: newMyReactions,
                             }
-                        }));
+                        }) ?? null);
                     }
                 }
                     break;
                 case WebSocketEventType.MESSAGE_CHILDREN_COUNT_UPDATED: {
                     const { messageId, childrenCount } = payload as MessageChildrenCountUpdatedPayload;
-                    setMessages(prev => prev.map(msg => {
+                    setMessages(prev => prev?.map(msg => {
                         if (msg.id !== messageId) {
                             return msg;
                         }
@@ -117,20 +138,9 @@ export const Thread = ({ rootMessage, eventEmitter }: Props) => {
                             ...msg,
                             childrenCount,
                         }
-                    }));
+                    }) ?? null);
                 }
                     break;
-            }
-        };
-
-        const loadMessages = async () => {
-            try {
-                const listRes = await getThreadMessagesList(apolloClient, rootMessage.id);
-                const list = [...listRes];
-                list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-                setMessages(list);
-            } catch (err) {
-                console.log('Failed to load messages', err);
             }
         };
 
@@ -145,14 +155,44 @@ export const Thread = ({ rootMessage, eventEmitter }: Props) => {
         return () => {
             abortController.abort();
         }
-    }, [rootMessage, eventEmitter, userCtx?.user?.id, apolloClient]);
+    }, [rootMessage, apolloClient, eventEmitter, userCtx?.user?.id]);
+
+    useEffect(() => {
+        if (messages !== null && !autoScrollDone.current) {
+            autoScrollDone.current = true;
+            handleScrollToBottom();
+        }
+    }, [messages]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                setIsBottomVisible(entries?.[0].isIntersecting ?? false);
+            },
+            {
+                root: null,        // null => viewport браузера
+                threshold: 0.0,    // 0.0 => достаточно хотя бы 1 пикселя
+            }
+        );
+
+        observer.observe(messagesEndRef.current!);
+
+        return () => {
+            observer.disconnect();
+        };
+    });
 
     return (
         <div className={styles.container}>
-            thread for {rootMessage.id}
-            <div className={styles.messageList}>
-                messages in thread
-                {messages.map(message => (
+            <div className={styles.header}>
+                <PanelRightClose
+                    className="cursor-pointer inline-block mr-2 text-red-500"
+                    onClick={onCloseThread}
+                />
+                Thread
+            </div>
+            <div className={styles.scrollArea}>
+                {messages?.length ? messages.map(message => (
                     <MessageComponent
                         key={message.id}
                         currentUserId={userCtx?.user?.id}
@@ -161,8 +201,17 @@ export const Thread = ({ rootMessage, eventEmitter }: Props) => {
                         onAddReaction={handleAddReaction}
                         onDeleteReaction={handleDeleteReaction}
                     />
-                ))}
+                )) : (
+                    <div>No messages here yet</div>
+                )}
+                <div ref={messagesEndRef} />
             </div>
+
+            {!isBottomVisible && (
+                <div className={styles.scrollUpFab} onClick={handleScrollToBottom} title="Scroll to bottom">
+                    <ArrowDownToLine/>
+                </div>
+            )}
             <MessageInput onSend={handleSend} />
         </div>
     );

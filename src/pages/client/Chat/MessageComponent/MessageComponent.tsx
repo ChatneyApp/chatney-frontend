@@ -1,4 +1,4 @@
-﻿import { HTMLProps, PropsWithChildren } from 'react';
+﻿import { XCircle } from 'lucide-react';
 import clsx from 'clsx';
 import { MessageWithUser } from '@/types/messages';
 import { isDev } from '@/helpers/env';
@@ -10,11 +10,6 @@ import { formatTimestamp } from '@/helpers/formatTimestamp';
 
 import styles from './MessageComponent.module.css';
 
-const DeleteButton = ({ children, onClick }: PropsWithChildren & HTMLProps<HTMLButtonElement>) => (
-    <button className="inline-block text-amber-700 p-2 cursor-pointer" onClick={onClick}>
-        {children}
-    </button>
-);
 type Props = {
     message: MessageWithUser;
     currentUserId?: UserId;
@@ -45,14 +40,17 @@ export const MessageComponent = ({ message, currentUserId, onDelete, onAddReacti
                 />
             )}
             <div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 relative">
                     {!isMine && (
                         <span className="font-medium">
                             {message.user?.name ?? message.userId}
                         </span>
                     )}
                     <span className="text-xs text-yellow-500">{formatTimestamp(new Date(message.createdAt))}</span>
-                    <DeleteButton onClick={() => onDelete(message.id)}>x</DeleteButton>
+                    <XCircle
+                        className="cursor-pointer text-red-500"
+                        onClick={() => onDelete(message.id)}
+                    />
                 </div>
                 <p className="text-gray-200 break-all">{message.content}</p>
                 <MessageUrlPreviewsComponent urlPreviews={message.urlPreviews}/>

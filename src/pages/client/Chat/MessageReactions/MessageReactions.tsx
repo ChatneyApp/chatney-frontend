@@ -25,7 +25,7 @@ export const MessageReactions = ({ reactions, myReactions, onAddReaction, onDele
                 />
             ))}
         <ReactionSelectionDialog
-            reactions={[ 'fire', 'smile', 'fff' ]}
+            reactions={['fire', 'smile', 'fff']}
             onSelect={onAddReaction}
             myReactions={myReactions}
         />

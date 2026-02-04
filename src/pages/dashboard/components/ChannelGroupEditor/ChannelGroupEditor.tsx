@@ -32,7 +32,6 @@ export const ChannelGroupEditor = ({ channelGroup }: Props) => {
     };
 
     const groupChannels = channels.filter(channel => channelGroup.channelIds.includes(channel.id));
-    console.log('groupChannels', groupChannels);
     const groupChannelNames = groupChannels.map(channel => channel.name);
 
     return (

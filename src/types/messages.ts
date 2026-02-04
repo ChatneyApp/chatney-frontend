@@ -40,6 +40,7 @@ export type Message = {
     myReactions: string[];
     urlPreviews: UrlPreview[];
     parentId: string | null;
+    childrenCount: number;
 }
 export type MessageWithUser = Message & {
     user: MessageUser;

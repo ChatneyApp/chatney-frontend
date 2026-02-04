@@ -1,6 +1,6 @@
 import { ApolloClient, gql, type TypedDocumentNode } from '@apollo/client';
 
-import { CreateMessageDto, Message, MessageWithUser } from '@/types/messages';
+import { CreateMessageDto, Message, MessageId, MessageWithUser } from '@/types/messages';
 import { ChannelId } from '@/types/channels';
 
 export const postNewMessage = async (client: ApolloClient<object>, messageDto: CreateMessageDto): Promise<Message> => {
@@ -43,6 +43,7 @@ export const postNewMessage = async (client: ApolloClient<object>, messageDto: C
                     }
                     myReactions
                     parentId
+                    childrenCount
                 }
             }
         }
@@ -161,14 +162,14 @@ export const deleteReaction = async (client: ApolloClient<object>, messageId: st
     }
 };
 
-type GetMessagesResponse = {
+type GetChannelMessagesResponse = {
     messages: {
         listChannelMessages: MessageWithUser[];
     }
 }
 
 export const getChannelMessagesList = async (client: ApolloClient<object>, channelId: ChannelId): Promise<MessageWithUser[]> => {
-    const GET_MESSAGES: TypedDocumentNode<GetMessagesResponse> = gql`
+    const GET_MESSAGES: TypedDocumentNode<GetChannelMessagesResponse> = gql`
     query ($channelId: String!) {
         messages {
             listChannelMessages(channelId: $channelId) {
@@ -207,6 +208,7 @@ export const getChannelMessagesList = async (client: ApolloClient<object>, chann
                 }
                 myReactions
                 parentId
+                childrenCount
             }
         }
     }
@@ -218,6 +220,68 @@ export const getChannelMessagesList = async (client: ApolloClient<object>, chann
         });
         return data?.messages?.listChannelMessages ?? [];
     } catch (error) {
-        throw new Error(`Can't get messages list: ${(error as Error).message}`);
+        throw new Error(`Can't get channel messages list: ${(error as Error).message}`);
+    }
+};
+
+type GetThreadMessagesResponse = {
+    messages: {
+        listThreadMessages: MessageWithUser[];
+    }
+}
+
+export const getThreadMessagesList = async (client: ApolloClient<object>, threadId: MessageId): Promise<MessageWithUser[]> => {
+    const GET_MESSAGES: TypedDocumentNode<GetThreadMessagesResponse> = gql`
+    query ($threadId: String!) {
+        messages {
+            listThreadMessages(threadId: $threadId) {
+                id
+                channelId
+                userId
+                content
+                attachments
+                status
+                createdAt
+                updatedAt
+                user {
+                    id
+                    name
+                    avatarUrl
+                }
+                urlPreviews {
+                    id
+                    createdAt
+                    updatedAt
+                    url
+                    title
+                    description
+                    thumbnailUrl
+                    videoThumbnailUrl
+                    siteName
+                    favIconUrl
+                    type
+                    author
+                    thumbnailWidth
+                    thumbnailHeight
+                }
+                reactions {
+                    code
+                    count
+                }
+                myReactions
+                parentId
+                childrenCount
+            }
+        }
+    }
+`;
+    try {
+        const { data } = await client.query({
+            query: GET_MESSAGES,
+            variables: { threadId },
+        });
+        return data?.messages?.listThreadMessages ?? [];
+    } catch (error) {
+        throw new Error(`Can't get thread messages list: ${(error as Error).message}`);
     }
 };

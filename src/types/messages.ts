@@ -2,6 +2,7 @@
 
 export type MessageId = string;
 export type UrlPreviewId = string;
+export type FileAttachmentId = string;
 export type MessageUser = {
     id: UserId;
     name: string;
@@ -26,6 +27,9 @@ export type UrlPreview = {
     author: string | null;
     thumbnailWidth: number | null;
     thumbnailHeight: number | null;
+}
+export type FileAttachment = {
+    id: FileAttachmentId;
 }
 export type Message = {
     id: MessageId;

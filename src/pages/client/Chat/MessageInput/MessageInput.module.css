@@ -1,0 +1,21 @@
+@reference "tailwindcss";
+
+.sendButton {
+    @apply ml-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500 cursor-pointer;
+
+    &:disabled {
+        @apply bg-gray-500 text-gray-700 cursor-not-allowed;
+    }
+}
+
+.fileAttachmentIcon {
+    @apply mr-4 text-amber-500 cursor-pointer;
+}
+
+.fileDropArea {
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    justify-content: stretch;
+    cursor: pointer;
+}

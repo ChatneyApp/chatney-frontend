@@ -1,15 +1,39 @@
 import { FormEventHandler, useState } from 'react';
 import { Paperclip } from 'lucide-react';
+import { useApolloClient } from '@apollo/client';
 
 import { useDropZone } from '@/hooks/useDropZone';
+import { FileAttachmentId } from '@/types/messages';
+import { prepareImage } from '@/helpers/attachments/prepareImage';
+import { requestFileUpload } from '@/graphql/attachmentss';
 
 import styles from './MessageInput.module.css';
-import { FileAttachmentId } from '@/types/messages.ts';
+
+
+async function uploadToPresignedUrl(url: string, file: Blob, mimeType: string) {
+    try {
+        const res = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': mimeType
+            },
+            body: file
+        });
+
+        if (!res.ok) {
+            const text = await res.text().catch(() => '');
+            throw new Error(`Upload failed: ${res.status} ${res.statusText} ${text}`);
+        }
+    } catch (error) {
+        console.error('Failed to upload file:', error);
+    }
+}
 
 type Props = {
     onSend(text: string, attachmentIds: FileAttachmentId[]): Promise<void>;
 }
 export function MessageInput({ onSend }: Props) {
+    const apolloClient = useApolloClient();
     const [isSending, setIsSending] = useState(false);
     const [text, setText] = useState('');
     const [attachmentIds, setAttachmentIds] = useState<FileAttachmentId[]>([]);
@@ -17,8 +41,19 @@ export function MessageInput({ onSend }: Props) {
     const canSend = text.trim().length > 0;
 
     const handleDrop = async (file: File) => {
-        console.log('Dropped file', file);
-        // TODO: preprocess the file
+        const { name, lastModified, type } = file;
+        console.log('Dropped file', name, lastModified, type);
+        // preprocess the file
+        const isImage = !file.type.startsWith('image/');
+        const isGif = file.type === 'image/gif';
+        const preprocessedBlob = isImage && !isGif
+            ? await prepareImage(file)
+            : file;
+        console.log(preprocessedBlob);
+
+        const secureUrl = await requestFileUpload(apolloClient);
+        console.log(`Got secure URL for upload: ${secureUrl}`);
+        await uploadToPresignedUrl(secureUrl.replace('https://', 'http://'), preprocessedBlob, file.type);
         // TODO: upload it as a temprorary attachment and get an attachment ID to send with the message
         // const attachment = await fileUpload(file);
         const attachmentId = crypto.randomUUID();

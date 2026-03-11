@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import type { Workspace, WorkspaceId } from '@/types/workspaces';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import { getWorkspacesQuery } from '@/graphql/workspaces';
 
 interface WorkspacesListContextValue {

@@ -1,33 +1,13 @@
 import { FormEventHandler, useState } from 'react';
 import { Paperclip } from 'lucide-react';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 
 import { useDropZone } from '@/hooks/useDropZone';
 import { FileAttachmentId } from '@/types/messages';
 import { prepareImage } from '@/helpers/attachments/prepareImage';
-import { requestFileUpload } from '@/graphql/attachmentss';
+import { uploadFile } from '@/graphql/attachments';
 
 import styles from './MessageInput.module.css';
-
-
-async function uploadToPresignedUrl(url: string, file: Blob, mimeType: string) {
-    try {
-        const res = await fetch(url, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': mimeType
-            },
-            body: file
-        });
-
-        if (!res.ok) {
-            const text = await res.text().catch(() => '');
-            throw new Error(`Upload failed: ${res.status} ${res.statusText} ${text}`);
-        }
-    } catch (error) {
-        console.error('Failed to upload file:', error);
-    }
-}
 
 type Props = {
     onSend(text: string, attachmentIds: FileAttachmentId[]): Promise<void>;
@@ -49,15 +29,11 @@ export function MessageInput({ onSend }: Props) {
         const preprocessedBlob = isImage && !isGif
             ? await prepareImage(file)
             : file;
-        console.log(preprocessedBlob);
+        console.log('preprocessed data length', preprocessedBlob.size);
 
-        const secureUrl = await requestFileUpload(apolloClient);
-        console.log(`Got secure URL for upload: ${secureUrl}`);
-        await uploadToPresignedUrl(secureUrl.replace('https://', 'http://'), preprocessedBlob, file.type);
-        // TODO: upload it as a temprorary attachment and get an attachment ID to send with the message
-        // const attachment = await fileUpload(file);
-        const attachmentId = crypto.randomUUID();
-        setAttachmentIds(v => [...v, attachmentId]);
+        const response = await uploadFile(apolloClient, preprocessedBlob, 'myfile.jpg', 'image/jpeg');
+        console.log('Got response', response);
+        setAttachmentIds(v => [...v, response.attachmentId]);
     };
 
     const { onClick: onFileSelectClick } = useDropZone({ onDrop: handleDrop });

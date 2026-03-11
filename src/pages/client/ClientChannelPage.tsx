@@ -3,7 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router';
 
 import { UserDataProvider, useUserData } from '@/contexts/UserDataContext';
 import { UserChannelProvider, useUserChannel } from '@/contexts/UserChannelProvider';
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { POST_MESSAGE } from '@/graphql/messages';
 import { CreateMessageInput, Message } from '@/types/messages';
 

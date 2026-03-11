@@ -1,5 +1,5 @@
 import { addWorkspace } from "@/graphql/workspaces";
-import { useApolloClient } from "@apollo/client";
+import { useApolloClient } from "@apollo/client/react";
 import { useState, useEffect, useRef } from "react";
 
 interface WorkspaceCreateModalProps {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowDownToLine } from 'lucide-react';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 
 import { useUser } from '@/contexts/UserContext';
 import { MessageInput } from '@/pages/client/Chat/MessageInput';

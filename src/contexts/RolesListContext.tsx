@@ -1,5 +1,5 @@
 ﻿import { createContext, ReactNode, startTransition, useContext } from 'react';
-import { useSuspenseQuery } from '@apollo/client';
+import { useSuspenseQuery } from '@apollo/client/react';
 
 import { Role } from '@/types/roles';
 import { GET_ROLES_QUERY } from '@/graphql/roles';

@@ -1,5 +1,5 @@
 import { createContext, ReactNode, startTransition, useContext } from 'react';
-import { useSuspenseQuery } from '@apollo/client';
+import { useSuspenseQuery } from '@apollo/client/react';
 
 import { SystemConfigValue } from '@/types/systemConfig';
 import { GET_SYSTEM_CONFIG_QUERY } from '@/graphql/systemConfig';

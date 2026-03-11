@@ -1,6 +1,6 @@
 import { installSystem } from '@/graphql/systemConfig';
 import { clientStartPageUrl } from '@/infra/consts';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styles from './Form.module.css';

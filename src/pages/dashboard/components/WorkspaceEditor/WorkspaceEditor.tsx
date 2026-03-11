@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 
 import { Workspace } from '@/types/workspaces';
 import { DELETE_WORKSPACE } from '@/graphql/workspaces';

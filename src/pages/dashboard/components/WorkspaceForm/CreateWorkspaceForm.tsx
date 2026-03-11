@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { useApolloClient, useMutation } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import { Dialog } from 'radix-ui';
 

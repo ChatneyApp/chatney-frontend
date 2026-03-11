@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 
 import { ChannelType } from '@/types/channelTypes';
 import { CreateChannelTypeForm } from '@/pages/dashboard/components/ChannelTypeForm/CreateChannelTypeForm';

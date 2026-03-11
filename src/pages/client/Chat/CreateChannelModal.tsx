@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useApolloClient } from "@apollo/client";
+import { useApolloClient } from "@apollo/client/react";
 import { addChannel } from "./chat.gql";
 import { useWorkspacesList } from "@/contexts/WorkspacesListContext";
 

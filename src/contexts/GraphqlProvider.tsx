@@ -1,55 +1,58 @@
 import { PropsWithChildren } from 'react';
-import { ApolloClient, ApolloProvider, from, HttpLink, InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
+import { ApolloClient, CombinedGraphQLErrors, from, InMemoryCache, ServerError } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client/react';
+import { SetContextLink } from '@apollo/client/link/context';
+import { ErrorLink } from '@apollo/client/link/error';
+import UploadHttpLink from 'apollo-upload-client/UploadHttpLink.mjs';
 
-const httpLink = new HttpLink({
-    uri: import.meta.env.VITE_API_URL
-});
-
-
-import { onError } from '@apollo/client/link/error';
 import { loginPageUrl, userAuthTokenName } from '@/infra/consts';
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-    const isUnauthorized =
-        (graphQLErrors &&
-            graphQLErrors.some(err => err.extensions?.code === "AUTH_NOT_AUTHENTICATED")) ||
-        (networkError && 'statusCode' in networkError && networkError.statusCode === 401);
+const authLink = new SetContextLink((previousContext) => {
+    const userToken = localStorage.getItem(userAuthTokenName);
 
+    return {
+        headers: {
+            ...previousContext.headers,
+            ...(userToken
+                ? { Authorization: `Bearer ${userToken}` }
+                : {}),
+        },
+    };
+});
+
+const uploadLink = new UploadHttpLink({
+    uri: import.meta.env.VITE_API_URL,
+    headers: {
+        'Apollo-Require-Preflight': 'true',
+    },
+});
+
+const errorLink = new ErrorLink(({ error }) => {
+    const isUnauthorizedGraphQl =
+        CombinedGraphQLErrors.is(error) &&
+        error.errors.some(
+            (err) =>
+                err.extensions?.code === 'AUTH_NOT_AUTHENTICATED' ||
+                err.extensions?.code === 'UNAUTHENTICATED'
+        );
+
+    const isUnauthorizedHttp =
+        ServerError.is(error) && error.statusCode === 401;
+
+    const isUnauthorized = isUnauthorizedGraphQl || isUnauthorizedHttp;
     const currentPath = window.location.pathname;
 
     if (isUnauthorized && currentPath !== loginPageUrl) {
-        // Clear any invalid token
         localStorage.removeItem(userAuthTokenName);
-
-        // Redirect to login
-        window.location.href = loginPageUrl; // Adjust this to your actual login route
+        window.location.assign(loginPageUrl);
     }
 });
 
+const client = new ApolloClient({
+    link: from([errorLink, authLink, uploadLink]),
+    cache: new InMemoryCache(),
+});
 
 export const GraphqlProvider = ({ children }: PropsWithChildren) => {
-    const authMiddleware = setContext((_, previousContext) => {
-        const { headers = {} } = previousContext;
-        const userToken = localStorage.getItem(userAuthTokenName);
-        const authHeaders = userToken ? {
-            Authorization: `Bearer ${userToken}`,
-        } : {};
-
-        return ({
-            ...previousContext,
-            headers: {
-                ...headers,
-                ...authHeaders,
-            },
-        });
-    })
-    const client = new ApolloClient({
-        link: from([ errorLink, authMiddleware, httpLink ]),
-        cache: new InMemoryCache(),
-    });
-
-    return (
-        <ApolloProvider client={client}>{children}</ApolloProvider>
-    );
+    return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };

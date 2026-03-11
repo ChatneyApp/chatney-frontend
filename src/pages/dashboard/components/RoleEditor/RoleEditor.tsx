@@ -1,4 +1,4 @@
-﻿import { useMutation } from '@apollo/client';
+﻿import { useMutation } from '@apollo/client/react';
 
 import { Role } from '@/types/roles';
 import { CreateRoleForm } from '@/pages/dashboard/components/RoleForm/CreateRoleForm';

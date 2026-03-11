@@ -1,5 +1,5 @@
 import { createContext, ReactNode, startTransition, useContext } from 'react';
-import { useSuspenseQuery } from '@apollo/client';
+import { useSuspenseQuery } from '@apollo/client/react';
 
 import { ChannelType } from '@/types/channelTypes';
 import { GET_CHANNEL_TYPES_QUERY } from '@/graphql/channelTypes';

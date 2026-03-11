@@ -1,5 +1,5 @@
 import { createContext, ReactNode, startTransition, useContext, useEffect, useState } from 'react';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 
 import { Channel } from '@/types/channels';
 import { WorkspacesListContext } from './WorkspacesListContext';

@@ -23,7 +23,7 @@ const authLink = new SetContextLink((previousContext) => {
 const uploadLink = new UploadHttpLink({
     uri: import.meta.env.VITE_API_URL,
     headers: {
-        'Apollo-Require-Preflight': 'true',
+        'GraphQL-preflight': '1',
     },
 });
 

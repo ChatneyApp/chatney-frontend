@@ -24,7 +24,7 @@ export function MessageInput({ onSend }: Props) {
         const { name, lastModified, type } = file;
         console.log('Dropped file', name, lastModified, type);
         // preprocess the file
-        const isImage = !file.type.startsWith('image/');
+        const isImage = file.type.startsWith('image/');
         const isGif = file.type === 'image/gif';
         const preprocessedBlob = isImage && !isGif
             ? await prepareImage(file)
@@ -49,6 +49,8 @@ export function MessageInput({ onSend }: Props) {
             setText('');
         } catch (_e) {
             // TODO
+        } finally {
+            setIsSending(false);
         }
     };
 

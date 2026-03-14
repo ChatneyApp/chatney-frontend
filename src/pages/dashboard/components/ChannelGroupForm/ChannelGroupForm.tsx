@@ -7,7 +7,7 @@ import { CREATE_CHANNEL_GROUP, UPDATE_CHANNEL_GROUP } from '@/graphql/channelGro
 import { Button } from '@/components/Button';
 import { ChannelGroup } from '@/types/channelGroups';
 import { useWorkspaceChannelGroupsList } from '@/contexts/WorkspaceChannelGroupsListContext';
-import { useWorkspaceChannelsList } from '@/contexts/WorkspaceChannelsListContext';
+import { useWorkspaceChannelsList } from '@/contexts/OldWorkspaceChannelsListContext';
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './ChannelGroupForm.module.css';
 

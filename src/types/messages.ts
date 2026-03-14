@@ -57,4 +57,13 @@ export type Reaction = {
     count: number;
 }
 
-export type CreateMessageInput = Omit<Message, 'id' | 'createdAt' | 'updatedAt' | 'status' | 'reactions'>;
+export type CreateMessageInput = Omit<Message,
+    'id'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'status'
+    | 'reactions'
+    | 'urlPreviews'
+    | 'childrenCount'
+    | 'myReactions'
+>;

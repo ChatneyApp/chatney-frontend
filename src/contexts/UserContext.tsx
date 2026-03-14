@@ -44,7 +44,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
                     return;
                 }
 
-                const userData = await getUserById({ client: apollo, id: userid });
+                const userData = await getUserById(apollo, userid);
 
                 if (userData) {
                     setUser({ user: userData, logout: logoutFunction });

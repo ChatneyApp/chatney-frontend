@@ -6,7 +6,7 @@ import { useWorkspaceChannelGroupsList } from '@/contexts/WorkspaceChannelGroups
 import { ChannelGroupForm } from '@/pages/dashboard/components/ChannelGroupForm/ChannelGroupForm';
 import { ChannelGroup } from '@/types/channelGroups';
 import styles from './ChannelGroupEditor.module.css';
-import { useWorkspaceChannelsList } from '@/contexts/WorkspaceChannelsListContext';
+import { useWorkspaceChannelsList } from '@/contexts/OldWorkspaceChannelsListContext';
 
 type Props = {
     channelGroup: ChannelGroup;

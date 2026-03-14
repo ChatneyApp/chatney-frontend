@@ -12,7 +12,7 @@ interface UserDataContextValue {
 const UserDataListContext = createContext<UserDataContextValue | null>(null);
 
 export function UserDataProvider({ children }: { children: ReactNode }) {
-    const [ data, setData ] = useState<User | null>(null);
+    const [data, setData] = useState<User | null>(null);
 
     const client = useApolloClient();
     const navigate = useNavigate();
@@ -22,27 +22,25 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
             const id = localStorage.getItem('userId');
 
             if (!id) {
-                throw new Error("User Id is not valid");
+                throw new Error('User Id is not valid');
             }
 
             try {
-                const response = await getUserById({ client, id });
+                const response = await getUserById(client, id);
                 setData(response);
             } catch (error) {
                 console.error('Error during login:', error);
                 navigate('/client', { replace: true });
             }
         })();
-    }, [ client, navigate ]);
+    }, [client, navigate]);
 
     if (!data) {
         return null; // or a loading spinner
     }
 
     return (
-        <UserDataListContext.Provider
-            value={{ userData: data }}
-        >
+        <UserDataListContext.Provider value={{ userData: data }}>
             {children}
         </UserDataListContext.Provider>
     );

@@ -1,22 +1,53 @@
 import { ApolloClient, gql } from '@apollo/client';
+import { UserAuthorization } from '@/types/users';
+
+type LoginUserResponse = {
+    users?: {
+        login?: UserAuthorization;
+    }
+}
+
+type RegisterUserResponse = {
+    users?: {
+        register?: {
+            id?: string;
+            name?: string;
+            email?: string;
+        }
+    }
+}
+
+const LOGIN_USER_MUTATION = gql`
+    mutation Login($login: String!, $password: String!) {
+        users {
+            login(login: $login, password: $password) {
+                id
+                token
+            }
+        }
+    }
+`;
+
+const REGISTER_USER_MUTATION = gql`
+    mutation RegisterUser($input: UserRegisterDTOInput!) {
+        users {
+            register(userDto: $input) {
+                id
+                name
+                email
+            }
+        }
+    }
+`;
 
 export const loginUser = async ({ client, login, password }: {
-    client: ApolloClient<object>,
+    client: ApolloClient,
     login: string,
     password: string,
 }): Promise<{ token: string, id: string }> => {
     try {
-        const { data } = await client.mutate({
-            mutation: gql`
-                mutation Login($login: String!, $password: String!) {
-                    users {
-                        login(login: $login, password: $password) {
-                            id
-                            token
-                        }
-                    }
-                }
-            `,
+        const { data } = await client.mutate<LoginUserResponse>({
+            mutation: LOGIN_USER_MUTATION,
             variables: { login, password },
         });
 
@@ -37,24 +68,14 @@ export const registerUser = async ({ client, email,
     password,
     name
 }: {
-    client: ApolloClient<object>,
+    client: ApolloClient,
     email: string,
     name: string,
     password: string,
 }): Promise<void> => {
     try {
-        const { data } = await client.mutate({
-            mutation: gql`
-                mutation RegisterUser($input: UserRegisterDTOInput!) {
-                    users {
-                        register(userDto: $input) {
-                            id
-                            name
-                            email
-                        }
-                    }
-                }
-            `,
+        const { data } = await client.mutate<RegisterUserResponse>({
+            mutation: REGISTER_USER_MUTATION,
             variables: { input: { email, name, password } },
         });
 

@@ -8,7 +8,7 @@ import dialogStyles from '@/components/Popup/Popup.module.css';
 import { CREATE_CHANNEL, UPDATE_CHANNEL } from '@/graphql/channels';
 import { Button } from '@/components/Button';
 import { Channel } from '@/types/channels';
-import { useWorkspaceChannelsList } from '@/contexts/WorkspaceChannelsListContext';
+import { useWorkspaceChannelsList } from '@/contexts/OldWorkspaceChannelsListContext';
 import { useChannelTypesList } from '@/contexts/ChannelTypesListContext';
 
 type FormInputs = {
@@ -24,9 +24,9 @@ type Props = {
 };
 
 export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) => {
-    const [ open, setOpen ] = useState(false);
-    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
-    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { refetch, workspace } = useWorkspaceChannelsList();
     const { channelTypes } = useChannelTypesList();
 
@@ -37,7 +37,7 @@ export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) =>
         }
     });
 
-    const [ createChannel, { loading: createLoading } ] = useMutation(CREATE_CHANNEL, {
+    const [createChannel, { loading: createLoading }] = useMutation(CREATE_CHANNEL, {
         onCompleted: () => {
             setOpen(false);
             reset();
@@ -49,7 +49,7 @@ export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) =>
         }
     });
 
-    const [ updateChannel, { loading: updateLoading } ] = useMutation(UPDATE_CHANNEL, {
+    const [updateChannel, { loading: updateLoading }] = useMutation(UPDATE_CHANNEL, {
         onCompleted: () => {
             setOpen(false);
             reset();

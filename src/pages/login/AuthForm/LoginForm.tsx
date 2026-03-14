@@ -5,7 +5,7 @@ import { Button } from '@/components/Button';
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './AuthForm.module.css';
 import { clientStartPageUrl, userAuthTokenName, userAuthId } from '@/infra/consts';
-import { loginUser } from './auth.gql';
+import { loginUser } from '@/graphql/auth';
 
 type FormInputs = {
     login: string;

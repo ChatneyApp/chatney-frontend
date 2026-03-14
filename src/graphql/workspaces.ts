@@ -1,33 +1,29 @@
-import { ApolloClient, gql, type TypedDocumentNode } from '@apollo/client';
+import { ApolloClient, gql } from '@apollo/client';
 
 import { Workspace } from '@/types/workspaces';
 
-export const addWorkspace = async ({
-    client,
-    name,
-}: {
-    client: ApolloClient<object>,
-    name: string,
-}): Promise<{
-    id: string;
-    name: string;
-    createdAt: string;
-    updatedAt: string;
-}> => {
+const AddWorkspaceMutation = gql`
+    mutation AddWorkspace($name: String!) {
+        workspaces {
+            addWorkspace(workspaceDto: { name: $name }) {
+                id
+                name
+                createdAt
+                updatedAt
+            }
+        }
+    }
+`;
+type AddWorkspaceMutationResponse = {
+    workspaces?: {
+        addWorkspace?: Workspace;
+    }
+}
+
+export const addWorkspace = async (client: ApolloClient, name: string): Promise<Workspace> => {
     try {
-        const { data } = await client.mutate({
-            mutation: gql`
-                mutation AddWorkspace($name: String!) {
-                    workspaces {
-                        addWorkspace(workspaceDto: { name: $name }) {
-                            id
-                            name
-                            createdAt
-                            updatedAt
-                        }
-                    }
-                }
-            `,
+        const { data } = await client.mutate<AddWorkspaceMutationResponse>({
+            mutation: AddWorkspaceMutation,
             variables: { name },
         });
 
@@ -59,12 +55,12 @@ export const DELETE_WORKSPACE = gql`
 `;
 
 type GetWorkspacesListResponse = {
-    workspaces: {
-        list: Workspace[];
+    workspaces?: {
+        list?: Workspace[];
     }
 }
-export const getWorkspacesQuery = async (client: ApolloClient<object>) => {
-    const GET_WORKSPACES_QUERY: TypedDocumentNode<GetWorkspacesListResponse> = gql`
+export const getWorkspacesQuery = async (client: ApolloClient) => {
+    const GET_WORKSPACES_QUERY = gql`
     {
         workspaces {
             list {
@@ -76,9 +72,9 @@ export const getWorkspacesQuery = async (client: ApolloClient<object>) => {
         }
     }
 `;
-    const { data } = await client.query({
+    const { data } = await client.query<GetWorkspacesListResponse>({
         query: GET_WORKSPACES_QUERY,
     });
 
-    return data.workspaces.list;
+    return data?.workspaces?.list ?? [];
 }

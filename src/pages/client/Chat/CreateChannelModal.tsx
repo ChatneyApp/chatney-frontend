@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useApolloClient } from "@apollo/client/react";
-import { addChannel } from "./chat.gql";
+import { addChannel } from '@/graphql/channels';
 import { useWorkspacesList } from "@/contexts/WorkspacesListContext";
 
 interface CreateChannelModalProps {
@@ -37,16 +37,11 @@ export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelM
         }
 
         try {
-            const newChannel = await addChannel({
-                channelTypeId: 'e35bdf2d-1624-474a-a7dc-bb3580dc4bff',
-                workspaceId: activeWorkspaceId,
-                client,
-                name: channelName.trim()
-            });
+            const newChannel = await addChannel(client, channelName.trim(), 'e35bdf2d-1624-474a-a7dc-bb3580dc4bff', activeWorkspaceId);
             onChannelCreated(newChannel);
-            setChannelName("");
+            setChannelName('');
         } catch (error) {
-            console.error("Error creating channel:", error);
+            console.error('Error creating channel:', error);
         }
     };
 

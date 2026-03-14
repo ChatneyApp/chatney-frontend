@@ -31,7 +31,7 @@ export function WorkspaceCreateModal({ onClose, onWorkspaceCreated }: WorkspaceC
         }
 
         try {
-            const newWorkspace = await addWorkspace({ name: workspaceName.trim(), client });
+            const newWorkspace = await addWorkspace(client, workspaceName.trim());
             onWorkspaceCreated(newWorkspace);
             setWorkspaceName("");
         } catch (error) {

@@ -2,8 +2,8 @@
 
 export type UserId = string;
 export type UserAuthorization = {
-    Id: UserId;
-    Token: string;
+    id: UserId;
+    token: string;
 }
 export type User = {
     id: UserId;

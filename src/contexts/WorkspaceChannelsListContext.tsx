@@ -4,7 +4,6 @@ import { useApolloClient } from '@apollo/client/react';
 import { Channel } from '@/types/channels';
 import { WorkspacesListContext } from './WorkspacesListContext';
 import { getWorkspaceChannels } from '@/graphql/channels';
-import { ChannelList } from '@/pages/client/Chat/ChannelsList';
 
 interface WorkspaceChannelsListContextValue {
     channels: Channel[];

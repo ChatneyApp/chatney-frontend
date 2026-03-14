@@ -1,11 +1,12 @@
-﻿import { ApolloClient, gql, NormalizedCacheObject } from '@apollo/client';
+﻿import { ApolloClient, gql } from '@apollo/client';
 
+type UploadResult = {
+    attachmentId: string;
+    s3Url: string;
+};
 type UploadFileResponse = {
     attachments?: {
-        upload?: {
-            attachmentId: string;
-            s3Url: string;
-        };
+        upload?: UploadResult;
     };
 };
 
@@ -20,12 +21,7 @@ const UPLOAD_FILE_MUTATION = gql`
     }
 `;
 
-export const uploadFile = async (
-    client: ApolloClient<NormalizedCacheObject>,
-    data: Blob,
-    fileName: string,
-    mimeType: string
-): Promise<{ attachmentId: string; s3Url: string }> => {
+export const uploadFile = async (client: ApolloClient, data: Blob, fileName: string, mimeType: string): Promise<UploadResult> => {
     const file = new File([data], fileName, {
         type: mimeType || data.type || 'application/octet-stream',
     });

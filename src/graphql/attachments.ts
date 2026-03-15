@@ -1,12 +1,9 @@
 ﻿import { ApolloClient, gql } from '@apollo/client';
+import { UploadedAttachment } from '@/types/attachments';
 
-type UploadResult = {
-    attachmentId: string;
-    s3Url: string;
-};
 type UploadFileResponse = {
     attachments?: {
-        upload?: UploadResult;
+        upload?: UploadedAttachment;
     };
 };
 
@@ -21,7 +18,7 @@ const UPLOAD_FILE_MUTATION = gql`
     }
 `;
 
-export const uploadFile = async (client: ApolloClient, data: Blob, fileName: string, mimeType: string): Promise<UploadResult> => {
+export const uploadFile = async (client: ApolloClient, data: Blob, fileName: string, mimeType: string): Promise<UploadedAttachment> => {
     const file = new File([data], fileName, {
         type: mimeType || data.type || 'application/octet-stream',
     });

@@ -1,0 +1,31 @@
+﻿.container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    background: transparent none no-repeat center center;
+    background-size: cover;
+    border: solid 1px transparent;
+
+    &:hover {
+        border-color: #666;
+        transition: border-color 0.2s;
+
+        .deleteButton {
+            opacity: 1;
+        }
+    }
+}
+
+.deleteButton {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: red;
+    color: white;
+    width: 12px;
+    height: 12px;
+    font-size: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    cursor: pointer;
+}

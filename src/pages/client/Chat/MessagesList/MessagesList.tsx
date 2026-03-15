@@ -5,7 +5,8 @@ import { useApolloClient } from '@apollo/client/react';
 import { useUser } from '@/contexts/UserContext';
 import { MessageInput } from '@/pages/client/Chat/MessageInput';
 import { ChannelListItem } from '@/pages/client/Chat/types';
-import { FileAttachmentId, MessageId, MessageWithUser } from '@/types/messages';
+import { MessageId, MessageWithUser } from '@/types/messages';
+import { AttachmentId } from '@/types/attachments';
 import { addReaction, deleteMessage, deleteReaction, getChannelMessagesList, postNewMessage } from '@/graphql/messages';
 import {
     MessageChildrenCountUpdatedPayload,
@@ -34,7 +35,7 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const autoScrollDone = useRef(false);
 
-    const handleSend = async (text: string, attachmentIds: FileAttachmentId[]) => {
+    const handleSend = async (text: string, attachmentIds: AttachmentId[]) => {
         const newMessage = {
             channelId: activeChannel.id,
             content: text,

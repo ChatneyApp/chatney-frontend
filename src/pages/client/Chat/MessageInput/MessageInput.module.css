@@ -1,5 +1,13 @@
 @reference "tailwindcss";
 
+.container {
+    @apply w-full border-t border-gray-700 p-3 flex flex-col items-center bg-gray-800;
+}
+
+.sendForm {
+    @apply w-full flex flex-row items-center;
+}
+
 .sendButton {
     @apply ml-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500 cursor-pointer;
 
@@ -18,4 +26,8 @@
     align-items: flex-start;
     justify-content: stretch;
     cursor: pointer;
+}
+
+.attachmentsList {
+    @apply flex flex-wrap items-center justify-start w-full pb-2;
 }

@@ -16,7 +16,7 @@ export const ChannelEditor = ({ channel }: Props) => {
     const { refetch } = useWorkspaceChannelsList();
     const { channelTypes } = useChannelTypesList();
 
-    const [ deleteChannel ] = useMutation(DELETE_CHANNEL, {
+    const [deleteChannel] = useMutation(DELETE_CHANNEL, {
         onCompleted: () => {
             refetch();
         },

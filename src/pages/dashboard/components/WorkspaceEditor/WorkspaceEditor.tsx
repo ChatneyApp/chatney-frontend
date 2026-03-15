@@ -14,7 +14,7 @@ type Props = {
 
 export const WorkspaceEditor = ({ workspace }: Props) => {
     const { refetch } = useWorkspacesList();
-    const [ deleteWorkspace ] = useMutation(DELETE_WORKSPACE, {
+    const [deleteWorkspace] = useMutation(DELETE_WORKSPACE, {
         onCompleted: () => {
             refetch();
         },

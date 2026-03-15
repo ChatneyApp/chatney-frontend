@@ -14,8 +14,8 @@ type FormInputs = {
 
 export const LoginForm = () => {
     const apollo = useApolloClient();
-    const [ loading, setLoading ] = useState(false);
-    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { register, handleSubmit, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             login: '',

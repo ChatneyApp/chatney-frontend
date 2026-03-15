@@ -54,7 +54,7 @@ export function WebSocketContextProvider({ children }: { children: ReactNode }) 
         ws.addEventListener('close', () => {
             console.log('WebSocket closed');
         }, { signal });
-    }, [ userId ]);
+    }, [userId]);
 
     const close = useCallback(() => {
         abortControllerRef.current.abort();
@@ -67,7 +67,7 @@ export function WebSocketContextProvider({ children }: { children: ReactNode }) 
     useEffect(() => {
         connect();
         return close;
-    }, [ userId ]);
+    }, [close, connect, userId]);
 
     return (
         <WebSocketContext.Provider value={{ eventEmitter: eventEmitter.current }}>

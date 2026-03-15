@@ -25,9 +25,9 @@ type Props = {
 };
 
 export const ChannelGroupForm = ({ cta, title, submitText, channelGroup }: Props) => {
-    const [ open, setOpen ] = useState(false);
-    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
-    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { refetch, workspace } = useWorkspaceChannelGroupsList();
     const { channels } = useWorkspaceChannelsList();
 
@@ -41,7 +41,7 @@ export const ChannelGroupForm = ({ cta, title, submitText, channelGroup }: Props
 
     const selectedChannels = watch('channelIds') || [];
 
-    const [ createChannelGroup, { loading: createLoading } ] = useMutation(CREATE_CHANNEL_GROUP, {
+    const [createChannelGroup, { loading: createLoading }] = useMutation(CREATE_CHANNEL_GROUP, {
         onCompleted: () => {
             setOpen(false);
             reset();
@@ -53,7 +53,7 @@ export const ChannelGroupForm = ({ cta, title, submitText, channelGroup }: Props
         }
     });
 
-    const [ updateChannelGroup, { loading: updateLoading } ] = useMutation(UPDATE_CHANNEL_GROUP, {
+    const [updateChannelGroup, { loading: updateLoading }] = useMutation(UPDATE_CHANNEL_GROUP, {
         onCompleted: () => {
             setOpen(false);
             reset();
@@ -110,7 +110,7 @@ export const ChannelGroupForm = ({ cta, title, submitText, channelGroup }: Props
         if (currentChannels.includes(channelId)) {
             newChannels = currentChannels.filter(id => id !== channelId);
         } else {
-            newChannels = [ ...currentChannels, channelId ];
+            newChannels = [...currentChannels, channelId];
         }
 
         setValue('channelIds', newChannels);

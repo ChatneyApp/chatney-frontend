@@ -1,4 +1,4 @@
-import { createContext, ReactNode, startTransition, useContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, startTransition, useCallback, useContext, useEffect, useState } from 'react';
 import { useApolloClient } from '@apollo/client/react';
 
 import { Channel } from '@/types/channels';
@@ -21,7 +21,7 @@ export function WorkspaceChannelsListProvider({ children }: { children: ReactNod
 
     const client = useApolloClient();
 
-    const handleRefresh = (channelId?: string) => {
+    const handleRefresh = useCallback((channelId?: string) => {
         startTransition(async () => {
             if (activeWorkspaceId === null) {
                 return;
@@ -38,14 +38,14 @@ export function WorkspaceChannelsListProvider({ children }: { children: ReactNod
                 /* swallow error */
             }
         });
-    };
+    }, [activeWorkspaceId, client]);
 
     useEffect(() => {
         if (activeWorkspaceId === null) {
             return;
         }
         handleRefresh();
-    }, [activeWorkspaceId]);
+    }, [activeWorkspaceId, handleRefresh]);
 
     return (
         <WorkspaceChannelsListContext.Provider

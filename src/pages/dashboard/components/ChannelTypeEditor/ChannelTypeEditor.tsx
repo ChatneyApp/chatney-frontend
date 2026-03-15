@@ -16,7 +16,7 @@ export const ChannelTypeEditor = ({ channelType }: Props) => {
     const { refetch } = useChannelTypesList();
     const { roles } = useRolesList();
     
-    const [ deleteChannelType ] = useMutation(DELETE_CHANNEL_TYPE, {
+    const [deleteChannelType] = useMutation(DELETE_CHANNEL_TYPE, {
         onCompleted: () => {
             refetch();
         },

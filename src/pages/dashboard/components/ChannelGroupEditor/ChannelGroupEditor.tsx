@@ -16,7 +16,7 @@ export const ChannelGroupEditor = ({ channelGroup }: Props) => {
     const { refetch } = useWorkspaceChannelGroupsList();
     const { channels } = useWorkspaceChannelsList();
 
-    const [ deleteChannelGroup ] = useMutation(DELETE_CHANNEL_GROUP, {
+    const [deleteChannelGroup] = useMutation(DELETE_CHANNEL_GROUP, {
         onCompleted: () => {
             refetch();
         },

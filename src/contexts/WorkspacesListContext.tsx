@@ -15,9 +15,9 @@ interface WorkspacesListContextValue {
 export const WorkspacesListContext = createContext<WorkspacesListContextValue>(null as unknown as WorkspacesListContextValue);
 
 export function WorkspacesListProvider({ children }: { children: ReactNode }) {
-    const [ workspacesList, setWorkspacesList ] = useState<Workspace[]>([]);
+    const [workspacesList, setWorkspacesList] = useState<Workspace[]>([]);
     const isLoading = useRef(false);
-    const [ activeWorkspaceId, setActiveWorkspaceId ] = useState<WorkspaceId | null>(null);
+    const [activeWorkspaceId, setActiveWorkspaceId] = useState<WorkspaceId | null>(null);
     const client = useApolloClient();
 
     const fetchData = useCallback(async () => {
@@ -34,16 +34,12 @@ export function WorkspacesListProvider({ children }: { children: ReactNode }) {
         } finally {
             isLoading.current = false;
         }
-    }, [ client, setWorkspacesList ]);
-
-    const refetch = () => {
-        fetchData();
-    };
+    }, [client, setWorkspacesList]);
 
     // Application start
     useEffect(() => {
         fetchData();
-    }, [ ]);
+    }, [fetchData]);
 
     return (
         <WorkspacesListContext.Provider
@@ -52,7 +48,7 @@ export function WorkspacesListProvider({ children }: { children: ReactNode }) {
                 setWorkspacesList,
                 activeWorkspaceId,
                 setActiveWorkspaceId,
-                refetch,
+                refetch: fetchData,
             }}
         >
             {children}

@@ -29,7 +29,7 @@ const logoutFunction = () => {
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
     const apollo = useApolloClient();
-    const [ userCtx, setUser ] = useState<UserContextData | null>({
+    const [userCtx, setUser] = useState<UserContextData | null>({
         user: null, logout: logoutFunction
     });
 
@@ -61,7 +61,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         };
 
         fetchStartupData();
-    }, [ ]);
+    }, [apollo]);
 
     if (!userCtx) {
         return null;

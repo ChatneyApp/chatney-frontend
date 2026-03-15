@@ -12,7 +12,7 @@ type Props = {
 }
 export const RoleEditor = ({ role }: Props) => {
     const { refetch } = useRolesList();
-    const [ deleteRole ] = useMutation(DELETE_ROLE, {
+    const [deleteRole] = useMutation(DELETE_ROLE, {
         onCompleted: () => {
             refetch();
         },

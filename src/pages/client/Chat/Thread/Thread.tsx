@@ -4,7 +4,7 @@ import { useApolloClient } from '@apollo/client/react';
 
 import { useUser } from '@/contexts/UserContext';
 import { MessageInput } from '@/pages/client/Chat/MessageInput';
-import { MessageWithUser } from '@/types/messages';
+import { CreateMessageDto, MessageWithUser } from '@/types/messages';
 import { AttachmentId } from '@/types/attachments';
 import { addReaction, deleteMessage, deleteReaction, getThreadMessagesList, postNewMessage } from '@/graphql/messages';
 import {
@@ -34,10 +34,10 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
     const autoScrollDone = useRef(false);
 
     const handleSend = async (text: string, attachmentIds: AttachmentId[]) => {
-        const newMessage = {
+        const newMessage: CreateMessageDto = {
             channelId: rootMessage.channelId,
             content: text,
-            attachments: attachmentIds,
+            attachmentIds,
             parentId: rootMessage.id,
         };
         await postNewMessage(apolloClient, newMessage);

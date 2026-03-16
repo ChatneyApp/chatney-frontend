@@ -1,4 +1,5 @@
 ﻿import { UserId } from '@/types/users';
+import { Attachment, AttachmentId } from '@/types/attachments.ts';
 
 export type MessageId = string;
 export type UrlPreviewId = string;
@@ -28,7 +29,7 @@ export type Message = {
     channelId: string;
     userId: string;
     content: string;
-    attachments: string[];
+    attachments: Attachment[];
     status: string;
     createdAt: Date;
     updatedAt: Date;
@@ -42,7 +43,9 @@ export type MessageWithUser = Message & {
     user: MessageUser;
 }
 
-export type CreateMessageDto = Pick<Message, 'channelId' | 'content' | 'attachments' | 'parentId'>;
+export type CreateMessageDto = Pick<Message, 'channelId' | 'content' | 'parentId'> & {
+    attachmentIds: AttachmentId[];
+};
 
 export type Reaction = {
     code: string;

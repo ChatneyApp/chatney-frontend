@@ -52,6 +52,13 @@ export const MessageComponent = ({ message, currentUserId, onDelete, onAddReacti
                     />
                 </div>
                 <p className="text-gray-200 break-all">{message.content}</p>
+                <div>
+                    {message.attachments
+                        .filter(attachment => attachment.type === 'image')
+                        .map(attachment => (
+                            <img src={`http://localhost:9000/chatney/${attachment.urlPath}`}/>
+                        ))}
+                </div>
                 <MessageUrlPreviewsComponent urlPreviews={message.urlPreviews}/>
                 <MessageReactions
                     reactions={message.reactions}

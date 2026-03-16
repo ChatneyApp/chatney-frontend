@@ -1,7 +1,17 @@
-﻿export type AttachmentId = string;
+﻿import { UserId } from '@/types/users.ts';
+
+export type AttachmentId = string;
 
 export type Attachment = {
     id: AttachmentId;
+    userId: UserId;
+    urlPath: string;
+    originalFileName: string;
+    extension: string;
+    mimeType: string;
+    type: 'image' | 'video' | 'binary';
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export type UploadedAttachment = {

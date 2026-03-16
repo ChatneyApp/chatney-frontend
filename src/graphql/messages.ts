@@ -59,7 +59,17 @@ export const postNewMessage = async (client: ApolloClient, messageDto: CreateMes
                         avatarUrl
                     }
                     content
-                    attachments
+                    attachments {
+                        id
+                        userId
+                        urlPath
+                        originalFileName
+                        extension
+                        mimeType
+                        type
+                        createdAt
+                        updatedAt
+                    }
                     status
                     createdAt
                     updatedAt
@@ -208,7 +218,17 @@ export const getChannelMessagesList = async (client: ApolloClient, channelId: Ch
                 channelId
                 userId
                 content
-                attachments
+                attachments {
+                    id
+                    userId
+                    urlPath
+                    originalFileName
+                    extension
+                    mimeType
+                    type
+                    createdAt
+                    updatedAt
+                }
                 status
                 createdAt
                 updatedAt

@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { useApolloClient } from '@apollo/client/react';
 import { getUserById } from '@/graphql/users';
 import { loginPageUrl, userAuthId, userAuthTokenName } from '@/infra/consts';
@@ -27,7 +27,7 @@ const logoutFunction = () => {
     window.location.reload()
 }
 
-export const UserProvider = ({ children }: { children: ReactNode }) => {
+export const UserProvider = ({ children }: PropsWithChildren) => {
     const apollo = useApolloClient();
     const [userCtx, setUser] = useState<UserContextData | null>({
         user: null, logout: logoutFunction

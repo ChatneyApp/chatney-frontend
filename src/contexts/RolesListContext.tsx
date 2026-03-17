@@ -1,4 +1,4 @@
-﻿import { createContext, ReactNode, startTransition, useContext } from 'react';
+﻿import { createContext, PropsWithChildren, startTransition, useContext } from 'react';
 import { useSuspenseQuery } from '@apollo/client/react';
 
 import { Role } from '@/types/roles';
@@ -11,7 +11,7 @@ interface RolesListContextValue {
 
 const RolesListContext = createContext<RolesListContextValue | null>(null);
 
-export function RolesListProvider({ children }: { children: ReactNode }) {
+export function RolesListProvider({ children }: PropsWithChildren) {
     const { data, refetch } = useSuspenseQuery(GET_ROLES_QUERY, {
         fetchPolicy: 'no-cache',
     });

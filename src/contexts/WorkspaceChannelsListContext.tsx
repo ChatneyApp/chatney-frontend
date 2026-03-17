@@ -1,4 +1,4 @@
-import { createContext, ReactNode, startTransition, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, startTransition, useCallback, useContext, useEffect, useState } from 'react';
 import { useApolloClient } from '@apollo/client/react';
 
 import { Channel } from '@/types/channels';
@@ -14,7 +14,7 @@ interface WorkspaceChannelsListContextValue {
 
 const WorkspaceChannelsListContext = createContext<WorkspaceChannelsListContextValue>(null as unknown as WorkspaceChannelsListContextValue);
 
-export function WorkspaceChannelsListProvider({ children }: { children: ReactNode }) {
+export function WorkspaceChannelsListProvider({ children }: PropsWithChildren) {
     const { activeWorkspaceId } = useContext(WorkspacesListContext);
     const [channels, setChannels] = useState<Channel[]>([]);
     const [activeChannel, setActiveChannel] = useState<Channel>(null as unknown as Channel);

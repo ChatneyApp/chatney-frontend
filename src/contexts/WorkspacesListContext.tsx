@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import type { Workspace, WorkspaceId } from '@/types/workspaces';
 import { useApolloClient } from '@apollo/client/react';
@@ -14,7 +14,7 @@ interface WorkspacesListContextValue {
 
 export const WorkspacesListContext = createContext<WorkspacesListContextValue>(null as unknown as WorkspacesListContextValue);
 
-export function WorkspacesListProvider({ children }: { children: ReactNode }) {
+export function WorkspacesListProvider({ children }: PropsWithChildren) {
     const [workspacesList, setWorkspacesList] = useState<Workspace[]>([]);
     const isLoading = useRef(false);
     const [activeWorkspaceId, setActiveWorkspaceId] = useState<WorkspaceId | null>(null);

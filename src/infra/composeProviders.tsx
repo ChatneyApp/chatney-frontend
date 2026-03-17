@@ -1,21 +1,16 @@
-import { ReactNode } from 'react';
+import { type ComponentType, PropsWithChildren } from 'react';
 
-type ProviderProps = {
-    children: React.ReactNode;
-};
-
-type ProviderComponent = React.ComponentType<ProviderProps>;
-
+type ProviderComponent = ComponentType<PropsWithChildren>;
 
 export function composeProviders(providers: ProviderComponent[]) {
     return providers.reduce(
         (AccumulatedProviders, CurrentProvider) =>
-            ({ children }: { children: ReactNode }) =>
+            ({ children }: PropsWithChildren) =>
             (
                 <AccumulatedProviders>
                     <CurrentProvider>{children}</CurrentProvider>
                 </AccumulatedProviders>
             ),
-        ({ children }: { children: ReactNode }) => <>{children}</> // initial accumulator
+        ({ children }: PropsWithChildren) => children
     );
 }

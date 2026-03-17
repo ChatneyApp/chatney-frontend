@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import { useApolloClient } from '@apollo/client/react';
 
 import { User } from '@/types/users';
@@ -11,7 +11,7 @@ interface UserDataContextValue {
 
 const UserDataListContext = createContext<UserDataContextValue | null>(null);
 
-export function UserDataProvider({ children }: { children: ReactNode }) {
+export function UserDataProvider({ children }: PropsWithChildren) {
     const [data, setData] = useState<User | null>(null);
 
     const client = useApolloClient();

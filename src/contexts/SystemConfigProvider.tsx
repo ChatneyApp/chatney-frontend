@@ -1,4 +1,4 @@
-import { createContext, ReactNode, startTransition, useContext } from 'react';
+import { createContext, PropsWithChildren, startTransition, useContext } from 'react';
 import { useSuspenseQuery } from '@apollo/client/react';
 
 import { SystemConfigValue } from '@/types/systemConfig';
@@ -11,7 +11,7 @@ interface SystemConfigContextValue {
 
 const SystemConfigContext = createContext<SystemConfigContextValue | null>(null);
 
-export function SystemConfigProvider({ children }: { children: ReactNode }) {
+export function SystemConfigProvider({ children }: PropsWithChildren) {
     const { data, refetch } = useSuspenseQuery<GetConfigListResponse>(GET_SYSTEM_CONFIG_QUERY, {
         fetchPolicy: 'no-cache',
     });

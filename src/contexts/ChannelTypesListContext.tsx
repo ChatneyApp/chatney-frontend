@@ -1,4 +1,4 @@
-import { createContext, ReactNode, startTransition, useContext } from 'react';
+import { createContext, PropsWithChildren, startTransition, useContext } from 'react';
 import { useSuspenseQuery } from '@apollo/client/react';
 
 import { ChannelType } from '@/types/channelTypes';
@@ -11,7 +11,7 @@ interface ChannelTypesListContextValue {
 
 const ChannelTypesListContext = createContext<ChannelTypesListContextValue | null>(null);
 
-export function ChannelTypesListProvider({ children }: { children: ReactNode }) {
+export function ChannelTypesListProvider({ children }: PropsWithChildren) {
     const { data, refetch } = useSuspenseQuery(GET_CHANNEL_TYPES_QUERY, {
         fetchPolicy: 'cache-and-network',
     });

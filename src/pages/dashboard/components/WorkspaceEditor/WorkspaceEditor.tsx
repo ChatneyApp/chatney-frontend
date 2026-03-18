@@ -1,4 +1,4 @@
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 
 import { Workspace } from '@/types/workspaces';
 import { DELETE_WORKSPACE } from '@/graphql/workspaces';
@@ -14,7 +14,7 @@ type Props = {
 
 export const WorkspaceEditor = ({ workspace }: Props) => {
     const { refetch } = useWorkspacesList();
-    const [ deleteWorkspace ] = useMutation(DELETE_WORKSPACE, {
+    const [deleteWorkspace] = useMutation(DELETE_WORKSPACE, {
         onCompleted: () => {
             refetch();
         },

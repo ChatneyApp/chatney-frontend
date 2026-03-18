@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useContext, useEffect, useRef } from 'react';
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useRef } from 'react';
 
 import { useUser } from './UserContext';
 import { WebSocketEvent, WebSocketEventEmitter, WebSocketEventRaw } from '@/communication/WebSocketEventEmitter';
@@ -9,7 +9,7 @@ export interface WebSocketContext {
 
 export const WebSocketContext = createContext<WebSocketContext>(null as unknown as WebSocketContext);
 
-export function WebSocketContextProvider({ children }: { children: ReactNode }) {
+export function WebSocketContextProvider({ children }: PropsWithChildren) {
     const userCtx = useUser();
     const eventEmitter = useRef(new WebSocketEventEmitter());
     const abortControllerRef = useRef(new AbortController());
@@ -54,7 +54,7 @@ export function WebSocketContextProvider({ children }: { children: ReactNode }) 
         ws.addEventListener('close', () => {
             console.log('WebSocket closed');
         }, { signal });
-    }, [ userId ]);
+    }, [userId]);
 
     const close = useCallback(() => {
         abortControllerRef.current.abort();
@@ -67,7 +67,7 @@ export function WebSocketContextProvider({ children }: { children: ReactNode }) 
     useEffect(() => {
         connect();
         return close;
-    }, [ userId ]);
+    }, [close, connect, userId]);
 
     return (
         <WebSocketContext.Provider value={{ eventEmitter: eventEmitter.current }}>

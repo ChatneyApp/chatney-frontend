@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from "react";
-import { useApolloClient } from "@apollo/client";
-import { addChannel } from "./chat.gql";
-import { useWorkspacesList } from "@/contexts/WorkspacesListContext";
+import { useState, useEffect, useRef } from 'react';
+import { useApolloClient } from '@apollo/client/react';
+import { addChannel } from '@/graphql/channels';
+import { useWorkspacesList } from '@/contexts/WorkspacesListContext';
 
 interface CreateChannelModalProps {
     onClose: () => void;
@@ -11,7 +11,7 @@ interface CreateChannelModalProps {
 export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelModalProps) {
     const wsCtx = useWorkspacesList();
     const client = useApolloClient();
-    const [channelName, setChannelName] = useState("");
+    const [channelName, setChannelName] = useState('');
     const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -21,9 +21,9 @@ export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelM
             }
         };
 
-        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener('mousedown', handleClickOutside);
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [onClose]);
 
@@ -33,20 +33,15 @@ export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelM
         }
         const activeWorkspaceId = wsCtx.activeWorkspaceId;
         if (!activeWorkspaceId) {
-            throw new Error("Active Workspace is not set");
+            throw new Error('Active Workspace is not set');
         }
 
         try {
-            const newChannel = await addChannel({
-                channelTypeId: 'e35bdf2d-1624-474a-a7dc-bb3580dc4bff',
-                workspaceId: activeWorkspaceId,
-                client,
-                name: channelName.trim()
-            });
+            const newChannel = await addChannel(client, channelName.trim(), 'e35bdf2d-1624-474a-a7dc-bb3580dc4bff', activeWorkspaceId);
             onChannelCreated(newChannel);
-            setChannelName("");
+            setChannelName('');
         } catch (error) {
-            console.error("Error creating channel:", error);
+            console.error('Error creating channel:', error);
         }
     };
 

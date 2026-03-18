@@ -1,10 +1,11 @@
 ﻿import { useEffect, useRef, useState } from 'react';
 import { ArrowDownToLine, PanelRightClose } from 'lucide-react';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 
 import { useUser } from '@/contexts/UserContext';
 import { MessageInput } from '@/pages/client/Chat/MessageInput';
-import { MessageWithUser } from '@/types/messages';
+import { CreateMessageDto, MessageWithUser } from '@/types/messages';
+import { AttachmentId } from '@/types/attachments';
 import { addReaction, deleteMessage, deleteReaction, getThreadMessagesList, postNewMessage } from '@/graphql/messages';
 import {
     MessageChildrenCountUpdatedPayload,
@@ -32,11 +33,11 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const autoScrollDone = useRef(false);
 
-    const handleSend = async (text: string) => {
-        const newMessage = {
+    const handleSend = async (text: string, attachmentIds: AttachmentId[]) => {
+        const newMessage: CreateMessageDto = {
             channelId: rootMessage.channelId,
             content: text,
-            attachments: [],
+            attachmentIds,
             parentId: rootMessage.id,
         };
         await postNewMessage(apolloClient, newMessage);

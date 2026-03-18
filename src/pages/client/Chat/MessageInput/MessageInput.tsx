@@ -1,0 +1,103 @@
+import { FormEventHandler, useState } from 'react';
+import { Paperclip } from 'lucide-react';
+import { useApolloClient } from '@apollo/client/react';
+
+import { useDropZone } from '@/hooks/useDropZone';
+import { prepareImage } from '@/helpers/attachments/prepareImage';
+import { uploadFile } from '@/graphql/attachments';
+import { MessageEditorAttachment } from '@/pages/client/Chat/MessageEditorAttachment';
+import { AttachmentId, UploadedAttachment } from '@/types/attachments';
+
+import styles from './MessageInput.module.css';
+
+type Props = {
+    onSend(text: string, attachmentIds: AttachmentId[]): Promise<void>;
+}
+export function MessageInput({ onSend }: Props) {
+    const apolloClient = useApolloClient();
+    const [isSending, setIsSending] = useState(false);
+    const [text, setText] = useState('');
+    const [attachments, setAttachments] = useState<UploadedAttachment[]>([]);
+
+    const canSend = text.trim().length > 0 || attachments.length > 0;
+
+    const handleDrop = async (file: File) => {
+        const { name, lastModified, type } = file;
+        console.log('Dropped file', name, lastModified, type);
+        // preprocess the file
+        const isImage = file.type.startsWith('image/');
+        const isGif = file.type === 'image/gif';
+        const shouldProcessFile = isImage && !isGif;
+        const preprocessedBlob = shouldProcessFile
+            ? await prepareImage(file)
+            : file;
+        const fileName = file.name;
+        const mimeType = shouldProcessFile ? 'image/jpeg' : file.type;
+
+        try {
+            const { attachmentId, s3Url } = await uploadFile(apolloClient, preprocessedBlob, fileName, mimeType);
+            console.log('Got response', { attachmentId, s3Url });
+            setAttachments(v => [...v, { attachmentId, s3Url }]);
+        } catch (err) {
+            console.error('Error during file upload', err);
+        }
+    };
+
+    const { onClick: onFileSelectClick } = useDropZone({ onDrop: handleDrop });
+
+    const handleSend: FormEventHandler = async (e) => {
+        e.preventDefault();
+        if (isSending || !canSend) {
+            return;
+        }
+        setIsSending(true);
+        try {
+            await onSend(text, attachments.map(a => a.attachmentId));
+            setText('');
+            setAttachments([]);
+        } catch (_e) {
+            // TODO
+        } finally {
+            setIsSending(false);
+        }
+    };
+
+    const handleDeleteAttachment = (attachmentId: AttachmentId) => {
+        setAttachments(list => list.filter(att => att.attachmentId !== attachmentId));
+    };
+
+    return (
+        <div className={styles.container}>
+            {attachments.length > 0 && (
+                <div className={styles.attachmentsList}>
+                    {attachments.map(attachment => (
+                        <MessageEditorAttachment
+                            key={attachment.attachmentId}
+                            attachment={attachment}
+                            onDelete={handleDeleteAttachment}
+                        />
+                    ))}
+                </div>
+            )}
+            <form onSubmit={handleSend} className={styles.sendForm}>
+                <div className={styles.fileDropArea}>
+                    <Paperclip className={styles.fileAttachmentIcon} onClick={onFileSelectClick} />
+                </div>
+                <input
+                    type="text"
+                    placeholder="Type a message..."
+                    className="flex-1 bg-gray-700 text-white p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                />
+                <button
+                    type="submit"
+                    disabled={!canSend}
+                    className={styles.sendButton}
+                >
+                    Send
+                </button>
+            </form>
+        </div>
+    );
+}

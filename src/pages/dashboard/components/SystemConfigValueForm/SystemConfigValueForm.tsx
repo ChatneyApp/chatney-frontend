@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import { Dialog } from 'radix-ui';
 
@@ -22,9 +22,9 @@ type Props = {
 };
 
 export const SystemConfigValueForm = ({ cta, title, submitText, systemConfigValue }: Props) => {
-    const [ open, setOpen ] = useState(false);
-    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
-    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { refetch } = useSystemConfig();
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
@@ -33,7 +33,7 @@ export const SystemConfigValueForm = ({ cta, title, submitText, systemConfigValu
         }
     });
 
-    const [ updateValue, { loading } ] = useMutation(UDPATE_SYSTEM_CONFIG_VALUE, {
+    const [updateValue, { loading }] = useMutation(UDPATE_SYSTEM_CONFIG_VALUE, {
         onCompleted: () => {
             setOpen(false);
             reset();

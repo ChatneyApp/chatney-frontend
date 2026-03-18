@@ -1,4 +1,4 @@
-﻿import { useMutation } from '@apollo/client';
+﻿import { useMutation } from '@apollo/client/react';
 
 import { Role } from '@/types/roles';
 import { CreateRoleForm } from '@/pages/dashboard/components/RoleForm/CreateRoleForm';
@@ -12,7 +12,7 @@ type Props = {
 }
 export const RoleEditor = ({ role }: Props) => {
     const { refetch } = useRolesList();
-    const [ deleteRole ] = useMutation(DELETE_ROLE, {
+    const [deleteRole] = useMutation(DELETE_ROLE, {
         onCompleted: () => {
             refetch();
         },

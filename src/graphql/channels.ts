@@ -2,6 +2,18 @@ import { ApolloClient, gql, type TypedDocumentNode } from '@apollo/client';
 
 import { Channel } from '@/types/channels';
 
+export const GetWorkspaceChannelsQuery = gql`
+    query GetWorkspaceChannels($workspaceId: String!) {
+        channels {
+            workspaceChannelList(workspaceId: $workspaceId) {
+                id
+                name
+                channelTypeId
+                workspaceId
+            }
+        }
+    }
+`;
 export type GetChannelsListResponse = {
     channels: {
         workspaceChannelList: Channel[];
@@ -23,6 +35,52 @@ export const CREATE_CHANNEL = gql`
         }
     }
 `;
+
+const AddChannelMutation = gql`
+    mutation AddChannel(
+        $name: String!
+        $channelTypeId: String!
+        $workspaceId: String!
+    ) {
+        channels {
+            addChannel(channelDto: {
+                name: $name
+                channelTypeId: $channelTypeId
+                workspaceId: $workspaceId
+            }) {
+                id
+                name
+                channelTypeId
+                workspaceId
+                createdAt
+                updatedAt
+            }
+        }
+    }
+`;
+type AddChannelResponse = {
+    channels?: {
+        addChannel?: Channel;
+    }
+}
+export const addChannel = async (client: ApolloClient, name: string, channelTypeId: string, workspaceId: string): Promise<Channel> => {
+    try {
+        const { data } = await client.mutate<AddChannelResponse>({
+            mutation: AddChannelMutation,
+            variables: { name, channelTypeId, workspaceId },
+        });
+
+        const channel = data?.channels?.addChannel;
+
+        if (!channel?.id || !channel?.name) {
+            throw new Error('Invalid addChannel response');
+        }
+
+        return channel;
+    } catch (error) {
+        throw new Error(`Adding channel failed: ${(error as Error).message}`);
+    }
+};
 
 export const GET_CHANNEL: TypedDocumentNode<GetChannelResponse> = gql`
     query ($channelId: String!) {
@@ -60,7 +118,7 @@ export const getWorkspaceChannels = async ({
     client,
     workspaceId,
 }: {
-    client: ApolloClient<object>,
+    client: ApolloClient,
     workspaceId: string,
 }): Promise<Array<{
     id: string;
@@ -69,19 +127,8 @@ export const getWorkspaceChannels = async ({
     workspaceId: string;
 }>> => {
     try {
-        const { data } = await client.query({
-            query: gql`
-                query GetWorkspaceChannels($workspaceId: String!) {
-                    channels {
-                        workspaceChannelList(workspaceId: $workspaceId) {
-                            id
-                            name
-                            channelTypeId
-                            workspaceId
-                        }
-                    }
-                }
-            `,
+        const { data } = await client.query<GetChannelsListResponse>({
+            query: GetWorkspaceChannelsQuery,
             variables: { workspaceId },
             fetchPolicy: 'no-cache', // Optional: Ensures fresh data
         });

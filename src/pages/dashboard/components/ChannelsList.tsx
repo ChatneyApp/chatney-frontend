@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { Tabs } from 'radix-ui';
 
 import { useWorkspacesList, WorkspacesListProvider } from '@/contexts/WorkspacesListContext';
-import { useWorkspaceChannelsList, WorkspaceChannelsListProvider } from '@/contexts/WorkspaceChannelsListContext';
+import { useWorkspaceChannelsList, WorkspaceChannelsListProvider } from '@/contexts/OldWorkspaceChannelsListContext';
 import { ChannelEditor } from '@/pages/dashboard/components/ChannelEditor/ChannelEditor';
 import { ChannelTypesListProvider } from '@/contexts/ChannelTypesListContext';
 import { CreateChannelForm } from '@/pages/dashboard/components/ChannelForm/CreateChannelForm';

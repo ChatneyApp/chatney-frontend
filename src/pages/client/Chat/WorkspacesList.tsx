@@ -5,15 +5,15 @@ import { WorkspaceCreateModal } from './WorkspaceCreateModal';
 import { Workspace } from '@/types/workspaces';
 
 export function WorkspacesList() {
-    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const workspacesList = useWorkspacesList();
     const userCtx = useUser();
-    const [ showPopup, setShowPopup ] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);
     const popupRef = useRef<HTMLDivElement>(null);
     const avatarRef = useRef<HTMLDivElement>(null);
 
     const handleWorkspaceCreated = (newWs: Workspace) => {
-        workspacesList.setWorkspacesList([ ...workspacesList.workspacesList, newWs ]);
+        workspacesList.setWorkspacesList([...workspacesList.workspacesList, newWs]);
         workspacesList.setActiveWorkspaceId(newWs.id);
         setIsModalOpen(false);
     };
@@ -27,15 +27,15 @@ export function WorkspacesList() {
 
     useEffect(() => {
         if (showPopup) {
-            document.addEventListener("mouseup", handleClickOutside);
+            document.addEventListener('mouseup', handleClickOutside);
         } else {
-            document.removeEventListener("mouseup", handleClickOutside);
+            document.removeEventListener('mouseup', handleClickOutside);
         }
 
         return () => {
-            document.removeEventListener("mouseup", handleClickOutside);
+            document.removeEventListener('mouseup', handleClickOutside);
         };
-    }, [ showPopup ]);
+    }, [showPopup]);
 
     return (
         <div className="relative w-16 bg-gray-800 flex flex-col justify-between items-center py-4">
@@ -46,9 +46,9 @@ export function WorkspacesList() {
                         title={ws.name}
                         key={idx}
                         onClick={() => workspacesList.setActiveWorkspaceId(ws.id)}
-                        className={`${workspacesList.activeWorkspaceId === ws.id ? "bg-gray-500" : "bg-gray-700"} w-10 h-10 flex items-center justify-center rounded-full text-sm hover:bg-gray-500 cursor-pointer`}
+                        className={`${workspacesList.activeWorkspaceId === ws.id ? 'bg-gray-500' : 'bg-gray-700'} w-10 h-10 flex items-center justify-center rounded-full text-sm hover:bg-gray-500 cursor-pointer`}
                     >
-                        <span className={workspacesList.activeWorkspaceId === ws.id ? "font-bold" : ""}>{ws.name[0].toUpperCase()}</span>
+                        <span className={workspacesList.activeWorkspaceId === ws.id ? 'font-bold' : ''}>{ws.name[0].toUpperCase()}</span>
                     </div>
                 ))}
                 <div

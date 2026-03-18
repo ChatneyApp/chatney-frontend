@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { useSuspenseQuery } from '@apollo/client';
+import { useSuspenseQuery } from '@apollo/client/react';
 
 import styles from './PermissionsList.module.css';
 import { GET_PERMISSIONS_LIST } from '@/graphql/permissions';

@@ -1,10 +1,19 @@
-import { ApolloClient, gql, type TypedDocumentNode } from '@apollo/client';
+import { ApolloClient, gql } from '@apollo/client';
 
 import { SystemConfigValue } from '@/types/systemConfig';
 
-export type GetChannelTypesListResponse = {
+export type GetConfigListResponse = {
     configs: {
         list: SystemConfigValue[];
+    }
+}
+
+export type InstallSystemResponse = {
+    configs: {
+        installSystem: {
+            status: string;
+            message: string;
+        }
     }
 }
 
@@ -21,7 +30,7 @@ export const UDPATE_SYSTEM_CONFIG_VALUE = gql`
   }
 `;
 
-export const GET_SYSTEM_CONFIG_QUERY: TypedDocumentNode<GetChannelTypesListResponse> = gql`
+export const GET_SYSTEM_CONFIG_QUERY  = gql`
     query {
         configs {
             list {
@@ -34,7 +43,7 @@ export const GET_SYSTEM_CONFIG_QUERY: TypedDocumentNode<GetChannelTypesListRespo
     }
 `;
 
-export const installSystem = async (client: ApolloClient<object>): Promise<boolean> => {
+export const installSystem = async (client: ApolloClient): Promise<boolean> => {
     const INSTALL_SYSTEM = gql`
         mutation {
             installWizard {
@@ -46,7 +55,7 @@ export const installSystem = async (client: ApolloClient<object>): Promise<boole
         }
     `;
     try {
-        const { data } = await client.mutate({
+        const { data } = await client.mutate<InstallSystemResponse>({
             mutation: INSTALL_SYSTEM,
         });
 

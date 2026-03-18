@@ -9,7 +9,7 @@ type Props = {
     onSelect(code: string): void;
 }
 export const ReactionSelectionDialog = ({ reactions, myReactions, onSelect }: Props) => {
-    const [ isOpen, setIsOpen ] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const handleClose = (code: string) => {
         onSelect(code);
         setIsOpen(false);

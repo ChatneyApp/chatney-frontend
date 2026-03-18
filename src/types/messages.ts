@@ -1,4 +1,5 @@
 ﻿import { UserId } from '@/types/users';
+import { Attachment, AttachmentId } from '@/types/attachments.ts';
 
 export type MessageId = string;
 export type UrlPreviewId = string;
@@ -6,10 +7,6 @@ export type MessageUser = {
     id: UserId;
     name: string;
     avatarUrl: string;
-}
-export type UrlPreviewMediaSize = {
-    width: number;
-    height: number;
 }
 export type UrlPreview = {
     id: UrlPreviewId;
@@ -32,7 +29,7 @@ export type Message = {
     channelId: string;
     userId: string;
     content: string;
-    attachments: string[];
+    attachments: Attachment[];
     status: string;
     createdAt: Date;
     updatedAt: Date;
@@ -46,11 +43,22 @@ export type MessageWithUser = Message & {
     user: MessageUser;
 }
 
-export type CreateMessageDto = Pick<Message, 'channelId' | 'content' | 'attachments' | 'parentId'>;
+export type CreateMessageDto = Pick<Message, 'channelId' | 'content' | 'parentId'> & {
+    attachmentIds: AttachmentId[];
+};
 
 export type Reaction = {
     code: string;
     count: number;
 }
 
-export type CreateMessageInput = Omit<Message, 'id' | 'createdAt' | 'updatedAt' | 'status' | 'reactions'>;
+export type CreateMessageInput = Omit<Message,
+    'id'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'status'
+    | 'reactions'
+    | 'urlPreviews'
+    | 'childrenCount'
+    | 'myReactions'
+>;

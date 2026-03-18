@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import { Dialog } from 'radix-ui';
 
@@ -25,9 +25,9 @@ type Props = {
 }
 
 export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: Props) => {
-    const [ open, setOpen ] = useState(false);
-    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
-    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { refetch } = useChannelTypesList();
     const { roles } = useRolesList();
 
@@ -39,7 +39,7 @@ export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: P
         }
     });
 
-    const [ createChannelType, { loading: createLoading } ] = useMutation(CREATE_CHANNEL_TYPE, {
+    const [createChannelType, { loading: createLoading }] = useMutation(CREATE_CHANNEL_TYPE, {
         onCompleted: () => {
             setOpen(false);
             reset();
@@ -51,7 +51,7 @@ export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: P
         }
     });
 
-    const [ editChannelType, { loading: editLoading } ] = useMutation(EDIT_CHANNEL_TYPE, {
+    const [editChannelType, { loading: editLoading }] = useMutation(EDIT_CHANNEL_TYPE, {
         onCompleted: () => {
             setOpen(false);
             reset();

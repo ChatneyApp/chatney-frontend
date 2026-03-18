@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { useApolloClient, useMutation } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import { Dialog } from 'radix-ui';
 
@@ -22,9 +22,9 @@ type Props = {
 }
 
 export const CreateWorkspaceForm = ({ cta, title, submitText, workspace }: Props) => {
-    const [ open, setOpen ] = useState(false);
-    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
-    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { refetch } = useWorkspacesList();
     const apolloClient = useApolloClient();
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
@@ -33,7 +33,7 @@ export const CreateWorkspaceForm = ({ cta, title, submitText, workspace }: Props
         }
     });
 
-    const [ updateWorkspace, { loading: updateLoading } ] = useMutation(UPDATE_WORKSPACE, {
+    const [updateWorkspace, { loading: updateLoading }] = useMutation(UPDATE_WORKSPACE, {
         onCompleted: () => {
             setOpen(false);
             reset();
@@ -66,7 +66,7 @@ export const CreateWorkspaceForm = ({ cta, title, submitText, workspace }: Props
             });
         } else {
             try {
-                await addWorkspace({ client: apolloClient, name: data.name });
+                await addWorkspace(apolloClient, data.name);
             } catch (error) {
                 setErrorMessage(`Error creating workspace: ${(error as Error).message}`);
                 setSuccessMessage(null);
@@ -116,9 +116,9 @@ export const CreateWorkspaceForm = ({ cta, title, submitText, workspace }: Props
                                 </Dialog.Close>
                                 <Button
                                     type="submit"
-                                    disabled={createLoading || updateLoading}
+                                    disabled={updateLoading}
                                 >
-                                    {createLoading || updateLoading ? 'Processing...' : submitText}
+                                    {updateLoading ? 'Processing...' : submitText}
                                 </Button>
                             </div>
                         </form>

@@ -38,20 +38,34 @@ export const MessageComponent = ({ message, currentUserId, onDelete, onAddReacti
                     className={styles.avatar}
                 />
             )}
-            <div>
-                <div className="flex items-center space-x-2 relative">
+            <div className={styles.innerContainer}>
+                <div className={styles.header}>
                     {!isMine && (
                         <span className="font-medium">
                             {message.user?.name ?? message.userId}
                         </span>
                     )}
-                    <span className="text-xs text-yellow-500">{formatTimestamp(new Date(message.createdAt))}</span>
+                    <span className={styles.timestamp}>
+                        {formatTimestamp(new Date(message.createdAt))}
+                    </span>
                     <XCircle
-                        className="cursor-pointer text-red-500"
+                        className={styles.deleteButton}
                         onClick={() => onDelete(message.id)}
                     />
                 </div>
-                <p className="text-gray-200 break-all">{message.content}</p>
+                <div className={styles.textContent}>
+                    {message.content}
+                </div>
+                <div className={styles.attachmentsContainer}>
+                    {message.attachments
+                        .filter(attachment => attachment.type === 'image')
+                        .map(attachment => (
+                            <img
+                                className={styles.attachment}
+                                src={`http://localhost:9000/chatney/${attachment.urlPath}`}
+                            />
+                        ))}
+                </div>
                 <MessageUrlPreviewsComponent urlPreviews={message.urlPreviews}/>
                 <MessageReactions
                     reactions={message.reactions}

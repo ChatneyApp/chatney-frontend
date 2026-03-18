@@ -7,7 +7,7 @@ import {
     useWorkspaceChannelGroupsList,
     WorkspaceChannelGroupsListProvider
 } from '@/contexts/WorkspaceChannelGroupsListContext';
-import { WorkspaceChannelsListProvider } from '@/contexts/WorkspaceChannelsListContext';
+import { WorkspaceChannelsListProvider } from '@/contexts/OldWorkspaceChannelsListContext';
 import { ChannelGroupEditor } from './ChannelGroupEditor/ChannelGroupEditor';
 import { TabsContent, TabsList, TabsTrigger } from '@/pages/dashboard/components/Tabs/Tabs';
 import { EmptyListMessage } from '@/pages/dashboard/components/EmptyListMessage';

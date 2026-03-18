@@ -1,5 +1,5 @@
 ﻿import { useForm } from 'react-hook-form';
-import { useMutation, useSuspenseQuery } from '@apollo/client';
+import { useMutation, useSuspenseQuery } from '@apollo/client/react';
 import { useState } from 'react';
 import { Dialog } from 'radix-ui';
 
@@ -24,9 +24,9 @@ type Props = {
     role?: Role;
 }
 export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
-    const [ open, setOpen ] = useState(false);
-    const [ successMessage, setSuccessMessage ] = useState<string | null>(null);
-    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const [open, setOpen] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { data: permissionsData } = useSuspenseQuery(GET_PERMISSIONS_LIST);
     const { refetch } = useRolesList();
 
@@ -38,7 +38,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
         }
     });
 
-    const [ createRole, { loading: createLoading } ] = useMutation(CREATE_ROLE, {
+    const [createRole, { loading: createLoading }] = useMutation(CREATE_ROLE, {
         onCompleted: () => {
             // setSuccessMessage(`Role "${data.createRole.Name}" created successfully!`);
             // setErrorMessage(null);
@@ -52,7 +52,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
         }
     });
 
-    const [ editRole, { loading: editLoading } ] = useMutation(EDIT_ROLE, {
+    const [editRole, { loading: editLoading }] = useMutation(EDIT_ROLE, {
         onCompleted: () => {
             // setSuccessMessage(`Role "${data.editRole.Name}" changed successfully!`);
             // setErrorMessage(null);

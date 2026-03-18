@@ -1,6 +1,6 @@
-import { addWorkspace } from "@/graphql/workspaces";
-import { useApolloClient } from "@apollo/client";
-import { useState, useEffect, useRef } from "react";
+import { addWorkspace } from '@/graphql/workspaces';
+import { useApolloClient } from '@apollo/client/react';
+import { useState, useEffect, useRef } from 'react';
 
 interface WorkspaceCreateModalProps {
     onClose: () => void;
@@ -8,7 +8,7 @@ interface WorkspaceCreateModalProps {
 }
 
 export function WorkspaceCreateModal({ onClose, onWorkspaceCreated }: WorkspaceCreateModalProps) {
-    const [ workspaceName, setWorkspaceName ] = useState("");
+    const [workspaceName, setWorkspaceName] = useState('');
     const modalRef = useRef<HTMLDivElement>(null);
     const client = useApolloClient()
 
@@ -19,11 +19,11 @@ export function WorkspaceCreateModal({ onClose, onWorkspaceCreated }: WorkspaceC
             }
         };
 
-        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener('mousedown', handleClickOutside);
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [ onClose ]);
+    }, [onClose]);
 
     const handleCreate = async () => {
         if (!workspaceName.trim()) {
@@ -31,11 +31,11 @@ export function WorkspaceCreateModal({ onClose, onWorkspaceCreated }: WorkspaceC
         }
 
         try {
-            const newWorkspace = await addWorkspace({ name: workspaceName.trim(), client });
+            const newWorkspace = await addWorkspace(client, workspaceName.trim());
             onWorkspaceCreated(newWorkspace);
-            setWorkspaceName("");
+            setWorkspaceName('');
         } catch (error) {
-            console.error("Error creating workspace:", error);
+            console.error('Error creating workspace:', error);
         }
     };
 

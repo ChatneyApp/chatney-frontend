@@ -1,11 +1,11 @@
 ﻿import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 
 import { Button } from '@/components/Button';
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './AuthForm.module.css';
-import { registerUser } from './auth.gql';
+import { registerUser } from '@/graphql/auth';
 
 type FormInputs = {
     email: string;

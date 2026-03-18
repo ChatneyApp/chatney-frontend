@@ -31,7 +31,7 @@ export function ChannelList({ activeChannel, setActiveChannel, channels, refetch
                 <div
                     key={channel.id}
                     onClick={() => setActiveChannel(channel)}
-                    className={`cursor-pointer px-2 py-1 rounded hover:bg-gray-700 ${activeChannel?.id === channel.id ? "font-bold text-white" : "text-gray-400"
+                    className={`cursor-pointer px-2 py-1 rounded hover:bg-gray-700 ${activeChannel?.id === channel.id ? 'font-bold text-white' : 'text-gray-400'
                         }`}
                 >
                     {channel.name}

@@ -1,10 +1,9 @@
-import { createContext, ReactNode, startTransition, useContext, useEffect, useState } from 'react';
-import { useApolloClient } from '@apollo/client';
+import { createContext, PropsWithChildren, startTransition, useCallback, useContext, useEffect, useState } from 'react';
+import { useApolloClient } from '@apollo/client/react';
 
 import { Channel } from '@/types/channels';
 import { WorkspacesListContext } from './WorkspacesListContext';
 import { getWorkspaceChannels } from '@/graphql/channels';
-import { ChannelList } from '@/pages/client/Chat/ChannelsList';
 
 interface WorkspaceChannelsListContextValue {
     channels: Channel[];
@@ -15,14 +14,14 @@ interface WorkspaceChannelsListContextValue {
 
 const WorkspaceChannelsListContext = createContext<WorkspaceChannelsListContextValue>(null as unknown as WorkspaceChannelsListContextValue);
 
-export function WorkspaceChannelsListProvider({ children }: { children: ReactNode }) {
+export function WorkspaceChannelsListProvider({ children }: PropsWithChildren) {
     const { activeWorkspaceId } = useContext(WorkspacesListContext);
     const [channels, setChannels] = useState<Channel[]>([]);
     const [activeChannel, setActiveChannel] = useState<Channel>(null as unknown as Channel);
 
     const client = useApolloClient();
 
-    const handleRefresh = (channelId?: string) => {
+    const handleRefresh = useCallback((channelId?: string) => {
         startTransition(async () => {
             if (activeWorkspaceId === null) {
                 return;
@@ -39,14 +38,14 @@ export function WorkspaceChannelsListProvider({ children }: { children: ReactNod
                 /* swallow error */
             }
         });
-    };
+    }, [activeWorkspaceId, client]);
 
     useEffect(() => {
         if (activeWorkspaceId === null) {
             return;
         }
         handleRefresh();
-    }, [activeWorkspaceId]);
+    }, [activeWorkspaceId, handleRefresh]);
 
     return (
         <WorkspaceChannelsListContext.Provider

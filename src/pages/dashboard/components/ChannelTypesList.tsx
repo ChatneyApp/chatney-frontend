@@ -11,7 +11,7 @@ const ChannelTypesListCore = () => {
 
     return <div>
         {channelTypes.map(channelType => (
-            <ChannelTypeEditor key={channelType.Id} channelType={channelType}/>
+            <ChannelTypeEditor key={channelType.id} channelType={channelType}/>
         ))}
         {!channelTypes.length && (
             <EmptyListMessage>

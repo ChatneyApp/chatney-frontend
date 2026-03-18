@@ -1,11 +1,11 @@
 ﻿import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from '@apollo/client/react';
 import { Button } from '@/components/Button';
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './AuthForm.module.css';
 import { clientStartPageUrl, userAuthTokenName, userAuthId } from '@/infra/consts';
-import { loginUser } from './auth.gql';
+import { loginUser } from '@/graphql/auth';
 
 type FormInputs = {
     login: string;
@@ -14,8 +14,8 @@ type FormInputs = {
 
 export const LoginForm = () => {
     const apollo = useApolloClient();
-    const [ loading, setLoading ] = useState(false);
-    const [ errorMessage, setErrorMessage ] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { register, handleSubmit, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             login: '',

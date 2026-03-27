@@ -1,10 +1,11 @@
 import { addWorkspace } from '@/graphql/workspaces';
 import { useApolloClient } from '@apollo/client/react';
 import { useState, useEffect, useRef } from 'react';
+import { Workspace } from '@/types/workspaces';
 
 interface WorkspaceCreateModalProps {
     onClose: () => void;
-    onWorkspaceCreated: (workspace: { id: string; name: string }) => void;
+    onWorkspaceCreated: (workspace: Workspace) => void;
 }
 
 export function WorkspaceCreateModal({ onClose, onWorkspaceCreated }: WorkspaceCreateModalProps) {

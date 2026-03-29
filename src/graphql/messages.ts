@@ -211,7 +211,7 @@ export const deleteReaction = async (client: ApolloClient, messageId: string, co
 
 export const getChannelMessagesList = async (client: ApolloClient, channelId: ChannelId): Promise<MessageWithUser[]> => {
     const GET_MESSAGES: TypedDocumentNode<GetChannelMessagesResponse> = gql`
-    query ($channelId: String!) {
+    query ($channelId: Int!) {
         messages {
             listChannelMessages(channelId: $channelId) {
                 id

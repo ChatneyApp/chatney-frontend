@@ -1,4 +1,4 @@
-﻿import { UserId } from '@/types/users.ts';
+﻿import { UserId } from '@/types/users';
 
 export type AttachmentId = string;
 

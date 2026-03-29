@@ -1,4 +1,4 @@
-export type ChannelTypeId = string;
+export type ChannelTypeId = number;
 export type ChannelType = {
     id: ChannelTypeId;
     label: string;

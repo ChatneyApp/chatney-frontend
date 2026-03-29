@@ -1,5 +1,6 @@
 ﻿import { UserId } from '@/types/users';
-import { Attachment, AttachmentId } from '@/types/attachments.ts';
+import { Attachment, AttachmentId } from '@/types/attachments';
+import { ChannelId } from '@/types/channels';
 
 export type MessageId = string;
 export type UrlPreviewId = string;
@@ -26,8 +27,8 @@ export type UrlPreview = {
 }
 export type Message = {
     id: MessageId;
-    channelId: string;
-    userId: string;
+    channelId: ChannelId;
+    userId: UserId;
     content: string;
     attachments: Attachment[];
     status: string;

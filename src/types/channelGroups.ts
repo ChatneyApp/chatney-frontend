@@ -1,4 +1,4 @@
-export type ChannelGroupId = string;
+export type ChannelGroupId = number;
 export type ChannelGroup = {
     id: ChannelGroupId;
     name: string;

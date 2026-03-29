@@ -35,7 +35,7 @@ export const EDIT_CHANNEL_TYPE = gql`
 `;
 
 export const DELETE_CHANNEL_TYPE = gql`
-    mutation($id: String!) {
+    mutation($id: Int!) {
         channels {
             deleteChannelType(id: $id)
         }

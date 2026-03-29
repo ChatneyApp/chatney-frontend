@@ -1,4 +1,4 @@
-﻿export type SystemConfigId = string;
+﻿export type SystemConfigId = number;
 export type SystemConfigValue = {
     id: SystemConfigId;
     name: string;

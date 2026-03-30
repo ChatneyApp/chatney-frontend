@@ -40,7 +40,7 @@ export const addWorkspace = async (client: ApolloClient, name: string): Promise<
 };
 
 export const UPDATE_WORKSPACE = gql`
-    mutation UpdateWorkspace($workspaceId: String!, $input: MutateWorkspaceDto!) {
+    mutation UpdateWorkspace($workspaceId: Int!, $input: MutateWorkspaceDto!) {
         updateWorkspace(workspaceId: $workspaceId, input: $input) {
             Id
             Name
@@ -49,7 +49,7 @@ export const UPDATE_WORKSPACE = gql`
 `;
 
 export const DELETE_WORKSPACE = gql`
-    mutation DeleteWorkspace($workspaceId: String!) {
+    mutation DeleteWorkspace($workspaceId: Int!) {
         deleteWorkspace(workspaceId: $workspaceId)
     }
 `;

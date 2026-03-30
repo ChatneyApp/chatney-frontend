@@ -85,7 +85,7 @@ export const addChannel = async (client: ApolloClient, name: string, channelType
 };
 
 export const GET_CHANNEL: TypedDocumentNode<GetChannelResponse> = gql`
-    query ($channelId: String!) {
+    query ($channelId: Int!) {
         GetChannel(channelId: $channelId) {
             Id
             Name

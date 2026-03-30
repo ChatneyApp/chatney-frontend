@@ -1,6 +1,6 @@
 ﻿import { UserId } from '@/types/users';
 
-export type AttachmentId = string;
+export type AttachmentId = number;
 
 export type Attachment = {
     id: AttachmentId;

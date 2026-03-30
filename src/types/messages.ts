@@ -2,7 +2,7 @@
 import { Attachment, AttachmentId } from '@/types/attachments';
 import { ChannelId } from '@/types/channels';
 
-export type MessageId = string;
+export type MessageId = number;
 export type UrlPreviewId = string;
 export type MessageUser = {
     id: UserId;
@@ -37,7 +37,7 @@ export type Message = {
     reactions: Reaction[];
     myReactions: string[];
     urlPreviews: UrlPreview[];
-    parentId: string | null;
+    parentId: MessageId | null;
     childrenCount: number;
 }
 export type MessageWithUser = Message & {

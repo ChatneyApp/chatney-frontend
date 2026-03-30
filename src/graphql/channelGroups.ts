@@ -9,7 +9,7 @@ export type GetChannelGroupsListResponse = {
 }
 
 export const CREATE_CHANNEL_GROUP = gql`
-    mutation($channelGroupDto: ChannelGroupDTOInput!) {
+    mutation($channelGroupDto: ChannelGroupDtoInput!) {
         channels {
             addChannelGroup(channelGroupDto: $channelGroupDto) {
                 id

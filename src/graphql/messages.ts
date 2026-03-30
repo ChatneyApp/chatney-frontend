@@ -47,7 +47,7 @@ type GetThreadMessagesResponse = {
 
 export const postNewMessage = async (client: ApolloClient, messageDto: CreateMessageDto): Promise<Message> => {
     const POST_MESSAGE = gql`
-        mutation CreateMessage($messageDto: MessageDTOInput!) {
+        mutation CreateMessage($messageDto: MessageDtoInput!) {
             messages {
                 addMessage(messageDto: $messageDto) {
                     id
@@ -118,9 +118,9 @@ export const postNewMessage = async (client: ApolloClient, messageDto: CreateMes
     }
 };
 
-export const deleteMessage = async (client: ApolloClient, messageId: string): Promise<boolean> => {
+export const deleteMessage = async (client: ApolloClient, messageId: MessageId): Promise<boolean> => {
     const DELETE_MESSAGE = gql`
-        mutation DeleteMessage($id: String!) {
+        mutation DeleteMessage($id: Int!) {
             messages {
                 deleteMessage(id: $id)
             }
@@ -144,9 +144,9 @@ export const deleteMessage = async (client: ApolloClient, messageId: string): Pr
     }
 };
 
-export const addReaction = async (client: ApolloClient, messageId: string, code: string): Promise<boolean> => {
+export const addReaction = async (client: ApolloClient, messageId: MessageId, code: string): Promise<boolean> => {
     const GQL_MUTATION = gql`
-        mutation AddReaction($code: String!, $messageId: String!) {
+        mutation AddReaction($code: String!, $messageId: Int!) {
             messages {
                 addReaction(code: $code, messageId: $messageId) {
                     status
@@ -176,9 +176,9 @@ export const addReaction = async (client: ApolloClient, messageId: string, code:
     }
 };
 
-export const deleteReaction = async (client: ApolloClient, messageId: string, code: string): Promise<boolean> => {
+export const deleteReaction = async (client: ApolloClient, messageId: MessageId, code: string): Promise<boolean> => {
     const GQL_MUTATION = gql`
-        mutation DeleteReaction($code: String!, $messageId: String!) {
+        mutation DeleteReaction($code: String!, $messageId: Int!) {
             messages {
                 deleteReaction(code: $code, messageId: $messageId) {
                     status
@@ -277,14 +277,24 @@ export const getChannelMessagesList = async (client: ApolloClient, channelId: Ch
 
 export const getThreadMessagesList = async (client: ApolloClient, threadId: MessageId): Promise<MessageWithUser[]> => {
     const GET_MESSAGES: TypedDocumentNode<GetThreadMessagesResponse> = gql`
-    query ($threadId: String!) {
+    query ($threadId: Int!) {
         messages {
             listThreadMessages(threadId: $threadId) {
                 id
                 channelId
                 userId
                 content
-                attachments
+                attachments {
+                    id
+                    userId
+                    urlPath
+                    originalFileName
+                    extension
+                    mimeType
+                    type
+                    createdAt
+                    updatedAt
+                }
                 status
                 createdAt
                 updatedAt

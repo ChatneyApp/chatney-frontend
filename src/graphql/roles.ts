@@ -9,7 +9,7 @@ export type GetRolesListResponse = {
 }
 
 export const CREATE_ROLE = gql`
-    mutation ($roleDto: RoleDTOInput!) {
+    mutation ($roleDto: RoleDtoInput!) {
         roles {
             addRole (roleDto: $roleDto) {
                 id

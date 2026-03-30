@@ -9,7 +9,7 @@ export type GetChannelTypesListResponse = {
 }
 
 export const CREATE_CHANNEL_TYPE = gql`
-    mutation ($channelTypeDto: ChannelTypeDTOInput!) {
+    mutation ($channelTypeDto: ChannelTypeDtoInput!) {
         channels {
             addChannelType(channelTypeDto: $channelTypeDto) {
                 id

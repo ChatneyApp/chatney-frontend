@@ -38,7 +38,7 @@ const WorkspaceChannelsList = () => {
     }
 
     return <Tabs.Root
-        defaultValue={defaultWorkspace.id}
+        defaultValue={defaultWorkspace.id.toString()}
     >
         <TabsList
             aria-label="Manage your account"
@@ -46,7 +46,7 @@ const WorkspaceChannelsList = () => {
             {workspacesList.map(workspace => (
                 <TabsTrigger
                     key={workspace.id}
-                    value={workspace.id}
+                    value={workspace.id.toString()}
                 >
                     {workspace.name}
                 </TabsTrigger>
@@ -55,7 +55,7 @@ const WorkspaceChannelsList = () => {
         {workspacesList.map(workspace => (
             <TabsContent
                 key={workspace.id}
-                value={workspace.id}
+                value={workspace.id.toString()}
             >
                 <WorkspaceChannelsListProvider workspace={workspace}>
                     <ChannelsListCore key={workspace.id}/>

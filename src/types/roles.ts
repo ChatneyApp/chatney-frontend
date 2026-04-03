@@ -1,4 +1,4 @@
-﻿export type RoleId = string;
+﻿export type RoleId = number;
 export type Role = {
     id: RoleId;
     name: string;

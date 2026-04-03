@@ -1,7 +1,8 @@
 ﻿import { UserId } from '@/types/users';
-import { Attachment, AttachmentId } from '@/types/attachments.ts';
+import { Attachment, AttachmentId } from '@/types/attachments';
+import { ChannelId } from '@/types/channels';
 
-export type MessageId = string;
+export type MessageId = number;
 export type UrlPreviewId = string;
 export type MessageUser = {
     id: UserId;
@@ -26,8 +27,8 @@ export type UrlPreview = {
 }
 export type Message = {
     id: MessageId;
-    channelId: string;
-    userId: string;
+    channelId: ChannelId;
+    userId: UserId;
     content: string;
     attachments: Attachment[];
     status: string;
@@ -36,7 +37,7 @@ export type Message = {
     reactions: Reaction[];
     myReactions: string[];
     urlPreviews: UrlPreview[];
-    parentId: string | null;
+    parentId: MessageId | null;
     childrenCount: number;
 }
 export type MessageWithUser = Message & {

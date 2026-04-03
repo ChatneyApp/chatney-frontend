@@ -1,9 +1,11 @@
 import { ApolloClient, gql, type TypedDocumentNode } from '@apollo/client';
 
 import { Channel } from '@/types/channels';
+import { WorkspaceId } from '@/types/workspaces';
+import { ChannelTypeId } from '@/types/channelTypes';
 
 export const GetWorkspaceChannelsQuery = gql`
-    query GetWorkspaceChannels($workspaceId: String!) {
+    query GetWorkspaceChannels($workspaceId: Int!) {
         channels {
             workspaceChannelList(workspaceId: $workspaceId) {
                 id
@@ -24,7 +26,7 @@ export type GetChannelResponse = {
 }
 
 export const CREATE_CHANNEL = gql`
-    mutation($channelDto: ChannelDTOInput!) {
+    mutation($channelDto: ChannelDtoInput!) {
         channels {
             addChannel(channelDto: $channelDto) {
                 id
@@ -39,8 +41,8 @@ export const CREATE_CHANNEL = gql`
 const AddChannelMutation = gql`
     mutation AddChannel(
         $name: String!
-        $channelTypeId: String!
-        $workspaceId: String!
+        $channelTypeId: Int!
+        $workspaceId: Int!
     ) {
         channels {
             addChannel(channelDto: {
@@ -63,7 +65,7 @@ type AddChannelResponse = {
         addChannel?: Channel;
     }
 }
-export const addChannel = async (client: ApolloClient, name: string, channelTypeId: string, workspaceId: string): Promise<Channel> => {
+export const addChannel = async (client: ApolloClient, name: string, channelTypeId: ChannelTypeId, workspaceId: WorkspaceId): Promise<Channel> => {
     try {
         const { data } = await client.mutate<AddChannelResponse>({
             mutation: AddChannelMutation,
@@ -83,7 +85,7 @@ export const addChannel = async (client: ApolloClient, name: string, channelType
 };
 
 export const GET_CHANNEL: TypedDocumentNode<GetChannelResponse> = gql`
-    query ($channelId: String!) {
+    query ($channelId: Int!) {
         GetChannel(channelId: $channelId) {
             Id
             Name
@@ -107,7 +109,7 @@ export const UPDATE_CHANNEL = gql`
 `;
 
 export const DELETE_CHANNEL = gql`
-    mutation ($id: String!) {
+    mutation ($id: Int!) {
         channels {
             deleteChannel(id: $id)
         }
@@ -119,13 +121,8 @@ export const getWorkspaceChannels = async ({
     workspaceId,
 }: {
     client: ApolloClient,
-    workspaceId: string,
-}): Promise<Array<{
-    id: string;
-    name: string;
-    channelTypeId: string;
-    workspaceId: string;
-}>> => {
+    workspaceId: WorkspaceId,
+}): Promise<Array<Channel>> => {
     try {
         const { data } = await client.query<GetChannelsListResponse>({
             query: GetWorkspaceChannelsQuery,

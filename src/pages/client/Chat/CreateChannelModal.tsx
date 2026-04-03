@@ -2,10 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { useApolloClient } from '@apollo/client/react';
 import { addChannel } from '@/graphql/channels';
 import { useWorkspacesList } from '@/contexts/WorkspacesListContext';
+import { Channel } from '@/types/channels';
 
 interface CreateChannelModalProps {
     onClose: () => void;
-    onChannelCreated: (channel: { id: string; name: string }) => void;
+    onChannelCreated: (channel: Channel) => void;
 }
 
 export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelModalProps) {
@@ -37,7 +38,8 @@ export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelM
         }
 
         try {
-            const newChannel = await addChannel(client, channelName.trim(), 'e35bdf2d-1624-474a-a7dc-bb3580dc4bff', activeWorkspaceId);
+            // TODO: implement channel types pull from the server
+            const newChannel = await addChannel(client, channelName.trim(), 1, activeWorkspaceId);
             onChannelCreated(newChannel);
             setChannelName('');
         } catch (error) {

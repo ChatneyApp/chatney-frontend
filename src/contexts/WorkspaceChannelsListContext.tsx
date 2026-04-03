@@ -1,14 +1,14 @@
 import { createContext, PropsWithChildren, startTransition, useCallback, useContext, useEffect, useState } from 'react';
 import { useApolloClient } from '@apollo/client/react';
 
-import { Channel } from '@/types/channels';
+import { Channel, ChannelId } from '@/types/channels';
 import { WorkspacesListContext } from './WorkspacesListContext';
 import { getWorkspaceChannels } from '@/graphql/channels';
 
 interface WorkspaceChannelsListContextValue {
     channels: Channel[];
     activeChannel: Channel;
-    refetch: (channelId?: string) => void;
+    refetch: (channelId?: ChannelId) => void;
     setActiveChannel: (ch: Channel) => void
 }
 
@@ -21,7 +21,7 @@ export function WorkspaceChannelsListProvider({ children }: PropsWithChildren) {
 
     const client = useApolloClient();
 
-    const handleRefresh = useCallback((channelId?: string) => {
+    const handleRefresh = useCallback((channelId?: ChannelId) => {
         startTransition(async () => {
             if (activeWorkspaceId === null) {
                 return;

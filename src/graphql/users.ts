@@ -1,4 +1,4 @@
-import { User } from '@/types/users';
+import { User, UserId } from '@/types/users';
 import { ApolloClient, gql } from '@apollo/client';
 
 type GetUserByIdResponse = {
@@ -8,7 +8,7 @@ type GetUserByIdResponse = {
 }
 
 const GET_USER_BY_ID_QUERY = gql`
-    query GetUserById($id: String!) {
+    query GetUserById($id: UUID!) {
         users {
             userById(id: $id) {
                 id
@@ -18,13 +18,13 @@ const GET_USER_BY_ID_QUERY = gql`
                 banned
                 muted
                 email
-                workspaces
+                workspaceIds
             }
         }
     }
 `;
 
-export const getUserById = async (client: ApolloClient, id: string): Promise<User> => {
+export const getUserById = async (client: ApolloClient, id: UserId): Promise<User> => {
     try {
         const { data } = await client.query<GetUserByIdResponse>({
             query: GET_USER_BY_ID_QUERY,

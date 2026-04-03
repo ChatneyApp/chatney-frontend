@@ -29,7 +29,7 @@ const LOGIN_USER_MUTATION = gql`
 `;
 
 const REGISTER_USER_MUTATION = gql`
-    mutation RegisterUser($input: UserRegisterDTOInput!) {
+    mutation RegisterUser($input: UserRegisterDtoInput!) {
         users {
             register(userDto: $input) {
                 id

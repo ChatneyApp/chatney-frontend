@@ -9,7 +9,7 @@ export type GetChannelGroupsListResponse = {
 }
 
 export const CREATE_CHANNEL_GROUP = gql`
-    mutation($channelGroupDto: ChannelGroupDTOInput!) {
+    mutation($channelGroupDto: ChannelGroupDtoInput!) {
         channels {
             addChannelGroup(channelGroupDto: $channelGroupDto) {
                 id
@@ -37,7 +37,7 @@ export const UPDATE_CHANNEL_GROUP = gql`
 `;
 
 export const DELETE_CHANNEL_GROUP = gql`
-    mutation ($id: String!) {
+    mutation ($id: Int!) {
         channels {
             deleteChannelGroup(id: $id)
         }
@@ -45,7 +45,7 @@ export const DELETE_CHANNEL_GROUP = gql`
 `;
 
 export const GET_WORKSPACE_CHANNEL_GROUPS_QUERY: TypedDocumentNode<GetChannelGroupsListResponse> = gql`
-    query ($workspaceId: String!) {
+    query ($workspaceId: Int!) {
         channels {
             workspaceChannelGroupList(workspaceId: $workspaceId) {
                 id

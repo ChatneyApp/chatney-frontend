@@ -13,7 +13,7 @@ export const CREATE_CHANNEL_TYPE = gql`
         channels {
             addChannelType(channelTypeDto: $channelTypeDto) {
                 id
-                label
+                name
                 key
                 baseRoleId
             }
@@ -26,7 +26,7 @@ export const EDIT_CHANNEL_TYPE = gql`
         channels {
             updateChannelType(channelType: $channelType) {
                 id
-                label
+                name
                 key
                 baseRoleId
             }
@@ -47,7 +47,7 @@ export const GET_CHANNEL_TYPES_QUERY: TypedDocumentNode<GetChannelTypesListRespo
         channels {
             channelTypeList {
                 id
-                label
+                name
                 key
                 baseRoleId
             }

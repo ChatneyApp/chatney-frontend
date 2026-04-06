@@ -1,4 +1,6 @@
-﻿export type ChannelListItem = {
+﻿import { ChannelId } from '@/types/channels';
+
+export type ChannelListItem = {
     name: string,
-    id: string
+    id: ChannelId,
 }

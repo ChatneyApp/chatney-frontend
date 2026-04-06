@@ -1,6 +1,6 @@
 ﻿import { XCircle } from 'lucide-react';
 import clsx from 'clsx';
-import { MessageWithUser } from '@/types/messages';
+import { MessageId, MessageWithUser } from '@/types/messages';
 import { isDev } from '@/helpers/env';
 import { MessageReactions } from '@/pages/client/Chat/MessageReactions';
 import { MessageThreadButton } from '@/pages/client/Chat/MessageThreadButton';
@@ -13,14 +13,14 @@ import styles from './MessageComponent.module.css';
 type Props = {
     message: MessageWithUser;
     currentUserId?: UserId;
-    onDelete(id: string): void;
-    onAddReaction(messageId: string, code: string): void;
-    onDeleteReaction(messageId: string, code: string): void;
+    onDelete(id: MessageId): void;
+    onAddReaction(messageId: MessageId, code: string): void;
+    onDeleteReaction(messageId: MessageId, code: string): void;
     onOpenThread?(parentId: MessageWithUser): void;
 };
 export const MessageComponent = ({ message, currentUserId, onDelete, onAddReaction, onDeleteReaction, onOpenThread }: Props) => {
     const isMine = message.userId === currentUserId;
-    const avatarUrl = message.user.avatarUrl ?? `https://i.pravatar.cc/?img=${message.userId.substring(0, 1)}`;
+    const avatarUrl = message.user.avatarUrl ?? `https://i.pravatar.cc/?img=${message.userId}`;
     const handleToggleThread = () => {
         onOpenThread?.(message);
     };

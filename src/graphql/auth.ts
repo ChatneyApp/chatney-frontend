@@ -1,5 +1,5 @@
 import { ApolloClient, gql } from '@apollo/client';
-import { UserAuthorization } from '@/types/users';
+import { UserAuthorization, UserId } from '@/types/users';
 
 type LoginUserResponse = {
     users?: {
@@ -44,7 +44,7 @@ export const loginUser = async ({ client, login, password }: {
     client: ApolloClient,
     login: string,
     password: string,
-}): Promise<{ token: string, id: string }> => {
+}): Promise<{ token: string, id: UserId }> => {
     try {
         const { data } = await client.mutate<LoginUserResponse>({
             mutation: LOGIN_USER_MUTATION,

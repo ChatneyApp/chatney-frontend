@@ -10,11 +10,12 @@ import { Button } from '@/components/Button';
 import { ChannelType } from '@/types/channelTypes';
 import { useChannelTypesList } from '@/contexts/ChannelTypesListContext';
 import { useRolesList } from '@/contexts/RolesListContext';
+import { RoleId } from '@/types/roles';
 
 type FormInputs = {
     label: string;
     key: string;
-    baseRoleId: string;
+    baseRoleId: RoleId;
 };
 
 type Props = {
@@ -35,7 +36,7 @@ export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: P
         defaultValues: {
             label: channelType?.label ?? '',
             key: channelType?.key ?? '',
-            baseRoleId: channelType?.baseRoleId ?? ''
+            baseRoleId: channelType?.baseRoleId ?? 0,
         }
     });
 

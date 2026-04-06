@@ -1,6 +1,6 @@
 ﻿import { Workspace } from './workspaces';
 
-export type UserId = number;
+export type UserId = string;
 export type UserAuthorization = {
     id: UserId;
     token: string;

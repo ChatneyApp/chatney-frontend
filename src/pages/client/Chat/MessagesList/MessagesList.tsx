@@ -45,15 +45,15 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
         await postNewMessage(apolloClient, newMessage);
     };
 
-    const handleOnDeleteClick = async (id: string) => {
+    const handleOnDeleteClick = async (id: MessageId) => {
         await deleteMessage(apolloClient, id);
     };
 
-    const handleAddReaction = async (messageId: string, code: string) => {
+    const handleAddReaction = async (messageId: MessageId, code: string) => {
         await addReaction(apolloClient, messageId, code);
     };
 
-    const handleDeleteReaction = async (messageId: string, code: string) => {
+    const handleDeleteReaction = async (messageId: MessageId, code: string) => {
         await deleteReaction(apolloClient, messageId, code);
     };
 

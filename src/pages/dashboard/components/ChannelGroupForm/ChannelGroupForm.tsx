@@ -10,11 +10,12 @@ import { useWorkspaceChannelGroupsList } from '@/contexts/WorkspaceChannelGroups
 import { useWorkspaceChannelsList } from '@/contexts/OldWorkspaceChannelsListContext';
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './ChannelGroupForm.module.css';
+import { ChannelId } from '@/types/channels';
 
 type FormInputs = {
     name: string;
     order: number;
-    channelIds: string[];
+    channelIds: ChannelId[];
 };
 
 type Props = {
@@ -103,9 +104,9 @@ export const ChannelGroupForm = ({ cta, title, submitText, channelGroup }: Props
         }
     };
 
-    const handleChannelToggle = (channelId: string) => {
+    const handleChannelToggle = (channelId: ChannelId) => {
         const currentChannels = watch('channelIds') || [];
-        let newChannels: string[];
+        let newChannels: ChannelId[];
 
         if (currentChannels.includes(channelId)) {
             newChannels = currentChannels.filter(id => id !== channelId);

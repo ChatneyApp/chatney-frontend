@@ -4,7 +4,7 @@ import { useApolloClient } from '@apollo/client/react';
 
 import { useUser } from '@/contexts/UserContext';
 import { MessageInput } from '@/pages/client/Chat/MessageInput';
-import { CreateMessageDto, MessageWithUser } from '@/types/messages';
+import { CreateMessageDto, MessageId, MessageWithUser } from '@/types/messages';
 import { AttachmentId } from '@/types/attachments';
 import { addReaction, deleteMessage, deleteReaction, getThreadMessagesList, postNewMessage } from '@/graphql/messages';
 import {
@@ -43,15 +43,15 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
         await postNewMessage(apolloClient, newMessage);
     };
 
-    const handleOnDeleteClick = async (id: string) => {
+    const handleOnDeleteClick = async (id: MessageId) => {
         await deleteMessage(apolloClient, id);
     };
 
-    const handleAddReaction = async (messageId: string, code: string) => {
+    const handleAddReaction = async (messageId: MessageId, code: string) => {
         await addReaction(apolloClient, messageId, code);
     };
 
-    const handleDeleteReaction = async (messageId: string, code: string) => {
+    const handleDeleteReaction = async (messageId: MessageId, code: string) => {
         await deleteReaction(apolloClient, messageId, code);
     };
 

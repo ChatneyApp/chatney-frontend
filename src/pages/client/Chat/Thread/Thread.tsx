@@ -39,6 +39,7 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
             content: text,
             attachmentIds,
             parentId: rootMessage.id,
+            replyTo: null,
         };
         await postNewMessage(apolloClient, newMessage);
     };
@@ -63,7 +64,7 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
         const loadMessages = async () => {
             try {
                 const listRes = await getThreadMessagesList(apolloClient, rootMessage.id);
-                const list = [...listRes];
+                const list = [...listRes.messages];
                 list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
                 setMessages(list);
             } catch (err) {

@@ -1,6 +1,6 @@
 import { ApolloClient, gql, type TypedDocumentNode } from '@apollo/client';
 
-import { CreateMessageDto, Message, MessageId, MessageWithUser } from '@/types/messages';
+import { CreateMessageDto, Message, MessageId, MessagesResult } from '@/types/messages';
 import { ChannelId } from '@/types/channels';
 
 type PostMessageEndpointResponse = {
@@ -35,13 +35,13 @@ type DeleteReactionEndpointResponse = {
 
 type GetChannelMessagesResponse = {
     messages: {
-        listChannelMessages: MessageWithUser[];
+        listChannelMessages: MessagesResult;
     }
 }
 
 type GetThreadMessagesResponse = {
     messages: {
-        listThreadMessages: MessageWithUser[];
+        listThreadMessages: MessagesResult;
     }
 }
 
@@ -209,57 +209,65 @@ export const deleteReaction = async (client: ApolloClient, messageId: MessageId,
     }
 };
 
-export const getChannelMessagesList = async (client: ApolloClient, channelId: ChannelId): Promise<MessageWithUser[]> => {
+export const getChannelMessagesList = async (client: ApolloClient, channelId: ChannelId): Promise<MessagesResult> => {
     const GET_MESSAGES: TypedDocumentNode<GetChannelMessagesResponse> = gql`
     query ($channelId: Int!) {
         messages {
             listChannelMessages(channelId: $channelId) {
-                id
-                channelId
-                userId
-                content
-                attachments {
+                messages {
+                    id
+                    channelId
+                    userId
+                    content
+                    attachments {
+                        id
+                        userId
+                        urlPath
+                        originalFileName
+                        extension
+                        mimeType
+                        type
+                        createdAt
+                        updatedAt
+                    }
+                    status
+                    createdAt
+                    updatedAt
+                    user {
+                        id
+                        name
+                        avatarUrl
+                    }
+                    urlPreviews {
+                        id
+                        createdAt
+                        updatedAt
+                        url
+                        title
+                        description
+                        thumbnailUrl
+                        videoThumbnailUrl
+                        siteName
+                        favIconUrl
+                        type
+                        author
+                        thumbnailWidth
+                        thumbnailHeight
+                    }
+                    reactions {
+                        code
+                        count
+                    }
+                    myReactions
+                    parentId
+                    childrenCount
+                    replyTo
+                }
+                refs {
                     id
                     userId
-                    urlPath
-                    originalFileName
-                    extension
-                    mimeType
-                    type
-                    createdAt
-                    updatedAt
+                    content
                 }
-                status
-                createdAt
-                updatedAt
-                user {
-                    id
-                    name
-                    avatarUrl
-                }
-                urlPreviews {
-                    id
-                    createdAt
-                    updatedAt
-                    url
-                    title
-                    description
-                    thumbnailUrl
-                    videoThumbnailUrl
-                    siteName
-                    favIconUrl
-                    type
-                    author
-                    thumbnailWidth
-                    thumbnailHeight
-                }
-                reactions {
-                    code
-                    count
-                }
-                myReactions
-                parentId
-                childrenCount
             }
         }
     }
@@ -269,63 +277,71 @@ export const getChannelMessagesList = async (client: ApolloClient, channelId: Ch
             query: GET_MESSAGES,
             variables: { channelId },
         });
-        return data?.messages?.listChannelMessages ?? [];
+        return data?.messages?.listChannelMessages ?? { messages: [], refs: [] };
     } catch (error) {
         throw new Error(`Can't get channel messages list: ${(error as Error).message}`);
     }
 };
 
-export const getThreadMessagesList = async (client: ApolloClient, threadId: MessageId): Promise<MessageWithUser[]> => {
+export const getThreadMessagesList = async (client: ApolloClient, threadId: MessageId): Promise<MessagesResult> => {
     const GET_MESSAGES: TypedDocumentNode<GetThreadMessagesResponse> = gql`
     query ($threadId: Int!) {
         messages {
             listThreadMessages(threadId: $threadId) {
-                id
-                channelId
-                userId
-                content
-                attachments {
+                messages {
+                    id
+                    channelId
+                    userId
+                    content
+                    attachments {
+                        id
+                        userId
+                        urlPath
+                        originalFileName
+                        extension
+                        mimeType
+                        type
+                        createdAt
+                        updatedAt
+                    }
+                    status
+                    createdAt
+                    updatedAt
+                    user {
+                        id
+                        name
+                        avatarUrl
+                    }
+                    urlPreviews {
+                        id
+                        createdAt
+                        updatedAt
+                        url
+                        title
+                        description
+                        thumbnailUrl
+                        videoThumbnailUrl
+                        siteName
+                        favIconUrl
+                        type
+                        author
+                        thumbnailWidth
+                        thumbnailHeight
+                    }
+                    reactions {
+                        code
+                        count
+                    }
+                    myReactions
+                    parentId
+                    childrenCount
+                    replyTo
+                }
+                refs {
                     id
                     userId
-                    urlPath
-                    originalFileName
-                    extension
-                    mimeType
-                    type
-                    createdAt
-                    updatedAt
+                    content
                 }
-                status
-                createdAt
-                updatedAt
-                user {
-                    id
-                    name
-                    avatarUrl
-                }
-                urlPreviews {
-                    id
-                    createdAt
-                    updatedAt
-                    url
-                    title
-                    description
-                    thumbnailUrl
-                    videoThumbnailUrl
-                    siteName
-                    favIconUrl
-                    type
-                    author
-                    thumbnailWidth
-                    thumbnailHeight
-                }
-                reactions {
-                    code
-                    count
-                }
-                myReactions
-                parentId
-                childrenCount
             }
         }
     }
@@ -335,7 +351,7 @@ export const getThreadMessagesList = async (client: ApolloClient, threadId: Mess
             query: GET_MESSAGES,
             variables: { threadId },
         });
-        return data?.messages?.listThreadMessages ?? [];
+        return data?.messages?.listThreadMessages ?? { messages: [], refs: [] };
     } catch (error) {
         throw new Error(`Can't get thread messages list: ${(error as Error).message}`);
     }

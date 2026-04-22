@@ -41,6 +41,7 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
             content: text,
             attachmentIds,
             parentId: null,
+            replyTo: null,
         };
         await postNewMessage(apolloClient, newMessage);
     };
@@ -65,7 +66,7 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
         const loadMessages = async () => {
             try {
                 const listRes = await getChannelMessagesList(apolloClient, activeChannel.id);
-                const list = [...listRes];
+                const list = [...listRes.messages];
                 list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
                 setMessages(list);
             } catch (err) {

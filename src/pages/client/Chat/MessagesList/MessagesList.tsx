@@ -5,7 +5,7 @@ import { useApolloClient } from '@apollo/client/react';
 import { useUser } from '@/contexts/UserContext';
 import { MessageInput } from '@/pages/client/Chat/MessageInput';
 import { ChannelListItem } from '@/pages/client/Chat/types';
-import { CreateMessageDto, MessageId, MessageWithUser } from '@/types/messages';
+import { CreateMessageDto, MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
 import { AttachmentId } from '@/types/attachments';
 import { addReaction, deleteMessage, deleteReaction, getChannelMessagesList, postNewMessage } from '@/graphql/messages';
 import {
@@ -31,7 +31,9 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
     const userCtx = useUser();
     const apolloClient = useApolloClient();
     const [messages, setMessages] = useState<MessageWithUser[] | null>(null);
+    const [refs, setRefs] = useState<Map<number, ReplyToMessage>>(new Map());
     const [isBottomVisible, setIsBottomVisible] = useState(true);
+    const [replyingTo, setReplyingTo] = useState<MessageWithUser | null>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const autoScrollDone = useRef(false);
 
@@ -41,9 +43,18 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
             content: text,
             attachmentIds,
             parentId: null,
-            replyTo: null,
+            replyTo: replyingTo?.id ?? null,
         };
         await postNewMessage(apolloClient, newMessage);
+        setReplyingTo(null);
+    };
+
+    const handleReply = (message: MessageWithUser) => {
+        setReplyingTo(message);
+    };
+
+    const handleClearReply = () => {
+        setReplyingTo(null);
     };
 
     const handleOnDeleteClick = async (id: MessageId) => {
@@ -69,6 +80,7 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
                 const list = [...listRes.messages];
                 list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
                 setMessages(list);
+                setRefs(new Map(listRes.refs.map(r => [r.id, r])));
             } catch (err) {
                 console.error('Failed to load messages', err);
             }
@@ -194,7 +206,9 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
                         key={message.id}
                         currentUserId={userCtx?.user?.id}
                         message={message}
+                        replyRef={message.replyTo != null ? refs.get(message.replyTo) : undefined}
                         onDelete={handleOnDeleteClick}
+                        onReply={handleReply}
                         onAddReaction={handleAddReaction}
                         onDeleteReaction={handleDeleteReaction}
                         onOpenThread={onOpenThread}
@@ -208,7 +222,11 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
                     <ArrowDownToLine/>
                 </div>
             )}
-            <MessageInput onSend={handleSend} />
+            <MessageInput
+                onSend={handleSend}
+                replyToPreview={replyingTo?.content ?? null}
+                onClearReply={handleClearReply}
+            />
         </div>
     );
 }

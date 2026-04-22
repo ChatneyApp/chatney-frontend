@@ -1,6 +1,6 @@
-﻿import { XCircle } from 'lucide-react';
+﻿import { CornerUpLeft, XCircle } from 'lucide-react';
 import clsx from 'clsx';
-import { MessageId, MessageWithUser } from '@/types/messages';
+import { MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
 import { isDev } from '@/helpers/env';
 import { MessageReactions } from '@/pages/client/Chat/MessageReactions';
 import { MessageThreadButton } from '@/pages/client/Chat/MessageThreadButton';
@@ -13,12 +13,14 @@ import styles from './MessageComponent.module.css';
 type Props = {
     message: MessageWithUser;
     currentUserId?: UserId;
+    replyRef?: ReplyToMessage;
     onDelete(id: MessageId): void;
+    onReply(message: MessageWithUser): void;
     onAddReaction(messageId: MessageId, code: string): void;
     onDeleteReaction(messageId: MessageId, code: string): void;
     onOpenThread?(parentId: MessageWithUser): void;
 };
-export const MessageComponent = ({ message, currentUserId, onDelete, onAddReaction, onDeleteReaction, onOpenThread }: Props) => {
+export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, onReply, onAddReaction, onDeleteReaction, onOpenThread }: Props) => {
     const isMine = message.userId === currentUserId;
     const avatarUrl = message.user.avatarUrl ?? `https://i.pravatar.cc/?img=${message.userId}`;
     const handleToggleThread = () => {
@@ -48,11 +50,20 @@ export const MessageComponent = ({ message, currentUserId, onDelete, onAddReacti
                     <span className={styles.timestamp}>
                         {formatTimestamp(new Date(message.createdAt))}
                     </span>
+                    <CornerUpLeft
+                        className={styles.replyButton}
+                        onClick={() => onReply(message)}
+                    />
                     <XCircle
                         className={styles.deleteButton}
                         onClick={() => onDelete(message.id)}
                     />
                 </div>
+                {replyRef && (
+                    <div className={styles.replyQuote}>
+                        {replyRef.content.length > 80 ? replyRef.content.slice(0, 80) + '…' : replyRef.content}
+                    </div>
+                )}
                 <div className={styles.textContent}>
                     {message.content}
                 </div>

@@ -1,4 +1,4 @@
-﻿import { MessageId, MessageWithUser } from '@/types/messages';
+﻿import { MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
 import { UserId } from '@/types/users';
 import { ChannelId } from '@/types/channels';
 
@@ -17,8 +17,13 @@ export type MessageChildrenCountUpdatedPayload = {
     messageId: MessageId;
     childrenCount: number;
 }
+export type NewMessagePayload = {
+    message: MessageWithUser;
+    replyTo: ReplyToMessage | null;
+};
+
 export type WebSocketMessagePayload =
-    MessageWithUser |
+    NewMessagePayload |
     MessageDeletedPayload |
     ReactionChangedPayload |
     MessageChildrenCountUpdatedPayload;
@@ -33,7 +38,7 @@ export enum WebSocketEventType {
 
 export type WebSocketEventRaw = {
     type: WebSocketEventType.NEW_MESSAGE;
-    payload: MessageWithUser;
+    payload: NewMessagePayload;
 } | {
     type: WebSocketEventType.DELETED_MESSAGE;
     payload: MessageDeletedPayload;

@@ -13,7 +13,8 @@ import {
     ReactionChangedPayload,
     WebSocketEvent,
     WebSocketEventEmitter,
-    WebSocketEventType
+    WebSocketEventType,
+    type NewMessagePayload,
 } from '@/communication/WebSocketEventEmitter';
 import { MessageComponent } from '@/pages/client/Chat/MessageComponent';
 
@@ -83,9 +84,12 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
             const { type, payload } = event;
             switch (type) {
                 case WebSocketEventType.NEW_MESSAGE: {
-                    const message = payload as MessageWithUser;
+                    const { message, replyTo } = payload as NewMessagePayload;
                     if (message.parentId === rootMessage.id) {
                         setMessages((prev) => [...prev ?? [], message]);
+                        if (replyTo) {
+                            setRefs(prev => prev.has(replyTo.id) ? prev : new Map(prev).set(replyTo.id, replyTo));
+                        }
                     }
                 }
                     break;

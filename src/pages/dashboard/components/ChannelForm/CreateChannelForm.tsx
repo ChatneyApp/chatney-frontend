@@ -10,10 +10,11 @@ import { Button } from '@/components/Button';
 import { Channel } from '@/types/channels';
 import { useWorkspaceChannelsList } from '@/contexts/OldWorkspaceChannelsListContext';
 import { useChannelTypesList } from '@/contexts/ChannelTypesListContext';
+import { ChannelTypeId } from '@/types/channelTypes';
 
 type FormInputs = {
     name: string;
-    channelTypeId: string;
+    channelTypeId: ChannelTypeId;
 };
 
 type Props = {
@@ -33,7 +34,7 @@ export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) =>
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             name: channel?.name ?? '',
-            channelTypeId: channel?.channelTypeId ?? '',
+            channelTypeId: channel?.channelTypeId ?? 0,
         }
     });
 

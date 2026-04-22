@@ -3,6 +3,8 @@ import { useApolloClient } from '@apollo/client/react';
 import { addChannel } from '@/graphql/channels';
 import { useWorkspacesList } from '@/contexts/WorkspacesListContext';
 import { Channel } from '@/types/channels';
+import { useChannelTypesList } from '@/contexts/ChannelTypesListContext';
+import { ChannelTypeId } from '@/types/channelTypes';
 
 interface CreateChannelModalProps {
     onClose: () => void;
@@ -11,7 +13,9 @@ interface CreateChannelModalProps {
 
 export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelModalProps) {
     const wsCtx = useWorkspacesList();
+    const { channelTypes } = useChannelTypesList();
     const client = useApolloClient();
+    const [channelTypeId, setChannelTypeId] = useState<ChannelTypeId>(channelTypes[0]?.id || 0);
     const [channelName, setChannelName] = useState('');
     const modalRef = useRef<HTMLDivElement>(null);
 
@@ -38,8 +42,8 @@ export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelM
         }
 
         try {
-            // TODO: implement channel types pull from the server
-            const newChannel = await addChannel(client, channelName.trim(), 1, activeWorkspaceId);
+            const channelTypeId = channelTypes[0].id;
+            const newChannel = await addChannel(client, channelName.trim(), channelTypeId, activeWorkspaceId);
             onChannelCreated(newChannel);
             setChannelName('');
         } catch (error) {
@@ -57,6 +61,19 @@ export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelM
                 className="w-full px-2 py-1 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none mb-3"
                 placeholder="Channel name"
             />
+            <select
+                value={channelTypeId}
+                onChange={(e) => setChannelTypeId(parseInt(e.target.value, 10))}
+            >
+                {channelTypes.map(channelType => (
+                    <option
+                        key={channelType.id}
+                        value={channelType.id}
+                    >
+                        {channelType.name}
+                    </option>
+                ))}
+            </select>
             <div className="flex justify-end space-x-2">
                 <button
                     onClick={onClose}

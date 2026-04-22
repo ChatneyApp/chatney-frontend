@@ -1,5 +1,5 @@
 import { FormEventHandler, useState } from 'react';
-import { Paperclip } from 'lucide-react';
+import { Paperclip, X } from 'lucide-react';
 import { useApolloClient } from '@apollo/client/react';
 
 import { useDropZone } from '@/hooks/useDropZone';
@@ -12,8 +12,10 @@ import styles from './MessageInput.module.css';
 
 type Props = {
     onSend(text: string, attachmentIds: AttachmentId[]): Promise<void>;
+    replyToPreview?: string | null;
+    onClearReply?(): void;
 }
-export function MessageInput({ onSend }: Props) {
+export function MessageInput({ onSend, replyToPreview, onClearReply }: Props) {
     const apolloClient = useApolloClient();
     const [isSending, setIsSending] = useState(false);
     const [text, setText] = useState('');
@@ -68,6 +70,14 @@ export function MessageInput({ onSend }: Props) {
 
     return (
         <div className={styles.container}>
+            {replyToPreview && (
+                <div className={styles.replyPreview}>
+                    <span className={styles.replyPreviewText}>
+                        {replyToPreview.length > 50 ? replyToPreview.slice(0, 50) + '…' : replyToPreview}
+                    </span>
+                    <X className={styles.replyPreviewClear} onClick={onClearReply} />
+                </div>
+            )}
             {attachments.length > 0 && (
                 <div className={styles.attachmentsList}>
                     {attachments.map(attachment => (

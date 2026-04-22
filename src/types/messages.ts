@@ -25,6 +25,12 @@ export type UrlPreview = {
     thumbnailWidth: number | null;
     thumbnailHeight: number | null;
 }
+export type ReplyToMessage = {
+    id: MessageId;
+    userId: UserId;
+    content: string;
+}
+
 export type Message = {
     id: MessageId;
     channelId: ChannelId;
@@ -39,12 +45,18 @@ export type Message = {
     urlPreviews: UrlPreview[];
     parentId: MessageId | null;
     childrenCount: number;
+    replyTo: MessageId | null;
 }
 export type MessageWithUser = Message & {
     user: MessageUser;
 }
 
-export type CreateMessageDto = Pick<Message, 'channelId' | 'content' | 'parentId'> & {
+export type MessagesResult = {
+    messages: MessageWithUser[];
+    refs: ReplyToMessage[];
+}
+
+export type CreateMessageDto = Pick<Message, 'channelId' | 'content' | 'parentId' | 'replyTo'> & {
     attachmentIds: AttachmentId[];
 };
 

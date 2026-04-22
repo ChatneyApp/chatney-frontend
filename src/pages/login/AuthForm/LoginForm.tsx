@@ -35,7 +35,7 @@ export const LoginForm = () => {
             });
 
             localStorage.setItem(userAuthTokenName, out.token);
-            localStorage.setItem(userAuthId, out.id);
+            localStorage.setItem(userAuthId, out.id.toString());
             window.location.href = clientStartPageUrl;
         } catch (error) {
             setErrorMessage(`Login error: ${(error as Error).message}`);

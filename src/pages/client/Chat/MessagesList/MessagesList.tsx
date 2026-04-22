@@ -5,7 +5,7 @@ import { useApolloClient } from '@apollo/client/react';
 import { useUser } from '@/contexts/UserContext';
 import { MessageInput } from '@/pages/client/Chat/MessageInput';
 import { ChannelListItem } from '@/pages/client/Chat/types';
-import { CreateMessageDto, MessageId, MessageWithUser } from '@/types/messages';
+import { CreateMessageDto, MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
 import { AttachmentId } from '@/types/attachments';
 import { addReaction, deleteMessage, deleteReaction, getChannelMessagesList, postNewMessage } from '@/graphql/messages';
 import {
@@ -14,7 +14,8 @@ import {
     ReactionChangedPayload,
     WebSocketEvent,
     WebSocketEventEmitter,
-    WebSocketEventType
+    WebSocketEventType,
+    type NewMessagePayload,
 } from '@/communication/WebSocketEventEmitter';
 import { MessageComponent } from '@/pages/client/Chat/MessageComponent';
 
@@ -31,7 +32,9 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
     const userCtx = useUser();
     const apolloClient = useApolloClient();
     const [messages, setMessages] = useState<MessageWithUser[] | null>(null);
+    const [refs, setRefs] = useState<Map<number, ReplyToMessage>>(new Map());
     const [isBottomVisible, setIsBottomVisible] = useState(true);
+    const [replyingTo, setReplyingTo] = useState<MessageWithUser | null>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const autoScrollDone = useRef(false);
 
@@ -41,19 +44,29 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
             content: text,
             attachmentIds,
             parentId: null,
+            replyTo: replyingTo?.id ?? null,
         };
         await postNewMessage(apolloClient, newMessage);
+        setReplyingTo(null);
     };
 
-    const handleOnDeleteClick = async (id: string) => {
+    const handleReply = (message: MessageWithUser) => {
+        setReplyingTo(message);
+    };
+
+    const handleClearReply = () => {
+        setReplyingTo(null);
+    };
+
+    const handleOnDeleteClick = async (id: MessageId) => {
         await deleteMessage(apolloClient, id);
     };
 
-    const handleAddReaction = async (messageId: string, code: string) => {
+    const handleAddReaction = async (messageId: MessageId, code: string) => {
         await addReaction(apolloClient, messageId, code);
     };
 
-    const handleDeleteReaction = async (messageId: string, code: string) => {
+    const handleDeleteReaction = async (messageId: MessageId, code: string) => {
         await deleteReaction(apolloClient, messageId, code);
     };
 
@@ -65,9 +78,10 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
         const loadMessages = async () => {
             try {
                 const listRes = await getChannelMessagesList(apolloClient, activeChannel.id);
-                const list = [...listRes];
+                const list = [...listRes.messages];
                 list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
                 setMessages(list);
+                setRefs(new Map(listRes.refs.map(r => [r.id, r])));
             } catch (err) {
                 console.error('Failed to load messages', err);
             }
@@ -77,9 +91,12 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
             const { type, payload } = event;
             switch (type) {
                 case WebSocketEventType.NEW_MESSAGE: {
-                    const message = payload as MessageWithUser;
+                    const { message, replyTo } = payload as NewMessagePayload;
                     if (message.channelId === activeChannel.id && !message.parentId) {
                         setMessages((prev) => [...prev ?? [], message]);
+                        if (replyTo) {
+                            setRefs(prev => prev.has(replyTo.id) ? prev : new Map(prev).set(replyTo.id, replyTo));
+                        }
                     }
                 }
                     break;
@@ -193,7 +210,9 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
                         key={message.id}
                         currentUserId={userCtx?.user?.id}
                         message={message}
+                        replyRef={message.replyTo != null ? refs.get(message.replyTo) : undefined}
                         onDelete={handleOnDeleteClick}
+                        onReply={handleReply}
                         onAddReaction={handleAddReaction}
                         onDeleteReaction={handleDeleteReaction}
                         onOpenThread={onOpenThread}
@@ -207,7 +226,11 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
                     <ArrowDownToLine/>
                 </div>
             )}
-            <MessageInput onSend={handleSend} />
+            <MessageInput
+                onSend={handleSend}
+                replyToPreview={replyingTo?.content ?? null}
+                onClearReply={handleClearReply}
+            />
         </div>
     );
 }

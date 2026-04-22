@@ -2,13 +2,13 @@ import { useState } from 'react';
 
 import { ChannelListItem } from './types';
 import { CreateChannelModal } from './CreateChannelModal';
-import { Channel } from '@/types/channels';
+import { Channel, ChannelId } from '@/types/channels';
 
 type Props = {
     activeChannel: Channel | null;
     setActiveChannel(channel: Channel): void;
     channels: Channel[];
-    refetch: (channelId?: string) => void;
+    refetch: (channelId?: ChannelId) => void;
 };
 export function ChannelList({ activeChannel, setActiveChannel, channels, refetch }: Props) {
     const [isModalOpen, setIsModalOpen] = useState(false);

@@ -1,6 +1,6 @@
 import { ApolloClient, gql, type TypedDocumentNode } from '@apollo/client';
 
-import { CreateMessageDto, Message, MessageId, MessagesResult } from '@/types/messages';
+import { CreateMessageDto, Message, MessageId, MessagesResult, UpdateMessageDto } from '@/types/messages';
 import { ChannelId } from '@/types/channels';
 
 type PostMessageEndpointResponse = {
@@ -115,6 +115,31 @@ export const postNewMessage = async (client: ApolloClient, messageDto: CreateMes
         return message;
     } catch (error) {
         throw new Error(`Adding message failed: ${(error as Error).message}`);
+    }
+};
+
+type UpdateMessageEndpointResponse = {
+    messages?: {
+        updateMessage?: boolean;
+    }
+}
+
+export const updateMessage = async (client: ApolloClient, dto: UpdateMessageDto): Promise<boolean> => {
+    const UPDATE_MESSAGE = gql`
+        mutation UpdateMessage($message: MessageUpdateDtoInput!) {
+            messages {
+                updateMessage(message: $message)
+            }
+        }
+    `;
+    try {
+        const { data } = await client.mutate<UpdateMessageEndpointResponse>({
+            mutation: UPDATE_MESSAGE,
+            variables: { message: dto },
+        });
+        return data?.messages?.updateMessage === true;
+    } catch (error) {
+        throw new Error(`Updating message failed: ${(error as Error).message}`);
     }
 };
 

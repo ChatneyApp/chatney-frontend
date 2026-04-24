@@ -6,9 +6,10 @@ import { useUser } from '@/contexts/UserContext';
 import { MessageInput } from '@/pages/client/Chat/MessageInput';
 import { ChannelListItem } from '@/pages/client/Chat/types';
 import { CreateMessageDto, MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
-import { AttachmentId } from '@/types/attachments';
-import { addReaction, deleteMessage, deleteReaction, getChannelMessagesList, postNewMessage } from '@/graphql/messages';
+import { AttachmentId, UploadedAttachment } from '@/types/attachments';
+import { addReaction, deleteMessage, deleteReaction, getChannelMessagesList, postNewMessage, updateMessage } from '@/graphql/messages';
 import {
+    EditedMessagePayload,
     MessageChildrenCountUpdatedPayload,
     MessageDeletedPayload,
     ReactionChangedPayload,
@@ -35,6 +36,7 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
     const [refs, setRefs] = useState<Map<number, ReplyToMessage>>(new Map());
     const [isBottomVisible, setIsBottomVisible] = useState(true);
     const [replyingTo, setReplyingTo] = useState<MessageWithUser | null>(null);
+    const [editingMessage, setEditingMessage] = useState<{ id: MessageId; content: string; attachments: UploadedAttachment[] } | null>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const autoScrollDone = useRef(false);
 
@@ -56,6 +58,26 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
 
     const handleClearReply = () => {
         setReplyingTo(null);
+    };
+
+    const handleEdit = (message: MessageWithUser) => {
+        setEditingMessage({
+            id: message.id,
+            content: message.content,
+            attachments: message.attachments.map(a => ({
+                attachmentId: a.id,
+                s3Url: `http://localhost:9000/chatney/${a.urlPath}`,
+            })),
+        });
+    };
+
+    const handleSaveEdit = async (id: MessageId, text: string, attachmentIds: AttachmentId[]) => {
+        const ok = await updateMessage(apolloClient, { id, content: text, attachmentIds });
+        if (ok) setEditingMessage(null);
+    };
+
+    const handleCancelEdit = () => {
+        setEditingMessage(null);
     };
 
     const handleOnDeleteClick = async (id: MessageId) => {
@@ -160,6 +182,13 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
                     }) ?? null);
                 }
                     break;
+                case WebSocketEventType.EDITED_MESSAGE: {
+                    const { message } = payload as EditedMessagePayload;
+                    if (message.channelId === activeChannel.id) {
+                        setMessages(prev => prev?.map(msg => msg.id === message.id ? { ...msg, ...message } : msg) ?? null);
+                    }
+                }
+                    break;
             }
         };
 
@@ -170,6 +199,7 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
         eventEmitter.addEventListener(WebSocketEventType.NEW_REACTION, handleWebSocketEvent, { signal });
         eventEmitter.addEventListener(WebSocketEventType.DELETED_REACTION, handleWebSocketEvent, { signal });
         eventEmitter.addEventListener(WebSocketEventType.MESSAGE_CHILDREN_COUNT_UPDATED, handleWebSocketEvent, { signal });
+        eventEmitter.addEventListener(WebSocketEventType.EDITED_MESSAGE, handleWebSocketEvent, { signal });
         loadMessages();
         return () => {
             abortController.abort();
@@ -213,6 +243,7 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
                         replyRef={message.replyTo != null ? refs.get(message.replyTo) : undefined}
                         onDelete={handleOnDeleteClick}
                         onReply={handleReply}
+                        onEdit={handleEdit}
                         onAddReaction={handleAddReaction}
                         onDeleteReaction={handleDeleteReaction}
                         onOpenThread={onOpenThread}
@@ -228,6 +259,9 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
             )}
             <MessageInput
                 onSend={handleSend}
+                onSaveEdit={handleSaveEdit}
+                onCancelEdit={handleCancelEdit}
+                editingMessage={editingMessage}
                 replyToPreview={replyingTo?.content ?? null}
                 onClearReply={handleClearReply}
             />

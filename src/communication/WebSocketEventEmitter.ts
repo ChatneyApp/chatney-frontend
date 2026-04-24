@@ -17,6 +17,9 @@ export type MessageChildrenCountUpdatedPayload = {
     messageId: MessageId;
     childrenCount: number;
 }
+export type EditedMessagePayload = {
+    message: MessageWithUser;
+};
 export type NewMessagePayload = {
     message: MessageWithUser;
     replyTo: ReplyToMessage | null;
@@ -26,7 +29,8 @@ export type WebSocketMessagePayload =
     NewMessagePayload |
     MessageDeletedPayload |
     ReactionChangedPayload |
-    MessageChildrenCountUpdatedPayload;
+    MessageChildrenCountUpdatedPayload |
+    EditedMessagePayload;
 
 export enum WebSocketEventType {
     NEW_MESSAGE = 'newMessage',
@@ -34,6 +38,7 @@ export enum WebSocketEventType {
     NEW_REACTION = 'newReaction',
     DELETED_REACTION = 'deletedReaction',
     MESSAGE_CHILDREN_COUNT_UPDATED = 'messageChildrenCountUpdated',
+    EDITED_MESSAGE = 'editedMessage',
 }
 
 export type WebSocketEventRaw = {
@@ -48,6 +53,9 @@ export type WebSocketEventRaw = {
 } | {
     type: WebSocketEventType.MESSAGE_CHILDREN_COUNT_UPDATED;
     payload: MessageChildrenCountUpdatedPayload;
+} | {
+    type: WebSocketEventType.EDITED_MESSAGE;
+    payload: EditedMessagePayload;
 }
 
 export class WebSocketEvent extends Event {

@@ -32,6 +32,10 @@
     @apply flex flex-wrap items-center justify-start w-full pb-2;
 }
 
+.editBanner {
+    @apply flex items-center justify-between w-full px-3 py-1.5 mb-1 rounded bg-yellow-900/40 border-l-2 border-yellow-500 text-sm text-yellow-300;
+}
+
 .replyPreview {
     @apply flex items-center justify-between w-full px-3 py-1.5 mb-1 rounded bg-gray-700 border-l-2 border-indigo-500 text-sm text-gray-300;
 }

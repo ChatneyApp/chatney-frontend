@@ -5,9 +5,10 @@ import { useApolloClient } from '@apollo/client/react';
 import { useUser } from '@/contexts/UserContext';
 import { MessageInput } from '@/pages/client/Chat/MessageInput';
 import { CreateMessageDto, MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
-import { AttachmentId } from '@/types/attachments';
-import { addReaction, deleteMessage, deleteReaction, getThreadMessagesList, postNewMessage } from '@/graphql/messages';
+import { AttachmentId, UploadedAttachment } from '@/types/attachments';
+import { addReaction, deleteMessage, deleteReaction, getThreadMessagesList, postNewMessage, updateMessage } from '@/graphql/messages';
 import {
+    EditedMessagePayload,
     MessageChildrenCountUpdatedPayload,
     MessageDeletedPayload,
     ReactionChangedPayload,
@@ -33,9 +34,28 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
     const [refs, setRefs] = useState<Map<number, ReplyToMessage>>(new Map());
     const [isBottomVisible, setIsBottomVisible] = useState(true);
     const [replyingTo, setReplyingTo] = useState<MessageWithUser | null>(null);
+    const [editingMessage, setEditingMessage] = useState<{ id: MessageId; content: string; attachments: UploadedAttachment[] } | null>(null);
 
     const handleReply = (message: MessageWithUser) => setReplyingTo(message);
     const handleClearReply = () => setReplyingTo(null);
+
+    const handleEdit = (message: MessageWithUser) => {
+        setEditingMessage({
+            id: message.id,
+            content: message.content,
+            attachments: message.attachments.map(a => ({
+                attachmentId: a.id,
+                s3Url: `http://localhost:9000/chatney/${a.urlPath}`,
+            })),
+        });
+    };
+
+    const handleSaveEdit = async (id: MessageId, text: string, attachmentIds: AttachmentId[]) => {
+        const ok = await updateMessage(apolloClient, { id, content: text, attachmentIds });
+        if (ok) setEditingMessage(null);
+    };
+
+    const handleCancelEdit = () => setEditingMessage(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const autoScrollDone = useRef(false);
 
@@ -150,6 +170,13 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
                     }) ?? null);
                 }
                     break;
+                case WebSocketEventType.EDITED_MESSAGE: {
+                    const { message } = payload as EditedMessagePayload;
+                    if (message.channelId === rootMessage.channelId) {
+                        setMessages(prev => prev?.map(msg => msg.id === message.id ? { ...msg, ...message } : msg) ?? null);
+                    }
+                }
+                    break;
             }
         };
 
@@ -160,6 +187,7 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
         eventEmitter.addEventListener(WebSocketEventType.NEW_REACTION, handleWebSocketEvent, { signal });
         eventEmitter.addEventListener(WebSocketEventType.DELETED_REACTION, handleWebSocketEvent, { signal });
         eventEmitter.addEventListener(WebSocketEventType.MESSAGE_CHILDREN_COUNT_UPDATED, handleWebSocketEvent, { signal });
+        eventEmitter.addEventListener(WebSocketEventType.EDITED_MESSAGE, handleWebSocketEvent, { signal });
         loadMessages();
         return () => {
             abortController.abort();
@@ -209,6 +237,7 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
                         replyRef={message.replyTo != null ? refs.get(message.replyTo) : undefined}
                         onDelete={handleOnDeleteClick}
                         onReply={handleReply}
+                        onEdit={handleEdit}
                         onAddReaction={handleAddReaction}
                         onDeleteReaction={handleDeleteReaction}
                     />
@@ -225,6 +254,9 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
             )}
             <MessageInput
                 onSend={handleSend}
+                onSaveEdit={handleSaveEdit}
+                onCancelEdit={handleCancelEdit}
+                editingMessage={editingMessage}
                 replyToPreview={replyingTo?.content ?? null}
                 onClearReply={handleClearReply}
             />

@@ -73,7 +73,7 @@ export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, o
                 )}
                 <div className={styles.textContent}>
                     {message.content}
-                    {message.updatedAt.getTime() !== message.createdAt.getTime() && (
+                    {new Date(message.updatedAt).getTime() !== new Date(message.createdAt).getTime() && (
                         <span className={styles.editedLabel}> (edited)</span>
                     )}
                 </div>

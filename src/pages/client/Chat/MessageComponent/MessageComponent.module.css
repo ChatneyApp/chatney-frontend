@@ -23,6 +23,14 @@
     @apply cursor-pointer text-gray-400 hover:text-indigo-400;
 }
 
+.editButton {
+    @apply cursor-pointer text-gray-400 hover:text-yellow-400 w-4 h-4;
+}
+
+.editedLabel {
+    @apply text-xs text-gray-500 italic;
+}
+
 .deleteButton {
     @apply cursor-pointer text-red-500;
 }

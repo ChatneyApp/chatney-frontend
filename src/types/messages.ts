@@ -65,6 +65,12 @@ export type Reaction = {
     count: number;
 }
 
+export type UpdateMessageDto = {
+    id: MessageId;
+    content: string;
+    attachmentIds: AttachmentId[];
+};
+
 export type CreateMessageInput = Omit<Message,
     'id'
     | 'createdAt'

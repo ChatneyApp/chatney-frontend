@@ -1,4 +1,4 @@
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import { Paperclip, X } from 'lucide-react';
 import { useApolloClient } from '@apollo/client/react';
 
@@ -7,26 +7,47 @@ import { prepareImage } from '@/helpers/attachments/prepareImage';
 import { uploadFile } from '@/graphql/attachments';
 import { MessageEditorAttachment } from '@/pages/client/Chat/MessageEditorAttachment';
 import { AttachmentId, UploadedAttachment } from '@/types/attachments';
+import { MessageId } from '@/types/messages';
 
 import styles from './MessageInput.module.css';
 
+type EditingMessage = {
+    id: MessageId;
+    content: string;
+    attachments: UploadedAttachment[];
+};
+
 type Props = {
     onSend(text: string, attachmentIds: AttachmentId[]): Promise<void>;
+    onSaveEdit?(id: MessageId, text: string, attachmentIds: AttachmentId[]): Promise<void>;
+    onCancelEdit?(): void;
+    editingMessage?: EditingMessage | null;
     replyToPreview?: string | null;
     onClearReply?(): void;
 }
-export function MessageInput({ onSend, replyToPreview, onClearReply }: Props) {
+export function MessageInput({ onSend, onSaveEdit, onCancelEdit, editingMessage, replyToPreview, onClearReply }: Props) {
     const apolloClient = useApolloClient();
     const [isSending, setIsSending] = useState(false);
     const [text, setText] = useState('');
     const [attachments, setAttachments] = useState<UploadedAttachment[]>([]);
+
+    const isEditing = editingMessage != null;
+
+    useEffect(() => {
+        if (editingMessage) {
+            setText(editingMessage.content);
+            setAttachments(editingMessage.attachments);
+        } else {
+            setText('');
+            setAttachments([]);
+        }
+    }, [editingMessage?.id]);
 
     const canSend = text.trim().length > 0 || attachments.length > 0;
 
     const handleDrop = async (file: File) => {
         const { name, lastModified, type } = file;
         console.log('Dropped file', name, lastModified, type);
-        // preprocess the file
         const isImage = file.type.startsWith('image/');
         const isGif = file.type === 'image/gif';
         const shouldProcessFile = isImage && !isGif;
@@ -54,9 +75,13 @@ export function MessageInput({ onSend, replyToPreview, onClearReply }: Props) {
         }
         setIsSending(true);
         try {
-            await onSend(text, attachments.map(a => a.attachmentId));
-            setText('');
-            setAttachments([]);
+            if (isEditing && onSaveEdit) {
+                await onSaveEdit(editingMessage.id, text, attachments.map(a => a.attachmentId));
+            } else {
+                await onSend(text, attachments.map(a => a.attachmentId));
+                setText('');
+                setAttachments([]);
+            }
         } catch (_e) {
             // TODO
         } finally {
@@ -70,7 +95,13 @@ export function MessageInput({ onSend, replyToPreview, onClearReply }: Props) {
 
     return (
         <div className={styles.container}>
-            {replyToPreview && (
+            {isEditing && (
+                <div className={styles.editBanner}>
+                    <span>Editing message</span>
+                    <X className={styles.replyPreviewClear} onClick={onCancelEdit} />
+                </div>
+            )}
+            {!isEditing && replyToPreview && (
                 <div className={styles.replyPreview}>
                     <span className={styles.replyPreviewText}>
                         {replyToPreview.length > 50 ? replyToPreview.slice(0, 50) + '…' : replyToPreview}
@@ -95,7 +126,7 @@ export function MessageInput({ onSend, replyToPreview, onClearReply }: Props) {
                 </div>
                 <input
                     type="text"
-                    placeholder="Type a message..."
+                    placeholder={isEditing ? 'Edit message…' : 'Type a message...'}
                     className="flex-1 bg-gray-700 text-white p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
@@ -105,7 +136,7 @@ export function MessageInput({ onSend, replyToPreview, onClearReply }: Props) {
                     disabled={!canSend}
                     className={styles.sendButton}
                 >
-                    Send
+                    {isEditing ? 'Save' : 'Send'}
                 </button>
             </form>
         </div>

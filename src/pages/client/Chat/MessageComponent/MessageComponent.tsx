@@ -82,6 +82,7 @@ export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, o
                         .filter(attachment => attachment.type === 'image')
                         .map(attachment => (
                             <img
+                                key={attachment.id}
                                 className={styles.attachment}
                                 src={`http://localhost:9000/chatney/${attachment.urlPath}`}
                             />

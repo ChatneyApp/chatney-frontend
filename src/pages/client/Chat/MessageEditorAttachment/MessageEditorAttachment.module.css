@@ -1,13 +1,10 @@
-﻿.container {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    background: transparent none no-repeat center center;
-    background-size: cover;
-    border: solid 1px transparent;
+@reference "tailwindcss";
+
+.container {
+    @apply relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded border border-transparent bg-gray-900 text-gray-200;
 
     &:hover {
-        border-color: #666;
+        @apply border-gray-500;
         transition: border-color 0.2s;
 
         .deleteButton {
@@ -16,16 +13,43 @@
     }
 }
 
+.previewMedia {
+    @apply h-full w-full object-cover;
+}
+
+.fallbackPreview {
+    @apply flex h-full w-full flex-col items-center justify-center gap-1 px-2 text-center text-[11px] text-gray-300;
+}
+
+.fallbackPreview span {
+    @apply line-clamp-2 max-w-full break-all;
+}
+
 .deleteButton {
-    position: absolute;
-    right: 0;
-    top: 0;
-    background-color: red;
-    color: white;
-    width: 12px;
-    height: 12px;
-    font-size: 8px;
-    opacity: 0;
+    @apply absolute right-1 top-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded bg-red-600 text-white opacity-0;
     transition: opacity 0.2s;
-    cursor: pointer;
+}
+
+.progress {
+    @apply absolute bottom-1 left-1 right-1 rounded bg-black/70 p-1 text-[10px] text-white;
+}
+
+.progress + .progress {
+    @apply bottom-8;
+}
+
+.progressLabel {
+    @apply mb-0.5 flex items-center justify-between gap-1;
+}
+
+.progressTrack {
+    @apply h-1 overflow-hidden rounded bg-gray-600;
+}
+
+.progressFill {
+    @apply h-full rounded bg-indigo-500;
+}
+
+.error {
+    @apply absolute inset-x-1 bottom-1 rounded bg-red-900/90 px-1 py-0.5 text-center text-[10px] text-white;
 }

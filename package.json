@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "jest --passWithNoTests",
     "lint": "eslint .",
-    "lint-soft": "eslint . --quiet",
+    "lint:soft": "eslint . --quiet",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {

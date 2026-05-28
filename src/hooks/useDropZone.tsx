@@ -8,7 +8,7 @@ import {
 } from 'react';
 
 type Options = {
-    fileMask: string;
+    fileMask?: string;
     onDrop: (f: File) => void;
 }
 
@@ -67,7 +67,11 @@ export const useDropZone = (options: Options) => {
         if (!inputRef.current) {
             const input = document.createElement('input')!;
             input.type = 'file';
-            input.accept = options.fileMask;
+            if (options.fileMask) {
+                input.accept = options.fileMask;
+            } else {
+                input.removeAttribute('accept');
+            }
             inputRef.current = input;
             input.addEventListener('change', _ => {
                 // you can use this method to get file and perform respective operations

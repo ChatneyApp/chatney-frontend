@@ -1,16 +1,12 @@
-import { FormEventHandler, useEffect, useState } from 'react';
+import { FormEventHandler, useCallback, useEffect, useState } from 'react';
 import { Paperclip, X } from 'lucide-react';
 import { Dialog } from 'radix-ui';
-import { useApolloClient } from '@apollo/client/react';
 
 import { useDropZone } from '@/hooks/useDropZone';
-import { uploadFile } from '@/graphql/attachments';
 import { MessageEditorAttachment } from '@/pages/client/Chat/MessageEditorAttachment';
 import { AttachmentId, UploadedAttachment } from '@/types/attachments';
 import { MessageId } from '@/types/messages';
 import { Button } from '@/components/Button';
-import { prepareVideo } from '@/helpers/attachments/prepareVideo';
-import { prepareAudio } from '@/helpers/attachments/prepareAudio';
 
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './MessageInput.module.css';
@@ -30,18 +26,15 @@ type Props = {
     onClearReply?(): void;
 }
 
-const allowedAttachmentExtensions = {
-    image: ['jpg', 'jpeg', 'png', 'bmp', 'webp', 'avif'],
-    gif: ['gif'],
-    video: ['mp4', 'mpg', 'mov', 'avi', 'mkv', 'webm'],
-    audio: ['mp3', 'wav', 'ogg', 'm4a', 'aiff', 'flac', 'wma', 'aac'],
-    binary: [],
+type EditorAttachment = {
+    kind: 'uploaded';
+    attachment: UploadedAttachment;
+} | {
+    kind: 'pending';
+    draftId: string;
+    file: File;
+    compress: boolean;
 };
-
-const buildFileMask = (extensionsByType: Record<string, string[]>) => Object.values(extensionsByType)
-    .flat()
-    .map(extension => `.${extension}`)
-    .join(',');
 
 const canCompressFile = (file: File) => file.type.startsWith('video/') || file.type.startsWith('audio/');
 
@@ -58,10 +51,9 @@ const formatFileSize = (size: number) => {
 };
 
 export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdit, onCancelEdit, onClearReply }: Props) {
-    const apolloClient = useApolloClient();
     const [isSending, setIsSending] = useState(false);
     const [text, setText] = useState('');
-    const [attachments, setAttachments] = useState<UploadedAttachment[]>([]);
+    const [attachments, setAttachments] = useState<EditorAttachment[]>([]);
     const [pendingFile, setPendingFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [compressPendingFile, setCompressPendingFile] = useState(false);
@@ -71,7 +63,10 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
     useEffect(() => {
         if (editingMessage) {
             setText(editingMessage.content);
-            setAttachments(editingMessage.attachments);
+            setAttachments(editingMessage.attachments.map(attachment => ({
+                kind: 'uploaded',
+                attachment,
+            })));
         } else {
             setText('');
             setAttachments([]);
@@ -90,42 +85,12 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
         return () => URL.revokeObjectURL(url);
     }, [pendingFile]);
 
-    const canSend = text.trim().length > 0 || attachments.length > 0;
-
-    const handleDrop = async (file: File, options: { compress: boolean }) => {
-        const { name, lastModified, type } = file;
-        console.log('Dropped file', name, lastModified, type);
-        const isVideo = file.type.startsWith('video/');
-        const isAudio = file.type.startsWith('audio/');
-        const shouldProcessFile = options.compress && (isVideo || isAudio);
-        let preprocessedBlob: Blob = file;
-        if (shouldProcessFile) {
-            // TODO: make video conversion abortable
-            const abortController = new AbortController();
-            if (isAudio) {
-                preprocessedBlob = await prepareAudio(file, abortController);
-            } else if (isVideo) {
-                preprocessedBlob = await prepareVideo(file, abortController);
-            }
-        }
-        const fileName = file.name;
-        let mimeType =  file.type;
-        if (shouldProcessFile) {
-            if (isAudio) {
-                mimeType = 'audio/mpeg';
-            } else if (isVideo) {
-                mimeType = 'video/mp4';
-            }
-        }
-
-        try {
-            const { attachmentId, s3Url, mimeType: serverMimeType, size } = await uploadFile(apolloClient, preprocessedBlob, fileName, mimeType);
-            console.log('Got response', { attachmentId, s3Url });
-            setAttachments(v => [...v, { attachmentId, s3Url, mimeType: serverMimeType, size }]);
-        } catch (err) {
-            console.error('Error during file upload', err);
-        }
-    };
+    const uploadedAttachments = attachments
+        .filter((attachment): attachment is Extract<EditorAttachment, { kind: 'uploaded' }> => attachment.kind === 'uploaded')
+        .map(({ attachment }) => attachment);
+    const hasPendingAttachments = attachments.some(attachment => attachment.kind === 'pending');
+    const canSend = text.trim().length > 0 || uploadedAttachments.length > 0;
+    const canSubmit = canSend && !hasPendingAttachments;
 
     const openFilePreview = (file: File) => {
         setPendingFile(file);
@@ -144,25 +109,32 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
         const file = pendingFile;
         const shouldCompress = compressPendingFile && canCompressFile(file);
         closeFilePreview();
-        void handleDrop(file, { compress: shouldCompress });
+        setAttachments(list => [
+            ...list,
+            {
+                kind: 'pending',
+                draftId: crypto.randomUUID(),
+                file,
+                compress: shouldCompress,
+            },
+        ]);
     };
 
     const { onClick: onFileSelectClick } = useDropZone({
-        fileMask: buildFileMask(allowedAttachmentExtensions),
         onDrop: openFilePreview,
     });
 
     const handleSend: FormEventHandler = async (e) => {
         e.preventDefault();
-        if (isSending || !canSend) {
+        if (isSending || !canSubmit) {
             return;
         }
         setIsSending(true);
         try {
             if (isEditing && onSaveEdit) {
-                await onSaveEdit(editingMessage.id, text, attachments.map(a => a.attachmentId));
+                await onSaveEdit(editingMessage.id, text, uploadedAttachments.map(a => a.attachmentId));
             } else {
-                await onSend(text, attachments.map(a => a.attachmentId));
+                await onSend(text, uploadedAttachments.map(a => a.attachmentId));
                 setText('');
                 setAttachments([]);
             }
@@ -173,9 +145,26 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
         }
     };
 
-    const handleDeleteAttachment = (attachmentId: AttachmentId) => {
-        setAttachments(list => list.filter(att => att.attachmentId !== attachmentId));
-    };
+    const handleDeleteAttachment = useCallback((attachmentId: AttachmentId) => {
+        setAttachments(list => list.filter(att => att.kind !== 'uploaded' || att.attachment.attachmentId !== attachmentId));
+    }, []);
+
+    const handleDeleteDraftAttachment = useCallback((draftId: string) => {
+        setAttachments(list => list.filter(att => att.kind !== 'pending' || att.draftId !== draftId));
+    }, []);
+
+    const handleDraftAttachmentUploaded = useCallback((draftId: string, uploadedAttachment: UploadedAttachment) => {
+        setAttachments(list => list.map(att => {
+            if (att.kind !== 'pending' || att.draftId !== draftId) {
+                return att;
+            }
+
+            return {
+                kind: 'uploaded',
+                attachment: uploadedAttachment,
+            };
+        }));
+    }, []);
 
     const renderPendingFilePreview = () => {
         if (!pendingFile || !previewUrl) {
@@ -265,11 +254,24 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
             {attachments.length > 0 && (
                 <div className={styles.attachmentsList}>
                     {attachments.map(attachment => (
-                        <MessageEditorAttachment
-                            key={attachment.attachmentId}
-                            attachment={attachment}
-                            onDelete={handleDeleteAttachment}
-                        />
+                        attachment.kind === 'uploaded'
+                            ? (
+                                <MessageEditorAttachment
+                                    key={attachment.attachment.attachmentId}
+                                    attachment={attachment.attachment}
+                                    onDelete={handleDeleteAttachment}
+                                />
+                            )
+                            : (
+                                <MessageEditorAttachment
+                                    key={attachment.draftId}
+                                    draftId={attachment.draftId}
+                                    file={attachment.file}
+                                    compress={attachment.compress}
+                                    onUploaded={handleDraftAttachmentUploaded}
+                                    onDelete={handleDeleteDraftAttachment}
+                                />
+                            )
                     ))}
                 </div>
             )}
@@ -286,7 +288,7 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
                 />
                 <button
                     type="submit"
-                    disabled={!canSend}
+                    disabled={!canSubmit}
                     className={styles.sendButton}
                 >
                     {isEditing ? 'Save' : 'Send'}

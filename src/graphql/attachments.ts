@@ -14,6 +14,7 @@ const UPLOAD_FILE_MUTATION = gql`
                 attachmentId
                 s3Url
                 mimeType
+                size
             }
         }
     }
@@ -42,6 +43,7 @@ export const uploadFile = async (client: ApolloClient, data: Blob, fileName: str
             attachmentId: result.attachmentId,
             s3Url: result.s3Url,
             mimeType: result.mimeType,
+            size: result.size,
         };
     } catch (error) {
         throw new Error(`File upload failed: ${(error as Error).message}`);

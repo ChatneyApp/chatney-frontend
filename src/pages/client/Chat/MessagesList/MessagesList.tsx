@@ -72,13 +72,16 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
                 attachmentId: a.id,
                 s3Url: `http://localhost:9000/chatney/${a.urlPath}`,
                 mimeType: a.mimeType,
+                size: a.size,
             })),
         });
     };
 
     const handleSaveEdit = async (id: MessageId, text: string, attachmentIds: AttachmentId[]) => {
         const ok = await updateMessage(apolloClient, { id, content: text, attachmentIds });
-        if (ok) setEditingMessage(null);
+        if (ok) {
+            setEditingMessage(null);
+        }
     };
 
     const handleCancelEdit = () => {

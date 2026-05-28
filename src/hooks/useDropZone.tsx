@@ -75,13 +75,14 @@ export const useDropZone = (options: Options) => {
                 if (files.length > 0) {
                     userOnDrop(files[0]);
                 }
+                input.value = '';
                 setIsManualSelecting(false);
             });
             input.addEventListener('cancel', _ => {
                 setIsManualSelecting(false);
             });
         }
-    }, [userOnDrop]);
+    }, [userOnDrop, options.fileMask]);
 
     return {
         isDraggingOver,

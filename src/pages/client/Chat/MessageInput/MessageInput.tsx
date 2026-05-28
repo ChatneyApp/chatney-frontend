@@ -1,5 +1,6 @@
 import { FormEventHandler, useEffect, useState } from 'react';
 import { Paperclip, X } from 'lucide-react';
+import { Dialog } from 'radix-ui';
 import { useApolloClient } from '@apollo/client/react';
 
 import { useDropZone } from '@/hooks/useDropZone';
@@ -7,10 +8,12 @@ import { uploadFile } from '@/graphql/attachments';
 import { MessageEditorAttachment } from '@/pages/client/Chat/MessageEditorAttachment';
 import { AttachmentId, UploadedAttachment } from '@/types/attachments';
 import { MessageId } from '@/types/messages';
-
-import styles from './MessageInput.module.css';
+import { Button } from '@/components/Button';
 import { prepareVideo } from '@/helpers/attachments/prepareVideo';
 import { prepareAudio } from '@/helpers/attachments/prepareAudio';
+
+import dialogStyles from '@/components/Popup/Popup.module.css';
+import styles from './MessageInput.module.css';
 
 type EditingMessage = {
     id: MessageId;
@@ -40,11 +43,28 @@ const buildFileMask = (extensionsByType: Record<string, string[]>) => Object.val
     .map(extension => `.${extension}`)
     .join(',');
 
+const canCompressFile = (file: File) => file.type.startsWith('video/') || file.type.startsWith('audio/');
+
+const formatFileSize = (size: number) => {
+    if (size < 1024) {
+        return `${size} B`;
+    }
+
+    if (size < 1024 * 1024) {
+        return `${(size / 1024).toFixed(1)} KB`;
+    }
+
+    return `${(size / 1024 / 1024).toFixed(1)} MB`;
+};
+
 export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdit, onCancelEdit, onClearReply }: Props) {
     const apolloClient = useApolloClient();
     const [isSending, setIsSending] = useState(false);
     const [text, setText] = useState('');
     const [attachments, setAttachments] = useState<UploadedAttachment[]>([]);
+    const [pendingFile, setPendingFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [compressPendingFile, setCompressPendingFile] = useState(false);
 
     const isEditing = editingMessage != null;
 
@@ -58,14 +78,26 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
         }
     }, [editingMessage]);
 
+    useEffect(() => {
+        if (!pendingFile) {
+            setPreviewUrl(null);
+            return;
+        }
+
+        const url = URL.createObjectURL(pendingFile);
+        setPreviewUrl(url);
+
+        return () => URL.revokeObjectURL(url);
+    }, [pendingFile]);
+
     const canSend = text.trim().length > 0 || attachments.length > 0;
 
-    const handleDrop = async (file: File) => {
+    const handleDrop = async (file: File, options: { compress: boolean }) => {
         const { name, lastModified, type } = file;
         console.log('Dropped file', name, lastModified, type);
         const isVideo = file.type.startsWith('video/');
         const isAudio = file.type.startsWith('audio/');
-        const shouldProcessFile = isVideo || isAudio;
+        const shouldProcessFile = options.compress && (isVideo || isAudio);
         let preprocessedBlob: Blob = file;
         if (shouldProcessFile) {
             // TODO: make video conversion abortable
@@ -87,17 +119,37 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
         }
 
         try {
-            const { attachmentId, s3Url, mimeType: serverMimeType } = await uploadFile(apolloClient, preprocessedBlob, fileName, mimeType);
+            const { attachmentId, s3Url, mimeType: serverMimeType, size } = await uploadFile(apolloClient, preprocessedBlob, fileName, mimeType);
             console.log('Got response', { attachmentId, s3Url });
-            setAttachments(v => [...v, { attachmentId, s3Url, mimeType: serverMimeType }]);
+            setAttachments(v => [...v, { attachmentId, s3Url, mimeType: serverMimeType, size }]);
         } catch (err) {
             console.error('Error during file upload', err);
         }
     };
 
+    const openFilePreview = (file: File) => {
+        setPendingFile(file);
+        setCompressPendingFile(false);
+    };
+
+    const closeFilePreview = () => {
+        setPendingFile(null);
+    };
+
+    const confirmPendingFile = () => {
+        if (!pendingFile) {
+            return;
+        }
+
+        const file = pendingFile;
+        const shouldCompress = compressPendingFile && canCompressFile(file);
+        closeFilePreview();
+        void handleDrop(file, { compress: shouldCompress });
+    };
+
     const { onClick: onFileSelectClick } = useDropZone({
         fileMask: buildFileMask(allowedAttachmentExtensions),
-        onDrop: handleDrop,
+        onDrop: openFilePreview,
     });
 
     const handleSend: FormEventHandler = async (e) => {
@@ -125,8 +177,77 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
         setAttachments(list => list.filter(att => att.attachmentId !== attachmentId));
     };
 
+    const renderPendingFilePreview = () => {
+        if (!pendingFile || !previewUrl) {
+            return null;
+        }
+
+        const mimeType = pendingFile.type;
+        if (mimeType.startsWith('image/')) {
+            return <img className={styles.filePreviewImage} src={previewUrl} alt={pendingFile.name} />;
+        }
+
+        if (mimeType.startsWith('video/')) {
+            return <video className={styles.filePreviewMedia} src={previewUrl} controls />;
+        }
+
+        if (mimeType.startsWith('audio/')) {
+            return <audio className={styles.filePreviewAudio} src={previewUrl} controls />;
+        }
+
+        if (mimeType === 'application/pdf') {
+            return <iframe className={styles.filePreviewFrame} src={previewUrl} title={pendingFile.name} />;
+        }
+
+        return (
+            <div className={styles.filePreviewFallback}>
+                <span className={styles.filePreviewFallbackIcon}>FILE</span>
+                <span>{mimeType || 'Unknown file type'}</span>
+            </div>
+        );
+    };
+
     return (
         <div className={styles.container}>
+            <Dialog.Root open={pendingFile != null} onOpenChange={(open) => !open && closeFilePreview()}>
+                <Dialog.Portal>
+                    <Dialog.Overlay className={dialogStyles.overlay}/>
+                    <Dialog.Content className={dialogStyles.container}>
+                        <Dialog.Title className={dialogStyles.title}>Send file</Dialog.Title>
+                        {pendingFile && (
+                            <div className={styles.filePreviewDialog}>
+                                <div className={styles.filePreviewArea}>
+                                    {renderPendingFilePreview()}
+                                </div>
+                                <div className={styles.filePreviewMeta}>
+                                    <span className={styles.filePreviewName}>{pendingFile.name}</span>
+                                    <span className={styles.filePreviewDetails}>
+                                        {pendingFile.type || 'Unknown MIME type'} - {formatFileSize(pendingFile.size)}
+                                    </span>
+                                </div>
+                                {canCompressFile(pendingFile) && (
+                                    <label className={styles.filePreviewCompress}>
+                                        <input
+                                            type="checkbox"
+                                            checked={compressPendingFile}
+                                            onChange={(e) => setCompressPendingFile(e.target.checked)}
+                                        />
+                                        <span>Compress</span>
+                                    </label>
+                                )}
+                            </div>
+                        )}
+                        <div className={dialogStyles.bottomButtons}>
+                            <Button type="button" onClick={closeFilePreview}>
+                                Cancel
+                            </Button>
+                            <Button type="button" onClick={confirmPendingFile}>
+                                Send
+                            </Button>
+                        </div>
+                    </Dialog.Content>
+                </Dialog.Portal>
+            </Dialog.Root>
             {isEditing && (
                 <div className={styles.editBanner}>
                     <span>Editing message</span>

@@ -9,6 +9,7 @@ export type Attachment = {
     originalFileName: string;
     extension: string;
     mimeType: string;
+    size: number;
     type: 'image' | 'gif' | 'video' | 'audio' | 'binary';
     createdAt: Date;
     updatedAt: Date;
@@ -18,4 +19,5 @@ export type UploadedAttachment = {
     attachmentId: AttachmentId;
     s3Url: string;
     mimeType: string;
+    size: number;
 }

@@ -13,6 +13,7 @@ const UPLOAD_FILE_MUTATION = gql`
             upload(file: $file) {
                 attachmentId
                 s3Url
+                mimeType
             }
         }
     }
@@ -40,6 +41,7 @@ export const uploadFile = async (client: ApolloClient, data: Blob, fileName: str
         return {
             attachmentId: result.attachmentId,
             s3Url: result.s3Url,
+            mimeType: result.mimeType,
         };
     } catch (error) {
         throw new Error(`File upload failed: ${(error as Error).message}`);

@@ -37,7 +37,7 @@ export const ChannelTypeEditor = ({ channelType }: Props) => {
     return (
         <div className={styles.container}>
             <div className={styles.label}>
-                <span className={styles.labelTitle}>Label:</span> {channelType.label}
+                <span className={styles.labelTitle}>Label:</span> {channelType.name}
             </div>
             <div className={styles.uuid}>
                 {channelType.id}

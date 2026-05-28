@@ -42,7 +42,7 @@ export const ChannelEditor = ({ channel }: Props) => {
                 {channel.id}
             </div>
             <div className={styles.channelType}>
-                Channel type: {channelType?.label ?? 'Unknown Channel Type'}
+                Channel type: {channelType?.name ?? 'Unknown Channel Type'}
             </div>
             <div className={styles.controls}>
                 <CreateChannelForm cta="Edit" title="Edit Channel" submitText="Save Changes" channel={channel}/>

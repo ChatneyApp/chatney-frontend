@@ -1,6 +1,6 @@
 ﻿import { imageLoadPromise } from './imageLoadPromise';
 
-export const blobToCanvas = async (blob: Blob): Promise<HTMLCanvasElement> => {
+export async function blobToCanvas(blob: Blob): Promise<HTMLCanvasElement> {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d')!;
     const img = document.createElement('img');
@@ -11,7 +11,9 @@ export const blobToCanvas = async (blob: Blob): Promise<HTMLCanvasElement> => {
 
     canvas.width = img.naturalWidth;
     canvas.height = img.naturalHeight;
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(img, 0, 0);
 
     return canvas;
-};
+}

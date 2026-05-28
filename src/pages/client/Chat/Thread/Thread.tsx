@@ -39,13 +39,18 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
     const handleReply = (message: MessageWithUser) => setReplyingTo(message);
     const handleClearReply = () => setReplyingTo(null);
 
-    const handleEdit = (message: MessageWithUser) => {
+    const handleEdit = (message: MessageWithUser | null) => {
+        if (!message) {
+            setEditingMessage(null);
+            return;
+        }
         setEditingMessage({
             id: message.id,
             content: message.content,
             attachments: message.attachments.map(a => ({
                 attachmentId: a.id,
                 s3Url: `http://localhost:9000/chatney/${a.urlPath}`,
+                mimeType: a.mimeType,
             })),
         });
     };

@@ -43,14 +43,6 @@
     @apply text-gray-200 break-all py-2;
 }
 
-.attachmentsContainer {
-    @apply p-2;
-}
-
-.attachment {
-    @apply rounded-lg;
-}
-
 .isMine {
     @apply self-end;
 }

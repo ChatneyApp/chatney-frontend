@@ -1,0 +1,5 @@
+@reference "tailwindcss";
+
+.container {
+    @apply flex flex-col gap-2 p-2;
+}

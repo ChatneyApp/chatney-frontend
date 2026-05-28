@@ -1,0 +1,17 @@
+@reference "tailwindcss";
+
+.image {
+    @apply rounded-lg max-w-full max-h-80 object-contain;
+}
+
+.video {
+    @apply rounded-lg max-w-full max-h-80;
+}
+
+.audio {
+    @apply w-full max-w-80;
+}
+
+.binary {
+    @apply text-sm text-gray-200 break-all underline underline-offset-2;
+}

@@ -8,6 +8,7 @@ import {
 } from 'react';
 
 type Options = {
+    fileMask: string;
     onDrop: (f: File) => void;
 }
 
@@ -66,7 +67,7 @@ export const useDropZone = (options: Options) => {
         if (!inputRef.current) {
             const input = document.createElement('input')!;
             input.type = 'file';
-            input.accept = '.jpg,.jpeg,.png,.gif,.bmp,.webp';
+            input.accept = options.fileMask;
             inputRef.current = input;
             input.addEventListener('change', _ => {
                 // you can use this method to get file and perform respective operations

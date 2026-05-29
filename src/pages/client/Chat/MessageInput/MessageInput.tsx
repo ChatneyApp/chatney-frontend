@@ -4,7 +4,7 @@ import { Dialog } from 'radix-ui';
 
 import { useDropZone } from '@/hooks/useDropZone';
 import { MessageEditorAttachment } from '@/pages/client/Chat/MessageEditorAttachment';
-import { AttachmentId, UploadedAttachment } from '@/types/attachments';
+import { AttachmentId, Attachment } from '@/types/attachments';
 import { MessageId } from '@/types/messages';
 import { Button } from '@/components/Button';
 
@@ -14,7 +14,7 @@ import styles from './MessageInput.module.css';
 type EditingMessage = {
     id: MessageId;
     content: string;
-    attachments: UploadedAttachment[];
+    attachments: Attachment[];
 };
 
 type Props = {
@@ -28,15 +28,19 @@ type Props = {
 
 type EditorAttachment = {
     kind: 'uploaded';
-    attachment: UploadedAttachment;
+    attachment: Attachment;
 } | {
     kind: 'pending';
     draftId: string;
     file: File;
     compress: boolean;
+    asFile: boolean;
 };
 
 const canCompressFile = (file: File) => file.type.startsWith('video/') || file.type.startsWith('audio/');
+
+const canUploadAsFile = (file: File) =>
+    file.type.startsWith('image/') || file.type.startsWith('video/') || file.type.startsWith('audio/');
 
 const formatFileSize = (size: number) => {
     if (size < 1024) {
@@ -57,6 +61,7 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
     const [pendingFile, setPendingFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [compressPendingFile, setCompressPendingFile] = useState(false);
+    const [uploadPendingFileAsFile, setUploadPendingFileAsFile] = useState(false);
 
     const isEditing = editingMessage != null;
 
@@ -95,6 +100,7 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
     const openFilePreview = (file: File) => {
         setPendingFile(file);
         setCompressPendingFile(false);
+        setUploadPendingFileAsFile(false);
     };
 
     const closeFilePreview = () => {
@@ -107,7 +113,8 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
         }
 
         const file = pendingFile;
-        const shouldCompress = compressPendingFile && canCompressFile(file);
+        const shouldCompress = !uploadPendingFileAsFile && compressPendingFile && canCompressFile(file);
+        const asFile = uploadPendingFileAsFile && canUploadAsFile(file);
         closeFilePreview();
         setAttachments(list => [
             ...list,
@@ -116,6 +123,7 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
                 draftId: crypto.randomUUID(),
                 file,
                 compress: shouldCompress,
+                asFile,
             },
         ]);
     };
@@ -132,9 +140,9 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
         setIsSending(true);
         try {
             if (isEditing && onSaveEdit) {
-                await onSaveEdit(editingMessage.id, text, uploadedAttachments.map(a => a.attachmentId));
+                await onSaveEdit(editingMessage.id, text, uploadedAttachments.map(a => a.id));
             } else {
-                await onSend(text, uploadedAttachments.map(a => a.attachmentId));
+                await onSend(text, uploadedAttachments.map(a => a.id));
                 setText('');
                 setAttachments([]);
             }
@@ -146,14 +154,14 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
     };
 
     const handleDeleteAttachment = useCallback((attachmentId: AttachmentId) => {
-        setAttachments(list => list.filter(att => att.kind !== 'uploaded' || att.attachment.attachmentId !== attachmentId));
+        setAttachments(list => list.filter(att => att.kind !== 'uploaded' || att.attachment.id !== attachmentId));
     }, []);
 
     const handleDeleteDraftAttachment = useCallback((draftId: string) => {
         setAttachments(list => list.filter(att => att.kind !== 'pending' || att.draftId !== draftId));
     }, []);
 
-    const handleDraftAttachmentUploaded = useCallback((draftId: string, uploadedAttachment: UploadedAttachment) => {
+    const handleDraftAttachmentUploaded = useCallback((draftId: string, uploadedAttachment: Attachment) => {
         setAttachments(list => list.map(att => {
             if (att.kind !== 'pending' || att.draftId !== draftId) {
                 return att;
@@ -214,11 +222,27 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
                                         {pendingFile.type || 'Unknown MIME type'} - {formatFileSize(pendingFile.size)}
                                     </span>
                                 </div>
+                                {canUploadAsFile(pendingFile) && (
+                                    <label className={styles.filePreviewOption}>
+                                        <input
+                                            type="checkbox"
+                                            checked={uploadPendingFileAsFile}
+                                            onChange={(e) => {
+                                                setUploadPendingFileAsFile(e.target.checked);
+                                                if (e.target.checked) {
+                                                    setCompressPendingFile(false);
+                                                }
+                                            }}
+                                        />
+                                        <span>Send as file</span>
+                                    </label>
+                                )}
                                 {canCompressFile(pendingFile) && (
-                                    <label className={styles.filePreviewCompress}>
+                                    <label className={styles.filePreviewOption}>
                                         <input
                                             type="checkbox"
                                             checked={compressPendingFile}
+                                            disabled={uploadPendingFileAsFile}
                                             onChange={(e) => setCompressPendingFile(e.target.checked)}
                                         />
                                         <span>Compress</span>
@@ -257,7 +281,7 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
                         attachment.kind === 'uploaded'
                             ? (
                                 <MessageEditorAttachment
-                                    key={attachment.attachment.attachmentId}
+                                    key={attachment.attachment.id}
                                     attachment={attachment.attachment}
                                     onDelete={handleDeleteAttachment}
                                 />
@@ -268,6 +292,7 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
                                     draftId={attachment.draftId}
                                     file={attachment.file}
                                     compress={attachment.compress}
+                                    asFile={attachment.asFile}
                                     onUploaded={handleDraftAttachmentUploaded}
                                     onDelete={handleDeleteDraftAttachment}
                                 />

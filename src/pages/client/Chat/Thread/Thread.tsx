@@ -5,7 +5,7 @@ import { useApolloClient } from '@apollo/client/react';
 import { useUser } from '@/contexts/UserContext';
 import { MessageInput } from '@/pages/client/Chat/MessageInput';
 import { CreateMessageDto, MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
-import { AttachmentId, UploadedAttachment } from '@/types/attachments';
+import { AttachmentId, Attachment } from '@/types/attachments';
 import { addReaction, deleteMessage, deleteReaction, getThreadMessagesList, postNewMessage, updateMessage } from '@/graphql/messages';
 import {
     EditedMessagePayload,
@@ -34,7 +34,7 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
     const [refs, setRefs] = useState<Map<number, ReplyToMessage>>(new Map());
     const [isBottomVisible, setIsBottomVisible] = useState(true);
     const [replyingTo, setReplyingTo] = useState<MessageWithUser | null>(null);
-    const [editingMessage, setEditingMessage] = useState<{ id: MessageId; content: string; attachments: UploadedAttachment[] } | null>(null);
+    const [editingMessage, setEditingMessage] = useState<{ id: MessageId; content: string; attachments: Attachment[] } | null>(null);
 
     const handleReply = (message: MessageWithUser) => setReplyingTo(message);
     const handleClearReply = () => setReplyingTo(null);
@@ -47,12 +47,7 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
         setEditingMessage({
             id: message.id,
             content: message.content,
-            attachments: message.attachments.map(a => ({
-                attachmentId: a.id,
-                s3Url: `http://localhost:9000/chatney/${a.urlPath}`,
-                mimeType: a.mimeType,
-                size: a.size,
-            })),
+            attachments: message.attachments,
         });
     };
 

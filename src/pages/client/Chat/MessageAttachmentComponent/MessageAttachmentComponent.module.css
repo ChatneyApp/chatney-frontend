@@ -13,5 +13,17 @@
 }
 
 .binary {
-    @apply text-sm text-gray-200 break-all underline underline-offset-2;
+    @apply inline-flex max-w-full items-center gap-2 rounded border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-200 hover:border-gray-500 hover:bg-gray-700;
+}
+
+.binaryIcon {
+    @apply shrink-0 text-gray-300;
+}
+
+.binaryName {
+    @apply min-w-0 break-all;
+}
+
+.binarySize {
+    @apply shrink-0 text-xs text-gray-400;
 }

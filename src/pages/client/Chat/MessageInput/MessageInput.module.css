@@ -89,6 +89,10 @@
     @apply break-words text-gray-400;
 }
 
-.filePreviewCompress {
+.filePreviewOption {
     @apply flex w-fit cursor-pointer items-center gap-2 text-sm text-gray-200;
+}
+
+.filePreviewOption:has(input:disabled) {
+    @apply cursor-not-allowed text-gray-500;
 }

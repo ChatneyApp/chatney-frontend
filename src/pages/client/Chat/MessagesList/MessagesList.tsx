@@ -6,7 +6,7 @@ import { useUser } from '@/contexts/UserContext';
 import { MessageInput } from '@/pages/client/Chat/MessageInput';
 import { ChannelListItem } from '@/pages/client/Chat/types';
 import { CreateMessageDto, MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
-import { AttachmentId, UploadedAttachment } from '@/types/attachments';
+import { AttachmentId, Attachment } from '@/types/attachments';
 import { addReaction, deleteMessage, deleteReaction, getChannelMessagesList, postNewMessage, updateMessage } from '@/graphql/messages';
 import {
     EditedMessagePayload,
@@ -36,7 +36,7 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
     const [refs, setRefs] = useState<Map<number, ReplyToMessage>>(new Map());
     const [isBottomVisible, setIsBottomVisible] = useState(true);
     const [replyingTo, setReplyingTo] = useState<MessageWithUser | null>(null);
-    const [editingMessage, setEditingMessage] = useState<{ id: MessageId; content: string; attachments: UploadedAttachment[] } | null>(null);
+    const [editingMessage, setEditingMessage] = useState<{ id: MessageId; content: string; attachments: Attachment[] } | null>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const autoScrollDone = useRef(false);
 
@@ -68,12 +68,7 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
         setEditingMessage({
             id: message.id,
             content: message.content,
-            attachments: message.attachments.map(a => ({
-                attachmentId: a.id,
-                s3Url: `http://localhost:9000/chatney/${a.urlPath}`,
-                mimeType: a.mimeType,
-                size: a.size,
-            })),
+            attachments: message.attachments,
         });
     };
 

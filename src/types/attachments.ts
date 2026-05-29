@@ -11,13 +11,7 @@ export type Attachment = {
     mimeType: string;
     size: number;
     type: 'image' | 'gif' | 'video' | 'audio' | 'binary';
+    asFile: boolean;
     createdAt: Date;
     updatedAt: Date;
-}
-
-export type UploadedAttachment = {
-    attachmentId: AttachmentId;
-    s3Url: string;
-    mimeType: string;
-    size: number;
 }

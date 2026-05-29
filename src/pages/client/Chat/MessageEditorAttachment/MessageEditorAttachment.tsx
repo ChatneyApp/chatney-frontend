@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
-import { File as FileIcon, Film, Music, X } from 'lucide-react';
+import { Music, X } from 'lucide-react';
 
 import { uploadFileWithProgress } from '@/graphql/attachments';
+import { getAttachmentType, getFileIcon } from '@/helpers/attachments/attachmentDisplay';
 import { prepareAudio } from '@/helpers/attachments/prepareAudio';
 import { prepareVideo } from '@/helpers/attachments/prepareVideo';
-import { AttachmentId, UploadedAttachment } from '@/types/attachments';
+import { Attachment, AttachmentId } from '@/types/attachments';
 
 import styles from './MessageEditorAttachment.module.css';
 
 type UploadedProps = {
-    attachment: UploadedAttachment;
+    attachment: Attachment;
     onDelete(attachmentId: AttachmentId): void;
 };
 
@@ -17,32 +18,39 @@ type PendingProps = {
     draftId: string;
     file: globalThis.File;
     compress: boolean;
-    onUploaded(draftId: string, attachment: UploadedAttachment): void;
+    asFile: boolean;
+    onUploaded(draftId: string, attachment: Attachment): void;
     onDelete(draftId: string): void;
 };
 
 type Props = UploadedProps | PendingProps;
 
+const getAttachmentUrl = (attachment: Attachment) => `http://localhost:9000/chatney/${attachment.urlPath}`;
+
 const isPendingAttachment = (props: Props): props is PendingProps => 'file' in props;
 
-const getAttachmentType = (mimeType: string): 'image' | 'gif' | 'video' | 'audio' | 'binary' => {
-    if (mimeType === 'image/gif') {
-        return 'gif';
+const getDisplayAttachmentType = (mimeType: string, asFile: boolean) => {
+    if (asFile) {
+        return 'binary';
     }
 
-    if (mimeType.startsWith('image/')) {
-        return 'image';
+    return getAttachmentType(mimeType);
+};
+
+const formatFileSize = (size?: number) => {
+    if (size == null) {
+        return null;
     }
 
-    if (mimeType.startsWith('video/')) {
-        return 'video';
+    if (size < 1024) {
+        return `${size} B`;
     }
 
-    if (mimeType.startsWith('audio/')) {
-        return 'audio';
+    if (size < 1024 * 1024) {
+        return `${(size / 1024).toFixed(1)} KB`;
     }
 
-    return 'binary';
+    return `${(size / 1024 / 1024).toFixed(1)} MB`;
 };
 
 const getUploadMimeType = (file: File, shouldProcessFile: boolean) => {
@@ -82,20 +90,24 @@ export const MessageEditorAttachment = (props: Props) => {
     const pendingFile = isPending ? props.file : null;
     const pendingDraftId = isPending ? props.draftId : null;
     const pendingCompress = isPending ? props.compress : false;
+    const inputAsFile = isPending ? props.asFile : props.attachment.asFile;
     const pendingOnUploaded = isPending ? props.onUploaded : null;
     const uploadedInput = isPending ? null : props.attachment;
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-    const [uploadedAttachment, setUploadedAttachment] = useState<UploadedAttachment | null>(
+    const [uploadedAttachment, setUploadedAttachment] = useState<Attachment | null>(
         isPending ? null : props.attachment,
     );
     const [conversionProgress, setConversionProgress] = useState<number | null>(null);
     const [uploadProgress, setUploadProgress] = useState<number | null>(isPending ? 0 : null);
     const [error, setError] = useState<string | null>(null);
 
-    const sourceUrl = uploadedAttachment?.s3Url ?? previewUrl;
+    const sourceUrl = uploadedAttachment?.urlPath ? getAttachmentUrl(uploadedAttachment) : previewUrl;
     const mimeType = uploadedAttachment?.mimeType ?? pendingFile?.type ?? uploadedInput?.mimeType ?? '';
-    const fileName = pendingFile?.name;
-    const attachmentType = getAttachmentType(mimeType);
+    const asFile = uploadedAttachment?.asFile ?? inputAsFile;
+    const fileSize = uploadedAttachment?.size ?? pendingFile?.size ?? uploadedInput?.size;
+    const fileName = uploadedAttachment?.originalFileName ?? pendingFile?.name ?? uploadedInput?.originalFileName;
+    const contentAttachmentType = getAttachmentType(mimeType);
+    const attachmentType = getDisplayAttachmentType(mimeType, asFile);
 
     useEffect(() => {
         if (!pendingFile) {
@@ -138,6 +150,7 @@ export const MessageEditorAttachment = (props: Props) => {
                     preprocessedBlob,
                     pendingFile.name,
                     getUploadMimeType(pendingFile, shouldProcessFile),
+                    inputAsFile,
                     setUploadProgress,
                     abortController.signal,
                 );
@@ -155,13 +168,15 @@ export const MessageEditorAttachment = (props: Props) => {
         void upload();
 
         return () => abortController.abort();
-    }, [pendingCompress, pendingDraftId, pendingFile, pendingOnUploaded]);
+    }, [inputAsFile, pendingCompress, pendingDraftId, pendingFile, pendingOnUploaded]);
 
     const preview = useMemo(() => {
         if (!sourceUrl) {
             return (
                 <div className={styles.fallbackPreview}>
-                    <FileIcon size={28} />
+                    {getFileIcon(contentAttachmentType, { size: 28 })}
+                    {fileName && <span>{fileName}</span>}
+                    {fileSize != null && <span className={styles.fileSize}>{formatFileSize(fileSize)}</span>}
                 </div>
             );
         }
@@ -182,12 +197,13 @@ export const MessageEditorAttachment = (props: Props) => {
             case 'binary':
                 return (
                     <div className={styles.fallbackPreview}>
-                        {mimeType.startsWith('video/') ? <Film size={28} /> : <FileIcon size={28} />}
-                        <span>{fileName ?? 'File'}</span>
+                        {getFileIcon(contentAttachmentType, { size: 28 })}
+                        {fileName && <span>{fileName}</span>}
+                        {fileSize != null && <span className={styles.fileSize}>{formatFileSize(fileSize)}</span>}
                     </div>
                 );
         }
-    }, [attachmentType, fileName, mimeType, sourceUrl]);
+    }, [attachmentType, contentAttachmentType, fileName, fileSize, sourceUrl]);
 
     const handleDelete = () => {
         if (isPending) {
@@ -195,7 +211,7 @@ export const MessageEditorAttachment = (props: Props) => {
             return;
         }
 
-        props.onDelete(props.attachment.attachmentId);
+        props.onDelete(props.attachment.id);
     };
 
     return (

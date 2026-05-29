@@ -1,21 +1,28 @@
 import { ApolloClient, gql } from '@apollo/client';
-import { UploadedAttachment } from '@/types/attachments';
+import { Attachment } from '@/types/attachments';
 import { userAuthTokenName } from '@/infra/consts';
 
 type UploadFileResponse = {
     attachments?: {
-        upload?: UploadedAttachment;
+        upload?: Attachment;
     };
 };
 
 const uploadFileMutationText = `
-    mutation UploadFile($file: Upload!) {
+    mutation UploadFile($file: Upload!, $asFile: Boolean!) {
         attachments {
-            upload(file: $file) {
-                attachmentId
-                s3Url
+            upload(file: $file, asFile: $asFile) {
+                id
+                userId
+                urlPath
+                originalFileName
+                extension
                 mimeType
                 size
+                type
+                asFile
+                createdAt
+                updatedAt
             }
         }
     }
@@ -23,7 +30,13 @@ const uploadFileMutationText = `
 
 const UPLOAD_FILE_MUTATION = gql(uploadFileMutationText);
 
-export const uploadFile = async (client: ApolloClient, data: Blob, fileName: string, mimeType: string): Promise<UploadedAttachment> => {
+export const uploadFile = async (
+    client: ApolloClient,
+    data: Blob,
+    fileName: string,
+    mimeType: string,
+    asFile = false,
+): Promise<Attachment> => {
     const file = new File([data], fileName, {
         type: mimeType || data.type || 'application/octet-stream',
     });
@@ -33,6 +46,7 @@ export const uploadFile = async (client: ApolloClient, data: Blob, fileName: str
             mutation: UPLOAD_FILE_MUTATION,
             variables: {
                 file,
+                asFile,
             },
         });
 
@@ -42,12 +56,7 @@ export const uploadFile = async (client: ApolloClient, data: Blob, fileName: str
             throw new Error('Upload response does not contain attachments.upload');
         }
 
-        return {
-            attachmentId: result.attachmentId,
-            s3Url: result.s3Url,
-            mimeType: result.mimeType,
-            size: result.size,
-        };
+        return result;
     } catch (error) {
         throw new Error(`File upload failed: ${(error as Error).message}`);
     }
@@ -62,9 +71,10 @@ export const uploadFileWithProgress = async (
     data: Blob,
     fileName: string,
     mimeType: string,
+    asFile = false,
     onProgress?: (progress: number) => void,
     signal?: AbortSignal,
-): Promise<UploadedAttachment> => {
+): Promise<Attachment> => {
     const file = new File([data], fileName, {
         type: mimeType || data.type || 'application/octet-stream',
     });
@@ -73,6 +83,7 @@ export const uploadFileWithProgress = async (
         query: uploadFileMutationText,
         variables: {
             file: null,
+            asFile,
         },
     }));
     formData.append('map', JSON.stringify({
@@ -125,10 +136,5 @@ export const uploadFileWithProgress = async (
 
     onProgress?.(1);
 
-    return {
-        attachmentId: result.attachmentId,
-        s3Url: result.s3Url,
-        mimeType: result.mimeType,
-        size: result.size,
-    };
+    return result;
 };

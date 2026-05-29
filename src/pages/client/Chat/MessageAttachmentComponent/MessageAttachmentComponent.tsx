@@ -1,3 +1,4 @@
+import { getAttachmentType, getFileIcon } from '@/helpers/attachments/attachmentDisplay';
 import { Attachment } from '@/types/attachments';
 
 import styles from './MessageAttachmentComponent.module.css';
@@ -8,10 +9,26 @@ type Props = {
 
 const getAttachmentUrl = (attachment: Attachment) => `http://localhost:9000/chatney/${attachment.urlPath}`;
 
+const formatFileSize = (size: number) => {
+    if (size < 1024) {
+        return `${size} B`;
+    }
+
+    if (size < 1024 * 1024) {
+        return `${(size / 1024).toFixed(1)} KB`;
+    }
+
+    return `${(size / 1024 / 1024).toFixed(1)} MB`;
+};
+
 export const MessageAttachmentComponent = ({ attachment }: Props) => {
     const attachmentUrl = getAttachmentUrl(attachment);
+    const attachmentType = attachment.asFile ? 'binary' : attachment.type;
+    const contentAttachmentType = attachment.type === 'binary'
+        ? getAttachmentType(attachment.mimeType)
+        : attachment.type;
 
-    switch (attachment.type) {
+    switch (attachmentType) {
         case 'image':
         case 'gif':
             return (
@@ -39,9 +56,11 @@ export const MessageAttachmentComponent = ({ attachment }: Props) => {
             );
         case 'binary':
             return (
-                <span className={styles.binary}>
-                    {attachment.originalFileName}
-                </span>
+                <a className={styles.binary} href={attachmentUrl} download={attachment.originalFileName}>
+                    {getFileIcon(contentAttachmentType, { className: styles.binaryIcon, size: 18 })}
+                    <span className={styles.binaryName}>{attachment.originalFileName}</span>
+                    <span className={styles.binarySize}>{formatFileSize(attachment.size)}</span>
+                </a>
             );
     }
 }

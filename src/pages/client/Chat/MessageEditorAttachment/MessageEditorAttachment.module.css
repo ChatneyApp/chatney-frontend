@@ -25,6 +25,10 @@
     @apply line-clamp-2 max-w-full break-all;
 }
 
+.fileSize {
+    @apply text-[10px] text-gray-400;
+}
+
 .deleteButton {
     @apply absolute right-1 top-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded bg-red-600 text-white opacity-0;
     transition: opacity 0.2s;

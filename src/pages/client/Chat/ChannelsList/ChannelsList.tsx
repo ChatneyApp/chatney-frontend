@@ -1,8 +1,12 @@
 import { useState } from 'react';
+import clsx from 'clsx';
 
-import { ChannelListItem } from './types';
-import { CreateChannelModal } from './CreateChannelModal';
+import { useWorkspacesList } from '@/contexts/WorkspacesListContext';
 import { Channel, ChannelId } from '@/types/channels';
+import { CreateChannelModal } from '../CreateChannelModal';
+import { ChannelListItem } from '../types';
+
+import styles from './ChannelsList.module.css';
 
 type Props = {
     activeChannel: Channel | null;
@@ -12,6 +16,8 @@ type Props = {
 };
 export function ChannelList({ activeChannel, setActiveChannel, channels, refetch }: Props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { activeWorkspaceId, workspacesList } = useWorkspacesList();
+    const activeWorkspace = workspacesList.find(workspace => workspace.id === activeWorkspaceId);
 
     const handleChannelCreated = (newChannel: ChannelListItem) => {
         setIsModalOpen(false);
@@ -19,9 +25,15 @@ export function ChannelList({ activeChannel, setActiveChannel, channels, refetch
     };
 
     return (
-        <div className="w-48 bg-gray-850 border-r border-gray-700 p-4 space-y-2 text-gray-400 relative">
+        <div className={styles.container}>
             <div
-                className="cursor-pointer hover:text-gray-200 px-2 py-1 rounded hover:bg-gray-700"
+                title={activeWorkspace?.name}
+                className={styles.workspaceTitle}
+            >
+                {activeWorkspace?.name}
+            </div>
+            <div
+                className={styles.createChannelButton}
                 onClick={() => setIsModalOpen(true)}
             >
                 + Create channel
@@ -31,8 +43,9 @@ export function ChannelList({ activeChannel, setActiveChannel, channels, refetch
                 <div
                     key={channel.id}
                     onClick={() => setActiveChannel(channel)}
-                    className={`cursor-pointer px-2 py-1 rounded hover:bg-gray-700 ${activeChannel?.id === channel.id ? 'font-bold text-white' : 'text-gray-400'
-                        }`}
+                    className={clsx(styles.channelItem, {
+                        [styles.channelItemActive]: activeChannel?.id === channel.id,
+                    })}
                 >
                     {channel.name}
                 </div>

@@ -1,8 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
+import clsx from 'clsx';
+
 import { useUser } from '@/contexts/UserContext';
 import { useWorkspacesList } from '@/contexts/WorkspacesListContext';
-import { WorkspaceCreateModal } from './WorkspaceCreateModal';
 import { Workspace } from '@/types/workspaces';
+import { WorkspaceCreateModal } from '../WorkspaceCreateModal';
+
+import styles from './WorkspacesList.module.css';
 
 export function WorkspacesList() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,23 +42,28 @@ export function WorkspacesList() {
     }, [showPopup]);
 
     return (
-        <div className="relative w-16 bg-gray-800 flex flex-col justify-between items-center py-4">
-            {/* Workspaces */}
-            <div className="space-y-4">
-                {workspacesList.workspacesList.map((ws, idx) => (
-                    <div
-                        title={ws.name}
-                        key={idx}
-                        onClick={() => workspacesList.setActiveWorkspaceId(ws.id)}
-                        className={`${workspacesList.activeWorkspaceId === ws.id ? 'bg-gray-500' : 'bg-gray-700'} w-10 h-10 flex items-center justify-center rounded-full text-sm hover:bg-gray-500 cursor-pointer`}
-                    >
-                        <span className={workspacesList.activeWorkspaceId === ws.id ? 'font-bold' : ''}>{ws.name[0].toUpperCase()}</span>
-                    </div>
-                ))}
+        <div className={styles.container}>
+            <div className={styles.workspaceItems}>
+                {workspacesList.workspacesList.map((ws, idx) => {
+                    const isActive = workspacesList.activeWorkspaceId === ws.id;
+
+                    return (
+                        <div
+                            title={ws.name}
+                            key={idx}
+                            onClick={() => workspacesList.setActiveWorkspaceId(ws.id)}
+                            className={clsx(styles.workspaceButton, { [styles.workspaceButtonActive]: isActive })}
+                        >
+                            <span className={clsx({ [styles.workspaceInitialActive]: isActive })}>
+                                {ws.name[0].toUpperCase()}
+                            </span>
+                        </div>
+                    );
+                })}
                 <div
                     onClick={() => setIsModalOpen(true)}
                     title="Create workspace"
-                    className="w-10 h-10 flex items-center justify-center bg-gray-700 rounded-full text-sm hover:bg-gray-600 cursor-pointer"
+                    className={styles.createWorkspaceButton}
                 >
                     +
                 </div>
@@ -64,51 +73,45 @@ export function WorkspacesList() {
                         onWorkspaceCreated={handleWorkspaceCreated}
                     />
                 )}
-
             </div>
 
-            {/* Avatar and Popup */}
-            <div className="space-y-2 flex flex-col items-center relative">
-                {/* Popup */}
+            <div className={styles.profileArea}>
                 {showPopup && (
                     <div
                         ref={popupRef}
-                        className="border border-gray-700 bg-gray-800 absolute left-16 -bottom-3 z-50 w-64 rounded-md shadow-lg p-4 text-sm text-gray-800"
+                        className={styles.profilePopup}
                     >
-                        {/* Chevron */}
-                        <div className="absolute left-[-6px] bottom-[38px] w-3 h-3 bg-gray-800 border-b border-l border-gray-700 rotate-45 shadow-md" />
+                        <div className={styles.profilePopupChevron} />
 
-                        {/* User Info */}
-                        <div className="mb-3">
-                            <div className="font-semibold text-gray-200 text-base">{userCtx?.user?.name}</div>
-                            <div className="text-xs text-gray-500">Role</div>
+                        <div className={styles.profileInfo}>
+                            <div className={styles.profileName}>{userCtx?.user?.name}</div>
+                            <div className={styles.profileRole}>Role</div>
                         </div>
 
-                        {/* Links */}
-                        <ul className="space-y-2 text-gray-400">
+                        <ul className={styles.profileLinks}>
                             <li>
-                                <a href="/dashboard" className="hover:text-gray-200">
+                                <a href="/dashboard" className={styles.profileLink}>
                                     Dashboard
                                 </a>
                             </li>
                             <li>
-                                <a href="/settings" className="hover:text-gray-200">
+                                <a href="/settings" className={styles.profileLink}>
                                     Settings
                                 </a>
                             </li>
                             <li>
-                                <a href="/profile" className="hover:text-gray-200">
+                                <a href="/profile" className={styles.profileLink}>
                                     Profile
                                 </a>
                             </li>
                             <li>
-                                <a href="/help" className="hover:text-gray-200">
+                                <a href="/help" className={styles.profileLink}>
                                     Help & Support
                                 </a>
                             </li>
                             <br />
                             <li>
-                                <a onClick={() => userCtx?.logout()} className="cursor-pointer hover:text-gray-200">
+                                <a onClick={() => userCtx?.logout()} className={styles.logoutLink}>
                                     Logout
                                 </a>
                             </li>
@@ -116,10 +119,9 @@ export function WorkspacesList() {
                     </div>
                 )}
 
-                {/* Avatar */}
                 <div
                     ref={avatarRef}
-                    className="mb-5 w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm cursor-pointer"
+                    className={styles.avatar}
                     title="Your Profile"
                     onClick={() => setShowPopup(!showPopup)}
                 >

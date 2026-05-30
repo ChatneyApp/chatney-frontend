@@ -1,0 +1,44 @@
+@reference "tailwindcss";
+
+.overlay {
+    @apply fixed inset-0;
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.container {
+    @apply fixed left-1/2 top-1/2 max-h-[85vh] w-[90vw] max-w-[360px] -translate-x-1/2 -translate-y-1/2
+    rounded-md bg-gray-800 p-5 text-white shadow-xl focus:outline-none;
+}
+
+.title {
+    @apply m-0 text-lg font-semibold;
+}
+
+.form {
+    @apply mt-4 flex flex-col gap-3;
+}
+
+.field {
+    @apply flex flex-col gap-1.5;
+}
+
+.label {
+    @apply text-sm font-medium text-gray-300;
+}
+
+.input,
+.select {
+    @apply w-full rounded border border-gray-600 bg-gray-700 px-2 py-1.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500;
+}
+
+.bottomButtons {
+    @apply mt-2 flex justify-end gap-2;
+}
+
+.cancelButton {
+    @apply cursor-pointer rounded px-3 py-1 text-sm text-gray-300 hover:text-white;
+}
+
+.createButton {
+    @apply cursor-pointer rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400;
+}

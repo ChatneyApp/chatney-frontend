@@ -1,4 +1,4 @@
-﻿export type SystemConfigId = number;
+export type SystemConfigId = number;
 export enum SystemConfigType {
     Int = 'int',
     IntArray = 'int[]',

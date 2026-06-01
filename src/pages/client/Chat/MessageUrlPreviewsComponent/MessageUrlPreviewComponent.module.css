@@ -1,4 +1,4 @@
-﻿@reference "tailwindcss";
+@reference "tailwindcss";
 
 .container {
     @apply relative block p-2 pl-6

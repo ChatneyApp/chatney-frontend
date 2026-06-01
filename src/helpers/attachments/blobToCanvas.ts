@@ -1,4 +1,4 @@
-﻿import { imageLoadPromise } from './imageLoadPromise';
+import { imageLoadPromise } from './imageLoadPromise';
 
 export async function blobToCanvas(blob: Blob): Promise<HTMLCanvasElement> {
     const canvas = document.createElement('canvas');

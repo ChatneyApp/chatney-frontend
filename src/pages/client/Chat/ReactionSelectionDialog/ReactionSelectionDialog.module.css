@@ -1,4 +1,4 @@
-﻿@reference "tailwindcss";
+@reference "tailwindcss";
 
 .popupArrow {
     @apply fill-gray-500;

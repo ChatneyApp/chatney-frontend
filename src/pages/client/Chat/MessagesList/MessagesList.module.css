@@ -1,4 +1,4 @@
-﻿@reference "tailwindcss";
+@reference "tailwindcss";
 
 .container {
     @apply relative flex-1 flex flex-col bg-gray-900;

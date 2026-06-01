@@ -1,4 +1,4 @@
-﻿import { Tabs } from 'radix-ui';
+import { Tabs } from 'radix-ui';
 
 import { TabsContent, TabsList, TabsTrigger } from '@/pages/dashboard/components/Tabs/Tabs';
 import { LoginForm } from './LoginForm';

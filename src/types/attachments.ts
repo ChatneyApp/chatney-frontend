@@ -1,4 +1,4 @@
-﻿import { UserId } from '@/types/users';
+import { UserId } from '@/types/users';
 
 export type AttachmentId = number;
 

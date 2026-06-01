@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowDownToLine, PanelRightClose } from 'lucide-react';
 import { useApolloClient } from '@apollo/client/react';
 
@@ -35,9 +35,28 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
     const [isBottomVisible, setIsBottomVisible] = useState(true);
     const [replyingTo, setReplyingTo] = useState<MessageWithUser | null>(null);
     const [editingMessage, setEditingMessage] = useState<{ id: MessageId; content: string; attachments: Attachment[] } | null>(null);
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const autoScrollDone = useRef(false);
 
-    const handleReply = (message: MessageWithUser) => setReplyingTo(message);
-    const handleClearReply = () => setReplyingTo(null);
+    const handleSend = async (text: string, attachmentIds: AttachmentId[]) => {
+        const newMessage: CreateMessageDto = {
+            channelId: rootMessage.channelId,
+            content: text,
+            attachmentIds,
+            parentId: rootMessage.id,
+            replyTo: replyingTo?.id ?? null,
+        };
+        await postNewMessage(apolloClient, newMessage);
+        setReplyingTo(null);
+    };
+
+    const handleReply = (message: MessageWithUser) => {
+        setReplyingTo(message);
+    };
+
+    const handleClearReply = () => {
+        setReplyingTo(null);
+    };
 
     const handleEdit = (message: MessageWithUser | null) => {
         if (!message) {
@@ -58,20 +77,8 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
         }
     };
 
-    const handleCancelEdit = () => setEditingMessage(null);
-    const messagesEndRef = useRef<HTMLDivElement | null>(null);
-    const autoScrollDone = useRef(false);
-
-    const handleSend = async (text: string, attachmentIds: AttachmentId[]) => {
-        const newMessage: CreateMessageDto = {
-            channelId: rootMessage.channelId,
-            content: text,
-            attachmentIds,
-            parentId: rootMessage.id,
-            replyTo: replyingTo?.id ?? null,
-        };
-        await postNewMessage(apolloClient, newMessage);
-        setReplyingTo(null);
+    const handleCancelEdit = () => {
+        setEditingMessage(null);
     };
 
     const handleOnDeleteClick = async (id: MessageId) => {

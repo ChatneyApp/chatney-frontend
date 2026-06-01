@@ -1,1 +1,1 @@
-﻿export { Thread } from './Thread';
+export { Thread } from './Thread';

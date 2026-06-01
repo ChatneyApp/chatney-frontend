@@ -1,4 +1,4 @@
-﻿import { Reaction } from '@/types/messages';
+import { Reaction } from '@/types/messages';
 
 import { ReactionSelectionDialog } from '../ReactionSelectionDialog';
 import { MessageReaction } from '../MessageReaction';

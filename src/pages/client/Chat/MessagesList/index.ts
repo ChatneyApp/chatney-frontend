@@ -1,1 +1,1 @@
-﻿export { MessagesList } from './MessagesList';
+export { MessagesList } from './MessagesList';

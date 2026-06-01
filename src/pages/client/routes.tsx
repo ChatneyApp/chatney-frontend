@@ -1,4 +1,4 @@
-﻿import { Route } from 'react-router';
+import { Route } from 'react-router';
 
 import { ClientLayout } from '@/pages/client/ClientLayout';
 import { ChatPage } from './Chat/ChatPage';

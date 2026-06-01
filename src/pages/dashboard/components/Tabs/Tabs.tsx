@@ -1,4 +1,4 @@
-﻿import { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { Tabs } from 'radix-ui';
 
 import styles from './Tabs.module.css';

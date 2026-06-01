@@ -1,4 +1,4 @@
-﻿@reference "tailwindcss";
+@reference "tailwindcss";
 
 .button {
     @apply px-4 py-2 font-bold rounded cursor-pointer;

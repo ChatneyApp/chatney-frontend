@@ -1,1 +1,1 @@
-﻿export { MessageReaction } from './MessageReaction';
+export { MessageReaction } from './MessageReaction';

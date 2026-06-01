@@ -1,4 +1,4 @@
-﻿import { CornerUpLeft, Pencil, XCircle } from 'lucide-react';
+import { CornerUpLeft, Pencil, XCircle } from 'lucide-react';
 import clsx from 'clsx';
 import { MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
 import { isDev } from '@/helpers/env';

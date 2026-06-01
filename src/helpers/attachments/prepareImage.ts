@@ -1,4 +1,4 @@
-﻿import { blobToCanvas } from '@/helpers/attachments/blobToCanvas';
+import { blobToCanvas } from '@/helpers/attachments/blobToCanvas';
 
 export const prepareImage = async (file: File): Promise<Blob> => {
     const canvas = await blobToCanvas(file);

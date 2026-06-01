@@ -1,4 +1,4 @@
-﻿import { ButtonHTMLAttributes } from 'react';
+import { ButtonHTMLAttributes } from 'react';
 import clsx from 'clsx';
 
 import styles from './Button.module.css';

@@ -1,4 +1,4 @@
-﻿import { Workspace } from './workspaces';
+import { Workspace } from './workspaces';
 
 export type UserId = string;
 export type UserAuthorization = {

@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Popover } from 'radix-ui';
 
 import styles from './ReactionSelectionDialog.module.css';

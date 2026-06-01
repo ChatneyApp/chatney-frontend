@@ -1,4 +1,5 @@
-import { calculateCroppedVideoSize, Size } from './calculateCroppedVideoSize';
+import { calculateCroppedVideoSize } from './calculateCroppedVideoSize';
+import { Size } from './types';
 
 describe('calculateCroppedVideoSize', () => {
     const desiredSize: Size = { width: 576, height: 1080 };

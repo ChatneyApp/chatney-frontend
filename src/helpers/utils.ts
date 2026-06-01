@@ -1,76 +1,8 @@
-import { FFmpeg } from '@ffmpeg/ffmpeg';
-import { toBlobURL } from '@ffmpeg/util';
-
-export interface VideoProperties {
-    fps: number;
-}
-
-export interface ProgressEvent {
-    progress: number;
-    time: number;
-}
-
-export const ffmpegExec = async (ffmpeg: FFmpeg, args: string[], progressCallback?: (e: ProgressEvent) => void, signal?: AbortSignal) => {
-    const logs: Record<string, string[]> = {};
-
-    ffmpeg.on('log', ({ message, type }) => {
-        if (!logs[type]) {
-            logs[type] = [];
-        }
-        logs[type].push(message);
-    });
-    if (progressCallback) {
-        ffmpeg.on('progress', progressCallback);
-    }
-    try {
-        await ffmpeg.exec(args, undefined, { signal });
-    } catch (e) {
-        console.error('ffmpegExec err', e);
-    }
-    if (progressCallback) {
-        ffmpeg.off('progress', progressCallback);
-    }
-    return Object.fromEntries(
-        Object.entries(logs)
-            .map(([k, v]) => [k, v.join('\n')])
-    );
-};
-
-export const getVideoProperties = async (ffmpeg: FFmpeg, fileName: string): Promise<VideoProperties> => {
-    const result: VideoProperties = {
-        fps: 0,
-    };
-    const infoResult = await ffmpegExec(ffmpeg, ['-i', fileName]);
-    const match = /(\d+)\sfps/i.exec(infoResult.stderr);
-    if (match?.[1]) {
-        result.fps = parseInt(match[1], 10);
-    }
-    return result;
-};
-
-export const ffmpegListFiles = async (ffmpeg: FFmpeg, path: string)=>
-    (await ffmpeg.listDir(path)).filter(p => !(['.', '..'].includes(p.name) && p.isDir));
-export const ffmpegListFilesRaw = async (ffmpeg: FFmpeg, path: string)=>
-    (await ffmpegListFiles(ffmpeg, path)).map(item => item.name);
-
 export const debugCanvas = (canvas: HTMLCanvasElement) => {
     const { width, height } = canvas;
     const img = canvas.toDataURL('image/png');
     console.log(img);
     console.log('%c ', `color: transparent;font-size:1px;width:${width}px;height:${height}px;background:transparent url('${img}') no-repeat 0 0;background-zie: ${width}px ${height}px;`);
-};
-
-const pkgVersion = '0.12.6';
-const pkgName = 'core';
-// const baseURL = `https://unpkg.com/@ffmpeg/${pkgName}@${pkgVersion}/dist/esm`;
-const ffmpegUrlPrefix = '';
-const baseURL = `${ffmpegUrlPrefix}/ffmpeg-${pkgName}/${pkgVersion}`;
-export const loadFFMpeg = async (ffmpeg: FFmpeg) => {
-    await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-        // workerURL: await toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript')
-    });
 };
 
 export const hexToUint8Array = (hex: string) => {
@@ -112,3 +44,15 @@ export const genUuid = () => {
 
     return uuidv4();
 }
+
+export const downloadBlob = (data: Blob, filename: string) => {
+    const url = URL.createObjectURL(data);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+};
+export const wait = (ms: number) => new Promise((resolve) => {
+    setTimeout(resolve, ms);
+});

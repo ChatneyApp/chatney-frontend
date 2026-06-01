@@ -13,8 +13,8 @@ export enum Libx264VideoCompressionPreset {
 }
 
 export type AudioConfig = {
-    audio_frequency?: string;
-    audio_target_bitrate?: string;
+    audioFrequency?: string;
+    audioTargetBitrate?: string;
 }
 
 export type VideoConfig = {
@@ -30,9 +30,9 @@ export type VideoConfig = {
 export const NORMALIZED_VIDEO_SIZE = { width: 576, height: 1024 };
 export const NORMALIZED_VIDEO_BG_COLOR = 'black';
 
-export const compileFfmpegAudioParams = (videoConfig: AudioConfig): string[] => {
-    const audioFrequency = videoConfig?.audio_frequency ?? '44100';
-    const audioTargetBitrate = videoConfig?.audio_target_bitrate ?? '128k';
+export function compileFfmpegAudioParams(videoConfig: AudioConfig): string[] {
+    const audioFrequency = videoConfig?.audioFrequency ?? '44100';
+    const audioTargetBitrate = videoConfig?.audioTargetBitrate ?? '128k';
 
     return [
         '-err_detect', 'explode',
@@ -41,9 +41,9 @@ export const compileFfmpegAudioParams = (videoConfig: AudioConfig): string[] => 
         '-b:a', audioTargetBitrate,
         '-ar', audioFrequency,
     ];
-};
+}
 
-export const compileFfmpegVideoParams = (videoConfig: VideoConfig): string[] => {
+export function compileFfmpegVideoParams(videoConfig: VideoConfig): string[] {
     const audioFrequency = videoConfig?.audioFrequency ?? '44100';
     const audioTargetBitrate = videoConfig?.audioTargetBitrate ?? '128k';
     const videoBufferSize = videoConfig?.videoBufferSize;
@@ -76,4 +76,4 @@ export const compileFfmpegVideoParams = (videoConfig: VideoConfig): string[] => 
         ...(typeof videoBufferSize === 'string' ? ['-bufsize', videoBufferSize] : []),
         '-r', videoFrameRate,
     ];
-};
+}

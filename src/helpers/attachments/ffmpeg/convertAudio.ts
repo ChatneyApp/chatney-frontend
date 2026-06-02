@@ -1,10 +1,37 @@
 import { fetchFile } from '@ffmpeg/util';
+import type { FFmpeg } from '@ffmpeg/ffmpeg';
 
 import type { AudioConfig } from './config';
 import { compileFfmpegAudioParams } from './config';
-import { ProgressEvent } from './types';
+import type { FFmpegExecResult, ProgressEvent } from './types';
 import { initFfmpeg } from './init';
 import { ffmpegExec, ffmpegListFilesRaw } from './generic';
+
+const AUDIO_TMP = {
+    source: 'input.mp3',
+    result: 'output.mp3',
+};
+
+const reportProgress = (callback?: (progress: number) => void) =>
+    ({ progress }: ProgressEvent) => callback?.(progress);
+
+async function putInputFile(ffmpeg: FFmpeg, file: File, path: string) {
+    await ffmpeg.writeFile(path, await fetchFile(file));
+}
+
+async function removeIfPresent(ffmpeg: FFmpeg, names: string[]) {
+    const currentFiles = await ffmpegListFilesRaw(ffmpeg, '.');
+
+    await Promise.all(
+        names
+            .filter((name) => currentFiles.includes(name))
+            .map((name) => ffmpeg.deleteFile(name)),
+    );
+}
+
+function hasConversionError(output: FFmpegExecResult) {
+    return output.stderr?.includes('Conversion failed!') ?? false;
+}
 
 export async function convertAudio(
     inputFile: File,
@@ -17,37 +44,21 @@ export async function convertAudio(
         throw new Error('FFmpeg not loaded');
     }
     const startTime = Date.now();
-    const updateEncodingStatus = ({ progress }: ProgressEvent) => {
-        setEncodingProgress?.(progress);
-    };
+    const updateEncodingStatus = reportProgress(setEncodingProgress);
 
-    // prepping files
-    const inputFileName = 'input.mp3';
-    const outputFileName = 'output.mp3';
-    const fetchedFile = await fetchFile(inputFile);
-    await ffmpeg.writeFile(inputFileName, fetchedFile);
+    await putInputFile(ffmpeg, inputFile, AUDIO_TMP.source);
 
-    // prepping command
-    const compileCommandArgs: string[] = [
-        '-i', inputFileName,
-    ];
-    compileCommandArgs.push(
+    const command = [
+        '-i', AUDIO_TMP.source,
         ...compileFfmpegAudioParams(audioConfig),
-        outputFileName,
-    );
-    // console.log('BEFORE dir [.]');
-    // console.table(await ffmpegListFilesRaw(ffmpeg, '.'));
+        AUDIO_TMP.result,
+    ];
 
-    // conversion
-    console.log(compileCommandArgs.join(' '));
-    const output = await ffmpegExec(ffmpeg, compileCommandArgs, updateEncodingStatus, signal);
+    console.log(command.join(' '));
+    const output = await ffmpegExec(ffmpeg, command, updateEncodingStatus, signal);
 
-    // console.log(output.stderr);
-    // console.log('AFTER dir [.]');
-    // console.table(await ffmpegListFilesRaw(ffmpeg, '.'));
-
-    const data = await ffmpeg.readFile(outputFileName) as Uint8Array;
-    const conversionFailed = output.stderr.includes('Conversion failed!');
+    const data = await ffmpeg.readFile(AUDIO_TMP.result) as Uint8Array;
+    const conversionFailed = hasConversionError(output);
     const result = new Blob([new Uint8Array(data)], { type: 'audio/mpeg' });
     console.log('generate result (blob)', result);
 
@@ -55,16 +66,7 @@ export async function convertAudio(
     console.error('AFTER dir [.]');
     console.table(await ffmpegListFilesRaw(ffmpeg, '.'));
 
-    // cleanup
-    const files = await ffmpegListFilesRaw(ffmpeg, '.');
-    if (files.includes(inputFileName)) {
-        await ffmpeg.deleteFile(inputFileName);
-    }
-    if (files.includes(outputFileName)) {
-        await ffmpeg.deleteFile(outputFileName);
-    }
-    // console.log('CLEANED FILES dir [.]');
-    // console.table(await ffmpegListFilesRaw(ffmpeg, '.'));
+    await removeIfPresent(ffmpeg, [AUDIO_TMP.source, AUDIO_TMP.result]);
     console.log(`convertAudio done in ${Date.now() - startTime}ms`);
 
     if (conversionFailed) {
@@ -72,4 +74,4 @@ export async function convertAudio(
     }
 
     return result;
-};
+}

@@ -1,10 +1,10 @@
 import { Size } from './types';
 
 export function calculateCroppedVideoSize(originalSize: Size, desiredSize: Size): Size {
-    const originalRatio = originalSize.width / originalSize.height;
+    const scale = desiredSize.height / originalSize.height;
 
     return {
-        width: Math.round(desiredSize.height * originalRatio),
+        width: Math.round(originalSize.width * scale),
         height: desiredSize.height,
     };
 }

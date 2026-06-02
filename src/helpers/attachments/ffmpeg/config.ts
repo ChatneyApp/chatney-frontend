@@ -30,50 +30,61 @@ export type VideoConfig = {
 export const NORMALIZED_VIDEO_SIZE = { width: 576, height: 1024 };
 export const NORMALIZED_VIDEO_BG_COLOR = 'black';
 
-export function compileFfmpegAudioParams(videoConfig: AudioConfig): string[] {
-    const audioFrequency = videoConfig?.audioFrequency ?? '44100';
-    const audioTargetBitrate = videoConfig?.audioTargetBitrate ?? '128k';
+const DEFAULT_AUDIO_FREQUENCY = '44100';
+const DEFAULT_AUDIO_BITRATE = '128k';
+const DEFAULT_FRAMERATE = '30';
+
+const strictFailureParams = ['-err_detect', 'explode', '-xerror'];
+
+const pair = (name: string, value: string) => [name, value];
+
+function compileAudioCodec(codec: 'aac' | 'mp3', config: AudioConfig, includeStrictMode = true): string[] {
+    const bitrate = config.audioTargetBitrate ?? DEFAULT_AUDIO_BITRATE;
+    const frequency = config.audioFrequency ?? DEFAULT_AUDIO_FREQUENCY;
 
     return [
-        '-err_detect', 'explode',
-        '-xerror',
-        '-c:a', 'mp3',
-        '-b:a', audioTargetBitrate,
-        '-ar', audioFrequency,
+        ...(includeStrictMode ? strictFailureParams : []),
+        ...pair('-c:a', codec),
+        ...pair('-b:a', bitrate),
+        ...pair('-ar', frequency),
     ];
 }
 
-export function compileFfmpegVideoParams(videoConfig: VideoConfig): string[] {
-    const audioFrequency = videoConfig?.audioFrequency ?? '44100';
-    const audioTargetBitrate = videoConfig?.audioTargetBitrate ?? '128k';
-    const videoBufferSize = videoConfig?.videoBufferSize;
-    const videoMinBitrate = videoConfig?.videoMinRate;
-    const videoMaxBitrate = videoConfig?.videoMaxRate;
-    const videoH264Preset = videoConfig?.videoH264Preset ?? Libx264VideoCompressionPreset.ultrafast;
-    const videoFrameRate = videoConfig?.videoFramerate ?? '30';
+function appendIfString(args: string[], option: string, value?: string) {
+    if (typeof value === 'string') {
+        args.push(option, value);
+    }
+}
 
-    return [
-        '-err_detect', 'explode',
-        '-xerror',
-        '-c:v', 'libx264',
-        '-profile:v', 'high',
-        '-level:v', '4.0',
-        '-pix_fmt', 'yuv420p',
-        '-colorspace:v', 'bt709',
-        '-color_primaries:v', 'bt709',
-        '-color_trc:v', 'bt709',
-        '-color_range:v', 'tv',
-        '-bsf:v', 'h264_metadata=chroma_sample_loc_type=0',
-        '-c:a', 'aac',
-        '-b:a', audioTargetBitrate,
-        '-ar', audioFrequency,
-        '-x264opts', 'opencl', // slight boost
-        '-brand', 'mp42', // brand compat
-        '-preset', `${videoH264Preset}`, // compression preset
-        '-movflags', '+faststart', // ability to start video earlier (streaming?)
-        ...(typeof videoMinBitrate === 'string' ? ['-minrate', videoMinBitrate] : []),
-        ...(typeof videoMaxBitrate === 'string' ? ['-maxrate', videoMaxBitrate] : []),
-        ...(typeof videoBufferSize === 'string' ? ['-bufsize', videoBufferSize] : []),
-        '-r', videoFrameRate,
+export function compileFfmpegAudioParams(audioConfig: AudioConfig): string[] {
+    return compileAudioCodec('mp3', audioConfig);
+}
+
+export function compileFfmpegVideoParams(videoConfig: VideoConfig): string[] {
+    const preset = videoConfig.videoH264Preset ?? Libx264VideoCompressionPreset.ultrafast;
+    const frameRate = videoConfig.videoFramerate ?? DEFAULT_FRAMERATE;
+
+    const params = [
+        ...strictFailureParams,
+        ...pair('-c:v', 'libx264'),
+        ...pair('-profile:v', 'high'),
+        ...pair('-level:v', '4.0'),
+        ...pair('-pix_fmt', 'yuv420p'),
+        ...pair('-colorspace:v', 'bt709'),
+        ...pair('-color_primaries:v', 'bt709'),
+        ...pair('-color_trc:v', 'bt709'),
+        ...pair('-color_range:v', 'tv'),
+        ...pair('-bsf:v', 'h264_metadata=chroma_sample_loc_type=0'),
+        ...compileAudioCodec('aac', videoConfig, false),
+        ...pair('-x264opts', 'opencl'),
+        ...pair('-brand', 'mp42'),
+        ...pair('-preset', preset),
+        ...pair('-movflags', '+faststart'),
     ];
+
+    appendIfString(params, '-minrate', videoConfig.videoMinRate);
+    appendIfString(params, '-maxrate', videoConfig.videoMaxRate);
+    appendIfString(params, '-bufsize', videoConfig.videoBufferSize);
+
+    return [...params, ...pair('-r', frameRate)];
 }

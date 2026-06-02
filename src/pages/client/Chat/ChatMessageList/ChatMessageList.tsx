@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ArrowDownToLine } from 'lucide-react';
 import { useApolloClient } from '@apollo/client/react';
 
@@ -66,8 +66,11 @@ export const ChatMessageList = ({
     const [isBottomVisible, setIsBottomVisible] = useState(true);
     const [replyingTo, setReplyingTo] = useState<MessageWithUser | null>(null);
     const [editingMessage, setEditingMessage] = useState<{ id: MessageId; content: string; attachments: Attachment[] } | null>(null);
+    const scrollAreaRef = useRef<HTMLDivElement | null>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const autoScrollDone = useRef(false);
+    const isBottomVisibleRef = useRef(true);
+    const shouldScrollAfterMessagesUpdate = useRef(false);
 
     const handleSend = async (text: string, attachmentIds: AttachmentId[]) => {
         const newMessage: CreateMessageDto = {
@@ -121,9 +124,21 @@ export const ChatMessageList = ({
         await deleteReaction(apolloClient, messageId, code);
     };
 
-    const handleScrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
-    };
+    const scrollToBottom = useCallback((behavior: ScrollBehavior = 'auto') => {
+        const scrollArea = scrollAreaRef.current;
+        if (!scrollArea) {
+            return;
+        }
+
+        scrollArea.scrollTo({
+            top: scrollArea.scrollHeight,
+            behavior,
+        });
+    }, []);
+
+    const handleScrollToBottom = useCallback(() => {
+        scrollToBottom('smooth');
+    }, [scrollToBottom]);
 
     useEffect(() => {
         const handleWebSocketEvent = (event: WebSocketEvent) => {
@@ -132,6 +147,7 @@ export const ChatMessageList = ({
                 case WebSocketEventType.NEW_MESSAGE: {
                     const { message, replyTo } = payload as NewMessagePayload;
                     if (isMessageInContext(message)) {
+                        shouldScrollAfterMessagesUpdate.current = isBottomVisibleRef.current;
                         setMessages((prev) => [...prev ?? [], message]);
                         if (replyTo) {
                             setRefs(prev => prev.has(replyTo.id) ? prev : new Map(prev).set(replyTo.id, replyTo));
@@ -234,25 +250,34 @@ export const ChatMessageList = ({
         };
     }, [apolloClient, channelId, eventEmitter, isMessageInContext, loadMessages, onMessageDeleted, userCtx?.user?.id]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (messages !== null && !autoScrollDone.current) {
             autoScrollDone.current = true;
-            handleScrollToBottom();
+            scrollToBottom();
+            return;
         }
-    }, [messages]);
+
+        if (shouldScrollAfterMessagesUpdate.current) {
+            shouldScrollAfterMessagesUpdate.current = false;
+            scrollToBottom('smooth');
+        }
+    }, [messages, scrollToBottom]);
 
     useEffect(() => {
+        const scrollArea = scrollAreaRef.current;
         const target = messagesEndRef.current;
-        if (!target) {
+        if (!scrollArea || !target) {
             return;
         }
 
         const observer = new IntersectionObserver(
             (entries) => {
-                setIsBottomVisible(entries?.[0].isIntersecting ?? false);
+                const isVisible = entries?.[0].isIntersecting ?? false;
+                isBottomVisibleRef.current = isVisible;
+                setIsBottomVisible(isVisible);
             },
             {
-                root: null,
+                root: scrollArea,
                 threshold: 0.0,
             }
         );
@@ -267,7 +292,7 @@ export const ChatMessageList = ({
     return (
         <div className={classNames.container}>
             <div className={classNames.header}>{header}</div>
-            <div className={classNames.scrollArea}>
+            <div className={classNames.scrollArea} ref={scrollAreaRef}>
                 {messages?.length ? messages.map(message => (
                     <MessageComponent
                         key={message.id}

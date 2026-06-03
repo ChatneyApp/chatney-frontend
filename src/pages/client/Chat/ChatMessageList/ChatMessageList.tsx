@@ -67,6 +67,7 @@ export const ChatMessageList = ({
     const [replyingTo, setReplyingTo] = useState<MessageWithUser | null>(null);
     const [editingMessage, setEditingMessage] = useState<{ id: MessageId; content: string; attachments: Attachment[] } | null>(null);
     const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+    const messageInputRef = useRef<HTMLDivElement | null>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const autoScrollDone = useRef(false);
     const isBottomVisibleRef = useRef(true);
@@ -289,6 +290,38 @@ export const ChatMessageList = ({
         };
     });
 
+    useLayoutEffect(() => {
+        const messageInput = messageInputRef.current;
+        if (!messageInput) {
+            return;
+        }
+
+        let lastHeight = messageInput.getBoundingClientRect().height;
+        const observer = new ResizeObserver((entries) => {
+            const nextHeight = entries[0]?.contentRect.height ?? messageInput.getBoundingClientRect().height;
+            if (nextHeight === lastHeight) {
+                return;
+            }
+
+            const heightDelta = nextHeight - lastHeight;
+            lastHeight = nextHeight;
+            const scrollArea = scrollAreaRef.current;
+            const bottomOffset = scrollArea
+                ? scrollArea.scrollHeight - scrollArea.scrollTop - scrollArea.clientHeight
+                : Number.POSITIVE_INFINITY;
+
+            if (isBottomVisibleRef.current || bottomOffset <= Math.abs(heightDelta) + 2) {
+                scrollToBottom();
+            }
+        });
+
+        observer.observe(messageInput);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [scrollToBottom]);
+
     return (
         <div className={classNames.container}>
             <div className={classNames.header}>{header}</div>
@@ -315,14 +348,16 @@ export const ChatMessageList = ({
                     <ArrowDownToLine/>
                 </div>
             )}
-            <MessageInput
-                onSend={handleSend}
-                onSaveEdit={handleSaveEdit}
-                onCancelEdit={() => setEditingMessage(null)}
-                editingMessage={editingMessage}
-                replyToPreview={replyingTo?.content ?? null}
-                onClearReply={handleClearReply}
-            />
+            <div ref={messageInputRef}>
+                <MessageInput
+                    onSend={handleSend}
+                    onSaveEdit={handleSaveEdit}
+                    onCancelEdit={() => setEditingMessage(null)}
+                    editingMessage={editingMessage}
+                    replyToPreview={replyingTo?.content ?? null}
+                    onClearReply={handleClearReply}
+                />
+            </div>
         </div>
     );
 };

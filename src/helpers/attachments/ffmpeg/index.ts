@@ -1,2 +1,2 @@
-export { convertAudio } from './convertAudio';
-export { convertVideo } from './convertVideo';
+export { preprocessAudio } from './preprocessAudio';
+export { preprocessVideo } from './preprocessVideo';

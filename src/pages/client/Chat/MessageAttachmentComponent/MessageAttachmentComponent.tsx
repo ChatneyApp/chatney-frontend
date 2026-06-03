@@ -27,6 +27,9 @@ export const MessageAttachmentComponent = ({ attachment }: Props) => {
     const contentAttachmentType = attachment.type === 'binary'
         ? getAttachmentType(attachment.mimeType)
         : attachment.type;
+    const mediaSize = attachment.width && attachment.height
+        ? { width: attachment.width, height: attachment.height }
+        : {};
 
     switch (attachmentType) {
         case 'image':
@@ -36,6 +39,7 @@ export const MessageAttachmentComponent = ({ attachment }: Props) => {
                     className={styles.image}
                     src={attachmentUrl}
                     alt={attachment.originalFileName}
+                    {...mediaSize}
                 />
             );
         case 'video':
@@ -44,6 +48,7 @@ export const MessageAttachmentComponent = ({ attachment }: Props) => {
                     className={styles.video}
                     src={attachmentUrl}
                     controls
+                    {...mediaSize}
                 />
             );
         case 'audio':

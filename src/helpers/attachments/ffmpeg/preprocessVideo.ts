@@ -2,9 +2,9 @@ import { fetchFile } from '@ffmpeg/util';
 import type { FFmpeg } from '@ffmpeg/ffmpeg';
 
 import type { VideoConfig } from './config';
-import { compileFfmpegVideoParams, NORMALIZED_VIDEO_BG_COLOR, NORMALIZED_VIDEO_SIZE } from './config';
-import { calculateCroppedVideoSize } from './calculateCroppedVideoSize';
-import type { FFmpegExecResult, ProgressEvent, Size, VideoProperties } from './types';
+import { compileFfmpegVideoParams } from './config';
+import { calculateVideoSize } from './calculateVideoSize';
+import type { FFmpegExecResult, ProgressEvent, Size } from './types';
 import { initFfmpeg } from './init';
 import { ffmpegExec, ffmpegListFilesRaw, getVideoProperties } from './generic';
 
@@ -30,22 +30,15 @@ async function discardFiles(ffmpeg: FFmpeg, names: string[]) {
     );
 }
 
-function buildVideoFilter(input: VideoProperties, frame: Size) {
-    const sourceRatio = input.width / input.height;
-    const targetRatio = frame.width / frame.height;
-
-    if (sourceRatio > targetRatio) {
-        return `scale=-2:${frame.height},crop=${frame.width}:${frame.height}`;
-    }
-
-    return `scale=-2:${frame.height},pad=${frame.width}:${frame.height}:(iw-ow)/2:(ih-oh)/2:${NORMALIZED_VIDEO_BG_COLOR}`;
+function buildVideoFilter(frame: Size) {
+    return `scale=${frame.width}:${frame.height}`;
 }
 
 function conversionFailed(output: FFmpegExecResult) {
     return output.stderr?.includes('Conversion failed!') ?? false;
 }
 
-export async function convertVideo(
+export async function preprocessVideo(
     inputFile: File,
     videoConfig: VideoConfig,
     setEncodingProgress?: ((progress: number) => void),
@@ -64,14 +57,14 @@ export async function convertVideo(
     console.log('inputVideoProps');
     console.table(inputVideoProps);
 
-    const outputVideoSize = calculateCroppedVideoSize(inputVideoProps, NORMALIZED_VIDEO_SIZE);
+    const outputVideoSize = calculateVideoSize(inputVideoProps);
     console.log('outputVideoSize');
     console.table(outputVideoSize);
 
     const command = [
         '-i', VIDEO_TMP.source,
         '-filter:v',
-        buildVideoFilter(inputVideoProps, NORMALIZED_VIDEO_SIZE),
+        buildVideoFilter(outputVideoSize),
         ...compileFfmpegVideoParams(videoConfig),
         VIDEO_TMP.result,
     ];
@@ -93,7 +86,7 @@ export async function convertVideo(
     console.table(await ffmpegListFilesRaw(ffmpeg, '.'));
 
     await discardFiles(ffmpeg, [VIDEO_TMP.source, VIDEO_TMP.result]);
-    console.log(`convertVideo done in ${Date.now() - startTime}ms`);
+    console.log(`preprocessVideo done in ${Date.now() - startTime}ms`);
 
     if (failed) {
         throw new Error('Video cannot be processed');

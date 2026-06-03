@@ -33,7 +33,7 @@ function hasConversionError(output: FFmpegExecResult) {
     return output.stderr?.includes('Conversion failed!') ?? false;
 }
 
-export async function convertAudio(
+export async function preprocessAudio(
     inputFile: File,
     audioConfig: AudioConfig,
     setEncodingProgress?: ((progress: number) => void),
@@ -67,7 +67,7 @@ export async function convertAudio(
     console.table(await ffmpegListFilesRaw(ffmpeg, '.'));
 
     await removeIfPresent(ffmpeg, [AUDIO_TMP.source, AUDIO_TMP.result]);
-    console.log(`convertAudio done in ${Date.now() - startTime}ms`);
+    console.log(`preprocessAudio done in ${Date.now() - startTime}ms`);
 
     if (conversionFailed) {
         throw new Error('Audio cannot be processed');

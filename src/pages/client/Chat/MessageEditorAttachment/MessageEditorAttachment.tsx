@@ -3,8 +3,8 @@ import { Music, X } from 'lucide-react';
 
 import { uploadFileWithProgress } from '@/graphql/attachments';
 import { getAttachmentType, getFileIcon } from '@/helpers/attachments/attachmentDisplay';
-import { prepareAudio } from '@/helpers/attachments/prepareAudio';
-import { prepareVideo } from '@/helpers/attachments/prepareVideo';
+import { preprocessAudio, preprocessVideo } from '@/helpers/attachments/ffmpeg';
+import { readAttachmentMetadata } from '@/helpers/attachments/readAttachmentMetadata';
 import { Attachment, AttachmentId } from '@/types/attachments';
 
 import styles from './MessageEditorAttachment.module.css';
@@ -138,19 +138,28 @@ export const MessageEditorAttachment = (props: Props) => {
                 if (shouldProcessFile) {
                     setConversionProgress(0);
                     if (isAudio) {
-                        preprocessedBlob = await prepareAudio(pendingFile, abortController, setConversionProgress);
+                        preprocessedBlob = await preprocessAudio(pendingFile, {}, (progress) => {
+                            setConversionProgress(progress);
+                            console.log(`audio conversion progress: ${Math.floor(progress * 100)}%`);
+                        }, abortController.signal);
                     } else if (isVideo) {
-                        preprocessedBlob = await prepareVideo(pendingFile, abortController, setConversionProgress);
+                        preprocessedBlob = await preprocessVideo(pendingFile, {}, (progress) => {
+                            setConversionProgress(progress);
+                            console.log(`video conversion progress: ${Math.floor(progress * 100)}%`);
+                        }, abortController.signal);
                     }
                     setConversionProgress(1);
                 }
 
                 setUploadProgress(0);
+                const uploadMimeType = getUploadMimeType(pendingFile, shouldProcessFile);
+                const metadata = await readAttachmentMetadata(preprocessedBlob, uploadMimeType, inputAsFile);
                 const attachment = await uploadFileWithProgress(
                     preprocessedBlob,
                     pendingFile.name,
-                    getUploadMimeType(pendingFile, shouldProcessFile),
+                    uploadMimeType,
                     inputAsFile,
+                    metadata,
                     setUploadProgress,
                     abortController.signal,
                 );

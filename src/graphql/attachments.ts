@@ -1,5 +1,5 @@
 import { ApolloClient, gql } from '@apollo/client';
-import { Attachment } from '@/types/attachments';
+import { Attachment, AttachmentUploadMetadata } from '@/types/attachments';
 import { userAuthTokenName } from '@/infra/consts';
 
 type UploadFileResponse = {
@@ -9,9 +9,9 @@ type UploadFileResponse = {
 };
 
 const uploadFileMutationText = `
-    mutation UploadFile($file: Upload!, $asFile: Boolean!) {
+    mutation UploadFile($file: Upload!, $asFile: Boolean!, $width: Int, $height: Int, $duration: Int) {
         attachments {
-            upload(file: $file, asFile: $asFile) {
+            upload(file: $file, asFile: $asFile, width: $width, height: $height, duration: $duration) {
                 id
                 userId
                 urlPath
@@ -21,6 +21,9 @@ const uploadFileMutationText = `
                 size
                 type
                 asFile
+                width
+                height
+                duration
                 createdAt
                 updatedAt
             }
@@ -36,6 +39,7 @@ export const uploadFile = async (
     fileName: string,
     mimeType: string,
     asFile = false,
+    metadata?: AttachmentUploadMetadata,
 ): Promise<Attachment> => {
     const file = new File([data], fileName, {
         type: mimeType || data.type || 'application/octet-stream',
@@ -47,6 +51,9 @@ export const uploadFile = async (
             variables: {
                 file,
                 asFile,
+                width: metadata?.width,
+                height: metadata?.height,
+                duration: metadata?.duration,
             },
         });
 
@@ -72,6 +79,7 @@ export const uploadFileWithProgress = async (
     fileName: string,
     mimeType: string,
     asFile = false,
+    metadata?: AttachmentUploadMetadata,
     onProgress?: (progress: number) => void,
     signal?: AbortSignal,
 ): Promise<Attachment> => {
@@ -84,6 +92,9 @@ export const uploadFileWithProgress = async (
         variables: {
             file: null,
             asFile,
+            width: metadata?.width,
+            height: metadata?.height,
+            duration: metadata?.duration,
         },
     }));
     formData.append('map', JSON.stringify({

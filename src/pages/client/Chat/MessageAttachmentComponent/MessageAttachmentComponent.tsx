@@ -1,4 +1,8 @@
+import { useState } from 'react';
+
 import { getAttachmentType, getFileIcon } from '@/helpers/attachments/attachmentDisplay';
+import { AudioAttachment } from '@/pages/client/Chat/AudioAttachment';
+import { FullscreenPreview } from '@/pages/client/Chat/FullscreenPreview';
 import { Attachment } from '@/types/attachments';
 
 import styles from './MessageAttachmentComponent.module.css';
@@ -22,6 +26,7 @@ const formatFileSize = (size: number) => {
 };
 
 export const MessageAttachmentComponent = ({ attachment }: Props) => {
+    const [previewOpen, setPreviewOpen] = useState(false);
     const attachmentUrl = getAttachmentUrl(attachment);
     const attachmentType = attachment.asFile ? 'binary' : attachment.type;
     const contentAttachmentType = attachment.type === 'binary'
@@ -35,33 +40,59 @@ export const MessageAttachmentComponent = ({ attachment }: Props) => {
         case 'image':
         case 'gif':
             return (
-                <img
-                    className={styles.image}
-                    src={attachmentUrl}
-                    alt={attachment.originalFileName}
-                    {...mediaSize}
-                />
+                <>
+                    <button className={styles.mediaButton} type="button" onClick={() => setPreviewOpen(true)}>
+                        <img
+                            className={styles.image}
+                            src={attachmentUrl}
+                            alt={attachment.originalFileName}
+                            {...mediaSize}
+                        />
+                    </button>
+                    {previewOpen && (
+                        <FullscreenPreview
+                            attachmentType={attachmentType}
+                            attachmentUrl={attachmentUrl}
+                            fileName={attachment.originalFileName}
+                            onClose={() => setPreviewOpen(false)}
+                        />
+                    )}
+                </>
             );
         case 'video':
             return (
-                <video
-                    className={styles.video}
-                    src={attachmentUrl}
-                    controls
-                    {...mediaSize}
-                />
+                <>
+                    <button className={styles.mediaButton} type="button" onClick={() => setPreviewOpen(true)}>
+                        <video
+                            className={styles.video}
+                            src={attachmentUrl}
+                            muted
+                            playsInline
+                            preload="metadata"
+                            {...mediaSize}
+                        />
+                    </button>
+                    {previewOpen && (
+                        <FullscreenPreview
+                            attachmentType={attachmentType}
+                            attachmentUrl={attachmentUrl}
+                            fileName={attachment.originalFileName}
+                            onClose={() => setPreviewOpen(false)}
+                        />
+                    )}
+                </>
             );
         case 'audio':
-            return (
-                <audio
-                    className={styles.audio}
-                    src={attachmentUrl}
-                    controls
-                />
-            );
+            return <AudioAttachment attachment={attachment} attachmentUrl={attachmentUrl} />;
         case 'binary':
             return (
-                <a className={styles.binary} href={attachmentUrl} download={attachment.originalFileName}>
+                <a
+                    className={styles.binary}
+                    href={attachmentUrl}
+                    download={attachment.originalFileName}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     {getFileIcon(contentAttachmentType, { className: styles.binaryIcon, size: 18 })}
                     <span className={styles.binaryName}>{attachment.originalFileName}</span>
                     <span className={styles.binarySize}>{formatFileSize(attachment.size)}</span>

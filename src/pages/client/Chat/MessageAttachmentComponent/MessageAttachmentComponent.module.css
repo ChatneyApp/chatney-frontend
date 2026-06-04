@@ -1,15 +1,15 @@
 @reference "tailwindcss";
 
+.mediaButton {
+    @apply block max-w-full rounded-lg border-0 bg-transparent p-0 text-left;
+}
+
 .image {
-    @apply rounded-lg max-w-full max-h-80 object-contain;
+    @apply max-h-80 max-w-full cursor-zoom-in rounded-lg object-contain;
 }
 
 .video {
-    @apply rounded-lg max-w-full max-h-80;
-}
-
-.audio {
-    @apply w-full max-w-80;
+    @apply max-h-80 max-w-full cursor-zoom-in rounded-lg;
 }
 
 .binary {

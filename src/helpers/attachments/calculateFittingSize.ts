@@ -7,8 +7,8 @@ export function calculateFittingSize(originalSize: Size, targetSide: number): Si
         return originalSize;
     }
 
-    const minSide = Math.min(originalSize.width, originalSize.height);
-    const scale = targetSide / minSide;
+    const maxSide = Math.max(originalSize.width, originalSize.height);
+    const scale = targetSide / maxSide;
 
     return {
         width: roundToEven(originalSize.width * scale),

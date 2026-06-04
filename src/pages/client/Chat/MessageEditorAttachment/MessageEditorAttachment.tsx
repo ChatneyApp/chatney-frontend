@@ -4,6 +4,7 @@ import { Music, X } from 'lucide-react';
 import { uploadFileWithProgress } from '@/graphql/attachments';
 import { getAttachmentType, getFileIcon } from '@/helpers/attachments/attachmentDisplay';
 import { preprocessAudio, preprocessVideo } from '@/helpers/attachments/ffmpeg';
+import { canPrepareImage, getSupportedImageMimeType, prepareImage } from '@/helpers/attachments/prepareImage';
 import { readAttachmentMetadata } from '@/helpers/attachments/readAttachmentMetadata';
 import { Attachment, AttachmentId } from '@/types/attachments';
 
@@ -129,30 +130,39 @@ export const MessageEditorAttachment = (props: Props) => {
         const abortController = new AbortController();
         const isVideo = pendingFile.type.startsWith('video/');
         const isAudio = pendingFile.type.startsWith('audio/');
-        const shouldProcessFile = pendingCompress && (isVideo || isAudio);
+        const isProcessableImage = canPrepareImage(pendingFile);
+        const shouldProcessFile = !inputAsFile && (
+            isProcessableImage || (pendingCompress && (isVideo || isAudio))
+        );
 
         const upload = async () => {
             try {
                 let preprocessedBlob: Blob = pendingFile;
 
                 if (shouldProcessFile) {
-                    setConversionProgress(0);
                     if (isAudio) {
+                        setConversionProgress(0);
                         preprocessedBlob = await preprocessAudio(pendingFile, {}, (progress) => {
                             setConversionProgress(progress);
                             console.log(`audio conversion progress: ${Math.floor(progress * 100)}%`);
                         }, abortController.signal);
+                        setConversionProgress(1);
                     } else if (isVideo) {
+                        setConversionProgress(0);
                         preprocessedBlob = await preprocessVideo(pendingFile, {}, (progress) => {
                             setConversionProgress(progress);
                             console.log(`video conversion progress: ${Math.floor(progress * 100)}%`);
                         }, abortController.signal);
+                        setConversionProgress(1);
+                    } else if (isProcessableImage) {
+                        preprocessedBlob = await prepareImage(pendingFile);
                     }
-                    setConversionProgress(1);
                 }
 
                 setUploadProgress(0);
-                const uploadMimeType = getUploadMimeType(pendingFile, shouldProcessFile);
+                const uploadMimeType = preprocessedBlob.type
+                    || getSupportedImageMimeType(pendingFile)
+                    || getUploadMimeType(pendingFile, shouldProcessFile);
                 const metadata = await readAttachmentMetadata(preprocessedBlob, uploadMimeType, inputAsFile);
                 const attachment = await uploadFileWithProgress(
                     preprocessedBlob,

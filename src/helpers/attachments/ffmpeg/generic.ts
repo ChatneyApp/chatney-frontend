@@ -1,6 +1,6 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 
-import { FFmpegExecResult, ProgressEvent, VideoProperties } from '@/helpers/attachments/ffmpeg/types';
+import { FFmpegExecResult, ProgressEvent, VideoProperties } from '../types';
 
 const FPS_RE = /(\d+)\sfps/i;
 const VIDEO_SIZE_RE = /Stream.+?Video.+?(\d{3,})x(\d{3,})/i;

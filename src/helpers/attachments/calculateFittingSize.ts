@@ -1,16 +1,14 @@
-import { Size } from './types';
-
-const TARGET_SIDE = 720;
+import type { Size } from './types';
 
 const roundToEven = (value: number) => Math.max(2, Math.round(value / 2) * 2);
 
-export function calculateVideoSize(originalSize: Size): Size {
-    if (originalSize.width <= TARGET_SIDE && originalSize.height <= TARGET_SIDE) {
+export function calculateFittingSize(originalSize: Size, targetSide: number): Size {
+    if (originalSize.width <= targetSide && originalSize.height <= targetSide) {
         return originalSize;
     }
 
     const minSide = Math.min(originalSize.width, originalSize.height);
-    const scale = TARGET_SIDE / minSide;
+    const scale = targetSide / minSide;
 
     return {
         width: roundToEven(originalSize.width * scale),

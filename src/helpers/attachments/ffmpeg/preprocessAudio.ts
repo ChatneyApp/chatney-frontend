@@ -3,7 +3,7 @@ import type { FFmpeg } from '@ffmpeg/ffmpeg';
 
 import type { AudioConfig } from './config';
 import { compileFfmpegAudioParams } from './config';
-import type { FFmpegExecResult, ProgressEvent } from './types';
+import type { FFmpegExecResult, ProgressEvent } from '../types';
 import { initFfmpeg } from './init';
 import { ffmpegExec, ffmpegListFilesRaw } from './generic';
 

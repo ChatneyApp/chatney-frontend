@@ -3,10 +3,12 @@ import type { FFmpeg } from '@ffmpeg/ffmpeg';
 
 import type { VideoConfig } from './config';
 import { compileFfmpegVideoParams } from './config';
-import { calculateVideoSize } from './calculateVideoSize';
-import type { FFmpegExecResult, ProgressEvent, Size } from './types';
+import { calculateFittingSize } from '../calculateFittingSize';
+import type { FFmpegExecResult, ProgressEvent, Size } from '../types';
 import { initFfmpeg } from './init';
 import { ffmpegExec, ffmpegListFilesRaw, getVideoProperties } from './generic';
+
+const TARGET_SIDE = 720;
 
 const VIDEO_TMP = {
     source: 'input.mp4',
@@ -57,7 +59,7 @@ export async function preprocessVideo(
     console.log('inputVideoProps');
     console.table(inputVideoProps);
 
-    const outputVideoSize = calculateVideoSize(inputVideoProps);
+    const outputVideoSize = calculateFittingSize(inputVideoProps, TARGET_SIDE);
     console.log('outputVideoSize');
     console.table(outputVideoSize);
 

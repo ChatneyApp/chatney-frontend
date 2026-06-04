@@ -80,12 +80,35 @@ const readWaveform = async (attachmentUrl: string) => {
     }
 };
 
+const drawRoundedRect = (
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    radius: number,
+) => {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+};
+
 export const AudioAttachment = ({ attachment, attachmentUrl }: Props) => {
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(attachment.duration ?? 0);
     const [waveform, setWaveform] = useState(EMPTY_WAVEFORM);
+    const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
     const progress = duration > 0 ? currentTime / duration : 0;
 
     useEffect(() => {
@@ -131,6 +154,62 @@ export const AudioAttachment = ({ attachment, attachmentUrl }: Props) => {
             cancelled = true;
         };
     }, [attachmentUrl]);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) {
+            return;
+        }
+
+        const updateCanvasSize = () => {
+            const rect = canvas.getBoundingClientRect();
+
+            setCanvasSize({
+                width: rect.width,
+                height: rect.height,
+            });
+        };
+        const resizeObserver = new ResizeObserver(updateCanvasSize);
+
+        updateCanvasSize();
+        resizeObserver.observe(canvas);
+
+        return () => resizeObserver.disconnect();
+    }, []);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) {
+            return;
+        }
+
+        const scale = window.devicePixelRatio || 1;
+        const width = Math.max(1, Math.floor(canvasSize.width));
+        const height = Math.max(1, Math.floor(canvasSize.height));
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+            return;
+        }
+
+        canvas.width = Math.floor(width * scale);
+        canvas.height = Math.floor(height * scale);
+        ctx.setTransform(scale, 0, 0, scale, 0, 0);
+        ctx.clearRect(0, 0, width, height);
+
+        const step = width / waveform.length;
+        const barWidth = Math.max(1, step * 0.48);
+        const playedBars = progress * waveform.length;
+
+        waveform.forEach((barHeight, index) => {
+            const x = index * step + (step - barWidth) / 2;
+            const y = (height - barHeight) / 2;
+            const radius = Math.min(barWidth / 2, barHeight / 2);
+
+            ctx.fillStyle = index < playedBars ? 'rgb(56 189 248)' : 'rgb(71 85 105)';
+            drawRoundedRect(ctx, x, y, barWidth, barHeight, radius);
+            ctx.fill();
+        });
+    }, [canvasSize, progress, waveform]);
 
     const togglePlayback = async () => {
         const audio = audioRef.current;
@@ -204,17 +283,7 @@ export const AudioAttachment = ({ attachment, attachmentUrl }: Props) => {
                     aria-valuemax={duration}
                     aria-valuenow={currentTime}
                 >
-                    {waveform.map((height, index) => {
-                        const isPlayed = index < progress * WAVEFORM_BARS;
-
-                        return (
-                            <span
-                                className={`${styles.waveformBar} ${isPlayed ? styles.waveformBarPlayed : ''}`}
-                                key={index}
-                                style={{ height }}
-                            />
-                        );
-                    })}
+                    <canvas className={styles.waveformCanvas} ref={canvasRef} />
                 </div>
                 <span className={styles.audioTime}>
                     {formatTime(currentTime)} / {formatTime(duration)}

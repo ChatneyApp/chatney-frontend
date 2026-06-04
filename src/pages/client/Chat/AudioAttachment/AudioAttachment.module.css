@@ -13,16 +13,11 @@
 }
 
 .waveform {
-    @apply flex h-7 cursor-pointer items-center gap-px;
+    @apply h-7 w-[20em] max-w-full cursor-pointer;
 }
 
-.waveformBar {
-    @apply block w-0.5 rounded-full;
-    background: rgb(71 85 105);
-}
-
-.waveformBarPlayed {
-    background: rgb(56 189 248);
+.waveformCanvas {
+    @apply block h-full w-full;
 }
 
 .audioTime {

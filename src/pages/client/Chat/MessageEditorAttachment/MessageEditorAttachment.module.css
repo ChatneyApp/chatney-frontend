@@ -34,26 +34,6 @@
     transition: opacity 0.2s;
 }
 
-.progress {
-    @apply absolute bottom-1 left-1 right-1 rounded bg-black/70 p-1 text-[10px] text-white;
-}
-
-.progress + .progress {
-    @apply bottom-8;
-}
-
-.progressLabel {
-    @apply mb-0.5 flex items-center justify-between gap-1;
-}
-
-.progressTrack {
-    @apply h-1 overflow-hidden rounded bg-gray-600;
-}
-
-.progressFill {
-    @apply h-full rounded bg-indigo-500;
-}
-
 .error {
     @apply absolute inset-x-1 bottom-1 rounded bg-red-900/90 px-1 py-0.5 text-center text-[10px] text-white;
 }

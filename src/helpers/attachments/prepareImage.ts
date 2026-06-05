@@ -5,7 +5,7 @@ import { imageLoadPromise } from '@/helpers/attachments/imageLoadPromise';
 import type { Size } from '@/helpers/attachments/types';
 
 const TARGET_SIDE = 1024;
-const JPEG_QUALITY = 0.84;
+const IMAGE_QUALITY = 0.84;
 
 const SUPPORTED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png']);
 
@@ -58,9 +58,5 @@ export const prepareImage = async (file: File): Promise<Blob> => {
 
     const canvas = await blobToCanvas(file, fittingSize);
 
-    return await canvasToBlob(
-        canvas,
-        mimeType,
-        mimeType === 'image/jpeg' ? JPEG_QUALITY : undefined,
-    );
+    return await canvasToBlob(canvas, mimeType, IMAGE_QUALITY);
 };

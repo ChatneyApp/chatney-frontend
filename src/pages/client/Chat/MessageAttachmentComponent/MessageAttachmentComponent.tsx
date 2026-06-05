@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { getAttachmentType, getFileIcon } from '@/helpers/attachments/attachmentDisplay';
+import { formatFileSize } from '@/helpers/utils';
 import { AudioAttachment } from '@/pages/client/Chat/AudioAttachment';
 import { FullscreenPreview } from '@/pages/client/Chat/FullscreenPreview';
 import { Attachment } from '@/types/attachments';
@@ -12,18 +13,6 @@ type Props = {
 }
 
 const getAttachmentUrl = (attachment: Attachment) => `http://localhost:9000/chatney/${attachment.urlPath}`;
-
-const formatFileSize = (size: number) => {
-    if (size < 1024) {
-        return `${size} B`;
-    }
-
-    if (size < 1024 * 1024) {
-        return `${(size / 1024).toFixed(1)} KB`;
-    }
-
-    return `${(size / 1024 / 1024).toFixed(1)} MB`;
-};
 
 export const MessageAttachmentComponent = ({ attachment }: Props) => {
     const [previewOpen, setPreviewOpen] = useState(false);

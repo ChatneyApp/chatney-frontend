@@ -1,7 +1,7 @@
 import { fetchFile } from '@ffmpeg/util';
 import type { FFmpeg } from '@ffmpeg/ffmpeg';
 
-import type { AudioConfig } from './config';
+import type { AudioConfig } from '../types';
 import { compileFfmpegAudioParams } from './config';
 import type { FFmpegExecResult, ProgressEvent } from '../types';
 import { initFfmpeg } from './init';

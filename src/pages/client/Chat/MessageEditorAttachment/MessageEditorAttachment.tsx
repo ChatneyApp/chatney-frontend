@@ -6,6 +6,8 @@ import { getAttachmentType, getFileIcon } from '@/helpers/attachments/attachment
 import { preprocessAudio, preprocessVideo } from '@/helpers/attachments/ffmpeg';
 import { canPrepareImage, getSupportedImageMimeType, prepareImage } from '@/helpers/attachments/prepareImage';
 import { readAttachmentMetadata } from '@/helpers/attachments/readAttachmentMetadata';
+import { formatFileSize } from '@/helpers/utils';
+import { ProgressBar } from '@/pages/client/Chat/ProgressBar';
 import { Attachment, AttachmentId } from '@/types/attachments';
 
 import styles from './MessageEditorAttachment.module.css';
@@ -38,22 +40,6 @@ const getDisplayAttachmentType = (mimeType: string, asFile: boolean) => {
     return getAttachmentType(mimeType);
 };
 
-const formatFileSize = (size?: number) => {
-    if (size == null) {
-        return null;
-    }
-
-    if (size < 1024) {
-        return `${size} B`;
-    }
-
-    if (size < 1024 * 1024) {
-        return `${(size / 1024).toFixed(1)} KB`;
-    }
-
-    return `${(size / 1024 / 1024).toFixed(1)} MB`;
-};
-
 const getUploadMimeType = (file: File, shouldProcessFile: boolean) => {
     if (!shouldProcessFile) {
         return file.type;
@@ -68,22 +54,6 @@ const getUploadMimeType = (file: File, shouldProcessFile: boolean) => {
     }
 
     return file.type;
-};
-
-const ProgressBar = ({ label, progress }: { label: string; progress: number }) => {
-    const percent = Math.max(0, Math.min(100, Math.round(progress * 100)));
-
-    return (
-        <div className={styles.progress}>
-            <div className={styles.progressLabel}>
-                <span>{label}</span>
-                <span>{percent}%</span>
-            </div>
-            <div className={styles.progressTrack}>
-                <div className={styles.progressFill} style={{ width: `${percent}%` }} />
-            </div>
-        </div>
-    );
 };
 
 export const MessageEditorAttachment = (props: Props) => {

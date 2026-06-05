@@ -1,7 +1,9 @@
 import type { Config } from 'jest';
 import { createDefaultPreset } from 'ts-jest';
 
-const tsJestTransformCfg = createDefaultPreset().transform;
+const tsJestTransformCfg = createDefaultPreset({
+  tsconfig: './tsconfig.test.json',
+}).transform;
 
 export default {
   testEnvironment: 'node',

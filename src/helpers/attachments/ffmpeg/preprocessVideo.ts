@@ -1,7 +1,7 @@
 import { fetchFile } from '@ffmpeg/util';
 import type { FFmpeg } from '@ffmpeg/ffmpeg';
 
-import type { VideoConfig } from './config';
+import type { VideoConfig } from '../types';
 import { compileFfmpegVideoParams } from './config';
 import { calculateFittingSize } from '../calculateFittingSize';
 import type { FFmpegExecResult, ProgressEvent, Size } from '../types';

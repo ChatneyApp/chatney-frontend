@@ -1,4 +1,6 @@
 // [libx264 @ 0xe00510] Possible presets: ultrafast superfast veryfast faster fast medium slow slower veryslow placebo
+import { AudioConfig, VideoConfig } from '@/helpers/attachments/types';
+
 export enum Libx264VideoCompressionPreset {
     ultrafast = 'ultrafast',
     superfast = 'superfast',
@@ -11,24 +13,6 @@ export enum Libx264VideoCompressionPreset {
     veryslow = 'veryslow',
     placebo = 'placebo',
 }
-
-export type AudioConfig = {
-    audioFrequency?: string;
-    audioTargetBitrate?: string;
-}
-
-export type VideoConfig = {
-    audioFrequency?: string;
-    audioTargetBitrate?: string;
-    videoBufferSize?: string;
-    videoMinRate?: string;
-    videoMaxRate?: string;
-    videoH264Preset?: string;
-    videoFramerate?: string;
-}
-
-export const NORMALIZED_VIDEO_SIZE = { width: 576, height: 1024 };
-export const NORMALIZED_VIDEO_BG_COLOR = 'black';
 
 const DEFAULT_AUDIO_FREQUENCY = '44100';
 const DEFAULT_AUDIO_BITRATE = '128k';

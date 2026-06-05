@@ -2,11 +2,12 @@ import { FormEventHandler, useCallback, useEffect, useState } from 'react';
 import { Paperclip, X } from 'lucide-react';
 import { Dialog } from 'radix-ui';
 
+import { Button } from '@/components/Button';
+import { formatFileSize } from '@/helpers/utils';
 import { useDropZone } from '@/hooks/useDropZone';
 import { MessageEditorAttachment } from '@/pages/client/Chat/MessageEditorAttachment';
 import { AttachmentId, Attachment } from '@/types/attachments';
 import { MessageId } from '@/types/messages';
-import { Button } from '@/components/Button';
 
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './MessageInput.module.css';
@@ -41,18 +42,6 @@ const canCompressFile = (file: File) => file.type.startsWith('video/') || file.t
 
 const canUploadAsFile = (file: File) =>
     file.type.startsWith('image/') || file.type.startsWith('video/') || file.type.startsWith('audio/');
-
-const formatFileSize = (size: number) => {
-    if (size < 1024) {
-        return `${size} B`;
-    }
-
-    if (size < 1024 * 1024) {
-        return `${(size / 1024).toFixed(1)} KB`;
-    }
-
-    return `${(size / 1024 / 1024).toFixed(1)} MB`;
-};
 
 export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdit, onCancelEdit, onClearReply }: Props) {
     const [isSending, setIsSending] = useState(false);

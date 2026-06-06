@@ -1,0 +1,25 @@
+@reference "tailwindcss";
+
+.audioPlayer {
+    @apply flex w-full max-w-[32rem] items-center gap-3 rounded-2xl border border-sky-500/20 bg-slate-900/95 px-3 py-3 text-slate-100 shadow-lg;
+}
+
+.audioButton {
+    @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky-500 text-white transition hover:bg-sky-400;
+}
+
+.audioBody {
+    @apply min-w-0 flex-1;
+}
+
+.waveform {
+    @apply h-7 w-[20em] max-w-full cursor-pointer;
+}
+
+.waveformCanvas {
+    @apply block h-full w-full;
+}
+
+.audioTime {
+    @apply block text-xs text-slate-400;
+}

@@ -1,4 +1,4 @@
-﻿import { createContext, PropsWithChildren, startTransition, useContext } from 'react';
+import { createContext, PropsWithChildren, startTransition, useContext } from 'react';
 import { useSuspenseQuery } from '@apollo/client/react';
 
 import { Workspace } from '@/types/workspaces';

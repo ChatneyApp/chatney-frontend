@@ -66,7 +66,12 @@ export const postNewMessage = async (client: ApolloClient, messageDto: CreateMes
                         originalFileName
                         extension
                         mimeType
+                        size
                         type
+                        asFile
+                        width
+                        height
+                        duration
                         createdAt
                         updatedAt
                     }
@@ -251,7 +256,12 @@ export const getChannelMessagesList = async (client: ApolloClient, channelId: Ch
                         originalFileName
                         extension
                         mimeType
+                        size
                         type
+                        asFile
+                        width
+                        height
+                        duration
                         createdAt
                         updatedAt
                     }
@@ -325,7 +335,12 @@ export const getThreadMessagesList = async (client: ApolloClient, threadId: Mess
                         originalFileName
                         extension
                         mimeType
+                        size
                         type
+                        asFile
+                        width
+                        height
+                        duration
                         createdAt
                         updatedAt
                     }

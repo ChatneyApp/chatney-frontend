@@ -1,4 +1,4 @@
-﻿@reference "tailwindcss";
+@reference "tailwindcss";
 
 .container {
     --bg-color-1: #366aaa;
@@ -41,14 +41,6 @@
 
 .textContent {
     @apply text-gray-200 break-all py-2;
-}
-
-.attachmentsContainer {
-    @apply p-2;
-}
-
-.attachment {
-    @apply rounded-lg;
 }
 
 .isMine {

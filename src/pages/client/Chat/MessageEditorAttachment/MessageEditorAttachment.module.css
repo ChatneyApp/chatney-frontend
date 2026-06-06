@@ -1,13 +1,10 @@
-﻿.container {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    background: transparent none no-repeat center center;
-    background-size: cover;
-    border: solid 1px transparent;
+@reference "tailwindcss";
+
+.container {
+    @apply relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded border border-transparent bg-gray-900 text-gray-200;
 
     &:hover {
-        border-color: #666;
+        @apply border-gray-500;
         transition: border-color 0.2s;
 
         .deleteButton {
@@ -16,16 +13,27 @@
     }
 }
 
+.previewMedia {
+    @apply h-full w-full object-cover;
+}
+
+.fallbackPreview {
+    @apply flex h-full w-full flex-col items-center justify-center gap-1 px-2 text-center text-[11px] text-gray-300;
+}
+
+.fallbackPreview span {
+    @apply line-clamp-2 max-w-full break-all;
+}
+
+.fileSize {
+    @apply text-[10px] text-gray-400;
+}
+
 .deleteButton {
-    position: absolute;
-    right: 0;
-    top: 0;
-    background-color: red;
-    color: white;
-    width: 12px;
-    height: 12px;
-    font-size: 8px;
-    opacity: 0;
+    @apply absolute right-1 top-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded bg-red-600 text-white opacity-0;
     transition: opacity 0.2s;
-    cursor: pointer;
+}
+
+.error {
+    @apply absolute inset-x-1 bottom-1 rounded bg-red-900/90 px-1 py-0.5 text-center text-[10px] text-white;
 }

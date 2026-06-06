@@ -1,4 +1,4 @@
-﻿import clsx from 'clsx';
+import clsx from 'clsx';
 import { Reaction } from '@/types/messages';
 
 import styles from './MessageReaction.module.css';

@@ -1,4 +1,4 @@
-﻿import { UrlPreview } from '@/types/messages';
+import { UrlPreview } from '@/types/messages';
 import { MessageUrlPreviewComponent } from './MessageUrlPreviewComponent';
 
 export const MessageUrlPreviewsComponent = ({ urlPreviews }: { urlPreviews: UrlPreview[] }) => {

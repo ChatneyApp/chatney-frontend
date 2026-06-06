@@ -1,4 +1,4 @@
-﻿@reference "tailwindcss";
+@reference "tailwindcss";
 
 .form {
     @apply w-1/2 mx-auto p-6 bg-white rounded-lg shadow-md text-gray-700;

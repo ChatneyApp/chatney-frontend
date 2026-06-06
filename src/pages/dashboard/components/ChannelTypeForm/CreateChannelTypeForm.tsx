@@ -34,7 +34,7 @@ export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: P
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
-            label: channelType?.label ?? '',
+            label: channelType?.name ?? '',
             key: channelType?.key ?? '',
             baseRoleId: channelType?.baseRoleId ?? 0,
         }

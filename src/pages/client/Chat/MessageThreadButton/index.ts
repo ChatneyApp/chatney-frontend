@@ -1,1 +1,1 @@
-﻿export { MessageThreadButton } from './MessageThreadButton';
+export { MessageThreadButton } from './MessageThreadButton';

@@ -1,1 +1,1 @@
-﻿export { MessageUrlPreviewsComponent } from './MessageUrlPreviewsComponent';
+export { MessageUrlPreviewsComponent } from './MessageUrlPreviewsComponent';

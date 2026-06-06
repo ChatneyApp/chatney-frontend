@@ -1,0 +1,25 @@
+@reference "tailwindcss";
+
+.container {
+    @apply relative flex w-16 flex-col items-center justify-between bg-gray-800 py-4;
+}
+
+.workspaceItems {
+    @apply space-y-4;
+}
+
+.workspaceButton {
+    @apply flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-gray-700 text-sm hover:bg-gray-500;
+}
+
+.workspaceButtonActive {
+    @apply bg-gray-500;
+}
+
+.workspaceInitialActive {
+    @apply font-bold;
+}
+
+.createWorkspaceButton {
+    @apply flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-gray-700 text-sm hover:bg-gray-600;
+}

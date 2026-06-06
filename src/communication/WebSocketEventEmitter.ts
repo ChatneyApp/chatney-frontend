@@ -1,4 +1,4 @@
-﻿import { MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
+import { MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
 import { UserId } from '@/types/users';
 import { ChannelId } from '@/types/channels';
 

@@ -1,4 +1,4 @@
-﻿import { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import { NavLink, type NavLinkRenderProps } from 'react-router';
 import { HomeIcon } from 'lucide-react';
 

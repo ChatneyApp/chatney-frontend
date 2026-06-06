@@ -1,0 +1,1 @@
+export { MessageAttachmentComponent } from './MessageAttachmentComponent';

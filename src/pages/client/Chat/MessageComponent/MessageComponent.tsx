@@ -1,4 +1,4 @@
-﻿import { CornerUpLeft, Pencil, XCircle } from 'lucide-react';
+import { CornerUpLeft, Pencil, XCircle } from 'lucide-react';
 import clsx from 'clsx';
 import { MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
 import { isDev } from '@/helpers/env';
@@ -7,6 +7,7 @@ import { MessageThreadButton } from '@/pages/client/Chat/MessageThreadButton';
 import { MessageUrlPreviewsComponent } from '@/pages/client/Chat/MessageUrlPreviewsComponent';
 import { UserId } from '@/types/users';
 import { formatTimestamp } from '@/helpers/formatTimestamp';
+import { MessageAttachments } from '@/pages/client/Chat/MessageAttachments';
 
 import styles from './MessageComponent.module.css';
 
@@ -77,17 +78,7 @@ export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, o
                         <span className={styles.editedLabel}> (edited)</span>
                     )}
                 </div>
-                <div className={styles.attachmentsContainer}>
-                    {message.attachments
-                        .filter(attachment => attachment.type === 'image')
-                        .map(attachment => (
-                            <img
-                                key={attachment.id}
-                                className={styles.attachment}
-                                src={`http://localhost:9000/chatney/${attachment.urlPath}`}
-                            />
-                        ))}
-                </div>
+                <MessageAttachments attachments={message.attachments}/>
                 <MessageUrlPreviewsComponent urlPreviews={message.urlPreviews}/>
                 <MessageReactions
                     reactions={message.reactions}

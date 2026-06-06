@@ -1,4 +1,4 @@
-﻿import { useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useMutation, useSuspenseQuery } from '@apollo/client/react';
 import { useState } from 'react';
 import { Dialog } from 'radix-ui';

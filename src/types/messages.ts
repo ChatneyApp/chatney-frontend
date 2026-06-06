@@ -1,4 +1,4 @@
-﻿import { UserId } from '@/types/users';
+import { UserId } from '@/types/users';
 import { Attachment, AttachmentId } from '@/types/attachments';
 import { ChannelId } from '@/types/channels';
 

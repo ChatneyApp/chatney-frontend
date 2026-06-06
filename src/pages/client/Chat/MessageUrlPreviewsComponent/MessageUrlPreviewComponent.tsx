@@ -1,4 +1,4 @@
-﻿import { UrlPreview } from '@/types/messages';
+import { UrlPreview } from '@/types/messages';
 
 import styles from './MessageUrlPreviewComponent.module.css';
 

@@ -1,4 +1,4 @@
-﻿import { Route } from 'react-router';
+import { Route } from 'react-router';
 
 import { DashboardLayout } from '@/pages/dashboard/layout/DashboardLayout';
 import { DashboardHomePage } from '@/pages/dashboard/DashboardHomePage';

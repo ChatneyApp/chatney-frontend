@@ -1,4 +1,4 @@
-﻿import { ChannelId } from '@/types/channels';
+import { ChannelId } from '@/types/channels';
 
 export type ChannelListItem = {
     name: string,

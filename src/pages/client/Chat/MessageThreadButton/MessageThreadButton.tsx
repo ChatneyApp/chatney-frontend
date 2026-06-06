@@ -1,4 +1,4 @@
-﻿import { MessageSquareMore } from 'lucide-react';
+import { MessageSquareMore } from 'lucide-react';
 
 import styles from './MessageThreadButton.module.css';
 

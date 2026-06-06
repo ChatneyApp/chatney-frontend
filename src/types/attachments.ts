@@ -1,6 +1,12 @@
-﻿import { UserId } from '@/types/users';
+import { UserId } from '@/types/users';
 
 export type AttachmentId = number;
+
+export type AttachmentUploadMetadata = {
+    width?: number;
+    height?: number;
+    duration?: number;
+};
 
 export type Attachment = {
     id: AttachmentId;
@@ -9,12 +15,12 @@ export type Attachment = {
     originalFileName: string;
     extension: string;
     mimeType: string;
-    type: 'image' | 'video' | 'binary';
+    size: number;
+    type: 'image' | 'gif' | 'video' | 'audio' | 'binary';
+    asFile: boolean;
+    width: number | null;
+    height: number | null;
+    duration: number | null;
     createdAt: Date;
     updatedAt: Date;
-}
-
-export type UploadedAttachment = {
-    attachmentId: AttachmentId;
-    s3Url: string;
 }

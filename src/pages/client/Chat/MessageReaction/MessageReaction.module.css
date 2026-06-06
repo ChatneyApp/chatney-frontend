@@ -1,4 +1,4 @@
-﻿@reference "tailwindcss";
+@reference "tailwindcss";
 
 .reaction {
     @apply flex flex-row gap-1 bg-blue-500 border-blue-400 border-2 rounded-lg px-2 py-0.5 cursor-pointer hover:bg-blue-700;

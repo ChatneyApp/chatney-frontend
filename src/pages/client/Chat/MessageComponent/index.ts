@@ -1,1 +1,1 @@
-﻿export { MessageComponent } from './MessageComponent';
+export { MessageComponent } from './MessageComponent';

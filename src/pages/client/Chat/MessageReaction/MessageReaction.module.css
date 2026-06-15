@@ -1,17 +1,19 @@
 @reference "tailwindcss";
 
 .reaction {
-    @apply flex flex-row gap-1 bg-blue-500 border-blue-400 border-2 rounded-lg px-2 py-0.5 cursor-pointer hover:bg-blue-700;
+    @apply inline-flex h-9 min-w-16 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#263653] bg-[#111c32] px-3 text-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.035),0_8px_22px_rgba(2,8,23,0.16)] transition hover:-translate-y-0.5 hover:border-[#4b5b86] hover:bg-[#17243d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8f96ff];
 
     &.mine {
-        @apply bg-green-500 border-green-400 hover:bg-green-700;
+        @apply border-[#46547e] bg-[#17213a] shadow-[inset_0_0_0_1px_rgba(143,150,255,0.28),0_8px_22px_rgba(2,8,23,0.18)] hover:border-[#717cc4] hover:bg-[#1c2947];
     }
 }
 
 .reactionBody {
-
+    @apply flex size-5 shrink-0 items-center justify-center text-[1.15rem];
+    font-family: 'Noto Color Emoji', sans-serif;
+    line-height: 1;
 }
 
 .counter {
-    @apply text-yellow-700 px-1;
+    @apply min-w-4 text-center text-base font-black leading-none text-[#9ca6ff];
 }

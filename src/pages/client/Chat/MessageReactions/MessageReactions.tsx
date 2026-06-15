@@ -3,6 +3,7 @@ import { Reaction } from '@/types/messages';
 import { ReactionSelectionDialog } from '../ReactionSelectionDialog';
 import { MessageReaction } from '../MessageReaction';
 import styles from './MessageReactions.module.css';
+import { ALL_REACTION_CODES } from '@/pages/client/Chat/emojis';
 
 type Props = {
     reactions: Reaction[];
@@ -25,7 +26,7 @@ export const MessageReactions = ({ reactions, myReactions, onAddReaction, onDele
                 />
             ))}
         <ReactionSelectionDialog
-            reactions={['fire', 'smile', 'fff']}
+            reactions={ALL_REACTION_CODES}
             onSelect={onAddReaction}
             myReactions={myReactions}
         />

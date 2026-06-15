@@ -1,20 +1,69 @@
 @reference "tailwindcss";
 
 .popupArrow {
-    @apply fill-gray-500;
+    @apply fill-[#1d2a44];
 }
+
 .triggerButton {
-    @apply inline-flex size-[35px] cursor-default items-center justify-center rounded-full hover:bg-amber-300;
+    @apply inline-flex size-9 cursor-pointer items-center justify-center rounded-full text-lg transition hover:bg-[#24314d];
+    font-family: 'Noto Color Emoji', sans-serif;
+    line-height: 1;
 }
 
 .popoverContent {
-    @apply max-w-[20em] rounded bg-gray-500 p-5 will-change-[transform,opacity];
+    @apply flex max-h-[min(42rem,calc(100vh-2rem))] w-[min(82vw,29rem)] flex-col overflow-hidden rounded-[1.35rem] border border-white/5 bg-[#1d2a44] p-0 text-[#e9edff] shadow-[0_24px_70px_rgba(3,8,23,0.5)] will-change-[transform,opacity];
+}
+
+.searchField {
+    @apply m-5 mb-4 flex h-[4.25rem] items-center gap-3 rounded-2xl bg-[#071226] px-5 text-[#9aa6c4] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.02)];
+}
+
+.searchIcon {
+    @apply size-6 shrink-0 text-[#9aa6c4];
+}
+
+.searchInput {
+    @apply min-w-0 flex-1 bg-transparent text-[1.35rem] font-semibold text-[#e9edff] outline-none placeholder:text-[#697693];
+}
+
+.reactionSections {
+    @apply min-h-0 flex-1 overflow-y-auto border-t border-white/[0.03] px-4 pb-3 pt-1;
+}
+
+.reactionSection {
+    @apply py-2;
+}
+
+.sectionTitle {
+    @apply mb-3 text-[0.82rem] font-black uppercase tracking-[0.18em] text-[#aab3ce];
 }
 
 .reactionsList {
-    @apply flex flex-row flex-wrap gap-2.5;
+    @apply grid grid-cols-8 gap-1.5;
 }
 
 .reaction {
-    @apply bg-gray-700 border-transparent hover:border-blue-400 border-2 py-1 px-2 rounded-full cursor-pointer hover:bg-gray-600;
+    @apply flex aspect-square items-center justify-center rounded-xl border border-transparent bg-transparent text-[1.45rem] transition hover:-translate-y-0.5 hover:border-white/10 hover:bg-[#273653] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9aa6ff];
+    font-family: 'Noto Color Emoji', sans-serif;
+    line-height: 1;
+}
+
+.emptyState {
+    @apply py-8 text-center text-sm font-semibold text-[#8d99b7];
+}
+
+.footer {
+    @apply flex items-center justify-between bg-[#071226] px-5 py-4;
+}
+
+.footerActions {
+    @apply flex items-center gap-4 text-[#92a0c1];
+}
+
+.footerButton {
+    @apply flex size-8 items-center justify-center rounded-xl transition hover:bg-white/5 hover:text-[#c9d0ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9aa6ff];
+}
+
+.viewAllButton {
+    @apply rounded-xl px-2 py-1 text-sm font-black uppercase tracking-[-0.02em] text-[#b9b7ff] transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9aa6ff];
 }

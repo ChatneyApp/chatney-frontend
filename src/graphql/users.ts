@@ -18,7 +18,6 @@ const GET_USER_BY_ID_QUERY = gql`
                 banned
                 muted
                 email
-                workspaceIds
             }
         }
     }

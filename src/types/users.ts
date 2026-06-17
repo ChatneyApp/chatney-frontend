@@ -1,5 +1,3 @@
-import { Workspace } from './workspaces';
-
 export type UserId = string;
 export type UserAuthorization = {
     id: UserId;
@@ -13,5 +11,4 @@ export type User = {
     banned: boolean;
     muted: boolean;
     email: string;
-    workspaces: Workspace[];
 }

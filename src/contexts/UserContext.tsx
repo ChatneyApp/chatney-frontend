@@ -2,7 +2,6 @@ import { createContext, PropsWithChildren, useContext, useEffect, useState } fro
 import { useApolloClient } from '@apollo/client/react';
 import { getUserById } from '@/graphql/users';
 import { loginPageUrl, userAuthId, userAuthTokenName } from '@/infra/consts';
-import { Workspace } from '@/types/workspaces';
 import { UserId } from '@/types/users';
 
 const UserContext = createContext<UserContextData | null>(null);
@@ -16,7 +15,6 @@ export type UserContextData = {
         banned: boolean;
         muted: boolean;
         email: string;
-        workspaces: Workspace[];
     } | null;
     logout: typeof logoutFunction;
 }

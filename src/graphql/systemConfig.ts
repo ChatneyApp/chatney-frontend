@@ -9,10 +9,10 @@ export type GetConfigListResponse = {
 }
 
 export type InstallSystemResponse = {
-    configs: {
+    installWizard: {
         installSystem: {
             status: string;
-            message: string;
+            message?: string | null;
         }
     }
 }
@@ -59,8 +59,13 @@ export const installSystem = async (client: ApolloClient): Promise<boolean> => {
             mutation: INSTALL_SYSTEM,
         });
 
-        if (!data?.configs.installSystem) {
+        const result = data?.installWizard?.installSystem;
+        if (!result) {
             throw new Error('System install error');
+        }
+
+        if (result.status !== 'success' && result.status !== 'installed') {
+            throw new Error(result.message ?? `Install failed with status: ${result.status}`);
         }
 
         return true;

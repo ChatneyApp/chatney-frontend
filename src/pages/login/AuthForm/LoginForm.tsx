@@ -50,12 +50,13 @@ export const LoginForm = () => {
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className={styles.formGroup}>
-                    <label htmlFor="login" className={styles.label}>Email</label>
+                    <label htmlFor="login" className={styles.label}>Email or nickname</label>
                     <input
                         id="login"
-                        type="email"
-                        placeholder="Enter your email"
-                        {...register('login', { required: 'Email is required' })}
+                        type="text"
+                        placeholder="Enter your email or nickname"
+                        autoComplete="username"
+                        {...register('login', { required: 'Email or nickname is required' })}
                         className={styles.input}
                     />
                     {errors.login && <span className={styles.errorText}>{errors.login.message}</span>}

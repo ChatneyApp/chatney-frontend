@@ -4,11 +4,13 @@ import { useMutation, useSuspenseQuery } from '@apollo/client/react';
 
 import { GET_MY_PROFILE, UPDATE_MY_PROFILE, type UpdateMyProfileResponse } from '@/graphql/profile';
 import { useUser } from '@/contexts/UserContext';
+import { getUserAvatarInitial, getUserDisplayName, validateNickname, MAX_NICKNAME_LENGTH } from '@/helpers/nickname';
 
 import styles from './ProfilePage.module.css';
 
 type ProfileFormInputs = {
-    name: string;
+    nickname: string;
+    fullName: string;
     email: string;
     avatarUrl: string;
     currentPassword: string;
@@ -51,7 +53,8 @@ function ProfilePageContent() {
         formState: { errors },
     } = useForm<ProfileFormInputs>({
         defaultValues: {
-            name: user.name,
+            nickname: user.nickname,
+            fullName: user.fullName ?? '',
             email: user.email,
             avatarUrl: user.avatarUrl ?? '',
             currentPassword: '',
@@ -78,7 +81,8 @@ function ProfilePageContent() {
             await updateProfile({
                 variables: {
                     profileDto: {
-                        name: formData.name.trim(),
+                        nickname: formData.nickname.trim(),
+                        fullName: formData.fullName.trim() || null,
                         email: formData.email.trim(),
                         avatarUrl: formData.avatarUrl.trim() || null,
                         currentPassword: formData.newPassword ? formData.currentPassword : null,
@@ -93,7 +97,8 @@ function ProfilePageContent() {
             const refreshedUser = refreshed.data!.users.myProfile.user;
 
             reset({
-                name: refreshedUser.name,
+                nickname: refreshedUser.nickname,
+                fullName: refreshedUser.fullName ?? '',
                 email: refreshedUser.email,
                 avatarUrl: refreshedUser.avatarUrl ?? '',
                 currentPassword: '',
@@ -105,7 +110,8 @@ function ProfilePageContent() {
         }
     };
 
-    const avatarInitial = user.name.charAt(0).toUpperCase();
+    const avatarInitial = getUserAvatarInitial(user);
+    const displayName = getUserDisplayName(user);
 
     return (
         <div className={styles.page}>
@@ -118,7 +124,8 @@ function ProfilePageContent() {
                     )}
                 </div>
                 <div className={styles.profileMeta}>
-                    <h1 className={styles.profileName}>{user.name}</h1>
+                    <h1 className={styles.profileName}>{displayName}</h1>
+                    <div className={styles.profileRole}>@{user.nickname}</div>
                     <div className={styles.profileRole}>
                         {profile.globalRoleName ?? 'No role assigned'}
                     </div>
@@ -156,15 +163,26 @@ function ProfilePageContent() {
                 <section className={styles.card}>
                     <h2 className={styles.cardTitle}>Account details</h2>
                     <div className={styles.field}>
-                        <label className={styles.label} htmlFor="profile-name">Name</label>
+                        <label className={styles.label} htmlFor="profile-nickname">Nickname</label>
                         <input
-                            id="profile-name"
+                            id="profile-nickname"
                             className={styles.input}
-                            {...register('name', { required: 'Name is required' })}
+                            {...register('nickname', { validate: validateNickname })}
+                            maxLength={MAX_NICKNAME_LENGTH}
                         />
-                        {errors.name && (
-                            <span className={styles.errorText}>{errors.name.message}</span>
+                        {errors.nickname && (
+                            <span className={styles.errorText}>{errors.nickname.message}</span>
                         )}
+                    </div>
+
+                    <div className={styles.field}>
+                        <label className={styles.label} htmlFor="profile-full-name">Full name</label>
+                        <input
+                            id="profile-full-name"
+                            className={styles.input}
+                            placeholder="Optional"
+                            {...register('fullName')}
+                        />
                     </div>
 
                     <div className={styles.field}>

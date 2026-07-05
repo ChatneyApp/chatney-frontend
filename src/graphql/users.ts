@@ -12,7 +12,8 @@ const GET_USER_BY_ID_QUERY = gql`
         users {
             userById(id: $id) {
                 id
-                name
+                nickname
+                fullName
                 active
                 verified
                 banned

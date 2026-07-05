@@ -6,11 +6,13 @@ import { CREATE_USER, UPDATE_USER } from '@/graphql/adminUsers';
 import { useUsersList } from '@/contexts/UsersListContext';
 import { useRolesList } from '@/contexts/RolesListContext';
 import { User } from '@/types/users';
+import { validateNickname, MAX_NICKNAME_LENGTH } from '@/helpers/nickname';
 
 import styles from './UserFormModal.module.css';
 
 type FormInputs = {
-    name: string;
+    nickname: string;
+    fullName: string;
     email: string;
     password: string;
     roleId: number;
@@ -39,7 +41,8 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
         formState: { errors },
     } = useForm<FormInputs>({
         defaultValues: {
-            name: user?.name ?? '',
+            nickname: user?.nickname ?? '',
+            fullName: user?.fullName ?? '',
             email: user?.email ?? '',
             password: '',
             roleId: defaultRoleId,
@@ -70,7 +73,8 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
         onOpenChange(nextOpen);
         if (!nextOpen) {
             reset({
-                name: user?.name ?? '',
+                nickname: user?.nickname ?? '',
+                fullName: user?.fullName ?? '',
                 email: user?.email ?? '',
                 password: '',
                 roleId: defaultRoleId,
@@ -88,7 +92,8 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
                 variables: {
                     userDto: {
                         id: user.id,
-                        name: data.name.trim(),
+                        nickname: data.nickname.trim(),
+                        fullName: data.fullName.trim() || null,
                         email: data.email.trim(),
                         roleId: data.roleId,
                         active: data.active,
@@ -105,7 +110,8 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
         await createUser({
             variables: {
                 userDto: {
-                    name: data.name.trim(),
+                    nickname: data.nickname.trim(),
+                    fullName: data.fullName.trim() || null,
                     email: data.email.trim(),
                     password: data.password,
                     roleId: data.roleId,
@@ -131,15 +137,26 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
 
                     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                         <div className={styles.field}>
-                            <label className={styles.label} htmlFor="user-name">Name</label>
+                            <label className={styles.label} htmlFor="user-nickname">Nickname</label>
                             <input
-                                id="user-name"
+                                id="user-nickname"
                                 className={styles.input}
-                                {...register('name', { required: 'Name is required' })}
+                                {...register('nickname', { validate: validateNickname })}
+                                maxLength={MAX_NICKNAME_LENGTH}
                             />
-                            {errors.name && (
-                                <span className={styles.errorText}>{errors.name.message}</span>
+                            {errors.nickname && (
+                                <span className={styles.errorText}>{errors.nickname.message}</span>
                             )}
+                        </div>
+
+                        <div className={styles.field}>
+                            <label className={styles.label} htmlFor="user-full-name">Full name</label>
+                            <input
+                                id="user-full-name"
+                                className={styles.input}
+                                placeholder="Optional"
+                                {...register('fullName')}
+                            />
                         </div>
 
                         <div className={styles.field}>

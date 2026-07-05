@@ -5,7 +5,8 @@ export type UserAuthorization = {
 }
 export type User = {
     id: UserId;
-    name: string;
+    nickname: string;
+    fullName?: string | null;
     active: boolean;
     verified: boolean;
     banned: boolean;

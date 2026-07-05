@@ -6,7 +6,7 @@ export type UserFilter = {
     active?: boolean | null;
     banned?: boolean | null;
     email?: string | null;
-    name?: string | null;
+    nickname?: string | null;
 };
 
 export type GetUsersListResponse = {
@@ -17,7 +17,8 @@ export type GetUsersListResponse = {
 
 const userFields = `
     id
-    name
+    nickname
+    fullName
     email
     avatarUrl
     active

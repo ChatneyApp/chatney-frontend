@@ -55,7 +55,9 @@ export const postNewMessage = async (client: ApolloClient, messageDto: CreateMes
                     userId
                     user {
                         id
-                        name
+                        nickname
+                        fullName
+                        displayName
                         avatarUrl
                     }
                     content
@@ -270,7 +272,9 @@ export const getChannelMessagesList = async (client: ApolloClient, channelId: Ch
                     updatedAt
                     user {
                         id
-                        name
+                        nickname
+                        fullName
+                        displayName
                         avatarUrl
                     }
                     urlPreviews {
@@ -349,7 +353,9 @@ export const getThreadMessagesList = async (client: ApolloClient, threadId: Mess
                     updatedAt
                     user {
                         id
-                        name
+                        nickname
+                        fullName
+                        displayName
                         avatarUrl
                     }
                     urlPreviews {

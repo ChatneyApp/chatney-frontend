@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useUser } from '@/contexts/UserContext';
+import { getUserAvatarInitial, getUserDisplayName } from '@/helpers/nickname';
 
 import styles from './UserSettingsPopup.module.css';
 
@@ -27,15 +28,19 @@ export function UserSettingsPopup() {
         };
     }, [showPopup]);
 
+    const user = userCtx?.user;
+    const displayName = user ? getUserDisplayName(user) : '';
+
     return (
         <div className={styles.profileArea} ref={containerRef}>
-            {showPopup && (
+            {showPopup && user && (
                 <div className={styles.profilePopup}>
                     <div className={styles.profilePopupChevron} />
 
                     <div className={styles.profileInfo}>
-                        <div className={styles.profileName}>{userCtx?.user?.name}</div>
-                        <div className={styles.profileRole}>{userCtx?.user?.email}</div>
+                        <div className={styles.profileName}>{displayName}</div>
+                        <div className={styles.profileRole}>@{user.nickname}</div>
+                        <div className={styles.profileRole}>{user.email}</div>
                     </div>
 
                     <ul className={styles.profileLinks}>
@@ -74,7 +79,7 @@ export function UserSettingsPopup() {
                 title="Your Profile"
                 onClick={() => setShowPopup(!showPopup)}
             >
-                {userCtx?.user?.name[0].toUpperCase()}
+                {user ? getUserAvatarInitial(user) : '?'}
             </div>
         </div>
     );

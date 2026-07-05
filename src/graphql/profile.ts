@@ -26,7 +26,8 @@ export const GET_MY_PROFILE: TypedDocumentNode<GetMyProfileResponse> = gql`
                 globalRoleName
                 user {
                     id
-                    name
+                    nickname
+                    fullName
                     email
                     avatarUrl
                     active
@@ -44,7 +45,8 @@ export const UPDATE_MY_PROFILE = gql`
         users {
             updateMyProfile(profileDto: $profileDto) {
                 id
-                name
+                nickname
+                fullName
                 email
                 avatarUrl
                 active

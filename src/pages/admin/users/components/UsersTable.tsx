@@ -6,6 +6,7 @@ import { useUsersList } from '@/contexts/UsersListContext';
 import { useRolesList } from '@/contexts/RolesListContext';
 import { useUser } from '@/contexts/UserContext';
 import { User } from '@/types/users';
+import { getUserDisplayName } from '@/helpers/nickname';
 
 import { UserFormModal } from './UserFormModal';
 import styles from './UsersTable.module.css';
@@ -51,7 +52,7 @@ export function UsersTable({ users }: Props) {
         }
 
         const confirmed = window.confirm(
-            `Delete user "${user.name}"? This action cannot be undone.`,
+            `Delete user "${getUserDisplayName(user)}"? This action cannot be undone.`,
         );
         if (!confirmed) {
             return;
@@ -88,10 +89,10 @@ export function UsersTable({ users }: Props) {
                                 <tr key={user.id}>
                                     <td className={styles.td}>
                                         <div className={styles.userName}>
-                                            {user.name}
+                                            {getUserDisplayName(user)}
                                             {isSelf && ' (you)'}
                                         </div>
-                                        <div className={styles.userEmail}>{user.email}</div>
+                                        <div className={styles.userEmail}>@{user.nickname} · {user.email}</div>
                                     </td>
                                     <td className={styles.td}>
                                         <span className={styles.roleName}>

@@ -6,11 +6,13 @@ import { Button } from '@/components/Button';
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './AuthForm.module.css';
 import { registerUser } from '@/graphql/auth';
+import { validateNickname, MAX_NICKNAME_LENGTH } from '@/helpers/nickname';
 
 type FormInputs = {
     email: string;
     password: string;
-    username: string;
+    nickname: string;
+    fullName: string;
 };
 
 export const RegisterForm = () => {
@@ -22,7 +24,8 @@ export const RegisterForm = () => {
         defaultValues: {
             email: '',
             password: '',
-            username: '',
+            nickname: '',
+            fullName: '',
         }
     });
 
@@ -33,7 +36,8 @@ export const RegisterForm = () => {
                 client: apollo,
                 email: data.email,
                 password: data.password,
-                name: data.username,
+                nickname: data.nickname,
+                fullName: data.fullName,
             });
             reset();
             window.location.href = '/login';
@@ -77,14 +81,25 @@ export const RegisterForm = () => {
                 </div>
 
                 <div className={styles.formGroup}>
-                    <label htmlFor="username" className={styles.label}>Username</label>
+                    <label htmlFor="nickname" className={styles.label}>Nickname</label>
                     <input
-                        id="username"
-                        placeholder='Enter your username'
-                        {...register('username', { required: 'Username is required' })}
+                        id="nickname"
+                        placeholder="Enter your nickname"
+                        {...register('nickname', { validate: validateNickname })}
+                        maxLength={MAX_NICKNAME_LENGTH}
                         className={styles.input}
                     />
-                    {errors.username && <span className={styles.errorText}>{errors.username.message}</span>}
+                    {errors.nickname && <span className={styles.errorText}>{errors.nickname.message}</span>}
+                </div>
+
+                <div className={styles.formGroup}>
+                    <label htmlFor="fullName" className={styles.label}>Full name</label>
+                    <input
+                        id="fullName"
+                        placeholder="Enter your full name (optional)"
+                        {...register('fullName')}
+                        className={styles.input}
+                    />
                 </div>
 
                 <div className={dialogStyles.bottomButtons}>

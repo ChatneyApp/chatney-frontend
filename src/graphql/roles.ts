@@ -14,9 +14,7 @@ export const CREATE_ROLE = gql`
             addRole (roleDto: $roleDto) {
                 id
                 name
-                settings {
-                    protected
-                }
+                isProtected
                 permissions
             }
         }
@@ -29,9 +27,7 @@ export const EDIT_ROLE = gql`
             updateRole (role: $role) {
                 id
                 name
-                settings {
-                    protected
-                }
+                isProtected
                 permissions
             }
         }
@@ -52,9 +48,7 @@ export const GET_ROLES_QUERY: TypedDocumentNode<GetRolesListResponse> = gql`
             list {
                 id
                 name
-                settings {
-                    protected
-                }
+                isProtected
                 permissions
             }
         }

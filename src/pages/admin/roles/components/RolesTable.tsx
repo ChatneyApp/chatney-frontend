@@ -22,7 +22,7 @@ export function RolesTable({ roles }: Props) {
     });
 
     const handleDelete = async (role: Role) => {
-        if (role.settings.protected) {
+        if (role.isProtected) {
             return;
         }
 
@@ -70,12 +70,12 @@ export function RolesTable({ roles }: Props) {
                                     <td className={styles.td}>
                                         <span
                                             className={
-                                                role.settings.protected
+                                                role.isProtected
                                                     ? `${styles.badge} ${styles.badgeProtected}`
                                                     : `${styles.badge} ${styles.badgeCustom}`
                                             }
                                         >
-                                            {role.settings.protected ? 'Protected' : 'Custom'}
+                                            {role.isProtected ? 'Protected' : 'Custom'}
                                         </span>
                                     </td>
                                     <td className={styles.td}>
@@ -109,9 +109,9 @@ export function RolesTable({ roles }: Props) {
                                                 type="button"
                                                 className={`${styles.actionButton} ${styles.deleteButton}`}
                                                 onClick={() => handleDelete(role)}
-                                                disabled={role.settings.protected}
+                                                disabled={role.isProtected}
                                                 title={
-                                                    role.settings.protected
+                                                    role.isProtected
                                                         ? 'Protected roles cannot be deleted'
                                                         : undefined
                                                 }

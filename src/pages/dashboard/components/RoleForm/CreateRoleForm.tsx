@@ -14,7 +14,7 @@ import { useRolesList } from '@/contexts/RolesListContext';
 type FormInputs = {
     name: string;
     permissions: string[];
-    isProtectedRole: boolean;
+    isProtected: boolean;
 };
 
 type Props = {
@@ -34,7 +34,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
         defaultValues: {
             name: role?.name ?? '',
             permissions: role?.permissions ?? [],
-            isProtectedRole: role?.settings?.protected ?? false
+            isProtected: role?.isProtected ?? false
         }
     });
 
@@ -83,9 +83,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
                         id: role.id,
                         name: data.name,
                         permissions: data.permissions,
-                        settings: {
-                            protected: data.isProtectedRole
-                        }
+                        isProtected: data.isProtected
                     }
                 }
             })
@@ -95,9 +93,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
                     roleDto: {
                         name: data.name,
                         permissions: data.permissions,
-                        settings: {
-                            protected: data.isProtectedRole
-                        }
+                        isProtected: data.isProtected
                     }
                 }
             });
@@ -163,7 +159,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
                                 <label>
                                     <input
                                         type="checkbox"
-                                        {...register('isProtectedRole')}
+                                        {...register('isProtected')}
                                     />
                                     Is Protected Role
                                 </label>

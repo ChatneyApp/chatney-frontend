@@ -12,7 +12,7 @@ import styles from './RoleFormModal.module.css';
 type FormInputs = {
     name: string;
     permissions: string[];
-    isProtectedRole: boolean;
+    isProtected: boolean;
 };
 
 type Props = {
@@ -40,7 +40,7 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
         defaultValues: {
             name: role?.name ?? '',
             permissions: role?.permissions ?? [],
-            isProtectedRole: role?.settings?.protected ?? false,
+            isProtected: role?.isProtected ?? false,
         },
     });
 
@@ -66,7 +66,7 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
             reset({
                 name: role?.name ?? '',
                 permissions: role?.permissions ?? [],
-                isProtectedRole: role?.settings?.protected ?? false,
+                isProtected: role?.isProtected ?? false,
             });
         }
     };
@@ -79,9 +79,7 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
                         id: role.id,
                         name: data.name,
                         permissions: data.permissions,
-                        settings: {
-                            protected: data.isProtectedRole,
-                        },
+                        isProtected: data.isProtected,
                     },
                 },
             });
@@ -93,9 +91,7 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
                 roleDto: {
                     name: data.name,
                     permissions: data.permissions,
-                    settings: {
-                        protected: data.isProtectedRole,
-                    },
+                    isProtected: data.isProtected,
                 },
             },
         });
@@ -159,7 +155,7 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
                             <input
                                 type="checkbox"
                                 className={styles.checkbox}
-                                {...register('isProtectedRole')}
+                                {...register('isProtected')}
                             />
                             Protected role (cannot be deleted)
                         </label>

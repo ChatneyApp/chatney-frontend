@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useMutation } from '@apollo/client/react';
 
 import { DELETE_ROLE } from '@/graphql/roles';
+import { formatPermissionLabel } from '@/helpers/permissions';
 import { useRolesList } from '@/contexts/RolesListContext';
 import { Role } from '@/types/roles';
 
@@ -86,7 +87,7 @@ export function RolesTable({ roles }: Props) {
                                                     className={styles.permissionTag}
                                                     title={permission}
                                                 >
-                                                    {permission.split('.').pop()}
+                                                    {formatPermissionLabel(permission)}
                                                 </span>
                                             ))}
                                             {hiddenCount > 0 && (

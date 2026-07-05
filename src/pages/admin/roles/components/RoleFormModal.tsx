@@ -7,6 +7,8 @@ import { GET_PERMISSIONS_LIST } from '@/graphql/permissions';
 import { useRolesList } from '@/contexts/RolesListContext';
 import { Role } from '@/types/roles';
 
+import { formatPermissionLabel } from '@/helpers/permissions';
+
 import styles from './RoleFormModal.module.css';
 
 type FormInputs = {
@@ -20,11 +22,6 @@ type Props = {
     onOpenChange: (open: boolean) => void;
     role?: Role;
 };
-
-function formatPermissionLabel(permission: string) {
-    const parts = permission.split('.');
-    return parts[parts.length - 1] ?? permission;
-}
 
 export function RoleFormModal({ open, onOpenChange, role }: Props) {
     const { data: permissionsData } = useSuspenseQuery(GET_PERMISSIONS_LIST);

@@ -5,6 +5,7 @@ import { Dialog } from 'radix-ui';
 
 import styles from './CreateRoleForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
+import { formatPermissionLabel } from '@/helpers/permissions';
 import { CREATE_ROLE, EDIT_ROLE } from '@/graphql/roles';
 import { GET_PERMISSIONS_LIST } from '@/graphql/permissions';
 import { Button } from '@/components/Button';
@@ -146,7 +147,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
                                                             {...register('permissions')}
                                                             value={permission}
                                                         />
-                                                        {permission.split('.')[1]}
+                                                        {formatPermissionLabel(permission)}
                                                     </label>
                                                 </div>
                                             ))}

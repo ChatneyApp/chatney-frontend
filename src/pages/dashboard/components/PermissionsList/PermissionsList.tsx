@@ -1,6 +1,8 @@
 import { Suspense } from 'react';
 import { useSuspenseQuery } from '@apollo/client/react';
 
+import { formatPermissionLabel } from '@/helpers/permissions';
+
 import styles from './PermissionsList.module.css';
 import { GET_PERMISSIONS_LIST } from '@/graphql/permissions';
 
@@ -19,7 +21,7 @@ const PermissionGroup = ({ label, permissions }: PermissionGroupProps) => (
             {permissions.map(permission => (
                 <Permission
                     key={permission}
-                    label={permission}
+                    label={formatPermissionLabel(permission)}
                 />
             ))}
         </ul>

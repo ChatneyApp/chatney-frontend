@@ -1,28 +1,107 @@
 @reference "tailwindcss";
 
-.form {
-    @apply w-1/2 mx-auto p-6 bg-white rounded-lg shadow-md text-gray-700;
+.page {
+    @apply flex min-h-screen flex-col items-center justify-center bg-[#0a0f1a] px-4 py-12;
+}
+
+.card {
+    @apply w-full max-w-[420px] rounded-[28px] border border-white/5 bg-[#131a2b] px-8 py-9 shadow-2xl shadow-black/40;
 }
 
 .title {
-    @apply text-2xl font-bold text-center mb-4;
+    @apply m-0 text-[1.65rem] font-semibold leading-tight tracking-tight text-white;
 }
 
-.formGroup {
-    @apply mb-4;
+.subtitle {
+    @apply mt-2 text-sm leading-relaxed text-gray-400;
 }
 
-.input {
-    @apply w-full p-2 border border-gray-300 rounded mb-4;
+.socialRow {
+    @apply mt-8 grid grid-cols-3 gap-3;
+}
+
+.socialButton {
+    @apply flex h-[52px] cursor-not-allowed items-center justify-center rounded-2xl border border-white/10 bg-[#1a2236] text-gray-300 opacity-70 transition-colors;
+}
+
+.divider {
+    @apply relative my-7 flex items-center;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    @apply h-px flex-1 bg-white/10;
+}
+
+.dividerText {
+    @apply px-4 text-[11px] font-medium tracking-[0.18em] text-gray-500 uppercase;
+}
+
+.form {
+    @apply flex flex-col gap-5;
+}
+
+.field {
+    @apply flex flex-col gap-2;
+}
+
+.labelRow {
+    @apply flex items-center justify-between;
 }
 
 .label {
-    @apply block mb-2;
+    @apply text-[11px] font-medium tracking-[0.14em] text-gray-500 uppercase;
 }
-.label:after {
-    @apply content-['*'] text-red-500;
+
+.forgotLink {
+    @apply cursor-pointer border-none bg-transparent p-0 text-[11px] font-medium tracking-wide text-indigo-400 uppercase transition-colors hover:text-indigo-300;
+}
+
+.inputWrapper {
+    @apply flex items-center gap-3 rounded-2xl border border-white/10 bg-[#1a2236] px-4 py-3.5 transition-colors focus-within:border-indigo-500/40 focus-within:ring-2 focus-within:ring-indigo-500/20;
+}
+
+.inputWrapperError {
+    @apply border-red-500/40 focus-within:border-red-500/40 focus-within:ring-red-500/20;
+}
+
+.inputIcon {
+    @apply shrink-0 text-gray-500;
+}
+
+.input {
+    @apply min-w-0 flex-1 border-none bg-transparent text-sm text-white outline-none placeholder:text-gray-600;
 }
 
 .errorText {
-    @apply text-red-500 text-sm;
+    @apply text-xs text-red-400;
+}
+
+.alert {
+    @apply rounded-2xl border px-4 py-3 text-sm;
+}
+
+.alertError {
+    @apply border-red-500/30 bg-red-500/10 text-red-300;
+}
+
+.submitButton {
+    @apply mt-1 w-full cursor-pointer rounded-2xl border-none bg-gradient-to-r from-[#c4b5fd] via-[#a5b4fc] to-[#818cf8] px-4 py-3.5 text-sm font-semibold text-[#0f172a] shadow-lg shadow-indigo-500/20 transition-all hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.switchMode {
+    @apply mt-7 text-center text-sm text-gray-400;
+}
+
+.switchLink {
+    @apply cursor-pointer border-none bg-transparent p-0 font-medium text-indigo-400 transition-colors hover:text-indigo-300;
+}
+
+.pageFooter {
+    @apply mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-gray-600;
+}
+
+.footerLink {
+    @apply text-gray-600 transition-colors hover:text-gray-400;
 }

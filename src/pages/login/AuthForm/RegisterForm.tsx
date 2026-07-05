@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useApolloClient } from '@apollo/client/react';
+import { AtSign, Lock, User } from 'lucide-react';
+import clsx from 'clsx';
 
-import { Button } from '@/components/Button';
-import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './AuthForm.module.css';
 import { registerUser } from '@/graphql/auth';
 import { validateNickname, MAX_NICKNAME_LENGTH } from '@/helpers/nickname';
@@ -18,19 +18,20 @@ type FormInputs = {
 export const RegisterForm = () => {
     const apollo = useApolloClient();
     const [loading, setLoading] = useState(false);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
+    const { register, handleSubmit, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             email: '',
             password: '',
             nickname: '',
             fullName: '',
-        }
+        },
     });
 
     const onSubmit = async (data: FormInputs) => {
         setLoading(true);
+        setErrorMessage(null);
+
         try {
             await registerUser({
                 client: apollo,
@@ -39,12 +40,9 @@ export const RegisterForm = () => {
                 nickname: data.nickname,
                 fullName: data.fullName,
             });
-            reset();
             window.location.href = '/login';
-
         } catch (error) {
             setErrorMessage(`Error registering: ${(error as Error).message}`);
-            setSuccessMessage(null);
         }
 
         setLoading(false);
@@ -52,64 +50,78 @@ export const RegisterForm = () => {
 
     return (
         <div>
-            {successMessage && <div className={styles.successMessage}>{successMessage}</div>}
-            {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
+            {errorMessage && (
+                <div className={clsx(styles.alert, styles.alertError, 'mb-5')}>
+                    {errorMessage}
+                </div>
+            )}
 
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className={styles.formGroup}>
+            <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+                <div className={styles.field}>
                     <label htmlFor="email" className={styles.label}>Email</label>
-                    <input
-                        id="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        {...register('email', { required: 'Email is required' })}
-                        className={styles.input}
-                    />
+                    <div className={clsx(styles.inputWrapper, errors.email && styles.inputWrapperError)}>
+                        <AtSign size={16} className={styles.inputIcon} aria-hidden />
+                        <input
+                            id="email"
+                            type="email"
+                            placeholder="name@company.com"
+                            autoComplete="email"
+                            {...register('email', { required: 'Email is required' })}
+                            className={styles.input}
+                        />
+                    </div>
                     {errors.email && <span className={styles.errorText}>{errors.email.message}</span>}
                 </div>
 
-                <div className={styles.formGroup}>
+                <div className={styles.field}>
                     <label htmlFor="password" className={styles.label}>Password</label>
-                    <input
-                        id="password"
-                        type="password"
-                        placeholder="Enter your password"
-                        {...register('password', { required: 'Password is required' })}
-                        className={styles.input}
-                    />
+                    <div className={clsx(styles.inputWrapper, errors.password && styles.inputWrapperError)}>
+                        <Lock size={16} className={styles.inputIcon} aria-hidden />
+                        <input
+                            id="password"
+                            type="password"
+                            placeholder="••••••••"
+                            autoComplete="new-password"
+                            {...register('password', { required: 'Password is required' })}
+                            className={styles.input}
+                        />
+                    </div>
                     {errors.password && <span className={styles.errorText}>{errors.password.message}</span>}
                 </div>
 
-                <div className={styles.formGroup}>
+                <div className={styles.field}>
                     <label htmlFor="nickname" className={styles.label}>Nickname</label>
-                    <input
-                        id="nickname"
-                        placeholder="Enter your nickname"
-                        {...register('nickname', { validate: validateNickname })}
-                        maxLength={MAX_NICKNAME_LENGTH}
-                        className={styles.input}
-                    />
+                    <div className={clsx(styles.inputWrapper, errors.nickname && styles.inputWrapperError)}>
+                        <User size={16} className={styles.inputIcon} aria-hidden />
+                        <input
+                            id="nickname"
+                            placeholder="your_nickname"
+                            autoComplete="username"
+                            {...register('nickname', { validate: validateNickname })}
+                            maxLength={MAX_NICKNAME_LENGTH}
+                            className={styles.input}
+                        />
+                    </div>
                     {errors.nickname && <span className={styles.errorText}>{errors.nickname.message}</span>}
                 </div>
 
-                <div className={styles.formGroup}>
-                    <label htmlFor="fullName" className={styles.label}>Full name</label>
-                    <input
-                        id="fullName"
-                        placeholder="Enter your full name (optional)"
-                        {...register('fullName')}
-                        className={styles.input}
-                    />
+                <div className={styles.field}>
+                    <label htmlFor="fullName" className={styles.label}>Full name (optional)</label>
+                    <div className={styles.inputWrapper}>
+                        <User size={16} className={styles.inputIcon} aria-hidden />
+                        <input
+                            id="fullName"
+                            placeholder="Jane Doe"
+                            autoComplete="name"
+                            {...register('fullName')}
+                            className={styles.input}
+                        />
+                    </div>
                 </div>
 
-                <div className={dialogStyles.bottomButtons}>
-                    <Button
-                        type="submit"
-                        disabled={loading}
-                    >
-                        {loading ? 'Registering...' : 'Register'}
-                    </Button>
-                </div>
+                <button type="submit" className={styles.submitButton} disabled={loading}>
+                    {loading ? 'Creating account...' : 'Create account'}
+                </button>
             </form>
         </div>
     );

@@ -14,7 +14,7 @@ import { useRolesList } from '@/contexts/RolesListContext';
 type FormInputs = {
     name: string;
     permissions: string[];
-    isBaseRole: boolean;
+    isProtectedRole: boolean;
 };
 
 type Props = {
@@ -34,7 +34,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
         defaultValues: {
             name: role?.name ?? '',
             permissions: role?.permissions ?? [],
-            isBaseRole: role?.settings?.base ?? false
+            isProtectedRole: role?.settings?.protected ?? false
         }
     });
 
@@ -84,7 +84,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
                         name: data.name,
                         permissions: data.permissions,
                         settings: {
-                            base: data.isBaseRole
+                            protected: data.isProtectedRole
                         }
                     }
                 }
@@ -96,7 +96,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
                         name: data.name,
                         permissions: data.permissions,
                         settings: {
-                            base: data.isBaseRole
+                            protected: data.isProtectedRole
                         }
                     }
                 }
@@ -163,9 +163,9 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
                                 <label>
                                     <input
                                         type="checkbox"
-                                        {...register('isBaseRole')}
+                                        {...register('isProtectedRole')}
                                     />
-                                    Is Base Role
+                                    Is Protected Role
                                 </label>
                             </div>
                             <div className={dialogStyles.bottomButtons}>

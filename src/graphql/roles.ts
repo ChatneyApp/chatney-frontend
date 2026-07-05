@@ -15,7 +15,7 @@ export const CREATE_ROLE = gql`
                 id
                 name
                 settings {
-                    base
+                    protected
                 }
                 permissions
             }
@@ -30,7 +30,7 @@ export const EDIT_ROLE = gql`
                 id
                 name
                 settings {
-                    base
+                    protected
                 }
                 permissions
             }
@@ -53,7 +53,7 @@ export const GET_ROLES_QUERY: TypedDocumentNode<GetRolesListResponse> = gql`
                 id
                 name
                 settings {
-                    base
+                    protected
                 }
                 permissions
             }

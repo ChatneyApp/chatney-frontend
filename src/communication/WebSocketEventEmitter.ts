@@ -25,7 +25,7 @@ export type RolePayload = {
     id: RoleId;
     name: string;
     permissions: string[];
-    isBase: boolean;
+    isProtected: boolean;
 };
 export type RoleDeletedPayload = {
     id: RoleId;

@@ -4,6 +4,6 @@ export type Role = {
     name: string;
     permissions: [];
     settings: {
-        base: boolean;
+        protected: boolean;
     };
 }

@@ -39,7 +39,7 @@ export const RoleEditor = ({ role }: Props) => {
                 Permissions: <b>{role.permissions.join(', ')}</b>
             </div>
             <div className={styles.settings}>
-                Settings: <b>{role.settings.base ? 'Base' : 'non-Base'}</b>
+                Settings: <b>{role.settings.protected ? 'Protected' : 'not Protected'}</b>
             </div>
             <div className={styles.controls}>
                 <CreateRoleForm cta="Edit" title="Edit Role" submitText="Save Changes" role={role}/>

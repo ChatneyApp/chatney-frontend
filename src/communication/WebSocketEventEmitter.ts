@@ -1,6 +1,7 @@
 import { MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
 import { UserId } from '@/types/users';
 import { ChannelId } from '@/types/channels';
+import { RoleId } from '@/types/roles';
 
 export type MessageDeletedPayload = {
     messageId: MessageId;
@@ -20,6 +21,15 @@ export type MessageChildrenCountUpdatedPayload = {
 export type EditedMessagePayload = {
     message: MessageWithUser;
 };
+export type RolePayload = {
+    id: RoleId;
+    name: string;
+    permissions: string[];
+    isBase: boolean;
+};
+export type RoleDeletedPayload = {
+    id: RoleId;
+};
 export type NewMessagePayload = {
     message: MessageWithUser;
     replyTo: ReplyToMessage | null;
@@ -30,7 +40,9 @@ export type WebSocketMessagePayload =
     MessageDeletedPayload |
     ReactionChangedPayload |
     MessageChildrenCountUpdatedPayload |
-    EditedMessagePayload;
+    EditedMessagePayload |
+    RolePayload |
+    RoleDeletedPayload;
 
 export enum WebSocketEventType {
     NEW_MESSAGE = 'newMessage',
@@ -39,6 +51,9 @@ export enum WebSocketEventType {
     DELETED_REACTION = 'deletedReaction',
     MESSAGE_CHILDREN_COUNT_UPDATED = 'messageChildrenCountUpdated',
     EDITED_MESSAGE = 'editedMessage',
+    NEW_ROLE = 'newRole',
+    UPDATED_ROLE = 'updatedRole',
+    DELETED_ROLE = 'deletedRole',
 }
 
 export type WebSocketEventRaw = {
@@ -56,6 +71,12 @@ export type WebSocketEventRaw = {
 } | {
     type: WebSocketEventType.EDITED_MESSAGE;
     payload: EditedMessagePayload;
+} | {
+    type: WebSocketEventType.NEW_ROLE | WebSocketEventType.UPDATED_ROLE;
+    payload: RolePayload;
+} | {
+    type: WebSocketEventType.DELETED_ROLE;
+    payload: RoleDeletedPayload;
 }
 
 export class WebSocketEvent extends Event {

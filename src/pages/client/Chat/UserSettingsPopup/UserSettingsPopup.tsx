@@ -35,7 +35,7 @@ export function UserSettingsPopup() {
 
                     <div className={styles.profileInfo}>
                         <div className={styles.profileName}>{userCtx?.user?.name}</div>
-                        <div className={styles.profileRole}>Role</div>
+                        <div className={styles.profileRole}>{userCtx?.user?.email}</div>
                     </div>
 
                     <ul className={styles.profileLinks}>

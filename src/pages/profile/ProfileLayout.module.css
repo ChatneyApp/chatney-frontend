@@ -1,0 +1,21 @@
+@reference "tailwindcss";
+
+.root {
+    @apply min-h-screen bg-gray-900 text-white;
+}
+
+.header {
+    @apply flex items-center justify-between border-b border-gray-700 px-6 py-4;
+}
+
+.backLink {
+    @apply flex items-center gap-2 text-sm text-gray-400 transition-colors hover:text-white;
+}
+
+.title {
+    @apply text-lg font-semibold text-white;
+}
+
+.main {
+    @apply mx-auto max-w-2xl p-6;
+}

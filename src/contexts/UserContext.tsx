@@ -1,22 +1,15 @@
-import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useApolloClient } from '@apollo/client/react';
 import { getUserById } from '@/graphql/users';
 import { loginPageUrl, userAuthId, userAuthTokenName } from '@/infra/consts';
-import { UserId } from '@/types/users';
+import { User } from '@/types/users';
 
 const UserContext = createContext<UserContextData | null>(null);
 
 export type UserContextData = {
-    user: {
-        id: UserId;
-        name: string;
-        active: boolean;
-        verified: boolean;
-        banned: boolean;
-        muted: boolean;
-        email: string;
-    } | null;
+    user: User | null;
     logout: typeof logoutFunction;
+    refreshUser: () => Promise<void>;
 }
 
 const logoutFunction = () => {
@@ -27,48 +20,49 @@ const logoutFunction = () => {
 
 export const UserProvider = ({ children }: PropsWithChildren) => {
     const apollo = useApolloClient();
-    const [userCtx, setUser] = useState<UserContextData | null>({
-        user: null, logout: logoutFunction
-    });
+    const [user, setUser] = useState<User | null>(null);
+    const [isReady, setIsReady] = useState(false);
 
-    // Application start
+    const refreshUser = useCallback(async () => {
+        const userid = localStorage.getItem(userAuthId);
+        if (!userid) {
+            window.location.href = loginPageUrl;
+            return;
+        }
+
+        const userData = await getUserById(apollo, userid);
+        setUser(userData);
+    }, [apollo]);
+
     useEffect(() => {
         const fetchStartupData = async () => {
             try {
-                const userid = localStorage.getItem(userAuthId);
-
-                if (!userid) {
-                    window.location.href = loginPageUrl;
-                    return;
-                }
-
-                const userData = await getUserById(apollo, userid);
-
-                if (userData) {
-                    setUser({ user: userData, logout: logoutFunction });
-                    return;
-                } else {
-                    window.location.href = loginPageUrl;
-                    return;
-                }
-
+                await refreshUser();
             } catch (err) {
                 console.error(err);
                 window.location.href = loginPageUrl;
+            } finally {
+                setIsReady(true);
             }
         };
 
         fetchStartupData();
-    }, [apollo]);
+    }, [refreshUser]);
 
-    if (!userCtx) {
+    const value = useMemo<UserContextData>(() => ({
+        user,
+        logout: logoutFunction,
+        refreshUser,
+    }), [user, refreshUser]);
+
+    if (!isReady) {
         return null;
     }
 
     return (
-        <UserContext.Provider value={userCtx} >
+        <UserContext.Provider value={value}>
             {children}
-        </UserContext.Provider >
+        </UserContext.Provider>
     );
 };
 

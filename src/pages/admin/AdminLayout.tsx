@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router';
-import { MessageSquare, Shield } from 'lucide-react';
+import { MessageSquare, Shield, Users } from 'lucide-react';
 import clsx from 'clsx';
 
 import { WebSocketContextProvider } from '@/contexts/WebSocketProvider';
@@ -19,6 +19,10 @@ export function AdminLayout() {
                         <NavLink to="/admin/roles" className={isActiveLink}>
                             <Shield size={16} />
                             Roles
+                        </NavLink>
+                        <NavLink to="/admin/users" className={isActiveLink}>
+                            <Users size={16} />
+                            Users
                         </NavLink>
                     </nav>
                     <div className={styles.sidebarFooter}>

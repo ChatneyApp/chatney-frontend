@@ -1,0 +1,109 @@
+@reference "tailwindcss";
+
+.page {
+    @apply flex flex-col gap-6;
+}
+
+.profileHeader {
+    @apply flex items-center gap-4;
+}
+
+.avatar {
+    @apply flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-indigo-600 text-2xl font-semibold text-white;
+}
+
+.avatarImage {
+    @apply h-full w-full object-cover;
+}
+
+.profileMeta {
+    @apply min-w-0;
+}
+
+.profileName {
+    @apply m-0 text-xl font-semibold text-white;
+}
+
+.profileRole {
+    @apply mt-1 text-sm text-gray-400;
+}
+
+.badges {
+    @apply mt-2 flex flex-wrap gap-2;
+}
+
+.badge {
+    @apply rounded-full px-2 py-0.5 text-xs font-medium;
+}
+
+.badgePositive {
+    @apply bg-emerald-500/20 text-emerald-300;
+}
+
+.badgeNeutral {
+    @apply bg-gray-700 text-gray-300;
+}
+
+.badgeWarning {
+    @apply bg-amber-500/20 text-amber-300;
+}
+
+.badgeDanger {
+    @apply bg-red-500/20 text-red-300;
+}
+
+.card {
+    @apply rounded-lg border border-gray-700 bg-gray-800/60 p-5;
+}
+
+.cardTitle {
+    @apply m-0 mb-4 text-base font-semibold text-white;
+}
+
+.form {
+    @apply flex flex-col gap-4;
+}
+
+.field {
+    @apply flex flex-col gap-1.5;
+}
+
+.label {
+    @apply text-sm font-medium text-gray-300;
+}
+
+.input {
+    @apply w-full rounded border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500;
+}
+
+.errorText {
+    @apply text-sm text-red-400;
+}
+
+.successMessage {
+    @apply rounded border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-300;
+}
+
+.errorMessage {
+    @apply rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300;
+}
+
+.actions {
+    @apply flex justify-end gap-2;
+}
+
+.cancelButton {
+    @apply cursor-pointer rounded px-4 py-2 text-sm text-gray-300 hover:text-white;
+}
+
+.submitButton {
+    @apply cursor-pointer rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-600;
+}
+
+.loading {
+    @apply flex min-h-[40vh] items-center justify-center text-gray-400;
+}
+
+.hint {
+    @apply text-xs text-gray-500;
+}

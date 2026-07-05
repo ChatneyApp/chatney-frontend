@@ -11,4 +11,6 @@ export type User = {
     banned: boolean;
     muted: boolean;
     email: string;
+    avatarUrl?: string | null;
+    roleId?: number;
 }

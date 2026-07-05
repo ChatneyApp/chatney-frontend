@@ -1,0 +1,33 @@
+@reference "tailwindcss";
+
+.root {
+    @apply flex h-screen bg-gray-900 text-white;
+}
+
+.sidebar {
+    @apply flex w-56 shrink-0 flex-col border-r border-gray-700 bg-gray-950;
+}
+
+.brand {
+    @apply border-b border-gray-700 px-4 py-5 text-lg font-semibold text-white;
+}
+
+.nav {
+    @apply flex flex-1 flex-col gap-1 p-3;
+}
+
+.navLink {
+    @apply flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-gray-800 hover:text-white;
+}
+
+.navLinkActive {
+    @apply bg-gray-800 text-white;
+}
+
+.sidebarFooter {
+    @apply border-t border-gray-700 p-3;
+}
+
+.main {
+    @apply min-w-0 flex-1 overflow-auto;
+}

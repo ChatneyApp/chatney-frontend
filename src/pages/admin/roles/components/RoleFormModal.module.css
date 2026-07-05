@@ -1,0 +1,75 @@
+@reference "tailwindcss";
+
+.overlay {
+    @apply fixed inset-0;
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.container {
+    @apply fixed left-1/2 top-1/2 max-h-[85vh] w-[90vw] max-w-[560px] -translate-x-1/2 -translate-y-1/2
+    overflow-y-auto rounded-md bg-gray-800 p-5 text-white shadow-xl focus:outline-none;
+}
+
+.title {
+    @apply m-0 text-lg font-semibold;
+}
+
+.form {
+    @apply mt-4 flex flex-col gap-4;
+}
+
+.field {
+    @apply flex flex-col gap-1.5;
+}
+
+.label {
+    @apply text-sm font-medium text-gray-300;
+}
+
+.input {
+    @apply w-full rounded border border-gray-600 bg-gray-700 px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500;
+}
+
+.errorText {
+    @apply text-sm text-red-400;
+}
+
+.errorMessage {
+    @apply rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300;
+}
+
+.permissionGroups {
+    @apply flex max-h-64 flex-col gap-3 overflow-y-auto rounded border border-gray-700 bg-gray-900/50 p-3;
+}
+
+.permissionGroupTitle {
+    @apply m-0 text-xs font-semibold uppercase tracking-wide text-gray-400;
+}
+
+.permissionList {
+    @apply mt-2 grid grid-cols-1 gap-1 sm:grid-cols-2;
+}
+
+.permissionItem {
+    @apply flex items-center gap-2 text-sm text-gray-200;
+}
+
+.checkbox {
+    @apply rounded border-gray-500 bg-gray-700 text-indigo-500 focus:ring-indigo-500;
+}
+
+.protectedLabel {
+    @apply flex items-center gap-2 text-sm text-gray-300;
+}
+
+.bottomButtons {
+    @apply mt-2 flex justify-end gap-2;
+}
+
+.cancelButton {
+    @apply cursor-pointer rounded px-3 py-1.5 text-sm text-gray-300 hover:text-white;
+}
+
+.submitButton {
+    @apply cursor-pointer rounded bg-indigo-600 px-4 py-1.5 text-sm text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400;
+}

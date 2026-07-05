@@ -40,8 +40,8 @@ export function UserSettingsPopup() {
 
                     <ul className={styles.profileLinks}>
                         <li>
-                            <a href="/dashboard" className={styles.profileLink}>
-                                Dashboard
+                            <a href="/admin/roles" className={styles.profileLink}>
+                                Admin
                             </a>
                         </li>
                         <li>

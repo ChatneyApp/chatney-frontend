@@ -4,6 +4,8 @@ import { useApolloClient } from '@apollo/client/react';
 import { Channel, ChannelId } from '@/types/channels';
 import { WorkspacesListContext } from './WorkspacesListContext';
 import { getWorkspaceChannels } from '@/graphql/channels';
+import { useWebsocket } from '@/contexts/WebSocketProvider';
+import { WebSocketEvent, WebSocketEventType } from '@/communication/WebSocketEventEmitter';
 
 interface WorkspaceChannelsListContextValue {
     channels: Channel[];
@@ -20,6 +22,7 @@ export function WorkspaceChannelsListProvider({ children }: PropsWithChildren) {
     const [activeChannel, setActiveChannel] = useState<Channel>(null as unknown as Channel);
 
     const client = useApolloClient();
+    const { eventEmitter } = useWebsocket();
 
     const handleRefresh = useCallback((channelId?: ChannelId) => {
         startTransition(async () => {
@@ -46,6 +49,25 @@ export function WorkspaceChannelsListProvider({ children }: PropsWithChildren) {
         }
         handleRefresh();
     }, [activeWorkspaceId, handleRefresh]);
+
+    useEffect(() => {
+        const controller = new AbortController();
+        const { signal } = controller;
+
+        const onChannelsChanged = (event: WebSocketEvent) => {
+            const payload = event.payload;
+            if ('workspaceId' in payload && payload.workspaceId !== activeWorkspaceId) {
+                return;
+            }
+            handleRefresh('id' in payload ? payload.id : undefined);
+        };
+
+        eventEmitter.addEventListener(WebSocketEventType.NEW_CHANNEL, onChannelsChanged, { signal });
+        eventEmitter.addEventListener(WebSocketEventType.UPDATED_CHANNEL, onChannelsChanged, { signal });
+        eventEmitter.addEventListener(WebSocketEventType.DELETED_CHANNEL, onChannelsChanged, { signal });
+
+        return () => controller.abort();
+    }, [eventEmitter, handleRefresh, activeWorkspaceId]);
 
     return (
         <WorkspaceChannelsListContext.Provider

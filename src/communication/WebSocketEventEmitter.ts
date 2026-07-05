@@ -1,6 +1,8 @@
 import { MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
 import { UserId } from '@/types/users';
-import { ChannelId } from '@/types/channels';
+import { Channel, ChannelId } from '@/types/channels';
+import { ChannelType, ChannelTypeId } from '@/types/channelTypes';
+import { Workspace, WorkspaceId } from '@/types/workspaces';
 import { RoleId } from '@/types/roles';
 
 export type MessageDeletedPayload = {
@@ -45,6 +47,19 @@ export type UserRoleDeletedPayload = {
     channelTypeId: number | null;
     workspaceId: number | null;
 };
+export type ChannelPayload = Channel;
+export type ChannelDeletedPayload = {
+    id: ChannelId;
+    workspaceId: WorkspaceId;
+};
+export type ChannelTypePayload = ChannelType;
+export type ChannelTypeDeletedPayload = {
+    id: ChannelTypeId;
+};
+export type WorkspacePayload = Workspace;
+export type WorkspaceDeletedPayload = {
+    id: WorkspaceId;
+};
 export type NewMessagePayload = {
     message: MessageWithUser;
     replyTo: ReplyToMessage | null;
@@ -59,7 +74,13 @@ export type WebSocketMessagePayload =
     RolePayload |
     RoleDeletedPayload |
     UserRolePayload |
-    UserRoleDeletedPayload;
+    UserRoleDeletedPayload |
+    ChannelPayload |
+    ChannelDeletedPayload |
+    ChannelTypePayload |
+    ChannelTypeDeletedPayload |
+    WorkspacePayload |
+    WorkspaceDeletedPayload;
 
 export enum WebSocketEventType {
     NEW_MESSAGE = 'newMessage',
@@ -74,6 +95,15 @@ export enum WebSocketEventType {
     NEW_USER_ROLE = 'newUserRole',
     UPDATED_USER_ROLE = 'updatedUserRole',
     DELETED_USER_ROLE = 'deletedUserRole',
+    NEW_CHANNEL = 'newChannel',
+    UPDATED_CHANNEL = 'updatedChannel',
+    DELETED_CHANNEL = 'deletedChannel',
+    NEW_CHANNEL_TYPE = 'newChannelType',
+    UPDATED_CHANNEL_TYPE = 'updatedChannelType',
+    DELETED_CHANNEL_TYPE = 'deletedChannelType',
+    NEW_WORKSPACE = 'newWorkspace',
+    UPDATED_WORKSPACE = 'updatedWorkspace',
+    DELETED_WORKSPACE = 'deletedWorkspace',
 }
 
 export type WebSocketEventRaw = {
@@ -103,6 +133,24 @@ export type WebSocketEventRaw = {
 } | {
     type: WebSocketEventType.DELETED_USER_ROLE;
     payload: UserRoleDeletedPayload;
+} | {
+    type: WebSocketEventType.NEW_CHANNEL | WebSocketEventType.UPDATED_CHANNEL;
+    payload: ChannelPayload;
+} | {
+    type: WebSocketEventType.DELETED_CHANNEL;
+    payload: ChannelDeletedPayload;
+} | {
+    type: WebSocketEventType.NEW_CHANNEL_TYPE | WebSocketEventType.UPDATED_CHANNEL_TYPE;
+    payload: ChannelTypePayload;
+} | {
+    type: WebSocketEventType.DELETED_CHANNEL_TYPE;
+    payload: ChannelTypeDeletedPayload;
+} | {
+    type: WebSocketEventType.NEW_WORKSPACE | WebSocketEventType.UPDATED_WORKSPACE;
+    payload: WorkspacePayload;
+} | {
+    type: WebSocketEventType.DELETED_WORKSPACE;
+    payload: WorkspaceDeletedPayload;
 }
 
 export class WebSocketEvent extends Event {

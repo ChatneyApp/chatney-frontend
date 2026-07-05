@@ -1,8 +1,10 @@
-import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useRef, useState, startTransition } from 'react';
 
 import type { Workspace, WorkspaceId } from '@/types/workspaces';
 import { useApolloClient } from '@apollo/client/react';
 import { getWorkspacesQuery } from '@/graphql/workspaces';
+import { useWebsocket } from '@/contexts/WebSocketProvider';
+import { WebSocketEventType } from '@/communication/WebSocketEventEmitter';
 
 interface WorkspacesListContextValue {
     workspacesList: Workspace[];
@@ -19,6 +21,7 @@ export function WorkspacesListProvider({ children }: PropsWithChildren) {
     const isLoading = useRef(false);
     const [activeWorkspaceId, setActiveWorkspaceId] = useState<WorkspaceId | null>(null);
     const client = useApolloClient();
+    const { eventEmitter } = useWebsocket();
 
     const fetchData = useCallback(async () => {
         if (isLoading.current) {
@@ -40,6 +43,23 @@ export function WorkspacesListProvider({ children }: PropsWithChildren) {
     useEffect(() => {
         fetchData();
     }, [fetchData]);
+
+    useEffect(() => {
+        const controller = new AbortController();
+        const { signal } = controller;
+
+        const onWorkspacesChanged = () => {
+            startTransition(() => {
+                fetchData();
+            });
+        };
+
+        eventEmitter.addEventListener(WebSocketEventType.NEW_WORKSPACE, onWorkspacesChanged, { signal });
+        eventEmitter.addEventListener(WebSocketEventType.UPDATED_WORKSPACE, onWorkspacesChanged, { signal });
+        eventEmitter.addEventListener(WebSocketEventType.DELETED_WORKSPACE, onWorkspacesChanged, { signal });
+
+        return () => controller.abort();
+    }, [eventEmitter, fetchData]);
 
     return (
         <WorkspacesListContext.Provider

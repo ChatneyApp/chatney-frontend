@@ -9,7 +9,7 @@ export type GetRolesListResponse = {
 }
 
 export const CREATE_ROLE = gql`
-    mutation ($roleDto: RoleDtoInput!) {
+    mutation ($roleDto: RoleCreateDtoInput!) {
         roles {
             addRole (roleDto: $roleDto) {
                 id
@@ -22,9 +22,9 @@ export const CREATE_ROLE = gql`
 `;
 
 export const EDIT_ROLE = gql`
-    mutation ($role: RoleInput!) {
+    mutation ($roleDto: RoleUpdateDtoInput!) {
         roles {
-            updateRole (role: $role) {
+            updateRole (roleDto: $roleDto) {
                 id
                 name
                 isProtected

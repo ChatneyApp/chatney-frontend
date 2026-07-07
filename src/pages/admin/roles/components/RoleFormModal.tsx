@@ -72,7 +72,7 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
         if (role) {
             await editRole({
                 variables: {
-                    role: {
+                    roleDto: {
                         id: role.id,
                         name: data.name,
                         permissions: data.permissions,

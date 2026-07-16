@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Clock3, Search, Settings, Smile } from 'lucide-react';
-import { Popover } from 'radix-ui';
+import { Search } from 'lucide-react';
+import { Popover, Tabs } from 'radix-ui';
 
-import { REACTION_DETAILS, ReactionOption } from '@/pages/client/Chat/emojis';
+import { REACTION_CATEGORIES, REACTION_DETAILS, ReactionCategory, ReactionOption } from '@/pages/client/Chat/emojis';
 
 import styles from './ReactionSelectionDialog.module.css';
 
@@ -23,13 +23,14 @@ const toReactionOption = (code: string): ReactionOption => {
         code,
         emoji: code,
         label: code,
-        category: 'popular',
+        category: ReactionCategory.SMILEYS,
     };
 };
 
 export const ReactionSelectionDialog = ({ reactions, myReactions, onSelect }: Props) => {
     const [isOpen, setIsOpen] = useState(false);
     const [searchValue, setSearchValue] = useState('');
+    const [activeCategory, setActiveCategory] = useState<string>(REACTION_CATEGORIES[0].id);
 
     const handleClose = (code: string) => {
         onSelect(code);
@@ -42,18 +43,37 @@ export const ReactionSelectionDialog = ({ reactions, myReactions, onSelect }: Pr
         .map(toReactionOption);
 
     const search = searchValue.trim().toLowerCase();
+    const isSearching = search.length > 0;
     const filteredReactions = reactionOptions.filter(reaction => (
-        search.length === 0
-        || reaction.code.toLowerCase().includes(search)
+        reaction.code.toLowerCase().includes(search)
         || reaction.label.toLowerCase().includes(search)
     ));
-
-    const popularReactions = filteredReactions.filter(reaction => reaction.category === 'popular');
-    const activityReactions = filteredReactions.filter(reaction => reaction.category === 'activity');
 
     if (reactionOptions.length === 0) {
         return null;
     }
+
+    const renderReactionsGrid = (options: ReactionOption[]) => {
+        if (options.length === 0) {
+            return <div className={styles.emptyState}>No matching emojis</div>;
+        }
+
+        return (
+            <div className={styles.reactionsList}>
+                {options.map(reaction => (
+                    <button
+                        key={reaction.code}
+                        type="button"
+                        aria-label={reaction.label}
+                        className={styles.reaction}
+                        onClick={() => handleClose(reaction.code)}
+                    >
+                        {reaction.emoji}
+                    </button>
+                ))}
+            </div>
+        );
+    };
 
     return (
         <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
@@ -83,66 +103,36 @@ export const ReactionSelectionDialog = ({ reactions, myReactions, onSelect }: Pr
                         />
                     </div>
 
-                    <div className={styles.reactionSections}>
-                        {popularReactions.length > 0 && (
-                            <section className={styles.reactionSection}>
-                                <h3 className={styles.sectionTitle}>Popular reactions</h3>
-                                <div className={styles.reactionsList}>
-                                    {popularReactions.map(reaction => (
-                                        <button
-                                            key={reaction.code}
-                                            type="button"
-                                            aria-label={reaction.label}
-                                            className={styles.reaction}
-                                            onClick={() => handleClose(reaction.code)}
-                                        >
-                                            {reaction.emoji}
-                                        </button>
-                                    ))}
-                                </div>
-                            </section>
-                        )}
-
-                        {activityReactions.length > 0 && (
-                            <section className={styles.reactionSection}>
-                                <h3 className={styles.sectionTitle}>Activity</h3>
-                                <div className={styles.reactionsList}>
-                                    {activityReactions.map(reaction => (
-                                        <button
-                                            key={reaction.code}
-                                            type="button"
-                                            aria-label={reaction.label}
-                                            className={styles.reaction}
-                                            onClick={() => handleClose(reaction.code)}
-                                        >
-                                            {reaction.emoji}
-                                        </button>
-                                    ))}
-                                </div>
-                            </section>
-                        )}
-
-                        {filteredReactions.length === 0 && (
-                            <div className={styles.emptyState}>No matching emojis</div>
-                        )}
-                    </div>
-
-                    <div className={styles.footer}>
-                        <div className={styles.footerActions}>
-                            <button type="button" className={styles.footerButton} aria-label="Emoji reactions">
-                                <Smile size={19}/>
-                            </button>
-                            <button type="button" className={styles.footerButton} aria-label="Recent reactions">
-                                <Clock3 size={19}/>
-                            </button>
-                            <button type="button" className={styles.footerButton} aria-label="Reaction settings">
-                                <Settings size={19}/>
-                            </button>
+                    {isSearching ? (
+                        <div className={styles.searchResults}>
+                            {renderReactionsGrid(filteredReactions)}
                         </div>
-                        <button type="button" className={styles.viewAllButton}>
-                            View all
-                        </button>
-                    </div>
+                    ) : (
+                        <Tabs.Root
+                            value={activeCategory}
+                            onValueChange={setActiveCategory}
+                            className={styles.tabsRoot}
+                        >
+                            <Tabs.List className={styles.tabsList} aria-label="Emoji categories">
+                                {REACTION_CATEGORIES.map(({ id, title, Icon }) => (
+                                    <Tabs.Trigger
+                                        key={id}
+                                        value={id}
+                                        className={styles.tabTrigger}
+                                        title={title}
+                                        aria-label={title}
+                                    >
+                                        <Icon size={18} aria-hidden="true"/>
+                                    </Tabs.Trigger>
+                                ))}
+                            </Tabs.List>
+                            {REACTION_CATEGORIES.map(({ id }) => (
+                                <Tabs.Content key={id} value={id} className={styles.tabContent}>
+                                    {renderReactionsGrid(reactionOptions.filter(reaction => reaction.category === id))}
+                                </Tabs.Content>
+                            ))}
+                        </Tabs.Root>
+                    )}
                     <Popover.Arrow className={styles.popupArrow}/>
                 </Popover.Content>
             </Popover.Portal>

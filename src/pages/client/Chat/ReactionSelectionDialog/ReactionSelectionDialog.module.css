@@ -26,16 +26,24 @@
     @apply min-w-0 flex-1 bg-transparent text-[1.35rem] font-semibold text-[#e9edff] outline-none placeholder:text-[#697693];
 }
 
-.reactionSections {
-    @apply min-h-0 flex-1 overflow-y-auto border-t border-white/[0.03] px-4 pb-3 pt-1;
+.tabsRoot {
+    @apply flex min-h-0 flex-1 flex-col;
 }
 
-.reactionSection {
-    @apply py-2;
+.tabsList {
+    @apply flex items-center gap-1 border-b border-white/5 px-4 pb-2;
 }
 
-.sectionTitle {
-    @apply mb-3 text-[0.82rem] font-black uppercase tracking-[0.18em] text-[#aab3ce];
+.tabTrigger {
+    @apply flex size-9 cursor-pointer items-center justify-center rounded-xl text-[#92a0c1] transition hover:bg-white/5 hover:text-[#c9d0ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9aa6ff] data-[state=active]:bg-[#273653] data-[state=active]:text-[#e9edff];
+}
+
+.tabContent {
+    @apply h-[19rem] overflow-y-auto px-4 py-3;
+}
+
+.searchResults {
+    @apply h-[19rem] min-h-0 overflow-y-auto border-t border-white/[0.03] px-4 py-3;
 }
 
 .reactionsList {
@@ -50,20 +58,4 @@
 
 .emptyState {
     @apply py-8 text-center text-sm font-semibold text-[#8d99b7];
-}
-
-.footer {
-    @apply flex items-center justify-between bg-[#071226] px-5 py-4;
-}
-
-.footerActions {
-    @apply flex items-center gap-4 text-[#92a0c1];
-}
-
-.footerButton {
-    @apply flex size-8 items-center justify-center rounded-xl transition hover:bg-white/5 hover:text-[#c9d0ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9aa6ff];
-}
-
-.viewAllButton {
-    @apply rounded-xl px-2 py-1 text-sm font-black uppercase tracking-[-0.02em] text-[#b9b7ff] transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9aa6ff];
 }

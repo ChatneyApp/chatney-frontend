@@ -14,7 +14,7 @@
 
 .emoji {
     @apply text-lg;
-    font-family: 'Noto Color Emoji', sans-serif;
+    font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
     line-height: 1;
 }
 

@@ -16,6 +16,10 @@
     }
 }
 
+.inputWrapper {
+    @apply relative flex-1 min-w-0;
+}
+
 .fileAttachmentIcon {
     @apply mr-4 text-amber-500 cursor-pointer;
 }

@@ -1,10 +1,20 @@
-import { FormEventHandler, useCallback, useEffect, useState } from 'react';
+import {
+    ChangeEventHandler,
+    FormEventHandler,
+    KeyboardEventHandler,
+    useCallback,
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from 'react';
 import { Paperclip, X } from 'lucide-react';
 import { Dialog } from 'radix-ui';
 
 import { Button } from '@/components/Button';
 import { formatFileSize } from '@/helpers/utils';
 import { useDropZone } from '@/hooks/useDropZone';
+import { EmojiSuggestion, EmojiSuggestionsPopup, EmojiSuggestionsPopupHandle } from '@/pages/client/Chat/EmojiSuggestionsPopup';
 import { MessageEditorAttachment } from '@/pages/client/Chat/MessageEditorAttachment';
 import { AttachmentId, Attachment } from '@/types/attachments';
 import { MessageId } from '@/types/messages';
@@ -38,6 +48,32 @@ type EditorAttachment = {
     asFile: boolean;
 };
 
+type EmojiQuery = {
+    start: number;
+    end: number;
+    query: string;
+};
+
+// ":" followed by a letter/digit, then a solid run of word characters, right before the caret
+const EMOJI_QUERY_PATTERN = /:([a-zA-Z0-9][a-zA-Z0-9_]*)$/;
+
+const getEmojiQuery = (text: string, caret: number | null): EmojiQuery | null => {
+    if (caret == null) {
+        return null;
+    }
+
+    const match = EMOJI_QUERY_PATTERN.exec(text.slice(0, caret));
+    if (!match) {
+        return null;
+    }
+
+    return {
+        start: caret - match[0].length,
+        end: caret,
+        query: match[1],
+    };
+};
+
 const canCompressFile = (file: File) => file.type.startsWith('video/') || file.type.startsWith('audio/');
 
 const canUploadAsFile = (file: File) =>
@@ -51,6 +87,11 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [compressPendingFile, setCompressPendingFile] = useState(false);
     const [uploadPendingFileAsFile, setUploadPendingFileAsFile] = useState(false);
+    const [caret, setCaret] = useState<number | null>(null);
+    const [suggestionsDismissed, setSuggestionsDismissed] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const pendingCaretRef = useRef<number | null>(null);
+    const suggestionsRef = useRef<EmojiSuggestionsPopupHandle>(null);
 
     const isEditing = editingMessage != null;
 
@@ -65,7 +106,57 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
             setText('');
             setAttachments([]);
         }
+        setCaret(null);
+        setSuggestionsDismissed(false);
     }, [editingMessage]);
+
+    const emojiQuery = suggestionsDismissed ? null : getEmojiQuery(text, caret);
+
+    // a controlled input moves the caret to the end after a programmatic value change; put it back
+    useLayoutEffect(() => {
+        if (pendingCaretRef.current != null && inputRef.current) {
+            inputRef.current.focus();
+            inputRef.current.setSelectionRange(pendingCaretRef.current, pendingCaretRef.current);
+            pendingCaretRef.current = null;
+        }
+    }, [text]);
+
+    const applyEmojiSuggestion = (suggestion: EmojiSuggestion) => {
+        if (!emojiQuery) {
+            return;
+        }
+
+        const newText = text.slice(0, emojiQuery.start) + suggestion.emoji + text.slice(emojiQuery.end);
+        const newCaret = emojiQuery.start + suggestion.emoji.length;
+        pendingCaretRef.current = newCaret;
+        setText(newText);
+        setCaret(newCaret);
+    };
+
+    const handleTextChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+        const { value, selectionStart } = e.target;
+        if (suggestionsDismissed && selectionStart != null && value[selectionStart - 1] === ':') {
+            setSuggestionsDismissed(false);
+        }
+        setText(value);
+        setCaret(selectionStart);
+    };
+
+    const handleInputKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
+        if (!emojiQuery) {
+            return;
+        }
+
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            setSuggestionsDismissed(true);
+            return;
+        }
+
+        if (suggestionsRef.current?.handleKeyDown(e)) {
+            e.preventDefault();
+        }
+    };
 
     useEffect(() => {
         if (!pendingFile) {
@@ -135,6 +226,8 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
                 setText('');
                 setAttachments([]);
             }
+            setCaret(null);
+            setSuggestionsDismissed(false);
         } catch (_e) {
             // TODO
         } finally {
@@ -293,13 +386,24 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
                 <div className={styles.fileDropArea}>
                     <Paperclip className={styles.fileAttachmentIcon} onClick={onFileSelectClick} />
                 </div>
-                <input
-                    type="text"
-                    placeholder={isEditing ? 'Edit message…' : 'Type a message...'}
-                    className="flex-1 bg-gray-700 text-white p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                />
+                <div className={styles.inputWrapper}>
+                    <EmojiSuggestionsPopup
+                        ref={suggestionsRef}
+                        query={emojiQuery?.query ?? null}
+                        onSelect={applyEmojiSuggestion}
+                    />
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        placeholder={isEditing ? 'Edit message…' : 'Type a message...'}
+                        className="w-full bg-gray-700 text-white p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        value={text}
+                        onChange={handleTextChange}
+                        onKeyDown={handleInputKeyDown}
+                        onSelect={(e) => setCaret(e.currentTarget.selectionStart)}
+                        onBlur={() => setCaret(null)}
+                    />
+                </div>
                 <button
                     type="submit"
                     disabled={!canSubmit}

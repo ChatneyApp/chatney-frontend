@@ -1,0 +1,27 @@
+@reference "tailwindcss";
+
+.container {
+    @apply absolute bottom-full left-0 z-10 mb-2 flex w-full max-w-md flex-col overflow-hidden rounded-lg border border-gray-600 bg-gray-900 py-1 shadow-lg;
+}
+
+.suggestion {
+    @apply flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-left text-sm text-gray-200;
+}
+
+.suggestionActive {
+    @apply bg-indigo-600/40 text-white;
+}
+
+.emoji {
+    @apply text-lg;
+    font-family: 'Noto Color Emoji', sans-serif;
+    line-height: 1;
+}
+
+.label {
+    @apply truncate;
+}
+
+.code {
+    @apply ml-auto shrink-0 text-xs text-gray-500;
+}

@@ -8,7 +8,7 @@ import {
     useRef,
     useState,
 } from 'react';
-import { Mic, Paperclip, X } from 'lucide-react';
+import { Mic, Paperclip, Video, X } from 'lucide-react';
 import { Dialog } from 'radix-ui';
 
 import { Button } from '@/components/Button';
@@ -16,6 +16,7 @@ import { formatFileSize } from '@/helpers/utils';
 import { useDropZone } from '@/hooks/useDropZone';
 import { EmojiSuggestion, EmojiSuggestionsPopup, EmojiSuggestionsPopupHandle } from '@/pages/client/Chat/EmojiSuggestionsPopup';
 import { MessageEditorAttachment } from '@/pages/client/Chat/MessageEditorAttachment';
+import { VideoRecorderModal } from '@/pages/client/Chat/VideoRecorderModal';
 import { VoiceRecorderModal } from '@/pages/client/Chat/VoiceRecorderModal';
 import { AttachmentId, Attachment } from '@/types/attachments';
 import { MessageId } from '@/types/messages';
@@ -89,6 +90,7 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
     const [compressPendingFile, setCompressPendingFile] = useState(false);
     const [uploadPendingFileAsFile, setUploadPendingFileAsFile] = useState(false);
     const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
+    const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
     const [caret, setCaret] = useState<number | null>(null);
     const [suggestionsDismissed, setSuggestionsDismissed] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -214,7 +216,7 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
         onDrop: openFilePreview,
     });
 
-    const handleVoiceRecorded = useCallback((file: File) => {
+    const handleMediaRecorded = useCallback((file: File) => {
         setAttachments(list => [
             ...list,
             {
@@ -400,11 +402,18 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
             {isVoiceModalOpen && (
                 <VoiceRecorderModal
                     onClose={() => setIsVoiceModalOpen(false)}
-                    onRecorded={handleVoiceRecorded}
+                    onRecorded={handleMediaRecorded}
+                />
+            )}
+            {isVideoModalOpen && (
+                <VideoRecorderModal
+                    onClose={() => setIsVideoModalOpen(false)}
+                    onRecorded={handleMediaRecorded}
                 />
             )}
             <form onSubmit={handleSend} className={styles.sendForm}>
                 <Mic className={styles.voiceRecordIcon} onClick={() => setIsVoiceModalOpen(true)} />
+                <Video className={styles.videoRecordIcon} onClick={() => setIsVideoModalOpen(true)} />
                 <div className={styles.fileDropArea}>
                     <Paperclip className={styles.fileAttachmentIcon} onClick={onFileSelectClick} />
                 </div>

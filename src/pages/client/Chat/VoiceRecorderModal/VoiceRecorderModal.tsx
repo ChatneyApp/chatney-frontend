@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Mic, Pause, Play, RotateCcw, Square } from 'lucide-react';
 import { Dialog } from 'radix-ui';
 
 import { Button } from '@/components/Button';
+import { useRecordingSession } from '@/hooks/useRecordingSession';
 import {
     EMPTY_WAVEFORM,
     MAX_BAR_HEIGHT,
@@ -22,23 +23,6 @@ type Props = {
     onRecorded: (file: File) => void;
 };
 
-type Stage = 'requesting' | 'recording' | 'paused' | 'preview' | 'error';
-
-type RecordingSession = {
-    stream: MediaStream;
-    recorder: MediaRecorder;
-    audioContext: AudioContext;
-    analyser: AnalyserNode;
-    chunks: Blob[];
-    finished: boolean;
-    released: boolean;
-};
-
-type Preview = {
-    blob: Blob;
-    url: string;
-};
-
 const MIME_CANDIDATES = [
     'audio/webm;codecs=opus',
     'audio/webm',
@@ -55,8 +39,6 @@ const FILE_EXTENSIONS: Record<string, string> = {
 };
 
 const LIVE_BAR_INTERVAL_MS = 50;
-
-const pickMimeType = () => MIME_CANDIDATES.find(type => MediaRecorder.isTypeSupported(type));
 
 const getFileExtension = (mimeType: string) => {
     const baseMimeType = mimeType.split(';')[0].trim().toLowerCase();
@@ -102,153 +84,51 @@ const peakToBarHeight = (peak: number) => {
 };
 
 export function VoiceRecorderModal({ onClose, onRecorded }: Props) {
-    const [stage, setStage] = useState<Stage>('requesting');
-    const [elapsedMs, setElapsedMs] = useState(0);
-    const [preview, setPreview] = useState<Preview | null>(null);
     const [previewWaveform, setPreviewWaveform] = useState(EMPTY_WAVEFORM);
     const [currentTime, setCurrentTime] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
-    const sessionRef = useRef<RecordingSession | null>(null);
-    const previewUrlRef = useRef<string | null>(null);
-    const isMountedRef = useRef(true);
+    const analyserRef = useRef<AnalyserNode | null>(null);
     const liveBarsRef = useRef<number[]>([]);
-    const accumulatedMsRef = useRef(0);
-    const segmentStartRef = useRef(0);
 
-    const releaseSession = useCallback((session: RecordingSession) => {
-        if (session.released) {
-            return;
-        }
+    const { stage, elapsedMs, preview, startRecording, pause, resume, stop, cancel } = useRecordingSession({
+        constraints: { audio: true },
+        mimeCandidates: MIME_CANDIDATES,
+        fallbackMimeType: 'audio/webm',
+        onStream: (stream) => {
+            const audioContext = getAudioContext();
+            const analyser = audioContext.createAnalyser();
+            analyser.fftSize = 1024;
+            audioContext.createMediaStreamSource(stream).connect(analyser);
+            analyserRef.current = analyser;
+            liveBarsRef.current = [];
+            setPreviewWaveform(EMPTY_WAVEFORM);
+            setCurrentTime(0);
+            setIsPlaying(false);
 
-        session.released = true;
-        session.stream.getTracks().forEach(track => track.stop());
-        void session.audioContext.close().catch(() => undefined);
-    }, []);
-
-    const startRecording = useCallback(async () => {
-        setStage('requesting');
-        setPreview(null);
-        setPreviewWaveform(EMPTY_WAVEFORM);
-        setCurrentTime(0);
-        setIsPlaying(false);
-        setElapsedMs(0);
-        liveBarsRef.current = [];
-        accumulatedMsRef.current = 0;
-
-        if (previewUrlRef.current) {
-            URL.revokeObjectURL(previewUrlRef.current);
-            previewUrlRef.current = null;
-        }
-
-        let stream: MediaStream;
-        try {
-            if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
-                throw new Error('Audio recording is not supported');
-            }
-            stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        } catch {
-            if (isMountedRef.current) {
-                setStage('error');
-            }
-            return;
-        }
-
-        if (!isMountedRef.current) {
-            stream.getTracks().forEach(track => track.stop());
-            return;
-        }
-
-        const audioContext = getAudioContext();
-        const analyser = audioContext.createAnalyser();
-        analyser.fftSize = 1024;
-        audioContext.createMediaStreamSource(stream).connect(analyser);
-
-        const mimeType = pickMimeType();
-        const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
-        const session: RecordingSession = {
-            stream,
-            recorder,
-            audioContext,
-            analyser,
-            chunks: [],
-            finished: false,
-            released: false,
-        };
-
-        recorder.ondataavailable = (event) => {
-            if (event.data.size > 0) {
-                session.chunks.push(event.data);
-            }
-        };
-        recorder.onstop = () => {
-            releaseSession(session);
-            if (!session.finished || !isMountedRef.current) {
-                return;
-            }
-
-            const blob = new Blob(session.chunks, { type: recorder.mimeType || mimeType || 'audio/webm' });
-            const url = URL.createObjectURL(blob);
-            previewUrlRef.current = url;
-            setPreview({ blob, url });
-            setStage('preview');
-        };
-
-        sessionRef.current = session;
-        segmentStartRef.current = performance.now();
-        recorder.start(250);
-        setStage('recording');
-    }, [releaseSession]);
-
-    const stopSession = useCallback((discard: boolean) => {
-        const session = sessionRef.current;
-        if (!session) {
-            return;
-        }
-
-        sessionRef.current = null;
-        session.finished = !discard;
-        if (session.recorder.state === 'recording') {
-            accumulatedMsRef.current += performance.now() - segmentStartRef.current;
-            setElapsedMs(accumulatedMsRef.current);
-        }
-        if (session.recorder.state !== 'inactive') {
-            session.recorder.stop();
-        } else {
-            releaseSession(session);
-        }
-    }, [releaseSession]);
-
-    useEffect(() => {
-        isMountedRef.current = true;
-        void startRecording();
-
-        return () => {
-            isMountedRef.current = false;
-            stopSession(true);
-            if (previewUrlRef.current) {
-                URL.revokeObjectURL(previewUrlRef.current);
-                previewUrlRef.current = null;
-            }
-        };
-    }, [startRecording, stopSession]);
+            return () => {
+                analyserRef.current = null;
+                void audioContext.close().catch(() => undefined);
+            };
+        },
+    });
 
     // live scrolling waveform while recording
     useEffect(() => {
-        const session = sessionRef.current;
-        if (stage !== 'recording' || !session) {
+        const analyser = analyserRef.current;
+        if (stage !== 'recording' || !analyser) {
             return;
         }
 
-        const data = new Uint8Array(session.analyser.fftSize);
+        const data = new Uint8Array(analyser.fftSize);
         let peakHold = 0;
         let lastBarAt = performance.now();
         let rafId = 0;
 
         const tick = () => {
-            session.analyser.getByteTimeDomainData(data);
+            analyser.getByteTimeDomainData(data);
             let peak = 0;
             for (let i = 0; i < data.length; i += 1) {
                 peak = Math.max(peak, Math.abs(data[i] - 128) / 128);
@@ -275,19 +155,6 @@ export function VoiceRecorderModal({ onClose, onRecorded }: Props) {
         rafId = requestAnimationFrame(tick);
 
         return () => cancelAnimationFrame(rafId);
-    }, [stage]);
-
-    // elapsed-time ticker while recording
-    useEffect(() => {
-        if (stage !== 'recording') {
-            return;
-        }
-
-        const intervalId = setInterval(() => {
-            setElapsedMs(accumulatedMsRef.current + (performance.now() - segmentStartRef.current));
-        }, 200);
-
-        return () => clearInterval(intervalId);
     }, [stage]);
 
     // decode the finished take into a static waveform
@@ -324,40 +191,9 @@ export function VoiceRecorderModal({ onClose, onRecorded }: Props) {
         drawBars(canvasRef.current, previewWaveform, duration > 0 ? currentTime / duration : 0);
     }, [stage, previewWaveform, currentTime, elapsedMs]);
 
-    const handlePause = () => {
-        const session = sessionRef.current;
-        if (!session || session.recorder.state !== 'recording') {
-            return;
-        }
-
-        accumulatedMsRef.current += performance.now() - segmentStartRef.current;
-        setElapsedMs(accumulatedMsRef.current);
-        session.recorder.pause();
-        setStage('paused');
-    };
-
-    const handleResume = () => {
-        const session = sessionRef.current;
-        if (!session || session.recorder.state !== 'paused') {
-            return;
-        }
-
-        segmentStartRef.current = performance.now();
-        session.recorder.resume();
-        setStage('recording');
-    };
-
-    const handleStop = () => {
-        stopSession(false);
-    };
-
     const handleCancel = () => {
-        stopSession(true);
+        cancel();
         onClose();
-    };
-
-    const handleRerecord = () => {
-        void startRecording();
     };
 
     const togglePreviewPlayback = async () => {
@@ -472,26 +308,26 @@ export function VoiceRecorderModal({ onClose, onRecorded }: Props) {
                                         Cancel
                                     </Button>
                                     {stage === 'recording' && (
-                                        <Button type="button" onClick={handlePause}>
+                                        <Button type="button" onClick={pause}>
                                             <Pause size={16} className={styles.buttonIcon} />
                                             Pause
                                         </Button>
                                     )}
                                     {stage === 'paused' && (
-                                        <Button type="button" onClick={handleResume}>
+                                        <Button type="button" onClick={resume}>
                                             <Mic size={16} className={styles.buttonIcon} />
                                             Resume
                                         </Button>
                                     )}
                                     {(stage === 'recording' || stage === 'paused') && (
-                                        <Button type="button" onClick={handleStop}>
+                                        <Button type="button" onClick={stop}>
                                             <Square size={16} className={styles.buttonIcon} />
                                             Stop
                                         </Button>
                                     )}
                                     {stage === 'preview' && (
                                         <>
-                                            <Button type="button" onClick={handleRerecord}>
+                                            <Button type="button" onClick={() => void startRecording()}>
                                                 <RotateCcw size={16} className={styles.buttonIcon} />
                                                 Re-record
                                             </Button>

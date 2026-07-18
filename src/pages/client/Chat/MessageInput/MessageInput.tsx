@@ -8,7 +8,7 @@ import {
     useRef,
     useState,
 } from 'react';
-import { Paperclip, X } from 'lucide-react';
+import { Mic, Paperclip, X } from 'lucide-react';
 import { Dialog } from 'radix-ui';
 
 import { Button } from '@/components/Button';
@@ -16,6 +16,7 @@ import { formatFileSize } from '@/helpers/utils';
 import { useDropZone } from '@/hooks/useDropZone';
 import { EmojiSuggestion, EmojiSuggestionsPopup, EmojiSuggestionsPopupHandle } from '@/pages/client/Chat/EmojiSuggestionsPopup';
 import { MessageEditorAttachment } from '@/pages/client/Chat/MessageEditorAttachment';
+import { VoiceRecorderModal } from '@/pages/client/Chat/VoiceRecorderModal';
 import { AttachmentId, Attachment } from '@/types/attachments';
 import { MessageId } from '@/types/messages';
 
@@ -87,6 +88,7 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [compressPendingFile, setCompressPendingFile] = useState(false);
     const [uploadPendingFileAsFile, setUploadPendingFileAsFile] = useState(false);
+    const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false);
     const [caret, setCaret] = useState<number | null>(null);
     const [suggestionsDismissed, setSuggestionsDismissed] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -211,6 +213,19 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
     const { onClick: onFileSelectClick } = useDropZone({
         onDrop: openFilePreview,
     });
+
+    const handleVoiceRecorded = useCallback((file: File) => {
+        setAttachments(list => [
+            ...list,
+            {
+                kind: 'pending',
+                draftId: crypto.randomUUID(),
+                file,
+                compress: true,
+                asFile: false,
+            },
+        ]);
+    }, []);
 
     const handleSend: FormEventHandler = async (e) => {
         e.preventDefault();
@@ -382,7 +397,14 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
                     ))}
                 </div>
             )}
+            {isVoiceModalOpen && (
+                <VoiceRecorderModal
+                    onClose={() => setIsVoiceModalOpen(false)}
+                    onRecorded={handleVoiceRecorded}
+                />
+            )}
             <form onSubmit={handleSend} className={styles.sendForm}>
+                <Mic className={styles.voiceRecordIcon} onClick={() => setIsVoiceModalOpen(true)} />
                 <div className={styles.fileDropArea}>
                     <Paperclip className={styles.fileAttachmentIcon} onClick={onFileSelectClick} />
                 </div>

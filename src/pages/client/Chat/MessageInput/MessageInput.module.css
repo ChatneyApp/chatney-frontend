@@ -21,6 +21,10 @@
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
 }
 
+.voiceRecordIcon {
+    @apply mr-4 text-amber-500 cursor-pointer;
+}
+
 .fileAttachmentIcon {
     @apply mr-4 text-amber-500 cursor-pointer;
 }

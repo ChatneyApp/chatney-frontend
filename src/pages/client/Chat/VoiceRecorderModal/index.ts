@@ -1,0 +1,1 @@
+export { VoiceRecorderModal } from './VoiceRecorderModal';

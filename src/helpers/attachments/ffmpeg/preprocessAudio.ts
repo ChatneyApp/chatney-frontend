@@ -7,10 +7,24 @@ import type { FFmpegExecResult, ProgressEvent } from '../types';
 import { initFfmpeg } from './init';
 import { ffmpegExec, ffmpegListFilesRaw } from './generic';
 
-const AUDIO_TMP = {
-    source: 'input.mp3',
-    result: 'output.mp3',
+const AUDIO_RESULT_TMP = 'output.mp3';
+
+const AUDIO_INPUT_EXTENSIONS: Record<string, string> = {
+    'audio/webm': 'webm',
+    'audio/ogg': 'ogg',
+    'audio/mp4': 'm4a',
+    'audio/wav': 'wav',
+    'audio/x-wav': 'wav',
+    'audio/flac': 'flac',
+    'audio/aac': 'aac',
 };
+
+function getSourceFileName(mimeType: string) {
+    const baseMimeType = mimeType.split(';')[0].trim().toLowerCase();
+    const extension = AUDIO_INPUT_EXTENSIONS[baseMimeType] ?? 'mp3';
+
+    return `input.${extension}`;
+}
 
 const reportProgress = (callback?: (progress: number) => void) =>
     ({ progress }: ProgressEvent) => callback?.(progress);
@@ -46,18 +60,19 @@ export async function preprocessAudio(
     const startTime = Date.now();
     const updateEncodingStatus = reportProgress(setEncodingProgress);
 
-    await putInputFile(ffmpeg, inputFile, AUDIO_TMP.source);
+    const sourceFileName = getSourceFileName(inputFile.type);
+    await putInputFile(ffmpeg, inputFile, sourceFileName);
 
     const command = [
-        '-i', AUDIO_TMP.source,
+        '-i', sourceFileName,
         ...compileFfmpegAudioParams(audioConfig),
-        AUDIO_TMP.result,
+        AUDIO_RESULT_TMP,
     ];
 
     console.log(command.join(' '));
     const output = await ffmpegExec(ffmpeg, command, updateEncodingStatus, signal);
 
-    const data = await ffmpeg.readFile(AUDIO_TMP.result) as Uint8Array;
+    const data = await ffmpeg.readFile(AUDIO_RESULT_TMP) as Uint8Array;
     const conversionFailed = hasConversionError(output);
     const result = new Blob([new Uint8Array(data)], { type: 'audio/mpeg' });
     console.log('generate result (blob)', result);
@@ -66,7 +81,7 @@ export async function preprocessAudio(
     console.error('AFTER dir [.]');
     console.table(await ffmpegListFilesRaw(ffmpeg, '.'));
 
-    await removeIfPresent(ffmpeg, [AUDIO_TMP.source, AUDIO_TMP.result]);
+    await removeIfPresent(ffmpeg, [sourceFileName, AUDIO_RESULT_TMP]);
     console.log(`preprocessAudio done in ${Date.now() - startTime}ms`);
 
     if (conversionFailed) {

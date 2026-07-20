@@ -10,10 +10,22 @@ import { ffmpegExec, ffmpegListFilesRaw, getVideoProperties } from './generic';
 
 const TARGET_SIDE = 720;
 
-const VIDEO_TMP = {
-    source: 'input.mp4',
-    result: 'output.mp4',
+const VIDEO_RESULT_TMP = 'output.mp4';
+
+const VIDEO_INPUT_EXTENSIONS: Record<string, string> = {
+    'video/webm': 'webm',
+    'video/mp4': 'mp4',
+    'video/quicktime': 'mov',
+    'video/x-matroska': 'mkv',
+    'video/ogg': 'ogv',
 };
+
+function getSourceFileName(mimeType: string) {
+    const baseMimeType = mimeType.split(';')[0].trim().toLowerCase();
+    const extension = VIDEO_INPUT_EXTENSIONS[baseMimeType] ?? 'mp4';
+
+    return `input.${extension}`;
+}
 
 const pipeProgress = (callback?: (progress: number) => void) =>
     ({ progress }: ProgressEvent) => callback?.(progress);
@@ -53,9 +65,10 @@ export async function preprocessVideo(
     const startTime = Date.now();
     const updateEncodingStatus = pipeProgress(setEncodingProgress);
 
-    await mountInput(ffmpeg, inputFile, VIDEO_TMP.source);
+    const sourceFileName = getSourceFileName(inputFile.type);
+    await mountInput(ffmpeg, inputFile, sourceFileName);
 
-    const inputVideoProps = await getVideoProperties(ffmpeg, VIDEO_TMP.source);
+    const inputVideoProps = await getVideoProperties(ffmpeg, sourceFileName);
     console.log('inputVideoProps');
     console.table(inputVideoProps);
 
@@ -64,21 +77,21 @@ export async function preprocessVideo(
     console.table(outputVideoSize);
 
     const command = [
-        '-i', VIDEO_TMP.source,
+        '-i', sourceFileName,
         '-filter:v',
         buildVideoFilter(outputVideoSize),
         ...compileFfmpegVideoParams(videoConfig),
-        VIDEO_TMP.result,
+        VIDEO_RESULT_TMP,
     ];
 
     console.log(command.join(' '));
     const output = await ffmpegExec(ffmpeg, command, updateEncodingStatus, signal);
 
-    const outputVideoProps = await getVideoProperties(ffmpeg, VIDEO_TMP.result);
+    const outputVideoProps = await getVideoProperties(ffmpeg, VIDEO_RESULT_TMP);
     console.log('outputVideoProps');
     console.table(outputVideoProps);
 
-    const data = await ffmpeg.readFile(VIDEO_TMP.result) as Uint8Array;
+    const data = await ffmpeg.readFile(VIDEO_RESULT_TMP) as Uint8Array;
     const failed = conversionFailed(output);
     const result = new Blob([new Uint8Array(data)], { type: 'video/mp4' });
     console.log('generated video result (blob)', result);
@@ -87,7 +100,7 @@ export async function preprocessVideo(
     console.error('AFTER dir [.]');
     console.table(await ffmpegListFilesRaw(ffmpeg, '.'));
 
-    await discardFiles(ffmpeg, [VIDEO_TMP.source, VIDEO_TMP.result]);
+    await discardFiles(ffmpeg, [sourceFileName, VIDEO_RESULT_TMP]);
     console.log(`preprocessVideo done in ${Date.now() - startTime}ms`);
 
     if (failed) {

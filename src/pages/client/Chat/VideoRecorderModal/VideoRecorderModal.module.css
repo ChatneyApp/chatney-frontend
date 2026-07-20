@@ -1,0 +1,41 @@
+@reference "tailwindcss";
+
+.wideContainer {
+    @apply max-w-[720px]!;
+}
+
+.body {
+    @apply mt-4 flex flex-col gap-3;
+}
+
+.videoBox {
+    @apply aspect-video w-full overflow-hidden rounded bg-black;
+}
+
+.video {
+    @apply h-full w-full object-contain;
+}
+
+.timer {
+    @apply text-center font-mono text-2xl;
+}
+
+.statusRow {
+    @apply flex h-5 items-center justify-center gap-2 text-sm text-gray-400;
+}
+
+.recordingDot {
+    @apply h-2.5 w-2.5 animate-pulse rounded-full bg-red-500;
+}
+
+.pausedDot {
+    @apply h-2.5 w-2.5 rounded-full bg-yellow-500;
+}
+
+.buttonIcon {
+    @apply mr-1.5 inline-block align-[-2px];
+}
+
+.errorMessage {
+    @apply mt-4 text-sm text-red-400;
+}

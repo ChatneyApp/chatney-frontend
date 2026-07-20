@@ -1,7 +1,12 @@
 @reference "tailwindcss";
 
+.anchor {
+    @apply absolute inset-0 pointer-events-none;
+}
+
 .container {
-    @apply absolute bottom-full left-0 z-10 mb-2 flex w-full max-w-md flex-col overflow-hidden rounded-lg border border-gray-600 bg-gray-900 py-1 shadow-lg;
+    @apply z-10 flex max-w-md flex-col overflow-hidden rounded-lg border border-gray-600 bg-gray-900 py-1 shadow-lg;
+    width: var(--radix-popover-trigger-width);
 }
 
 .suggestion {

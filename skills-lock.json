@@ -13,6 +13,18 @@
       "skillPath": "skills/graphql-operations/SKILL.md",
       "computedHash": "d0532171706cbba72112a6f3ffdc49d5d15b22fdd092de7324099e767bf1cbf1"
     },
+    "storybook-setup": {
+      "source": "patricio0312rev/skills",
+      "sourceType": "github",
+      "skillPath": "foundation/storybook-setup/SKILL.md",
+      "computedHash": "fafd159d7a60ca872eddd2d5561cfedefa509cecfaeb87ad1a24fa3dc64afc59"
+    },
+    "storybook-stories": {
+      "source": "pedronauck/skills",
+      "sourceType": "github",
+      "skillPath": "skills/mine/storybook-stories/SKILL.md",
+      "computedHash": "9978ee12cc47c35da310ebb95edceff6e2f5fcc5bea3b2ba32d6552c0da71ba2"
+    },
     "tailwindcss": {
       "source": "hairyf/skills",
       "sourceType": "github",

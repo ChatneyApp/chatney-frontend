@@ -1,42 +1,22 @@
 @reference "tailwindcss";
 
 .container {
-    @apply relative block p-2 pl-6
-        bg-[#19334d]
-        border border-gray-700 rounded-lg;
-}
-
-.container::before {
-    @apply w-2 rounded-bl-lg rounded-tl-lg;
-    content: '';
-    --size: 5px;
-    --color: #ffb325;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: var(--size);
-    bottom: 0;
-    background: repeating-linear-gradient(
-            -45deg,
-            transparent,
-            transparent var(--size),
-            var(--color) var(--size),
-            var(--color) calc(var(--size) * 2)
-    );
+    @apply block p-4 bg-[#101830] border border-[#232e4d] rounded-xl
+        hover:border-[#3a4a7d] transition-colors;
 }
 
 .siteName {
-    @apply font-bold text-[#699cce];
+    @apply text-xs font-bold uppercase tracking-wider text-indigo-300;
 }
 
 .title {
-    @apply text-white;
+    @apply mt-1 font-semibold text-white;
 }
 
 .description {
-    @apply text-gray-400;
+    @apply mt-0.5 text-sm text-[#8b93b0];
 }
 
 .image {
-    @apply mt-2 max-w-full rounded w-100 h-auto;
+    @apply mt-3 max-w-full rounded-lg w-100 h-auto;
 }

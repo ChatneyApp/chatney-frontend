@@ -11,7 +11,7 @@ interface ChannelTypesListContextValue {
     refetch: () => void;
 }
 
-const ChannelTypesListContext = createContext<ChannelTypesListContextValue | null>(null);
+export const ChannelTypesListContext = createContext<ChannelTypesListContextValue | null>(null);
 
 export function ChannelTypesListProvider({ children }: PropsWithChildren) {
     const { data, refetch } = useSuspenseQuery(GET_CHANNEL_TYPES_QUERY, {

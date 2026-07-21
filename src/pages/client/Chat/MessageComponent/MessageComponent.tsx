@@ -45,12 +45,15 @@ export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, o
             <div className={styles.innerContainer}>
                 <div className={styles.header}>
                     {!isMine && (
-                        <span className="font-medium">
+                        <span className={styles.userName}>
                             {message.user?.displayName ?? message.userId}
                         </span>
                     )}
                     <span className={styles.timestamp}>
                         {formatTimestamp(new Date(message.updatedAt))}
+                        {new Date(message.updatedAt).getTime() !== new Date(message.createdAt).getTime() && (
+                            <span className={styles.editedLabel}> (edited)</span>
+                        )}
                     </span>
                     <CornerUpLeft
                         className={styles.replyButton}
@@ -74,9 +77,6 @@ export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, o
                 )}
                 <div className={styles.textContent}>
                     {message.content}
-                    {new Date(message.updatedAt).getTime() !== new Date(message.createdAt).getTime() && (
-                        <span className={styles.editedLabel}> (edited)</span>
-                    )}
                 </div>
                 <MessageAttachments attachments={message.attachments}/>
                 <MessageUrlPreviewsComponent urlPreviews={message.urlPreviews}/>

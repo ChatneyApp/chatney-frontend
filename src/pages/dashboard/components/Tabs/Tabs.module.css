@@ -25,11 +25,11 @@
 }
 
 .tabsTrigger:hover {
-    @apply text-amber-500;
+    @apply text-indigo-400;
 }
 
 .tabsTrigger[data-state=active] {
-    @apply font-bold text-amber-500;
+    @apply font-bold text-indigo-400;
 }
 
 .tabsList {

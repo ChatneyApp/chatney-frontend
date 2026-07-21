@@ -4,7 +4,7 @@ import { getUserById } from '@/graphql/users';
 import { loginPageUrl, userAuthId, userAuthTokenName } from '@/infra/consts';
 import { User } from '@/types/users';
 
-const UserContext = createContext<UserContextData | null>(null);
+export const UserContext = createContext<UserContextData | null>(null);
 
 export type UserContextData = {
     user: User | null;

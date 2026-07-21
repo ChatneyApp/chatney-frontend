@@ -1,50 +1,55 @@
 @reference "tailwindcss";
 
 .container {
-    --bg-color-1: #366aaa;
-    --bg-color-2: #2a496c;
-    --bg-color-3: #2a496c;
-    @apply box-border rounded-lg p-2 flex items-start space-x-4 max-w-[30em];
-    background-image: linear-gradient(to bottom, var(--bg-color-1) 0%, var(--bg-color-2) 60%, var(--bg-color-3) 100%);
-    background-attachment: fixed;
+    @apply box-border rounded-2xl p-4 flex items-start gap-3 max-w-[36em]
+        bg-[#151d33] border border-[#232e4d]
+        shadow-[0_8px_24px_rgba(2,8,23,0.35)];
 }
 
-.innerContainer {}
+.innerContainer {
+    @apply flex-1 min-w-0;
+}
 
 .header {
-    @apply flex items-center space-x-2 relative;
+    @apply flex items-center gap-2 relative;
+}
+
+.userName {
+    @apply font-semibold text-indigo-100;
 }
 
 .timestamp {
-    @apply text-xs text-yellow-500;
+    @apply ml-auto text-xs text-[#7d87a8];
 }
 
 .replyButton {
-    @apply cursor-pointer text-gray-400 hover:text-indigo-400;
+    @apply w-4 h-4 cursor-pointer text-[#5f6a8c] hover:text-indigo-300;
 }
 
 .editButton {
-    @apply cursor-pointer text-gray-400 hover:text-yellow-400 w-4 h-4;
+    @apply w-4 h-4 cursor-pointer text-[#5f6a8c] hover:text-indigo-300;
 }
 
 .editedLabel {
-    @apply text-xs text-gray-500 italic;
+    @apply text-xs text-[#7d87a8] italic;
 }
 
 .deleteButton {
-    @apply cursor-pointer text-red-500;
+    @apply w-4 h-4 cursor-pointer text-[#5f6a8c] hover:text-red-400;
 }
 
 .replyQuote {
-    @apply mt-1 px-2 py-1 text-xs text-gray-400 border-l-2 border-indigo-400 bg-black/20 rounded-sm break-all;
+    @apply mt-2 px-3 py-1.5 text-xs text-[#9aa3c0] border-l-2 border-indigo-400 bg-[#0f1526] rounded-md [overflow-wrap:anywhere];
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
 }
 
 .textContent {
-    @apply text-gray-200 break-all py-2;
+    @apply text-[#dbe1f4] leading-relaxed py-2 whitespace-pre-wrap [overflow-wrap:anywhere];
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
 }
 
 .isMine {
-    @apply self-end;
+    @apply self-end bg-[#1a2340] border-[#2f3c66];
 }
 
 .avatar {

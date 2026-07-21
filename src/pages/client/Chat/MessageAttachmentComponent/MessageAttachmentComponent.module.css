@@ -1,29 +1,38 @@
 @reference "tailwindcss";
 
 .mediaButton {
-    @apply block max-w-full rounded-lg border-0 bg-transparent p-0 text-left;
+    @apply block max-w-full rounded-xl border-0 bg-transparent p-0 text-left;
 }
 
 .image {
-    @apply max-h-80 max-w-full cursor-zoom-in rounded-lg object-contain;
+    @apply max-h-80 max-w-full cursor-zoom-in rounded-xl object-contain;
 }
 
 .video {
-    @apply max-h-80 max-w-full cursor-zoom-in rounded-lg;
+    @apply max-h-80 max-w-full cursor-zoom-in rounded-xl;
 }
 
 .binary {
-    @apply inline-flex max-w-full items-center gap-2 rounded border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-200 hover:border-gray-500 hover:bg-gray-700;
+    @apply inline-flex max-w-full items-center gap-3 rounded-xl border border-[#28345a] bg-[#1b2440] px-3 py-2.5
+        hover:border-[#3a4a7d] hover:bg-[#212c4e] transition-colors;
+}
+
+.binaryIconTile {
+    @apply flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#232e52];
 }
 
 .binaryIcon {
-    @apply shrink-0 text-gray-300;
+    @apply text-indigo-300;
+}
+
+.binaryInfo {
+    @apply flex min-w-0 flex-col;
 }
 
 .binaryName {
-    @apply min-w-0 break-all;
+    @apply min-w-0 break-all text-sm font-semibold text-white;
 }
 
 .binarySize {
-    @apply shrink-0 text-xs text-gray-400;
+    @apply text-xs text-[#8b93b0];
 }

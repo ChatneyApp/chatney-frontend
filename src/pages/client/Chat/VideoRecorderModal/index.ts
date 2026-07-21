@@ -1,0 +1,1 @@
+export { VideoRecorderModal } from './VideoRecorderModal';

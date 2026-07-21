@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@font-face {
+    font-family: 'Noto Color Emoji';
+    src: url('/NotoColorEmoji-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
     margin: 0;
     padding: 0;
@@ -18,17 +26,17 @@
 
 @layer theme {
     :root {
-        --color-main: #3e939f;
+        --color-main: var(--color-indigo-400);
         --text-color: var(--color-zinc-800);
         --page-bg-color: var(--color-zinc-200);
 
-        --main-menu-bg-color: var(--color-amber-800);
-        --main-menu-bg-color-hover: var(--color-amber-600);
+        --main-menu-bg-color: var(--color-indigo-900);
+        --main-menu-bg-color-hover: var(--color-indigo-600);
         --main-menu-text-color: var(--color-white);
 
-        --button-bg-color: var(--color-amber-600);
+        --button-bg-color: var(--color-indigo-500);
         --button-text-color: var(--color-white);
-        --button-bg-color-hover: var(--color-amber-700);
+        --button-bg-color-hover: var(--color-indigo-600);
     }
 
     @media (prefers-color-scheme: dark) {
@@ -41,13 +49,13 @@
 
 @layer base {
     h1 {
-        @apply py-4 text-amber-500 font-bold text-4xl;
+        @apply py-4 text-indigo-400 font-bold text-4xl;
     }
     h2 {
-        @apply py-4 text-amber-500 font-bold text-3xl;
+        @apply py-4 text-indigo-400 font-bold text-3xl;
     }
     h3 {
-        @apply py-4 text-amber-500 font-bold text-2xl;
+        @apply py-4 text-indigo-400 font-bold text-2xl;
     }
 }
 

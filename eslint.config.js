@@ -6,10 +6,8 @@ import a11y from 'eslint-plugin-jsx-a11y';
 
 export default [
     { ignores: ['dist', 'node_modules', 'public'] },
-
     js.configs.recommended,
     ...tseslint.configs.recommended,
-
     {
         files: ['src/**/*.{ts,tsx}'],
         plugins: { react, 'react-hooks': reactHooks, 'jsx-a11y': a11y },

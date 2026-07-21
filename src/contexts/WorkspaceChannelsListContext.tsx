@@ -14,7 +14,7 @@ interface WorkspaceChannelsListContextValue {
     setActiveChannel: (ch: Channel) => void
 }
 
-const WorkspaceChannelsListContext = createContext<WorkspaceChannelsListContextValue>(null as unknown as WorkspaceChannelsListContextValue);
+export const WorkspaceChannelsListContext = createContext<WorkspaceChannelsListContextValue>(null as unknown as WorkspaceChannelsListContextValue);
 
 export function WorkspaceChannelsListProvider({ children }: PropsWithChildren) {
     const { activeWorkspaceId } = useContext(WorkspacesListContext);

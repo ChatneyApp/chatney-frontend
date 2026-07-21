@@ -1,17 +1,20 @@
 @reference "tailwindcss";
 
 .container {
-    @apply flex flex-row items-center;
+    @apply flex flex-row items-center mt-1;
 }
 
 .button {
-    @apply flex flex-row gap-1 bg-blue-500 border-blue-400 border-2 rounded-lg px-2 py-0.5 cursor-pointer hover:bg-blue-700;
+    @apply inline-flex flex-row items-center gap-1.5 rounded-full border border-[#2b3760] bg-[#111a30] px-3 py-1
+        text-xs font-semibold text-indigo-300 cursor-pointer
+        hover:border-indigo-400 hover:text-indigo-200 hover:bg-[#17213a];
+}
 
-    &.mine {
-        @apply bg-green-500 border-green-400 hover:bg-green-700;
-    }
+.button svg {
+    width: 16px;
+    height: 16px;
 }
 
 .counter {
-    @apply text-yellow-700 px-1;
+    @apply px-1.5 text-xs font-bold text-[#9ca6ff];
 }

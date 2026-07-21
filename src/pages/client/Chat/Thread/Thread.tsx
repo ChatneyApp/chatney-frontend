@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { PanelRightClose } from 'lucide-react';
+import { MessagesSquare, X } from 'lucide-react';
 import { useApolloClient } from '@apollo/client/react';
 
 import { WebSocketEventEmitter } from '@/communication/WebSocketEventEmitter';
@@ -35,11 +35,12 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
 
     const header = (
         <>
-            <PanelRightClose
-                className="cursor-pointer inline-block mr-2 text-red-500"
+            <MessagesSquare className={styles.headerIcon} />
+            <span className={styles.headerTitle}>Thread</span>
+            <X
+                className={styles.closeButton}
                 onClick={onCloseThread}
             />
-            Thread
         </>
     );
 

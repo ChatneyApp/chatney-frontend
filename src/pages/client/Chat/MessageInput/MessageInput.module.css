@@ -1,23 +1,42 @@
 @reference "tailwindcss";
 
 .container {
-    @apply w-full border-t border-gray-700 p-3 flex flex-col items-center bg-gray-800;
+    @apply w-full p-3 flex flex-col items-center bg-transparent;
 }
 
 .sendForm {
-    @apply w-full flex flex-row items-center;
+    @apply w-full flex flex-row items-end gap-1 rounded-2xl border border-[#232e4d] bg-[#141c33] px-3 py-2
+        shadow-[0_8px_24px_rgba(2,8,23,0.35)]
+        focus-within:border-[#3a4a7d];
 }
 
 .sendButton {
-    @apply ml-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500 cursor-pointer;
+    @apply ml-2 p-2.5 bg-indigo-500 text-white rounded-xl hover:bg-indigo-400 cursor-pointer;
+
+    & svg {
+        @apply w-5 h-5;
+    }
 
     &:disabled {
-        @apply bg-gray-500 text-gray-700 cursor-not-allowed;
+        @apply bg-[#232e4d] text-[#5f6a8c] cursor-not-allowed;
     }
 }
 
+.inputWrapper {
+    @apply relative flex-1 min-w-0;
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
+}
+
+.voiceRecordIcon {
+    @apply mx-1.5 mb-2.5 w-5 h-5 text-[#7d87a8] cursor-pointer hover:text-indigo-300;
+}
+
+.videoRecordIcon {
+    @apply mx-1.5 mb-2.5 w-5 h-5 text-[#7d87a8] cursor-pointer hover:text-indigo-300;
+}
+
 .fileAttachmentIcon {
-    @apply mr-4 text-amber-500 cursor-pointer;
+    @apply mx-1.5 mb-2.5 w-5 h-5 text-[#7d87a8] cursor-pointer hover:text-indigo-300;
 }
 
 .fileDropArea {
@@ -37,11 +56,32 @@
 }
 
 .replyPreview {
-    @apply flex items-center justify-between w-full px-3 py-1.5 mb-1 rounded bg-gray-700 border-l-2 border-indigo-500 text-sm text-gray-300;
+    @apply flex items-center gap-3 w-full mb-2;
+}
+
+.replyPreviewAvatar {
+    @apply w-12 h-12 shrink-0 rounded-full object-cover;
+}
+
+.replyPreviewQuote {
+    @apply flex-1 min-w-0 rounded-lg rounded-l-sm border-l-2 border-indigo-400 bg-[#182036] px-4 py-2;
+}
+
+.replyPreviewHeader {
+    @apply flex items-baseline gap-1.5;
+}
+
+.replyPreviewAuthor {
+    @apply text-xs font-bold uppercase tracking-wider text-indigo-300;
+}
+
+.replyPreviewTime {
+    @apply text-xs text-[#7d87a8];
 }
 
 .replyPreviewText {
-    @apply truncate;
+    @apply mt-0.5 truncate text-sm italic text-[#aeb6d4];
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
 }
 
 .replyPreviewClear {

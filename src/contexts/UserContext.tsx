@@ -5,7 +5,7 @@ import { loginPageUrl, userAuthId, userAuthTokenName } from '@/infra/consts';
 import { Workspace } from '@/types/workspaces';
 import { UserId } from '@/types/users';
 
-const UserContext = createContext<UserContextData | null>(null);
+export const UserContext = createContext<UserContextData | null>(null);
 
 export type UserContextData = {
     user: {

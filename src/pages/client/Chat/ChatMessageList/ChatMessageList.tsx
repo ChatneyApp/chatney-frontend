@@ -354,7 +354,7 @@ export const ChatMessageList = ({
                     onSaveEdit={handleSaveEdit}
                     onCancelEdit={() => setEditingMessage(null)}
                     editingMessage={editingMessage}
-                    replyToPreview={replyingTo?.content ?? null}
+                    replyToMessage={replyingTo}
                     onClearReply={handleClearReply}
                 />
             </div>

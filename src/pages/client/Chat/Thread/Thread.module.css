@@ -1,12 +1,25 @@
 @reference "tailwindcss";
 
 .container {
-    @apply relative flex flex-col bg-gray-900;
+    @apply relative flex flex-col bg-[#131a30] border-l border-[#2a3557]
+        shadow-[inset_1px_0_0_rgba(129,140,248,0.08)];
     flex: 0 1 30%;
 }
 
 .header {
-    @apply flex flex-row items-center text-lg text-orange-400 font-bold m-2 mb-4;
+    @apply flex flex-row items-center gap-2 m-0 mb-2 px-4 py-3 border-b border-[#232e4d];
+}
+
+.headerIcon {
+    @apply w-5 h-5 text-indigo-300;
+}
+
+.headerTitle {
+    @apply text-lg font-bold text-white;
+}
+
+.closeButton {
+    @apply ml-auto w-5 h-5 cursor-pointer text-[#7d87a8] hover:text-white;
 }
 
 .scrollArea {
@@ -21,9 +34,9 @@
     z-index: 10;
     cursor: pointer;
     opacity: 0.5;
-    background-color: rgb(42, 68, 133);
+    background-color: var(--color-indigo-600);
     border-radius: 50%;
-    border: solid 1px white;
+    border: solid 1px var(--color-indigo-300);
 
     &:hover {
         opacity: 1;

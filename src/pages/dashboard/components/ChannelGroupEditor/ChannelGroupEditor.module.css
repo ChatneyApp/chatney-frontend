@@ -35,7 +35,7 @@
 }
 
 .channelListItem {
-    @apply border-2 border-amber-600 p-2 rounded-lg;
+    @apply border-2 border-indigo-500 p-2 rounded-lg;
 }
 
 .controls {

@@ -82,9 +82,18 @@ export const MessageAttachmentComponent = ({ attachment }: Props) => {
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    {getFileIcon(contentAttachmentType, { className: styles.binaryIcon, size: 18 })}
-                    <span className={styles.binaryName}>{attachment.originalFileName}</span>
-                    <span className={styles.binarySize}>{formatFileSize(attachment.size)}</span>
+                    <span className={styles.binaryIconTile}>
+                        {getFileIcon(contentAttachmentType, { className: styles.binaryIcon, size: 20 })}
+                    </span>
+                    <span className={styles.binaryInfo}>
+                        <span className={styles.binaryName}>{attachment.originalFileName}</span>
+                        <span className={styles.binarySize}>
+                            {formatFileSize(attachment.size)}
+                            {attachment.originalFileName.includes('.') && (
+                                <> • {attachment.originalFileName.split('.').pop()?.toUpperCase()}</>
+                            )}
+                        </span>
+                    </span>
                 </a>
             );
     }

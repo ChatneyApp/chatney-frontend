@@ -8,7 +8,7 @@ import {
     useRef,
     useState,
 } from 'react';
-import { Mic, Paperclip, Video, X } from 'lucide-react';
+import { Check, Mic, Paperclip, SendHorizontal, Video, X } from 'lucide-react';
 import { Dialog } from 'radix-ui';
 
 import { Button } from '@/components/Button';
@@ -18,8 +18,9 @@ import { EmojiSuggestion, EmojiSuggestionsPopup, EmojiSuggestionsPopupHandle } f
 import { MessageEditorAttachment } from '@/pages/client/Chat/MessageEditorAttachment';
 import { VideoRecorderModal } from '@/pages/client/Chat/VideoRecorderModal';
 import { VoiceRecorderModal } from '@/pages/client/Chat/VoiceRecorderModal';
+import { formatTimestamp } from '@/helpers/formatTimestamp';
 import { AttachmentId, Attachment } from '@/types/attachments';
-import { MessageId } from '@/types/messages';
+import { MessageId, MessageWithUser } from '@/types/messages';
 
 import dialogStyles from '@/components/Popup/Popup.module.css';
 import styles from './MessageInput.module.css';
@@ -32,7 +33,7 @@ type EditingMessage = {
 
 type Props = {
     editingMessage?: EditingMessage | null;
-    replyToPreview?: string | null;
+    replyToMessage?: MessageWithUser | null;
     onSend(text: string, attachmentIds: AttachmentId[]): Promise<void>;
     onSaveEdit?(id: MessageId, text: string, attachmentIds: AttachmentId[]): Promise<void>;
     onCancelEdit?(): void;
@@ -81,7 +82,7 @@ const canCompressFile = (file: File) => file.type.startsWith('video/') || file.t
 const canUploadAsFile = (file: File) =>
     file.type.startsWith('image/') || file.type.startsWith('video/') || file.type.startsWith('audio/');
 
-export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdit, onCancelEdit, onClearReply }: Props) {
+export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdit, onCancelEdit, onClearReply }: Props) {
     const [isSending, setIsSending] = useState(false);
     const [text, setText] = useState('');
     const [attachments, setAttachments] = useState<EditorAttachment[]>([]);
@@ -93,7 +94,7 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
     const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
     const [caret, setCaret] = useState<number | null>(null);
     const [suggestionsDismissed, setSuggestionsDismissed] = useState(false);
-    const inputRef = useRef<HTMLInputElement>(null);
+    const inputRef = useRef<HTMLTextAreaElement>(null);
     const pendingCaretRef = useRef<number | null>(null);
     const suggestionsRef = useRef<EmojiSuggestionsPopupHandle>(null);
 
@@ -137,7 +138,17 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
         setCaret(newCaret);
     };
 
-    const handleTextChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    // grow with the content, capped by the max-height on the textarea
+    useLayoutEffect(() => {
+        const el = inputRef.current;
+        if (!el) {
+            return;
+        }
+        el.style.height = 'auto';
+        el.style.height = `${el.scrollHeight}px`;
+    }, [text]);
+
+    const handleTextChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
         const { value, selectionStart } = e.target;
         if (suggestionsDismissed && selectionStart != null && value[selectionStart - 1] === ':') {
             setSuggestionsDismissed(false);
@@ -146,19 +157,36 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
         setCaret(selectionStart);
     };
 
-    const handleInputKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
-        if (!emojiQuery) {
-            return;
+    const handleInputKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
+        if (emojiQuery) {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                setSuggestionsDismissed(true);
+                return;
+            }
+
+            if (suggestionsRef.current?.handleKeyDown(e)) {
+                e.preventDefault();
+                return;
+            }
         }
 
-        if (e.key === 'Escape') {
-            e.preventDefault();
-            setSuggestionsDismissed(true);
-            return;
-        }
+        if (e.key === 'Enter') {
+            if (e.shiftKey || e.ctrlKey) {
+                // Shift+Enter inserts a newline natively; Ctrl+Enter needs it done by hand
+                if (e.ctrlKey) {
+                    e.preventDefault();
+                    const { selectionStart, selectionEnd } = e.currentTarget;
+                    const newCaret = selectionStart + 1;
+                    pendingCaretRef.current = newCaret;
+                    setText(text.slice(0, selectionStart) + '\n' + text.slice(selectionEnd));
+                    setCaret(newCaret);
+                }
+                return;
+            }
 
-        if (suggestionsRef.current?.handleKeyDown(e)) {
             e.preventDefault();
+            e.currentTarget.form?.requestSubmit();
         }
     };
 
@@ -366,11 +394,22 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
                     <X className={styles.replyPreviewClear} onClick={onCancelEdit} />
                 </div>
             )}
-            {!isEditing && replyToPreview && (
+            {!isEditing && replyToMessage && (
                 <div className={styles.replyPreview}>
-                    <span className={styles.replyPreviewText}>
-                        {replyToPreview.length > 50 ? replyToPreview.slice(0, 50) + '…' : replyToPreview}
-                    </span>
+                    <img
+                        className={styles.replyPreviewAvatar}
+                        src={replyToMessage.user.avatarUrl ?? `https://i.pravatar.cc/?img=${replyToMessage.userId}`}
+                        alt={replyToMessage.user.name}
+                    />
+                    <div className={styles.replyPreviewQuote}>
+                        <div className={styles.replyPreviewHeader}>
+                            <span className={styles.replyPreviewAuthor}>{replyToMessage.user.name}</span>
+                            <span className={styles.replyPreviewTime}>
+                                • {formatTimestamp(new Date(replyToMessage.updatedAt))}
+                            </span>
+                        </div>
+                        <div className={styles.replyPreviewText}>{replyToMessage.content}</div>
+                    </div>
                     <X className={styles.replyPreviewClear} onClick={onClearReply} />
                 </div>
             )}
@@ -423,11 +462,11 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
                         query={emojiQuery?.query ?? null}
                         onSelect={applyEmojiSuggestion}
                     />
-                    <input
+                    <textarea
                         ref={inputRef}
-                        type="text"
+                        rows={1}
                         placeholder={isEditing ? 'Edit message…' : 'Type a message...'}
-                        className="w-full bg-gray-700 text-white p-2 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="block w-full resize-none max-h-40 overflow-y-auto bg-transparent text-white placeholder-[#5f6a8c] p-2 focus:outline-none"
                         value={text}
                         onChange={handleTextChange}
                         onKeyDown={handleInputKeyDown}
@@ -439,8 +478,9 @@ export function MessageInput({ editingMessage, replyToPreview, onSend, onSaveEdi
                     type="submit"
                     disabled={!canSubmit}
                     className={styles.sendButton}
+                    title={isEditing ? 'Save' : 'Send'}
                 >
-                    {isEditing ? 'Save' : 'Send'}
+                    {isEditing ? <Check /> : <SendHorizontal />}
                 </button>
             </form>
         </div>

@@ -5,9 +5,11 @@ import { WorkspaceChannelsListProvider } from '@/contexts/WorkspaceChannelsListC
 import { composeProviders } from '@/infra/composeProviders';
 import { WebSocketContextProvider } from '@/contexts/WebSocketProvider';
 import { ChannelTypesListProvider } from '@/contexts/ChannelTypesListContext';
+import { RolesListProvider } from '@/contexts/RolesListContext.tsx';
 
 const providers = [
     WebSocketContextProvider,
+    RolesListProvider,
     ChannelTypesListProvider,
     WorkspacesListProvider,
     WorkspaceChannelsListProvider,

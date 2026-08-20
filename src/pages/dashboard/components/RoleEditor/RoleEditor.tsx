@@ -1,5 +1,7 @@
 import { useMutation } from '@apollo/client/react';
 
+import { formatPermissionLabel } from '@/helpers/permissions';
+
 import { Role } from '@/types/roles';
 import { CreateRoleForm } from '@/pages/dashboard/components/RoleForm/CreateRoleForm';
 import { Button } from '@/components/Button';
@@ -36,10 +38,10 @@ export const RoleEditor = ({ role }: Props) => {
                 {role.id}
             </div>
             <div className={styles.permissions}>
-                Permissions: <b>{role.permissions.join(', ')}</b>
+                Permissions: <b>{role.permissions.map(formatPermissionLabel).join(', ')}</b>
             </div>
             <div className={styles.settings}>
-                Settings: <b>{role.settings.base ? 'Base' : 'non-Base'}</b>
+                Settings: <b>{role.isProtected ? 'Protected' : 'not Protected'}</b>
             </div>
             <div className={styles.controls}>
                 <CreateRoleForm cta="Edit" title="Edit Role" submitText="Save Changes" role={role}/>

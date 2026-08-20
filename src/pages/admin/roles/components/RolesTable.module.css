@@ -1,0 +1,77 @@
+@reference "tailwindcss";
+
+.tableWrapper {
+    @apply overflow-hidden rounded-lg border border-gray-700;
+}
+
+.table {
+    @apply w-full border-collapse text-left text-sm;
+}
+
+.thead {
+    @apply bg-gray-800 text-xs uppercase tracking-wide text-gray-400;
+}
+
+.th {
+    @apply px-4 py-3 font-medium;
+}
+
+.tbody tr {
+    @apply border-t border-gray-700 bg-gray-900/60 transition-colors hover:bg-gray-800/80;
+}
+
+.td {
+    @apply px-4 py-3 align-middle;
+}
+
+.roleName {
+    @apply font-medium text-white;
+}
+
+.roleId {
+    @apply text-xs text-gray-500;
+}
+
+.badge {
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium;
+}
+
+.badgeProtected {
+    @apply bg-amber-500/20 text-amber-300;
+}
+
+.badgeCustom {
+    @apply bg-gray-700 text-gray-300;
+}
+
+.permissions {
+    @apply flex flex-wrap gap-1;
+}
+
+.permissionTag {
+    @apply rounded bg-gray-700 px-1.5 py-0.5 text-xs text-gray-300;
+}
+
+.permissionMore {
+    @apply text-xs text-gray-500;
+}
+
+.actions {
+    @apply flex items-center gap-2;
+}
+
+.actionButton {
+    @apply cursor-pointer rounded px-2 py-1 text-xs font-medium transition-colors;
+}
+
+.editButton {
+    @apply text-indigo-300 hover:bg-indigo-500/20 hover:text-indigo-200;
+}
+
+.deleteButton {
+    @apply text-red-400 hover:bg-red-500/20 hover:text-red-300 disabled:cursor-not-allowed disabled:text-gray-600 disabled:hover:bg-transparent;
+}
+
+.empty {
+    @apply rounded-lg border border-dashed border-gray-700 bg-gray-900/40 px-6 py-12 text-center text-gray-400;
+}

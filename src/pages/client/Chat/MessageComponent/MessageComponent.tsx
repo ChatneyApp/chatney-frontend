@@ -38,7 +38,7 @@ export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, o
             {!isMine && (
                 <img
                     src={avatarUrl}
-                    alt={message.user.name}
+                    alt={message.user.displayName}
                     className={styles.avatar}
                 />
             )}
@@ -46,7 +46,7 @@ export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, o
                 <div className={styles.header}>
                     {!isMine && (
                         <span className={styles.userName}>
-                            {message.user?.name ?? message.userId}
+                            {message.user?.displayName ?? message.userId}
                         </span>
                     )}
                     <span className={styles.timestamp}>

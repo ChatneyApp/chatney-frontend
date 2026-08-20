@@ -9,30 +9,22 @@ export type GetRolesListResponse = {
 }
 
 export const CREATE_ROLE = gql`
-    mutation ($roleDto: RoleDtoInput!) {
+    mutation ($roleDto: RoleCreateDtoInput!) {
         roles {
             addRole (roleDto: $roleDto) {
                 id
                 name
-                settings {
-                    base
-                }
-                permissions
             }
         }
     }
 `;
 
 export const EDIT_ROLE = gql`
-    mutation ($role: RoleInput!) {
+    mutation ($roleDto: RoleUpdateDtoInput!) {
         roles {
-            updateRole (role: $role) {
+            updateRole (roleDto: $roleDto) {
                 id
                 name
-                settings {
-                    base
-                }
-                permissions
             }
         }
     }
@@ -52,10 +44,6 @@ export const GET_ROLES_QUERY: TypedDocumentNode<GetRolesListResponse> = gql`
             list {
                 id
                 name
-                settings {
-                    base
-                }
-                permissions
             }
         }
     }

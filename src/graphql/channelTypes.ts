@@ -15,7 +15,6 @@ export const CREATE_CHANNEL_TYPE = gql`
                 id
                 name
                 key
-                baseRoleId
             }
         }
     }
@@ -28,7 +27,6 @@ export const EDIT_CHANNEL_TYPE = gql`
                 id
                 name
                 key
-                baseRoleId
             }
         }
     }
@@ -49,7 +47,6 @@ export const GET_CHANNEL_TYPES_QUERY: TypedDocumentNode<GetChannelTypesListRespo
                 id
                 name
                 key
-                baseRoleId
             }
         }
     }

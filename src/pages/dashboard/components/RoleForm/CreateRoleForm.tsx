@@ -5,6 +5,7 @@ import { Dialog } from 'radix-ui';
 
 import styles from './CreateRoleForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
+import { formatPermissionLabel } from '@/helpers/permissions';
 import { CREATE_ROLE, EDIT_ROLE } from '@/graphql/roles';
 import { GET_PERMISSIONS_LIST } from '@/graphql/permissions';
 import { Button } from '@/components/Button';
@@ -14,7 +15,7 @@ import { useRolesList } from '@/contexts/RolesListContext';
 type FormInputs = {
     name: string;
     permissions: string[];
-    isBaseRole: boolean;
+    isProtected: boolean;
 };
 
 type Props = {
@@ -34,7 +35,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
         defaultValues: {
             name: role?.name ?? '',
             permissions: role?.permissions ?? [],
-            isBaseRole: role?.settings?.base ?? false
+            isProtected: role?.isProtected ?? false
         }
     });
 
@@ -83,9 +84,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
                         id: role.id,
                         name: data.name,
                         permissions: data.permissions,
-                        settings: {
-                            base: data.isBaseRole
-                        }
+                        isProtected: data.isProtected
                     }
                 }
             })
@@ -95,9 +94,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
                     roleDto: {
                         name: data.name,
                         permissions: data.permissions,
-                        settings: {
-                            base: data.isBaseRole
-                        }
+                        isProtected: data.isProtected
                     }
                 }
             });
@@ -150,7 +147,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
                                                             {...register('permissions')}
                                                             value={permission}
                                                         />
-                                                        {permission.split('.')[1]}
+                                                        {formatPermissionLabel(permission)}
                                                     </label>
                                                 </div>
                                             ))}
@@ -163,9 +160,9 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
                                 <label>
                                     <input
                                         type="checkbox"
-                                        {...register('isBaseRole')}
+                                        {...register('isProtected')}
                                     />
-                                    Is Base Role
+                                    Is Protected Role
                                 </label>
                             </div>
                             <div className={dialogStyles.bottomButtons}>

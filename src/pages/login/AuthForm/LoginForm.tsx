@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useApolloClient } from '@apollo/client/react';
-import { Button } from '@/components/Button';
-import dialogStyles from '@/components/Popup/Popup.module.css';
+import { AtSign, Lock } from 'lucide-react';
+import clsx from 'clsx';
+
 import styles from './AuthForm.module.css';
 import { clientStartPageUrl, userAuthTokenName, userAuthId } from '@/infra/consts';
 import { loginUser } from '@/graphql/auth';
@@ -20,12 +21,12 @@ export const LoginForm = () => {
         defaultValues: {
             login: '',
             password: '',
-        }
+        },
     });
 
     const onSubmit = async (data: FormInputs) => {
-        console.log('Form data:', data);
         setLoading(true);
+        setErrorMessage(null);
 
         try {
             const out = await loginUser({
@@ -46,41 +47,51 @@ export const LoginForm = () => {
 
     return (
         <div>
-            {errorMessage && <div className={styles.errorText}>{errorMessage}</div>}
+            {errorMessage && (
+                <div className={clsx(styles.alert, styles.alertError, 'mb-5')}>
+                    {errorMessage}
+                </div>
+            )}
 
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="login" className={styles.label}>Email</label>
-                    <input
-                        id="login"
-                        type="email"
-                        placeholder="Enter your email"
-                        {...register('login', { required: 'Email is required' })}
-                        className={styles.input}
-                    />
+            <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+                <div className={styles.field}>
+                    <label htmlFor="login" className={styles.label}>Work email</label>
+                    <div className={clsx(styles.inputWrapper, errors.login && styles.inputWrapperError)}>
+                        <AtSign size={16} className={styles.inputIcon} aria-hidden />
+                        <input
+                            id="login"
+                            type="text"
+                            placeholder="name@company.com"
+                            autoComplete="username"
+                            {...register('login', { required: 'Email or nickname is required' })}
+                            className={styles.input}
+                        />
+                    </div>
                     {errors.login && <span className={styles.errorText}>{errors.login.message}</span>}
                 </div>
 
-                <div className={styles.formGroup}>
-                    <label htmlFor="password" className={styles.label}>Password</label>
-                    <input
-                        id="password"
-                        type="password"
-                        placeholder="Enter your password"
-                        {...register('password', { required: 'Password is required' })}
-                        className={styles.input}
-                    />
+                <div className={styles.field}>
+                    <div className={styles.labelRow}>
+                        <label htmlFor="password" className={styles.label}>Password</label>
+                        <button type="button" className={styles.forgotLink}>Forgot?</button>
+                    </div>
+                    <div className={clsx(styles.inputWrapper, errors.password && styles.inputWrapperError)}>
+                        <Lock size={16} className={styles.inputIcon} aria-hidden />
+                        <input
+                            id="password"
+                            type="password"
+                            placeholder="••••••••"
+                            autoComplete="current-password"
+                            {...register('password', { required: 'Password is required' })}
+                            className={styles.input}
+                        />
+                    </div>
                     {errors.password && <span className={styles.errorText}>{errors.password.message}</span>}
                 </div>
 
-                <div className={dialogStyles.bottomButtons}>
-                    <Button
-                        type="submit"
-                        disabled={loading}
-                    >
-                        {loading ? 'Logging in...' : 'Login'}
-                    </Button>
-                </div>
+                <button type="submit" className={styles.submitButton} disabled={loading}>
+                    {loading ? 'Signing in...' : 'Enter Chatney'}
+                </button>
             </form>
         </div>
     );

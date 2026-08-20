@@ -4,6 +4,8 @@ import { GraphqlProvider } from '@/contexts/GraphqlProvider';
 import { UserProvider } from '@/contexts/UserContext';
 
 import { dashboardRoutes } from '@/pages/dashboard/routes';
+import { adminRoutes } from '@/pages/admin/routes';
+import { profileRoutes } from '@/pages/profile/routes';
 import { clientRoutes } from '@/pages/client/routes';
 import { LoginRegisterPage } from '@/pages/login/ClientHomePage';
 import { composeProviders } from '@/infra/composeProviders';
@@ -36,6 +38,8 @@ const LoginPageRouterSelector = () => {
         <ComposedProviders>
             <Routes>
                 {dashboardRoutes()}
+                {adminRoutes()}
+                {profileRoutes()}
                 {clientRoutes()}
             </Routes>
         </ComposedProviders>

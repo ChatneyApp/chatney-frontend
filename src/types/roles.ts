@@ -2,8 +2,8 @@ export type RoleId = number;
 export type Role = {
     id: RoleId;
     name: string;
-    permissions: [];
-    settings: {
-        base: boolean;
-    };
+    isProtected: boolean;
+    permissions: string[];
+    createdAt?: string;
+    updatedAt?: string;
 }

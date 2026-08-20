@@ -6,7 +6,9 @@ export type MessageId = number;
 export type UrlPreviewId = string;
 export type MessageUser = {
     id: UserId;
-    name: string;
+    nickname: string;
+    fullName?: string | null;
+    displayName: string;
     avatarUrl: string;
 }
 export type UrlPreview = {

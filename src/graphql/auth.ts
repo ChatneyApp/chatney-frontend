@@ -11,7 +11,8 @@ type RegisterUserResponse = {
     users?: {
         register?: {
             id?: string;
-            name?: string;
+            nickname?: string;
+            fullName?: string | null;
             email?: string;
         }
     }
@@ -33,7 +34,8 @@ const REGISTER_USER_MUTATION = gql`
         users {
             register(userDto: $input) {
                 id
-                name
+                nickname
+                fullName
                 email
             }
         }
@@ -66,17 +68,26 @@ export const loginUser = async ({ client, login, password }: {
 
 export const registerUser = async ({ client, email,
     password,
-    name
+    nickname,
+    fullName,
 }: {
     client: ApolloClient,
     email: string,
-    name: string,
+    nickname: string,
+    fullName?: string | null,
     password: string,
 }): Promise<void> => {
     try {
         const { data } = await client.mutate<RegisterUserResponse>({
             mutation: REGISTER_USER_MUTATION,
-            variables: { input: { email, name, password } },
+            variables: {
+                input: {
+                    email,
+                    nickname,
+                    fullName: fullName?.trim() || null,
+                    password,
+                },
+            },
         });
 
         const id = data?.users?.register?.id;
@@ -85,6 +96,6 @@ export const registerUser = async ({ client, email,
             throw new Error('Invalid register response');
         }
     } catch (error) {
-        throw new Error(`Login failed: ${(error as Error).message}`);
+        throw new Error(`Registration failed: ${(error as Error).message}`);
     }
 };

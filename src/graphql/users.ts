@@ -1,4 +1,5 @@
 import { User, UserId } from '@/types/users';
+import { DirectMessageUser } from '@/types/channels';
 import { ApolloClient, gql } from '@apollo/client';
 
 type GetUserByIdResponse = {
@@ -42,5 +43,40 @@ export const getUserById = async (client: ApolloClient, id: UserId): Promise<Use
         return user;
     } catch (error) {
         throw new Error(`Fetching user failed: ${(error as Error).message}`);
+    }
+};
+
+export const SEARCH_USERS_BY_NICKNAME_QUERY = gql`
+    query SearchUsersByNickname($prefix: String!) {
+        users {
+            searchByNickname(prefix: $prefix) {
+                id
+                nickname
+                avatarUrl
+            }
+        }
+    }
+`;
+
+type SearchUsersByNicknameResponse = {
+    users?: {
+        searchByNickname?: DirectMessageUser[];
+    }
+};
+
+export const searchUsersByNickname = async (
+    client: ApolloClient,
+    prefix: string,
+): Promise<DirectMessageUser[]> => {
+    try {
+        const { data } = await client.query<SearchUsersByNicknameResponse>({
+            query: SEARCH_USERS_BY_NICKNAME_QUERY,
+            variables: { prefix },
+            fetchPolicy: 'no-cache',
+        });
+
+        return data?.users?.searchByNickname ?? [];
+    } catch (error) {
+        throw new Error(`Searching users failed: ${(error as Error).message}`);
     }
 };

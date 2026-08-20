@@ -7,7 +7,8 @@ export const clientRoutes = () => (
     <>
         <Route path="client" element={<ClientLayout/>}>
             <Route index element={<ChatPage/>}/>
-            <Route path="chat" index element={<ChatPage/>}/>
+            <Route path="chat" element={<ChatPage/>}/>
+            <Route path="chat/new" element={<ChatPage/>}/>
         </Route>
     </>
 );

@@ -56,6 +56,9 @@ export function WorkspaceChannelsListProvider({ children }: PropsWithChildren) {
 
         const onChannelsChanged = (event: WebSocketEvent) => {
             const payload = event.payload;
+            if ('isDm' in payload && payload.isDm === true) {
+                return;
+            }
             if ('workspaceId' in payload && payload.workspaceId !== activeWorkspaceId) {
                 return;
             }

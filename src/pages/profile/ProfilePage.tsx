@@ -127,7 +127,7 @@ function ProfilePageContent() {
                     <h1 className={styles.profileName}>{displayName}</h1>
                     <div className={styles.profileRole}>@{user.nickname}</div>
                     <div className={styles.profileRole}>
-                        {profile.globalRoleName ?? 'No role assigned'}
+                        {profile.roleNames?.join(' / ') ?? 'No role assigned'}
                     </div>
                     <div className={styles.badges}>
                         <StatusBadge

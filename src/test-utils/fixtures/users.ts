@@ -6,34 +6,38 @@ export const mockUserId2: UserId = 'user-2';
 
 export const mockUser1: User = {
     id: mockUserId1,
-    name: 'Ada Lovelace',
+    nickname: 'ada',
+    fullName: 'Ada Lovelace',
     active: true,
     verified: true,
     banned: false,
     muted: false,
     email: 'ada@chatney.dev',
-    workspaces: [],
 };
 
 export const mockUser2: User = {
     id: mockUserId2,
-    name: 'Grace Hopper',
+    nickname: 'grace',
+    fullName: 'Grace Hopper',
     active: true,
     verified: true,
     banned: false,
     muted: false,
     email: 'grace@chatney.dev',
-    workspaces: [],
 };
 
 export const mockMessageUser1: MessageUser = {
     id: mockUserId1,
-    name: mockUser1.name,
+    nickname: mockUser1.nickname,
+    fullName: mockUser1.fullName,
+    displayName: 'Ada Lovelace',
     avatarUrl: `https://i.pravatar.cc/150?u=${mockUserId1}`,
 };
 
 export const mockMessageUser2: MessageUser = {
     id: mockUserId2,
-    name: mockUser2.name,
+    nickname: mockUser2.nickname,
+    fullName: mockUser2.fullName,
+    displayName: 'Grace Hopper',
     avatarUrl: `https://i.pravatar.cc/150?u=${mockUserId2}`,
 };

@@ -2,26 +2,38 @@ import { useState } from 'react';
 import clsx from 'clsx';
 
 import { useWorkspacesList } from '@/contexts/WorkspacesListContext';
-import { Channel, ChannelId } from '@/types/channels';
+import { Channel, ChannelId, channelDisplayName } from '@/types/channels';
 import { CreateChannelModal } from '../CreateChannelModal';
-import { ChannelListItem } from '../types';
 
 import styles from './ChannelsList.module.css';
 
 type Props = {
     activeChannel: Channel | null;
+    isComposingDirectMessage: boolean;
     setActiveChannel(channel: Channel): void;
+    onComposeDirectMessage(): void;
     channels: Channel[];
-    refetch: (channelId?: ChannelId) => void;
+    directMessages: Channel[];
+    refetchChannels: (channelId?: ChannelId) => void;
 };
-export function ChannelList({ activeChannel, setActiveChannel, channels, refetch }: Props) {
+
+export function ChannelList({
+    activeChannel,
+    isComposingDirectMessage,
+    setActiveChannel,
+    onComposeDirectMessage,
+    channels,
+    directMessages,
+    refetchChannels,
+}: Props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { activeWorkspaceId, workspacesList } = useWorkspacesList();
     const activeWorkspace = workspacesList.find(workspace => workspace.id === activeWorkspaceId);
 
-    const handleChannelCreated = (newChannel: ChannelListItem) => {
+    const handleChannelCreated = (newChannel: Channel) => {
         setIsModalOpen(false);
-        refetch(newChannel.id);
+        refetchChannels(newChannel.id);
+        setActiveChannel(newChannel);
     };
 
     return (
@@ -47,7 +59,29 @@ export function ChannelList({ activeChannel, setActiveChannel, channels, refetch
                         [styles.channelItemActive]: activeChannel?.id === channel.id,
                     })}
                 >
-                    {channel.name}
+                    {channelDisplayName(channel)}
+                </div>
+            ))}
+
+            <div className={styles.sectionTitle}>Direct messages</div>
+            <div
+                className={clsx(styles.createChannelButton, {
+                    [styles.channelItemActive]: isComposingDirectMessage,
+                })}
+                onClick={onComposeDirectMessage}
+            >
+                + New message
+            </div>
+
+            {directMessages.map((channel) => (
+                <div
+                    key={channel.id}
+                    onClick={() => setActiveChannel(channel)}
+                    className={clsx(styles.channelItem, {
+                        [styles.channelItemActive]: activeChannel?.id === channel.id,
+                    })}
+                >
+                    {channelDisplayName(channel)}
                 </div>
             ))}
 

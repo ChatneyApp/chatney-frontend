@@ -3,7 +3,6 @@ import { useMutation } from '@apollo/client/react';
 
 import { DELETE_USER } from '@/graphql/adminUsers';
 import { useUsersList } from '@/contexts/UsersListContext';
-import { useRolesList } from '@/contexts/RolesListContext';
 import { useUser } from '@/contexts/UserContext';
 import { User } from '@/types/users';
 import { getUserDisplayName } from '@/helpers/nickname';
@@ -36,15 +35,11 @@ function StatusBadge({
 
 export function UsersTable({ users }: Props) {
     const { refetch } = useUsersList();
-    const { roles } = useRolesList();
     const currentUser = useUser()?.user;
     const [editingUser, setEditingUser] = useState<User | null>(null);
     const [deleteUser] = useMutation(DELETE_USER, {
         onCompleted: () => refetch(),
     });
-
-    const getRoleName = (roleId?: number) =>
-        roles.find((role) => role.id === roleId)?.name ?? 'Unknown';
 
     const handleDelete = async (user: User) => {
         if (user.id === currentUser?.id) {
@@ -76,7 +71,6 @@ export function UsersTable({ users }: Props) {
                     <thead className={styles.thead}>
                         <tr>
                             <th className={styles.th}>User</th>
-                            <th className={styles.th}>Role</th>
                             <th className={styles.th}>Status</th>
                             <th className={styles.th}>Actions</th>
                         </tr>
@@ -93,11 +87,6 @@ export function UsersTable({ users }: Props) {
                                             {isSelf && ' (you)'}
                                         </div>
                                         <div className={styles.userEmail}>@{user.nickname} · {user.email}</div>
-                                    </td>
-                                    <td className={styles.td}>
-                                        <span className={styles.roleName}>
-                                            {getRoleName(user.roleId)}
-                                        </span>
                                     </td>
                                     <td className={styles.td}>
                                         <div className={styles.badges}>

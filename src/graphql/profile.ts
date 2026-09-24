@@ -4,7 +4,7 @@ import { User } from '@/types/users';
 
 export type UserProfile = {
     user: User;
-    globalRoleName: string | null;
+    roleNames: string[];
 };
 
 export type GetMyProfileResponse = {
@@ -23,7 +23,7 @@ export const GET_MY_PROFILE: TypedDocumentNode<GetMyProfileResponse> = gql`
     query GetMyProfile {
         users {
             myProfile {
-                globalRoleName
+                roleNames
                 user {
                     id
                     nickname

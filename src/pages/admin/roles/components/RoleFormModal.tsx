@@ -1,20 +1,15 @@
 import { useForm } from 'react-hook-form';
-import { useMutation, useSuspenseQuery } from '@apollo/client/react';
+import { useMutation } from '@apollo/client/react';
 import { Dialog } from 'radix-ui';
 
 import { CREATE_ROLE, EDIT_ROLE } from '@/graphql/roles';
-import { GET_PERMISSIONS_LIST } from '@/graphql/permissions';
 import { useRolesList } from '@/contexts/RolesListContext';
 import { Role } from '@/types/roles';
-
-import { formatPermissionLabel } from '@/helpers/permissions';
 
 import styles from './RoleFormModal.module.css';
 
 type FormInputs = {
     name: string;
-    permissions: string[];
-    isProtected: boolean;
 };
 
 type Props = {
@@ -24,7 +19,6 @@ type Props = {
 };
 
 export function RoleFormModal({ open, onOpenChange, role }: Props) {
-    const { data: permissionsData } = useSuspenseQuery(GET_PERMISSIONS_LIST);
     const { refetch } = useRolesList();
     const isEditing = Boolean(role);
 
@@ -36,8 +30,6 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
     } = useForm<FormInputs>({
         defaultValues: {
             name: role?.name ?? '',
-            permissions: role?.permissions ?? [],
-            isProtected: role?.isProtected ?? false,
         },
     });
 
@@ -62,8 +54,6 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
         if (!nextOpen) {
             reset({
                 name: role?.name ?? '',
-                permissions: role?.permissions ?? [],
-                isProtected: role?.isProtected ?? false,
             });
         }
     };
@@ -75,8 +65,6 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
                     roleDto: {
                         id: role.id,
                         name: data.name,
-                        permissions: data.permissions,
-                        isProtected: data.isProtected,
                     },
                 },
             });
@@ -87,14 +75,11 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
             variables: {
                 roleDto: {
                     name: data.name,
-                    permissions: data.permissions,
-                    isProtected: data.isProtected,
                 },
             },
         });
     };
 
-    const permissionGroups = permissionsData.permissions.list;
     const isSubmitting = createLoading || editLoading;
 
     return (
@@ -120,42 +105,6 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
                                 <span className={styles.errorText}>{errors.name.message}</span>
                             )}
                         </div>
-
-                        <div className={styles.field}>
-                            <span className={styles.label}>Permissions</span>
-                            <div className={styles.permissionGroups}>
-                                {permissionGroups.map((group) => (
-                                    <div key={group.label}>
-                                        <h4 className={styles.permissionGroupTitle}>{group.label}</h4>
-                                        <div className={styles.permissionList}>
-                                            {group.list.map((permission) => (
-                                                <label
-                                                    key={permission}
-                                                    className={styles.permissionItem}
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        className={styles.checkbox}
-                                                        value={permission}
-                                                        {...register('permissions')}
-                                                    />
-                                                    {formatPermissionLabel(permission)}
-                                                </label>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <label className={styles.protectedLabel}>
-                            <input
-                                type="checkbox"
-                                className={styles.checkbox}
-                                {...register('isProtected')}
-                            />
-                            Protected role (cannot be deleted)
-                        </label>
 
                         <div className={styles.bottomButtons}>
                             <Dialog.Close asChild>

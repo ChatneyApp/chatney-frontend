@@ -50,7 +50,8 @@ export type UserRoleDeletedPayload = {
 export type ChannelPayload = Channel;
 export type ChannelDeletedPayload = {
     id: ChannelId;
-    workspaceId: WorkspaceId;
+    workspaceId: WorkspaceId | null;
+    isDm?: boolean;
 };
 export type ChannelTypePayload = ChannelType;
 export type ChannelTypeDeletedPayload = {

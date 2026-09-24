@@ -56,10 +56,6 @@
     @apply bg-red-500/20 text-red-300;
 }
 
-.roleName {
-    @apply text-sm text-gray-200;
-}
-
 .actions {
     @apply flex items-center gap-2;
 }

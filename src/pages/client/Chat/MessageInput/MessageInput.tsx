@@ -399,11 +399,11 @@ export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdi
                     <img
                         className={styles.replyPreviewAvatar}
                         src={replyToMessage.user.avatarUrl ?? `https://i.pravatar.cc/?img=${replyToMessage.userId}`}
-                        alt={replyToMessage.user.name}
+                        alt={replyToMessage.user.displayName}
                     />
                     <div className={styles.replyPreviewQuote}>
                         <div className={styles.replyPreviewHeader}>
-                            <span className={styles.replyPreviewAuthor}>{replyToMessage.user.name}</span>
+                            <span className={styles.replyPreviewAuthor}>{replyToMessage.user.displayName}</span>
                             <span className={styles.replyPreviewTime}>
                                 • {formatTimestamp(new Date(replyToMessage.updatedAt))}
                             </span>

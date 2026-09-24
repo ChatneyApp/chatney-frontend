@@ -5,6 +5,7 @@ import { WorkspaceChannelsListProvider } from '@/contexts/WorkspaceChannelsListC
 import { composeProviders } from '@/infra/composeProviders';
 import { WebSocketContextProvider } from '@/contexts/WebSocketProvider';
 import { ChannelTypesListProvider } from '@/contexts/ChannelTypesListContext';
+import { DirectMessagesListProvider } from '@/contexts/DirectMessagesListContext';
 import { RolesListProvider } from '@/contexts/RolesListContext.tsx';
 
 const providers = [
@@ -13,6 +14,7 @@ const providers = [
     ChannelTypesListProvider,
     WorkspacesListProvider,
     WorkspaceChannelsListProvider,
+    DirectMessagesListProvider,
 ];
 const ComposedProviders = composeProviders(providers);
 

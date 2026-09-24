@@ -13,6 +13,10 @@
     @apply flex cursor-pointer items-center justify-center rounded-md border border-indigo-500 bg-indigo-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:border-indigo-400 hover:bg-indigo-500;
 }
 
+.sectionTitle {
+    @apply mt-4 mb-1 px-1 text-xs font-semibold uppercase tracking-wide text-gray-500;
+}
+
 .channelItem {
     @apply cursor-pointer rounded px-2 py-1 text-gray-400 hover:bg-gray-700;
 }

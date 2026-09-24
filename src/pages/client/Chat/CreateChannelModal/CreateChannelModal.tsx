@@ -19,14 +19,16 @@ export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelM
     const wsCtx = useWorkspacesList();
     const { channelTypes } = useChannelTypesList();
     const client = useApolloClient();
-    const [channelTypeId, setChannelTypeId] = useState<ChannelTypeId>(channelTypes[0]?.id || 0);
+    const workspaceChannelTypes = channelTypes.filter(channelType => channelType.key !== 'dm');
+    const [channelTypeId, setChannelTypeId] = useState<ChannelTypeId>(workspaceChannelTypes[0]?.id || 0);
     const [channelName, setChannelName] = useState('');
 
     useEffect(() => {
-        if (!channelTypeId && channelTypes[0]) {
-            setChannelTypeId(channelTypes[0].id);
+        const firstTypeId = workspaceChannelTypes[0]?.id;
+        if (!channelTypeId && firstTypeId) {
+            setChannelTypeId(firstTypeId);
         }
-    }, [channelTypeId, channelTypes]);
+    }, [channelTypeId, workspaceChannelTypes]);
 
     const handleCreate: FormEventHandler = async (e) => {
         e.preventDefault();
@@ -74,7 +76,7 @@ export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelM
                                 onChange={(e) => setChannelTypeId(parseInt(e.target.value, 10))}
                                 className={styles.select}
                             >
-                                {channelTypes.map(channelType => (
+                                {workspaceChannelTypes.map(channelType => (
                                     <option
                                         key={channelType.id}
                                         value={channelType.id}

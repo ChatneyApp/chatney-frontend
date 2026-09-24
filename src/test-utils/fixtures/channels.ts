@@ -17,6 +17,20 @@ export const mockChannel2: Channel = {
     workspaceId: mockWorkspace1.id,
 };
 
+export const mockDirectMessageUser = {
+    id: 'user-2',
+    nickname: 'grace',
+};
+
+export const mockDirectMessage: Channel = {
+    id: 10,
+    name: 'Direct message',
+    channelTypeId: 3,
+    workspaceId: null,
+    isDm: true,
+    otherUsers: [mockDirectMessageUser],
+};
+
 export const mockChannelsList: Channel[] = [mockChannel1, mockChannel2];
 
 export const mockChannelListItem1: ChannelListItem = { id: mockChannel1.id, name: mockChannel1.name };

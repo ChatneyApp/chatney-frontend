@@ -132,7 +132,7 @@ export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) =>
                                 className={styles.select}
                             >
                                 <option value="">Select a channel type</option>
-                                {channelTypes.map(type => (
+                                {channelTypes.filter(type => type.key !== 'dm').map(type => (
                                     <option key={type.id} value={type.id}>
                                         {type.name}
                                     </option>

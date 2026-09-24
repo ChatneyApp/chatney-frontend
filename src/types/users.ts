@@ -13,5 +13,4 @@ export type User = {
     muted: boolean;
     email: string;
     avatarUrl?: string | null;
-    roleId?: number;
 }

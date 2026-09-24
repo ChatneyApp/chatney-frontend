@@ -4,7 +4,6 @@ import { Dialog } from 'radix-ui';
 
 import { CREATE_USER, UPDATE_USER } from '@/graphql/adminUsers';
 import { useUsersList } from '@/contexts/UsersListContext';
-import { useRolesList } from '@/contexts/RolesListContext';
 import { User } from '@/types/users';
 import { validateNickname, MAX_NICKNAME_LENGTH } from '@/helpers/nickname';
 
@@ -15,7 +14,6 @@ type FormInputs = {
     fullName: string;
     email: string;
     password: string;
-    roleId: number;
     active: boolean;
     verified: boolean;
     banned: boolean;
@@ -29,10 +27,8 @@ type Props = {
 };
 
 export function UserFormModal({ open, onOpenChange, user }: Props) {
-    const { roles } = useRolesList();
     const { refetch } = useUsersList();
     const isEditing = Boolean(user);
-    const defaultRoleId = user?.roleId ?? roles[0]?.id ?? 0;
 
     const {
         register,
@@ -45,7 +41,6 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
             fullName: user?.fullName ?? '',
             email: user?.email ?? '',
             password: '',
-            roleId: defaultRoleId,
             active: user?.active ?? true,
             verified: user?.verified ?? false,
             banned: user?.banned ?? false,
@@ -77,7 +72,6 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
                 fullName: user?.fullName ?? '',
                 email: user?.email ?? '',
                 password: '',
-                roleId: defaultRoleId,
                 active: user?.active ?? true,
                 verified: user?.verified ?? false,
                 banned: user?.banned ?? false,
@@ -95,7 +89,6 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
                         nickname: data.nickname.trim(),
                         fullName: data.fullName.trim() || null,
                         email: data.email.trim(),
-                        roleId: data.roleId,
                         active: data.active,
                         verified: data.verified,
                         banned: data.banned,
@@ -114,7 +107,6 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
                     fullName: data.fullName.trim() || null,
                     email: data.email.trim(),
                     password: data.password,
-                    roleId: data.roleId,
                     active: data.active,
                     verified: data.verified,
                     banned: data.banned,
@@ -169,27 +161,6 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
                             />
                             {errors.email && (
                                 <span className={styles.errorText}>{errors.email.message}</span>
-                            )}
-                        </div>
-
-                        <div className={styles.field}>
-                            <label className={styles.label} htmlFor="user-role">Role</label>
-                            <select
-                                id="user-role"
-                                className={styles.select}
-                                {...register('roleId', {
-                                    required: 'Role is required',
-                                    valueAsNumber: true,
-                                })}
-                            >
-                                {roles.map((role) => (
-                                    <option key={role.id} value={role.id}>
-                                        {role.name}
-                                    </option>
-                                ))}
-                            </select>
-                            {errors.roleId && (
-                                <span className={styles.errorText}>{errors.roleId.message}</span>
                             )}
                         </div>
 

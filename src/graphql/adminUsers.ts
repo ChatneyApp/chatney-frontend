@@ -25,7 +25,6 @@ const userFields = `
     verified
     banned
     muted
-    roleId
 `;
 
 export const GET_USERS_QUERY: TypedDocumentNode<GetUsersListResponse, { filter: UserFilter }> = gql`

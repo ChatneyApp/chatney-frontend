@@ -48,3 +48,14 @@ export default tseslint.config({
   },
 })
 ```
+
+## GraphQL
+
+`graphql/schema.graphql` is the backend's exported schema. It is generated, never hand-edited. See [GRAPHQL.md](GRAPHQL.md) for how to catch up after the backend schema changes.
+
+Operations live in `src/graphql/` and are written with the generated `graphql()` function, which types their variables and results from the schema. After changing an operation or refreshing the schema, regenerate and commit `src/graphql/generated/`:
+
+```bash
+npm run graphql:generate   # or graphql:watch while developing
+npm run graphql:check      # what CI runs: fails if the generated files are stale
+```

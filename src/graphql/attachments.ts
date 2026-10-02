@@ -1,76 +1,41 @@
-import { ApolloClient, gql } from '@apollo/client';
+import { print } from 'graphql';
+
+import { graphql } from '@/graphql/generated';
+import type { UploadFileMutation } from '@/graphql/generated/graphql';
 import { Attachment, AttachmentUploadMetadata } from '@/types/attachments';
 import { userAuthTokenName } from '@/infra/consts';
 
-type UploadFileResponse = {
-    attachments?: {
-        upload?: Attachment;
-    };
-};
+export const AttachmentFieldsFragment = graphql(`
+    fragment AttachmentFields on Attachment {
+        id
+        userId
+        urlPath
+        originalFileName
+        extension
+        mimeType
+        size
+        type
+        asFile
+        width
+        height
+        duration
+        createdAt
+        updatedAt
+    }
+`);
 
-const uploadFileMutationText = `
+const UPLOAD_FILE_MUTATION = graphql(`
     mutation UploadFile($file: Upload!, $asFile: Boolean!, $width: Int, $height: Int, $duration: Int) {
         attachments {
             upload(file: $file, asFile: $asFile, width: $width, height: $height, duration: $duration) {
-                id
-                userId
-                urlPath
-                originalFileName
-                extension
-                mimeType
-                size
-                type
-                asFile
-                width
-                height
-                duration
-                createdAt
-                updatedAt
+                ...AttachmentFields
             }
         }
     }
-`;
-
-const UPLOAD_FILE_MUTATION = gql(uploadFileMutationText);
-
-export const uploadFile = async (
-    client: ApolloClient,
-    data: Blob,
-    fileName: string,
-    mimeType: string,
-    asFile = false,
-    metadata?: AttachmentUploadMetadata,
-): Promise<Attachment> => {
-    const file = new File([data], fileName, {
-        type: mimeType || data.type || 'application/octet-stream',
-    });
-
-    try {
-        const response = await client.mutate<UploadFileResponse>({
-            mutation: UPLOAD_FILE_MUTATION,
-            variables: {
-                file,
-                asFile,
-                width: metadata?.width,
-                height: metadata?.height,
-                duration: metadata?.duration,
-            },
-        });
-
-        const result = response.data?.attachments?.upload;
-
-        if (!result) {
-            throw new Error('Upload response does not contain attachments.upload');
-        }
-
-        return result;
-    } catch (error) {
-        throw new Error(`File upload failed: ${(error as Error).message}`);
-    }
-};
+`);
 
 type GraphqlUploadResponse = {
-    data?: UploadFileResponse;
+    data?: UploadFileMutation;
     errors?: { message: string }[];
 };
 
@@ -88,7 +53,7 @@ export const uploadFileWithProgress = async (
     });
     const formData = new FormData();
     formData.append('operations', JSON.stringify({
-        query: uploadFileMutationText,
+        query: print(UPLOAD_FILE_MUTATION),
         variables: {
             file: null,
             asFile,

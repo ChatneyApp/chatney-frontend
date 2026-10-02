@@ -3,9 +3,10 @@ import tseslint from 'typescript-eslint';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import a11y from 'eslint-plugin-jsx-a11y';
+import graphql from '@graphql-eslint/eslint-plugin';
 
 export default [
-    { ignores: ['dist', 'node_modules', 'public'] },
+    { ignores: ['dist', 'node_modules', 'public', 'src/graphql/generated'] },
     js.configs.recommended,
     ...tseslint.configs.recommended,
     {
@@ -42,5 +43,26 @@ export default [
             'brace-style': ['error', '1tbs', { allowSingleLine: false }],
         },
         settings: { react: { version: 'detect' } },
+    },
+    {
+        files: ['src/**/*.{ts,tsx}'],
+        processor: graphql.processor,
+    },
+    {
+        files: ['src/**/*.graphql'],
+        plugins: { '@graphql-eslint': graphql },
+        languageOptions: {
+            parser: graphql.parser,
+            parserOptions: {
+                graphQLConfig: {
+                    schema: './graphql/schema.graphql',
+                    documents: ['src/**/*.{ts,tsx}', '!src/graphql/generated/**'],
+                },
+            },
+        },
+        rules: {
+            ...graphql.configs['flat/operations-recommended'].rules,
+            '@graphql-eslint/naming-convention': 'off',
+        },
     },
 ];

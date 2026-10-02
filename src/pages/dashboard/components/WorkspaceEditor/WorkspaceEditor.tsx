@@ -24,7 +24,7 @@ export const WorkspaceEditor = ({ workspace }: Props) => {
     const handleDelete = async () => {
         await deleteWorkspace({
             variables: {
-                workspaceId: workspace.id
+                id: workspace.id
             }
         });
     };

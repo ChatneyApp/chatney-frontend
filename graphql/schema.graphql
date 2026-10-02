@@ -1,0 +1,701 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  attachments: AttachmentQueries!
+  channels: ChannelQueries!
+  configs: ConfigQueries!
+  messages: MessageQueries!
+  draftMessages: DraftMessageQueries!
+  permissions: PermissionQueries!
+  acls: AclQueries!
+  roles: RoleQueries!
+  users: UserQueries!
+  workspaces: WorkspaceQueries!
+}
+
+type Mutation {
+  channels: ChannelMutations!
+  configs: ConfigMutations!
+  messages: MessageMutations!
+  draftMessages: DraftMessageMutations!
+  attachments: AttachmentMutations!
+  acls: AclMutations!
+  roles: RoleMutations!
+  users: UserMutations!
+  userRoles: UserRoleMutations!
+  workspaces: WorkspaceMutations!
+  installWizard: InstallWizardMutations!
+}
+
+type AclMutations {
+  setRoleAcl(roleId: Int!, secObjId: Int!, permissions: [Permission!]!): RoleAcl
+    @authorize
+    @cost(weight: "10")
+  deleteRoleAcl(roleId: Int!, secObjId: Int!): Boolean!
+    @authorize
+    @cost(weight: "10")
+  setUserAcl(userId: UUID!, secObjId: Int!, permissions: [Permission!]!): UserAcl
+    @authorize
+    @cost(weight: "10")
+  deleteUserAcl(userId: UUID!, secObjId: Int!): Boolean!
+    @authorize
+    @cost(weight: "10")
+  setRoleAclForGlobal(roleId: Int!, permissions: [Permission!]!): RoleAcl
+    @authorize
+    @cost(weight: "10")
+  setRoleAclForWorkspace(
+    roleId: Int!
+    workspaceId: Int!
+    permissions: [Permission!]!
+  ): RoleAcl @authorize @cost(weight: "10")
+  setRoleAclForChannelType(
+    roleId: Int!
+    channelTypeId: Int!
+    permissions: [Permission!]!
+  ): RoleAcl @authorize @cost(weight: "10")
+  setRoleAclForChannel(
+    roleId: Int!
+    channelId: Int!
+    permissions: [Permission!]!
+  ): RoleAcl @authorize @cost(weight: "10")
+  setUserAclForGlobal(userId: UUID!, permissions: [Permission!]!): UserAcl
+    @authorize
+    @cost(weight: "10")
+  setUserAclForWorkspace(
+    userId: UUID!
+    workspaceId: Int!
+    permissions: [Permission!]!
+  ): UserAcl @authorize @cost(weight: "10")
+  setUserAclForChannelType(
+    userId: UUID!
+    channelTypeId: Int!
+    permissions: [Permission!]!
+  ): UserAcl @authorize @cost(weight: "10")
+  setUserAclForChannel(
+    userId: UUID!
+    channelId: Int!
+    permissions: [Permission!]!
+  ): UserAcl @authorize @cost(weight: "10")
+}
+
+type AclQueries {
+  roleAcls(roleId: Int!): [RoleAcl!]! @authorize @cost(weight: "10")
+  userAcls(userId: UUID!): [UserAcl!]! @authorize @cost(weight: "10")
+  objectAcls(secObjId: Int!): ObjectAcls! @authorize @cost(weight: "10")
+}
+
+type Attachment {
+  id: Int!
+  userId: UUID!
+  urlPath: String!
+  originalFileName: String!
+  extension: String!
+  mimeType: String!
+  size: Long!
+  width: Int
+  height: Int
+  duration: Int
+  type: String!
+  asFile: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type AttachmentMutations {
+  upload(
+    file: Upload!
+    asFile: Boolean!
+    width: Int
+    height: Int
+    duration: Int
+  ): Attachment! @authorize @cost(weight: "10")
+}
+
+type AttachmentQueries {
+  byId(id: Int!): Attachment @authorize @cost(weight: "10")
+}
+
+type Channel {
+  id: Int!
+  name: String!
+  channelTypeId: Int
+  workspaceId: Int
+  isDm: Boolean!
+  secObjId: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ChannelGroup {
+  id: Int!
+  name: String!
+  workspaceId: Int!
+  channelIds: [Int!]!
+  order: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ChannelMutations {
+  addChannelType(channelTypeDto: ChannelTypeDtoInput!): ChannelType!
+    @authorize
+    @cost(weight: "10")
+  updateChannelType(channelType: ChannelTypeInput!): ChannelType
+    @authorize
+    @cost(weight: "10")
+  deleteChannelType(id: Int!): Boolean! @authorize @cost(weight: "10")
+  addChannel(channelDto: ChannelDtoInput!): Channel!
+    @authorize
+    @cost(weight: "10")
+  updateChannel(channel: ChannelInput!): Channel @authorize @cost(weight: "10")
+  deleteChannel(id: Int!): Boolean! @authorize @cost(weight: "10")
+  addChannelGroup(channelGroupDto: ChannelGroupDtoInput!): ChannelGroup!
+    @authorize
+    @cost(weight: "10")
+  updateChannelGroup(channelGroup: ChannelGroupInput!): ChannelGroup
+    @authorize
+    @cost(weight: "10")
+  deleteChannelGroup(id: Int!): Boolean! @authorize @cost(weight: "10")
+  openDirectMessage(otherUserIds: [UUID!]!): DirectMessage!
+    @authorize
+    @cost(weight: "10")
+}
+
+type ChannelQueries {
+  channelById(id: Int!): Channel @authorize @cost(weight: "10")
+  channelByName(name: String!): Channel @authorize @cost(weight: "10")
+  workspaceChannelList(workspaceId: Int!): [Channel!]!
+    @authorize
+    @cost(weight: "10")
+  directMessageList: [DirectMessage!]! @authorize @cost(weight: "10")
+  channelTypeList: [ChannelType!]! @authorize @cost(weight: "10")
+  workspaceChannelGroupList(workspaceId: Int!): [ChannelGroup!]!
+    @authorize
+    @cost(weight: "10")
+}
+
+type ChannelType {
+  id: Int!
+  name: String!
+  key: String!
+  secObjId: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Config {
+  id: Int!
+  name: String!
+  value: String!
+  type: String
+}
+
+type ConfigMutations {
+  updateConfig(config: ConfigInput!): Config @authorize @cost(weight: "10")
+}
+
+type ConfigQueries {
+  configById(id: Int!): Config @authorize @cost(weight: "10")
+  configByName(name: String!): Config @authorize @cost(weight: "10")
+  list: [Config!]! @authorize @cost(weight: "10")
+}
+
+type DirectMessage {
+  channel: Channel!
+  otherUsers: [DirectMessageUser!]!
+}
+
+type DirectMessageUser {
+  id: UUID!
+  nickname: String!
+  avatarUrl: String
+}
+
+type DraftMessage {
+  id: Int!
+  channelId: Int!
+  userId: UUID!
+  content: String!
+  attachmentIds: [Int!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  parentId: Int
+}
+
+type DraftMessageMutations {
+  updateDraftMessage(messageDto: DraftMessageDtoInput!): DraftMessage
+    @authorize
+    @cost(weight: "10")
+  deleteMessage(id: Int!): Boolean! @authorize @cost(weight: "10")
+}
+
+type DraftMessageQueries {
+  draftMessages: [DraftMessage!]! @authorize @cost(weight: "10")
+}
+
+type InstallSystemResult {
+  status: String!
+  message: String
+}
+
+type InstallWizardMutations {
+  installSystem: InstallSystemResult! @cost(weight: "10")
+  unInstallSystem: InstallSystemResult! @cost(weight: "10")
+}
+
+type MessageMutations {
+  addMessage(messageDto: MessageDtoInput!): MessageWithUser
+    @authorize
+    @cost(weight: "10")
+  updateMessage(message: MessageUpdateDtoInput!): Boolean!
+    @authorize
+    @cost(weight: "10")
+  deleteMessage(id: Int!): Boolean! @authorize @cost(weight: "10")
+  addReaction(code: String!, messageId: Int!): ReactionEndpointOutput!
+    @authorize
+    @cost(weight: "10")
+  deleteReaction(code: String!, messageId: Int!): ReactionEndpointOutput!
+    @authorize
+    @cost(weight: "10")
+}
+
+type MessageQueries {
+  listChannelMessages(channelId: Int!): MessagesResult!
+    @authorize
+    @cost(weight: "10")
+  listThreadMessages(threadId: Int!): MessagesResult!
+    @authorize
+    @cost(weight: "10")
+}
+
+type MessagesResult {
+  messages: [MessageWithUser!]!
+  refs: [ReplyToMessage!]!
+}
+
+type MessageUser {
+  id: UUID!
+  nickname: String!
+  fullName: String
+  avatarUrl: String
+  displayName: String!
+}
+
+type MessageWithUser {
+  user: MessageUser!
+  myReactions: [String!]!
+  urlPreviews: [UrlPreview!]!
+  attachments: [Attachment!]!
+  reactions: [ReactionInMessage!]!
+  id: Int!
+  channelId: Int!
+  userId: UUID!
+  content: String!
+  status: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  parentId: Int
+  childrenCount: Int!
+  replyTo: Int
+}
+
+type MyPermissions {
+  global: [Permission!]!
+  workspaces: [ObjectPermissions!]!
+  channelTypes: [ObjectPermissions!]!
+  channels: [ObjectPermissions!]!
+}
+
+type ObjectAcls {
+  roleAcls: [RoleAcl!]!
+  userAcls: [UserAcl!]!
+}
+
+type ObjectPermissions {
+  id: Int!
+  permissions: [Permission!]!
+}
+
+type PermissionGroup {
+  label: String!
+  list: [Permission!]!
+}
+
+type PermissionQueries {
+  list: [PermissionGroup!]!
+}
+
+type ReactionEndpointOutput {
+  status: String!
+  message: String
+}
+
+type ReactionInMessage {
+  code: String!
+  count: Int!
+}
+
+type ReplyToMessage {
+  id: Int!
+  userId: UUID!
+  content: String!
+}
+
+type Role {
+  id: Int!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type RoleAcl {
+  roleId: Int!
+  secObjId: Int!
+  permissions: [Permission!]!
+}
+
+type RoleMutations {
+  addRole(roleDto: RoleCreateDtoInput!): Role! @authorize @cost(weight: "10")
+  updateRole(roleDto: RoleUpdateDtoInput!): Role! @authorize @cost(weight: "10")
+  deleteRole(id: Int!): Boolean! @authorize @cost(weight: "10")
+}
+
+type RoleQueries {
+  roleById(id: Int!): Role @authorize @cost(weight: "10")
+  roleByName(name: String!): Role @authorize @cost(weight: "10")
+  list: [Role!]! @authorize @cost(weight: "10")
+}
+
+type UrlPreview {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  url: String!
+  title: String
+  description: String
+  thumbnailUrl: String
+  videoThumbnailUrl: String
+  siteName: String
+  favIconUrl: String
+  type: String
+  author: String
+  thumbnailWidth: Int
+  thumbnailHeight: Int
+}
+
+type User {
+  id: UUID!
+  nickname: String!
+  fullName: String
+  active: Boolean!
+  verified: Boolean!
+  banned: Boolean!
+  muted: Boolean!
+  email: String!
+  avatarUrl: String
+}
+
+type UserAcl {
+  userId: UUID!
+  secObjId: Int!
+  permissions: [Permission!]!
+}
+
+type UserLoginResponse {
+  id: String!
+  token: String!
+}
+
+type UserMutations {
+  createUser(userDto: CreateUserDtoInput!): User! @authorize @cost(weight: "10")
+  register(userDto: UserRegisterDtoInput!): User! @cost(weight: "10")
+  deleteUser(id: UUID!): Boolean! @authorize @cost(weight: "10")
+  updateUser(userDto: UpdateUserDtoInput!): User! @authorize @cost(weight: "10")
+  updateMyProfile(profileDto: UpdateMyProfileDtoInput!): User!
+    @authorize
+    @cost(weight: "10")
+  login(login: String!, password: String!): UserLoginResponse
+    @cost(weight: "10")
+}
+
+type UserProfile {
+  user: User!
+  roleNames: [String!]!
+}
+
+type UserQueries {
+  myProfile: UserProfile! @authorize @cost(weight: "10")
+  myPermissions: MyPermissions! @authorize @cost(weight: "10")
+  userById(id: UUID!): User @authorize @cost(weight: "10")
+  userByNickname(nickname: String!): User @authorize @cost(weight: "10")
+  list(filter: UserFilterInput!): [User!]! @authorize @cost(weight: "10")
+  searchByNickname(prefix: String!): [DirectMessageUser!]!
+    @authorize
+    @cost(weight: "10")
+}
+
+type UserRole {
+  userId: UUID!
+  roleId: Int!
+}
+
+type UserRoleMutations {
+  assignRole(userId: UUID!, roleId: Int!): UserRole!
+    @authorize
+    @cost(weight: "10")
+  unassignRole(userId: UUID!, roleId: Int!): Boolean!
+    @authorize
+    @cost(weight: "10")
+}
+
+type Workspace {
+  id: Int!
+  name: String!
+  secObjId: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type WorkspaceMutations {
+  addWorkspace(workspaceDto: WorkspaceDtoInput!): Workspace!
+    @authorize
+    @cost(weight: "10")
+  updateWorkspace(workspace: WorkspaceInput!): Workspace
+    @authorize
+    @cost(weight: "10")
+  deleteWorkspace(id: Int!): Boolean! @authorize @cost(weight: "10")
+}
+
+type WorkspaceQueries {
+  workspaceById(id: Int!): Workspace @authorize @cost(weight: "10")
+  workspaceByName(name: String!): Workspace @authorize @cost(weight: "10")
+  list: [Workspace!]! @authorize @cost(weight: "10")
+}
+
+input ChannelDtoInput {
+  name: String!
+  channelTypeId: Int!
+  workspaceId: Int!
+}
+
+input ChannelGroupDtoInput {
+  name: String!
+  workspaceId: Int!
+  channelIds: [Int!]!
+  order: Int!
+}
+
+input ChannelGroupInput {
+  id: Int!
+  name: String!
+  workspaceId: Int!
+  channelIds: [Int!]!
+  order: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input ChannelInput {
+  id: Int!
+  name: String!
+  channelTypeId: Int
+  workspaceId: Int
+  isDm: Boolean!
+  secObjId: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input ChannelTypeDtoInput {
+  name: String!
+  key: String!
+}
+
+input ChannelTypeInput {
+  id: Int!
+  name: String!
+  key: String!
+  secObjId: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input ConfigInput {
+  id: Int!
+  name: String!
+  value: String!
+  type: String
+}
+
+input CreateUserDtoInput {
+  nickname: String!
+  fullName: String
+  active: Boolean!
+  verified: Boolean!
+  banned: Boolean!
+  muted: Boolean!
+  email: String!
+  password: String!
+  roleIds: [Int!]
+}
+
+input DraftMessageDtoInput {
+  channelId: Int!
+  content: String!
+  attachmentIds: [Int!]
+  parentId: Int
+}
+
+input MessageDtoInput {
+  channelId: Int!
+  content: String!
+  attachmentIds: [Int!]
+  parentId: Int
+  replyTo: Int
+}
+
+input MessageUpdateDtoInput {
+  id: Int!
+  content: String!
+  attachmentIds: [Int!]
+}
+
+input RoleCreateDtoInput {
+  name: String!
+}
+
+input RoleUpdateDtoInput {
+  id: Int!
+  name: String!
+}
+
+input UpdateMyProfileDtoInput {
+  nickname: String
+  fullName: String
+  email: String
+  avatarUrl: String
+  currentPassword: String
+  newPassword: String
+}
+
+input UpdateUserDtoInput {
+  id: UUID!
+  nickname: String!
+  fullName: String
+  active: Boolean!
+  verified: Boolean!
+  banned: Boolean!
+  muted: Boolean!
+  email: String!
+  password: String
+  roleIds: [Int!]!
+}
+
+input UserFilterInput {
+  active: Boolean
+  banned: Boolean
+  email: String
+  nickname: String
+}
+
+input UserRegisterDtoInput {
+  nickname: String!
+  fullName: String
+  email: String!
+  password: String!
+}
+
+input WorkspaceDtoInput {
+  name: String!
+}
+
+input WorkspaceInput {
+  id: Int!
+  name: String!
+  secObjId: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"Defines when a policy shall be executed."
+enum ApplyPolicy {
+  "Before the resolver was executed."
+  BEFORE_RESOLVER
+  "After the resolver was executed."
+  AFTER_RESOLVER
+  "The policy is applied in the validation step before the execution."
+  VALIDATION
+}
+
+enum Permission {
+  ATTACHMENT_DELETE
+  ATTACHMENT_READ
+  ATTACHMENT_UPLOAD
+  CHANNEL_ADD_CHANNEL_GROUP
+  CHANNEL_CREATE_CHANNEL
+  CHANNEL_CREATE_MESSAGE
+  CHANNEL_DELETE_CHANNEL
+  CHANNEL_DELETE_CHANNEL_GROUP
+  CHANNEL_DELETE_CHANNEL_TYPE
+  CHANNEL_DELETE_MESSAGE
+  CHANNEL_DELETE_OWN_MESSAGE
+  CHANNEL_EDIT_CHANNEL
+  CHANNEL_EDIT_CHANNEL_GROUP
+  CHANNEL_EDIT_MESSAGE
+  CHANNEL_EDIT_OWN_MESSAGE
+  CHANNEL_READ_CHANNEL
+  CHANNEL_READ_MESSAGE
+  CONFIG_READ_VALUE
+  CONFIG_UPDATE_VALUE
+  ROLE_CREATE_ROLE
+  ROLE_DELETE_ROLE
+  ROLE_EDIT_ROLE
+  USER_CREATE_USER
+  USER_DELETE_USER
+  USER_EDIT_USER
+  USER_READ_USER
+  WORKSPACE_CREATE_WORKSPACE
+  WORKSPACE_DELETE_WORKSPACE
+  WORKSPACE_READ_WORKSPACE
+  WORKSPACE_UPDATE_WORKSPACE
+}
+
+"The `DateTime` scalar type represents a date and time with time zone offset information."
+scalar DateTime
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
+
+"The `Long` scalar type represents a signed 64-bit integer."
+scalar Long
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/long.html")
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload
+
+"The `UUID` scalar type represents a Universally Unique Identifier (UUID) as defined by RFC 9562."
+scalar UUID
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/uuid.html")
+
+"The authorize directive."
+directive @authorize(
+  "The name of the authorization policy that determines access to the annotated resource."
+  policy: String
+  "Roles that are allowed to access the annotated resource."
+  roles: [String!]
+  "Defines when the authorize directive shall be applied. By default the authorize directive is applied before the resolver is executed."
+  apply: ApplyPolicy! = BEFORE_RESOLVER
+) repeatable on OBJECT | FIELD_DEFINITION
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost(
+  "The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc."
+  weight: String!
+) on
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | ENUM
+  | INPUT_FIELD_DEFINITION

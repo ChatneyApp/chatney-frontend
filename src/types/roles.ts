@@ -1,7 +1,4 @@
+import type { RoleFieldsFragment } from '@/graphql/generated/graphql';
+
 export type RoleId = number;
-export type Role = {
-    id: RoleId;
-    name: string;
-    createdAt?: string;
-    updatedAt?: string;
-}
+export type Role = RoleFieldsFragment;

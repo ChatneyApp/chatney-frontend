@@ -3,7 +3,7 @@ import { mockChannel1 } from './channels';
 import { mockMessageUser1, mockMessageUser2, mockUserId1, mockUserId2 } from './users';
 import { mockImageAttachment } from './attachments';
 
-const createdAt = new Date('2026-01-15T10:00:00Z');
+const createdAt = '2026-01-15T10:00:00Z';
 const updatedAt = createdAt;
 
 export const mockReactions: Reaction[] = [
@@ -13,7 +13,7 @@ export const mockReactions: Reaction[] = [
 ];
 
 export const mockUrlPreview: UrlPreview = {
-    id: 'preview-1',
+    id: 1,
     createdAt,
     updatedAt,
     url: 'https://storybook.js.org',
@@ -87,7 +87,7 @@ export const mockEditedMessage: MessageWithUser = {
     ...mockPlainMessage,
     id: 6,
     content: 'Fixed a typo in this message.',
-    updatedAt: new Date('2026-01-15T10:05:00Z'),
+    updatedAt: '2026-01-15T10:05:00Z',
 };
 
 export const mockThreadedMessage: MessageWithUser = {

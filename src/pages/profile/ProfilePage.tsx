@@ -2,7 +2,7 @@ import { Suspense, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useSuspenseQuery } from '@apollo/client/react';
 
-import { GET_MY_PROFILE, UPDATE_MY_PROFILE, type UpdateMyProfileResponse } from '@/graphql/profile';
+import { GET_MY_PROFILE, UPDATE_MY_PROFILE } from '@/graphql/profile';
 import { useUser } from '@/contexts/UserContext';
 import { getUserAvatarInitial, getUserDisplayName, validateNickname, MAX_NICKNAME_LENGTH } from '@/helpers/nickname';
 
@@ -63,7 +63,7 @@ function ProfilePageContent() {
         },
     });
 
-    const [updateProfile, { loading }] = useMutation<UpdateMyProfileResponse>(UPDATE_MY_PROFILE);
+    const [updateProfile, { loading }] = useMutation(UPDATE_MY_PROFILE);
 
     const newPassword = watch('newPassword');
     const avatarUrl = watch('avatarUrl').trim();

@@ -2,7 +2,7 @@ import { createContext, PropsWithChildren, startTransition, useContext } from 'r
 import { useSuspenseQuery } from '@apollo/client/react';
 
 import { SystemConfigValue } from '@/types/systemConfig';
-import { GET_SYSTEM_CONFIG_QUERY, GetConfigListResponse } from '@/graphql/systemConfig';
+import { GET_SYSTEM_CONFIG } from '@/graphql/systemConfig';
 
 interface SystemConfigContextValue {
     systemConfig: SystemConfigValue[];
@@ -12,7 +12,7 @@ interface SystemConfigContextValue {
 const SystemConfigContext = createContext<SystemConfigContextValue | null>(null);
 
 export function SystemConfigProvider({ children }: PropsWithChildren) {
-    const { data, refetch } = useSuspenseQuery<GetConfigListResponse>(GET_SYSTEM_CONFIG_QUERY, {
+    const { data, refetch } = useSuspenseQuery(GET_SYSTEM_CONFIG, {
         fetchPolicy: 'no-cache',
     });
 

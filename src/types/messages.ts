@@ -1,71 +1,19 @@
-import { UserId } from '@/types/users';
-import { Attachment, AttachmentId } from '@/types/attachments';
-import { ChannelId } from '@/types/channels';
+import type { MessageFieldsFragment, MessagesResultFieldsFragment, UrlPreviewFieldsFragment } from '@/graphql/generated/graphql';
+import { AttachmentId } from '@/types/attachments';
 
 export type MessageId = number;
-export type UrlPreviewId = string;
-export type MessageUser = {
-    id: UserId;
-    nickname: string;
-    fullName?: string | null;
-    displayName: string;
-    avatarUrl: string;
-}
-export type UrlPreview = {
-    id: UrlPreviewId;
-    createdAt: Date;
-    updatedAt: Date;
-    url: string;
-    title: string | null;
-    description: string | null;
-    thumbnailUrl: string | null;
-    videoThumbnailUrl: string | null;
-    siteName: string | null;
-    favIconUrl: string | null;
-    type: string | null;
-    author: string | null;
-    thumbnailWidth: number | null;
-    thumbnailHeight: number | null;
-}
-export type ReplyToMessage = {
-    id: MessageId;
-    userId: UserId;
-    content: string;
-}
-
-export type Message = {
-    id: MessageId;
-    channelId: ChannelId;
-    userId: UserId;
-    content: string;
-    attachments: Attachment[];
-    status: string;
-    createdAt: Date;
-    updatedAt: Date;
-    reactions: Reaction[];
-    myReactions: string[];
-    urlPreviews: UrlPreview[];
-    parentId: MessageId | null;
-    childrenCount: number;
-    replyTo: MessageId | null;
-}
-export type MessageWithUser = Message & {
-    user: MessageUser;
-}
-
-export type MessagesResult = {
-    messages: MessageWithUser[];
-    refs: ReplyToMessage[];
-}
+export type UrlPreviewId = number;
+export type MessageWithUser = MessageFieldsFragment;
+export type MessageUser = MessageWithUser['user'];
+export type Message = Omit<MessageWithUser, 'user'>;
+export type UrlPreview = UrlPreviewFieldsFragment;
+export type Reaction = MessageWithUser['reactions'][number];
+export type MessagesResult = MessagesResultFieldsFragment;
+export type ReplyToMessage = MessagesResult['refs'][number];
 
 export type CreateMessageDto = Pick<Message, 'channelId' | 'content' | 'parentId' | 'replyTo'> & {
     attachmentIds: AttachmentId[];
 };
-
-export type Reaction = {
-    code: string;
-    count: number;
-}
 
 export type UpdateMessageDto = {
     id: MessageId;

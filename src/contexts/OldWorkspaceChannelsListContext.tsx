@@ -3,7 +3,7 @@ import { useSuspenseQuery } from '@apollo/client/react';
 
 import { Workspace } from '@/types/workspaces';
 import { Channel } from '@/types/channels';
-import { type GetChannelsListResponse, GetWorkspaceChannelsQuery } from '@/graphql/channels';
+import { GET_WORKSPACE_CHANNELS } from '@/graphql/channels';
 
 interface WorkspaceChannelsListContextValue {
     workspace: Workspace;
@@ -18,7 +18,7 @@ type WorkspaceChannelsListProviderProps = {
 } & PropsWithChildren;
 
 export function WorkspaceChannelsListProvider({ workspace, children }: WorkspaceChannelsListProviderProps) {
-    const { data, refetch } = useSuspenseQuery<GetChannelsListResponse>(GetWorkspaceChannelsQuery, {
+    const { data, refetch } = useSuspenseQuery(GET_WORKSPACE_CHANNELS, {
         variables: { workspaceId: workspace.id },
         fetchPolicy: 'no-cache',
     });

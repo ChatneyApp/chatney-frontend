@@ -15,14 +15,11 @@ export function WebSocketContextProvider({ children }: PropsWithChildren) {
     const abortControllerRef = useRef(new AbortController());
     const webSocketRef = useRef<WebSocket | null>(null);
     const userId = userCtx?.user?.id ?? null;
-    console.log('WSContext - userId', userId);
 
     const connect = useCallback(() => {
         if (!userId) {
             return;
         }
-
-        console.log('connecting to websocket...');
 
         const url = new URL(`${import.meta.env.VITE_WEBSOCKET_URL}`);
         const deviceId = sessionStorage.getItem('deviceId')!;

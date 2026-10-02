@@ -8,6 +8,10 @@ export const mockChannel1: Channel = {
     name: 'general',
     channelTypeId: mockChannelType1.id,
     workspaceId: mockWorkspace1.id,
+    isDm: false,
+    secObjId: 21,
+    createdAt: '2026-01-15T10:00:00Z',
+    updatedAt: '2026-01-15T10:00:00Z',
 };
 
 export const mockChannel2: Channel = {
@@ -15,11 +19,16 @@ export const mockChannel2: Channel = {
     name: 'random',
     channelTypeId: mockChannelType1.id,
     workspaceId: mockWorkspace1.id,
+    isDm: false,
+    secObjId: 22,
+    createdAt: '2026-01-15T10:00:00Z',
+    updatedAt: '2026-01-15T10:00:00Z',
 };
 
 export const mockDirectMessageUser = {
     id: 'user-2',
     nickname: 'grace',
+    avatarUrl: null,
 };
 
 export const mockDirectMessage: Channel = {
@@ -28,6 +37,9 @@ export const mockDirectMessage: Channel = {
     channelTypeId: 3,
     workspaceId: null,
     isDm: true,
+    secObjId: 30,
+    createdAt: '2026-01-15T10:00:00Z',
+    updatedAt: '2026-01-15T10:00:00Z',
     otherUsers: [mockDirectMessageUser],
 };
 

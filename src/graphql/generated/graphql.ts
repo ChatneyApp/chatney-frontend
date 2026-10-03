@@ -4,12 +4,14 @@ type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** Internal type. DO NOT USE DIRECTLY. */
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+/** Input for creating a channel. */
 export type ChannelDtoInput = {
   channelTypeId: number;
   name: string;
   workspaceId: number;
 };
 
+/** Input for creating a channel group. */
 export type ChannelGroupDtoInput = {
   channelIds: Array<number>;
   name: string;
@@ -17,124 +19,189 @@ export type ChannelGroupDtoInput = {
   workspaceId: number;
 };
 
+/** A named, ordered sidebar section of channels within a workspace. It doesn't affect permissions. */
 export type ChannelGroupInput = {
+  /** Channels in this group, in display order. */
   channelIds: Array<number>;
   createdAt: string;
   id: number;
   name: string;
+  /** Sort position among the workspace's groups. */
   order: number;
   updatedAt: string;
   workspaceId: number;
 };
 
+/** A conversation: a workspace channel or a direct message (isDm). */
 export type ChannelInput = {
+  /** Channel type. Null for direct messages. */
   channelTypeId?: number | null | undefined;
   createdAt: string;
   id: number;
+  /** True for a direct-message conversation (no workspace or channel type). */
   isDm: boolean;
   name: string;
+  /** Secure object id, used to target this channel's ACLs. */
   secObjId: number;
   updatedAt: string;
+  /** Owning workspace. Null for direct messages. */
   workspaceId?: number | null | undefined;
 };
 
+/** Input for creating a channel type. */
 export type ChannelTypeDtoInput = {
   key: string;
   name: string;
 };
 
+/** A category of channels (e.g. public, private); the second level of the permission hierarchy. */
 export type ChannelTypeInput = {
   createdAt: string;
   id: number;
+  /** Stable machine name, e.g. "public". */
   key: string;
   name: string;
+  /** Secure object id, used to target this channel type's ACLs. */
   secObjId: number;
   updatedAt: string;
 };
 
+/** A system-wide configuration value. */
 export type ConfigInput = {
   id: number;
+  /** Unique dotted key, e.g. "messages.sendCooldown". */
   name: string;
+  /** How to parse value: "string", "int" or "string[]" (comma-separated). */
   type?: string | null | undefined;
+  /** Value serialized as a string; parse according to type. */
   value: string;
 };
 
+/** Input for an admin creating a user. */
 export type CreateUserDtoInput = {
   active: boolean;
   banned: boolean;
   email: string;
   fullName?: string | null | undefined;
   muted: boolean;
+  /** 1-20 chars of [a-zA-Z0-9_], trimmed. INVALID_NICKNAME if malformed, NICKNAME_TAKEN if in use. */
   nickname: string;
   password: string;
+  /** Roles to assign. Null or empty assigns the configured default role. */
   roleIds?: Array<number> | null | undefined;
   verified: boolean;
 };
 
+/** Input for posting a message. */
 export type MessageDtoInput = {
+  /** Ids of attachments uploaded beforehand via attachments.upload. */
   attachmentIds?: Array<number> | null | undefined;
   channelId: number;
   content: string;
+  /** Thread root message id to post as a thread reply. */
   parentId?: number | null | undefined;
+  /** Message id to quote-reply to. */
   replyTo?: number | null | undefined;
 };
 
+/** Input for editing a message. */
 export type MessageUpdateDtoInput = {
+  /** Full replacement set of attachments. Null removes all. */
   attachmentIds?: Array<number> | null | undefined;
   content: string;
   id: number;
 };
 
+/** An action a subject (role or user) can be granted on a secure object via an ACL. */
 export type Permission =
+  /** Delete attachments. Checked globally. */
   | 'ATTACHMENT_DELETE'
+  /** Read attachment metadata. Checked globally. */
   | 'ATTACHMENT_READ'
+  /** Upload attachments. Checked globally. */
   | 'ATTACHMENT_UPLOAD'
+  /** Create channel groups in a workspace. Checked on the workspace. */
   | 'CHANNEL_ADD_CHANNEL_GROUP'
+  /** Create channels in a workspace (checked on the workspace); granted globally, also allows creating channel types. */
   | 'CHANNEL_CREATE_CHANNEL'
+  /** Post messages in a channel. Checked on the channel. */
   | 'CHANNEL_CREATE_MESSAGE'
+  /** Delete a channel. Checked on the channel. */
   | 'CHANNEL_DELETE_CHANNEL'
+  /** Delete channel groups in a workspace. Checked on the workspace. */
   | 'CHANNEL_DELETE_CHANNEL_GROUP'
+  /** Delete a channel type. Checked on the channel type. */
   | 'CHANNEL_DELETE_CHANNEL_TYPE'
+  /** Delete anyone's messages in a channel. Checked on the channel. */
   | 'CHANNEL_DELETE_MESSAGE'
+  /** Delete your own messages in a channel. Checked on the channel. */
   | 'CHANNEL_DELETE_OWN_MESSAGE'
+  /** Edit a channel (checked on the channel) or a channel type (checked on the channel type). */
   | 'CHANNEL_EDIT_CHANNEL'
+  /** Edit channel groups in a workspace. Checked on the workspace. */
   | 'CHANNEL_EDIT_CHANNEL_GROUP'
+  /** Edit anyone's messages in a channel. Checked on the channel. */
   | 'CHANNEL_EDIT_MESSAGE'
+  /** Edit your own messages in a channel. Checked on the channel. */
   | 'CHANNEL_EDIT_OWN_MESSAGE'
+  /** See a channel; channels without it are hidden. Checked on the channel. */
   | 'CHANNEL_READ_CHANNEL'
+  /** Read messages in a channel. Checked on the channel. */
   | 'CHANNEL_READ_MESSAGE'
+  /** Read system configuration values. Checked globally. */
   | 'CONFIG_READ_VALUE'
+  /** Update system configuration values. Checked globally. */
   | 'CONFIG_UPDATE_VALUE'
+  /** Create roles. Checked globally. */
   | 'ROLE_CREATE_ROLE'
+  /** Delete roles. Checked globally. */
   | 'ROLE_DELETE_ROLE'
+  /** Edit roles and role ACLs. Checked globally. */
   | 'ROLE_EDIT_ROLE'
+  /** Create users as an admin. Checked globally. */
   | 'USER_CREATE_USER'
+  /** Delete users. Checked globally. */
   | 'USER_DELETE_USER'
+  /** Edit other users, their role assignments and user ACLs. Checked globally. */
   | 'USER_EDIT_USER'
+  /** List and look up users. Checked globally. */
   | 'USER_READ_USER'
+  /** Create workspaces. Checked globally. */
   | 'WORKSPACE_CREATE_WORKSPACE'
+  /** Delete a workspace. Checked on the workspace. */
   | 'WORKSPACE_DELETE_WORKSPACE'
+  /** See a workspace. Checked on the workspace. */
   | 'WORKSPACE_READ_WORKSPACE'
+  /** Edit a workspace. Checked on the workspace. */
   | 'WORKSPACE_UPDATE_WORKSPACE';
 
+/** Input for creating a role. */
 export type RoleCreateDtoInput = {
   name: string;
 };
 
+/** Input for renaming a role. */
 export type RoleUpdateDtoInput = {
   id: number;
   name: string;
 };
 
+/** Input for updating your own profile. Null fields are left unchanged. */
 export type UpdateMyProfileDtoInput = {
+  /** Empty string clears it. */
   avatarUrl?: string | null | undefined;
+  /** Required when changing the password. FORBIDDEN_ACTION if missing or wrong. */
   currentPassword?: string | null | undefined;
   email?: string | null | undefined;
+  /** Empty string clears it. */
   fullName?: string | null | undefined;
+  /** New password. Requires currentPassword. */
   newPassword?: string | null | undefined;
+  /** 1-20 chars of [a-zA-Z0-9_], trimmed. INVALID_NICKNAME if malformed, NICKNAME_TAKEN if in use. */
   nickname?: string | null | undefined;
 };
 
+/** Input for an admin updating a user. */
 export type UpdateUserDtoInput = {
   active: boolean;
   banned: boolean;
@@ -142,30 +209,40 @@ export type UpdateUserDtoInput = {
   fullName?: string | null | undefined;
   id: string;
   muted: boolean;
+  /** 1-20 chars of [a-zA-Z0-9_], trimmed. INVALID_NICKNAME if malformed, NICKNAME_TAKEN if in use. */
   nickname: string;
+  /** New password. Null or blank keeps the current one. */
   password?: string | null | undefined;
+  /** Full replacement set of the user's roles. */
   roleIds: Array<number>;
   verified: boolean;
 };
 
+/** Optional filters for users.list; null fields are ignored. */
 export type UserFilterInput = {
   active?: boolean | null | undefined;
   banned?: boolean | null | undefined;
+  /** Exact email match, case-insensitive. */
   email?: string | null | undefined;
+  /** Exact nickname match, case-insensitive. */
   nickname?: string | null | undefined;
 };
 
+/** Input for self-registration. */
 export type UserRegisterDtoInput = {
   email: string;
   fullName?: string | null | undefined;
+  /** 1-20 chars of [a-zA-Z0-9_], trimmed. INVALID_NICKNAME if malformed, NICKNAME_TAKEN if in use. */
   nickname: string;
   password: string;
 };
 
+/** Top-level container of channels; the first level of the permission hierarchy. */
 export type WorkspaceInput = {
   createdAt: string;
   id: number;
   name: string;
+  /** Secure object id, used to target this workspace's ACLs. */
   secObjId: number;
   updatedAt: string;
 };

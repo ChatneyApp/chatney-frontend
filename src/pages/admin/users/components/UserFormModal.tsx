@@ -84,6 +84,9 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
         if (user) {
             await updateUser({
                 variables: {
+                    // TODO: UpdateUserDtoInput requires roleIds and the backend syncs the user's roles to it,
+                    // but the schema exposes no way to read a user's current roles, so they can't be sent safely.
+                    // @ts-expect-error roleIds is missing
                     userDto: {
                         id: user.id,
                         nickname: data.nickname.trim(),

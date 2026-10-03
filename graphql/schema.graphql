@@ -1,0 +1,1184 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  "File attachments: metadata lookup."
+  attachments: AttachmentQueries!
+  "Channels, channel types, channel groups and direct messages."
+  channels: ChannelQueries!
+  "System-wide configuration values."
+  configs: ConfigQueries!
+  "Channel messages, threads and reactions."
+  messages: MessageQueries!
+  "The current user's unsent message drafts."
+  draftMessages: DraftMessageQueries!
+  "Catalog of all permissions, grouped for the admin UI."
+  permissions: PermissionQueries!
+  "Raw role/user ACL rows (admin UI)."
+  acls: AclQueries!
+  "Roles."
+  roles: RoleQueries!
+  "Users, the current user's profile and resolved permissions."
+  users: UserQueries!
+  "Workspaces."
+  workspaces: WorkspaceQueries!
+}
+
+type Mutation {
+  "Channels, channel types, channel groups and direct messages."
+  channels: ChannelMutations!
+  "Update system-wide configuration values."
+  configs: ConfigMutations!
+  "Post, edit and delete messages; manage reactions."
+  messages: MessageMutations!
+  "Save and clear the current user's message drafts."
+  draftMessages: DraftMessageMutations!
+  "Upload and delete file attachments."
+  attachments: AttachmentMutations!
+  "Grant or revoke permissions for roles and users on secure objects."
+  acls: AclMutations!
+  "Create, edit and delete roles."
+  roles: RoleMutations!
+  "Registration, login and user management."
+  users: UserMutations!
+  "Assign roles to users and remove them."
+  userRoles: UserRoleMutations!
+  "Create, edit and delete workspaces."
+  workspaces: WorkspaceMutations!
+  "System install and uninstall. No auth required."
+  installWizard: InstallWizardMutations!
+}
+
+"""
+Grant or revoke permissions for roles and users on secure objects (global, workspace,
+channel type, channel). Each call replaces the whole permission set of one (subject, object) pair.
+"""
+type AclMutations {
+  """
+  Sets the permissions a role has on a secure object. Requires RoleEditRole.
+  Prefer the setRoleAclFor* wrappers, which take a domain id instead of a secObjId.
+  
+  
+  **Returns:**
+  The stored ACL, or null if it was deleted.
+  """
+  setRoleAcl(
+    "Role to grant to."
+    roleId: Int!
+    "Secure object id of the target (global, workspace, channel type or channel)."
+    secObjId: Int!
+    "Full replacement set. An empty list deletes the ACL and returns null."
+    permissions: [Permission!]!
+  ): RoleAcl @authorize @cost(weight: "10")
+  """
+  Removes a role's ACL on a secure object. Requires RoleEditRole.
+  
+  **Returns:**
+  True if an ACL existed and was deleted.
+  """
+  deleteRoleAcl(
+    "Role whose ACL is removed."
+    roleId: Int!
+    "Secure object id the ACL is attached to."
+    secObjId: Int!
+  ): Boolean! @authorize @cost(weight: "10")
+  """
+  Sets the permissions a single user has on a secure object. Requires UserEditUser.
+  While a user has any user ACL in an object's hierarchy, their role ACLs are ignored there.
+  Prefer the setUserAclFor* wrappers, which take a domain id instead of a secObjId.
+  
+  
+  **Returns:**
+  The stored ACL, or null if it was deleted.
+  """
+  setUserAcl(
+    "User to grant to."
+    userId: UUID!
+    "Secure object id of the target (global, workspace, channel type or channel)."
+    secObjId: Int!
+    "Full replacement set. An empty list deletes the ACL and returns null."
+    permissions: [Permission!]!
+  ): UserAcl @authorize @cost(weight: "10")
+  """
+  Removes a user's ACL on a secure object. Requires UserEditUser.
+  
+  **Returns:**
+  True if an ACL existed and was deleted.
+  """
+  deleteUserAcl(
+    "User whose ACL is removed."
+    userId: UUID!
+    "Secure object id the ACL is attached to."
+    secObjId: Int!
+  ): Boolean! @authorize @cost(weight: "10")
+  "Sets the permissions a role has globally: system-level permissions (e.g. roles, users, config, attachments, creating workspaces), not inherited by workspaces or channels. Requires RoleEditRole."
+  setRoleAclForGlobal(
+    "Role to grant to."
+    roleId: Int!
+    "Full replacement set. An empty list deletes the ACL and returns null."
+    permissions: [Permission!]!
+  ): RoleAcl @authorize @cost(weight: "10")
+  "Sets the permissions a role has on a workspace and everything inside it. Requires RoleEditRole."
+  setRoleAclForWorkspace(
+    "Role to grant to."
+    roleId: Int!
+    "Target workspace. NOT_FOUND if it doesn't exist."
+    workspaceId: Int!
+    "Full replacement set. An empty list deletes the ACL and returns null."
+    permissions: [Permission!]!
+  ): RoleAcl @authorize @cost(weight: "10")
+  "Sets the permissions a role has on a channel type and every channel of that type. Requires RoleEditRole."
+  setRoleAclForChannelType(
+    "Role to grant to."
+    roleId: Int!
+    "Target channel type. NOT_FOUND if it doesn't exist."
+    channelTypeId: Int!
+    "Full replacement set. An empty list deletes the ACL and returns null."
+    permissions: [Permission!]!
+  ): RoleAcl @authorize @cost(weight: "10")
+  "Sets the permissions a role has on a single channel. Requires RoleEditRole."
+  setRoleAclForChannel(
+    "Role to grant to."
+    roleId: Int!
+    "Target channel. NOT_FOUND if it doesn't exist."
+    channelId: Int!
+    "Full replacement set. An empty list deletes the ACL and returns null."
+    permissions: [Permission!]!
+  ): RoleAcl @authorize @cost(weight: "10")
+  "Sets the permissions a user has globally: system-level permissions (e.g. roles, users, config, attachments, creating workspaces), not inherited by workspaces or channels. Requires UserEditUser."
+  setUserAclForGlobal(
+    "User to grant to."
+    userId: UUID!
+    "Full replacement set. An empty list deletes the ACL and returns null."
+    permissions: [Permission!]!
+  ): UserAcl @authorize @cost(weight: "10")
+  "Sets the permissions a user has on a workspace and everything inside it. Requires UserEditUser."
+  setUserAclForWorkspace(
+    "User to grant to."
+    userId: UUID!
+    "Target workspace. NOT_FOUND if it doesn't exist."
+    workspaceId: Int!
+    "Full replacement set. An empty list deletes the ACL and returns null."
+    permissions: [Permission!]!
+  ): UserAcl @authorize @cost(weight: "10")
+  "Sets the permissions a user has on a channel type and every channel of that type. Requires UserEditUser."
+  setUserAclForChannelType(
+    "User to grant to."
+    userId: UUID!
+    "Target channel type. NOT_FOUND if it doesn't exist."
+    channelTypeId: Int!
+    "Full replacement set. An empty list deletes the ACL and returns null."
+    permissions: [Permission!]!
+  ): UserAcl @authorize @cost(weight: "10")
+  "Sets the permissions a user has on a single channel. Requires UserEditUser."
+  setUserAclForChannel(
+    "User to grant to."
+    userId: UUID!
+    "Target channel. NOT_FOUND if it doesn't exist."
+    channelId: Int!
+    "Full replacement set. An empty list deletes the ACL and returns null."
+    permissions: [Permission!]!
+  ): UserAcl @authorize @cost(weight: "10")
+}
+
+type AclQueries {
+  "All ACLs of one role across every secure object. Requires RoleEditRole."
+  roleAcls("Role to list ACLs for." roleId: Int!): [RoleAcl!]!
+    @authorize
+    @cost(weight: "10")
+  "All direct ACLs of one user across every secure object. Requires UserEditUser."
+  userAcls("User to list ACLs for." userId: UUID!): [UserAcl!]!
+    @authorize
+    @cost(weight: "10")
+  """
+  All role and user ACLs attached directly to one secure object. Requires RoleEditRole.
+  userAcls is always empty unless the caller also has UserEditUser.
+  """
+  objectAcls(
+    "Secure object id (from a workspace, channel type or channel)."
+    secObjId: Int!
+  ): ObjectAcls! @authorize @cost(weight: "10")
+}
+
+"An uploaded file's metadata."
+type Attachment {
+  id: Int!
+  "Uploader."
+  userId: UUID!
+  "Object key within the storage bucket: attachments/{userId}/{yyyy-MM-dd}/{fileId}.{extension}"
+  urlPath: String!
+  "File name as uploaded by the user."
+  originalFileName: String!
+  "Stored file extension without the dot. Audio is stored as mp3, video as mp4. May be empty."
+  extension: String!
+  mimeType: String!
+  "File size in bytes."
+  size: Long!
+  "Media width in pixels, as reported by the uploader."
+  width: Int
+  "Media height in pixels, as reported by the uploader."
+  height: Int
+  "Audio/video duration in seconds, as reported by the uploader."
+  duration: Int
+  """
+  Display kind derived from the MIME type: "image", "gif", "video", "audio" or "binary".
+  This can be used to determine how to display the attachment in the frontend.
+  """
+  type: String!
+  "Show as a downloadable file rather than inline media."
+  asFile: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type AttachmentMutations {
+  """
+  Uploads a file to storage and records its metadata. Requires AttachmentUpload.
+  Reference the returned id in a message's attachmentIds.
+  """
+  upload(
+    "The file (multipart upload). Must not be empty."
+    file: Upload!
+    "Show as a downloadable file rather than inline media."
+    asFile: Boolean!
+    "Media width in pixels, if known by the client."
+    width: Int
+    "Media height in pixels, if known by the client."
+    height: Int
+    "Audio/video duration in seconds, if known by the client."
+    duration: Int
+  ): Attachment! @authorize @cost(weight: "10")
+}
+
+type AttachmentQueries {
+  "Attachment metadata by id, or null if it doesn't exist. Requires AttachmentRead."
+  byId(id: Int!): Attachment @authorize @cost(weight: "10")
+}
+
+"A conversation: a workspace channel or a direct message (isDm)."
+type Channel {
+  id: Int!
+  name: String!
+  "Channel type. Null for direct messages."
+  channelTypeId: Int
+  "Owning workspace. Null for direct messages."
+  workspaceId: Int
+  "True for a direct-message conversation (no workspace or channel type)."
+  isDm: Boolean!
+  "Secure object id, used to target this channel's ACLs."
+  secObjId: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"A named, ordered sidebar section of channels within a workspace. It doesn't affect permissions."
+type ChannelGroup {
+  id: Int!
+  name: String!
+  workspaceId: Int!
+  "Channels in this group, in display order."
+  channelIds: [Int!]!
+  "Sort position among the workspace's groups."
+  order: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ChannelMutations {
+  "Creates a channel type. Requires ChannelCreateChannel globally."
+  addChannelType(channelTypeDto: ChannelTypeDtoInput!): ChannelType!
+    @authorize
+    @cost(weight: "10")
+  """
+  Updates a channel type, matched by id. Requires ChannelEditChannel on it.
+  
+  **Returns:**
+  The saved channel type, or null if it doesn't exist.
+  """
+  updateChannelType(channelType: ChannelTypeInput!): ChannelType
+    @authorize
+    @cost(weight: "10")
+  """
+  Deletes a channel type. Requires ChannelDeleteChannelType on it.
+  
+  **Returns:**
+  True if it existed and was deleted.
+  """
+  deleteChannelType(id: Int!): Boolean! @authorize @cost(weight: "10")
+  """
+  Creates a channel in a workspace. Requires ChannelCreateChannel on the workspace.
+  NOT_FOUND if the workspace doesn't exist, FORBIDDEN_ACTION if the channel type doesn't exist.
+  """
+  addChannel(channelDto: ChannelDtoInput!): Channel!
+    @authorize
+    @cost(weight: "10")
+  """
+  Updates a channel, matched by id. Requires ChannelEditChannel on it.
+  
+  **Returns:**
+  The saved channel, or null if it doesn't exist.
+  """
+  updateChannel(channel: ChannelInput!): Channel @authorize @cost(weight: "10")
+  """
+  Deletes a channel. Requires ChannelDeleteChannel on it.
+  
+  **Returns:**
+  True if it existed and was deleted.
+  """
+  deleteChannel(id: Int!): Boolean! @authorize @cost(weight: "10")
+  "Creates a channel group (sidebar section). Requires ChannelAddChannelGroup on the workspace."
+  addChannelGroup(channelGroupDto: ChannelGroupDtoInput!): ChannelGroup!
+    @authorize
+    @cost(weight: "10")
+  """
+  Updates a channel group, matched by id. Requires ChannelEditChannelGroup on its workspace.
+  
+  **Returns:**
+  The saved group, or null if it or its workspace doesn't exist.
+  """
+  updateChannelGroup(channelGroup: ChannelGroupInput!): ChannelGroup
+    @authorize
+    @cost(weight: "10")
+  """
+  Deletes a channel group. Requires ChannelDeleteChannelGroup on its workspace.
+  
+  **Returns:**
+  True if it existed and was deleted.
+  """
+  deleteChannelGroup(id: Int!): Boolean! @authorize @cost(weight: "10")
+  """
+  Returns the DM conversation with exactly these participants, creating it if needed. Every participant
+  gets read/write access to it. FORBIDDEN_ACTION if there's nobody besides yourself, NOT_FOUND if a user
+  doesn't exist.
+  """
+  openDirectMessage(
+    "The other participants. You are added automatically; duplicates are ignored."
+    otherUserIds: [UUID!]!
+  ): DirectMessage! @authorize @cost(weight: "10")
+}
+
+type ChannelQueries {
+  "A channel by id, or null. Requires ChannelReadChannel on it."
+  channelById(id: Int!): Channel @authorize @cost(weight: "10")
+  "A channel by exact name, or null. Requires ChannelReadChannel on it."
+  channelByName(name: String!): Channel @authorize @cost(weight: "10")
+  "Channels in a workspace that the current user has ChannelReadChannel on. NOT_FOUND if the workspace doesn't exist."
+  workspaceChannelList(workspaceId: Int!): [Channel!]!
+    @authorize
+    @cost(weight: "10")
+  "Direct-message conversations the current user is a member of."
+  directMessageList: [DirectMessage!]! @authorize @cost(weight: "10")
+  "All channel types."
+  channelTypeList: [ChannelType!]! @authorize @cost(weight: "10")
+  "Channel groups (sidebar sections) of a workspace. Requires ChannelReadChannel on the workspace."
+  workspaceChannelGroupList(workspaceId: Int!): [ChannelGroup!]!
+    @authorize
+    @cost(weight: "10")
+}
+
+"A category of channels (e.g. public, private); the second level of the permission hierarchy."
+type ChannelType {
+  id: Int!
+  name: String!
+  "Stable machine name, e.g. \"public\"."
+  key: String!
+  "Secure object id, used to target this channel type's ACLs."
+  secObjId: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"A system-wide configuration value."
+type Config {
+  id: Int!
+  "Unique dotted key, e.g. \"messages.sendCooldown\"."
+  name: String!
+  "Value serialized as a string; parse according to type."
+  value: String!
+  "How to parse value: \"string\", \"int\" or \"string[]\" (comma-separated)."
+  type: String
+}
+
+type ConfigMutations {
+  """
+  Overwrites a config entry, matched by id. Requires ConfigUpdateValue.
+  
+  **Returns:**
+  The saved entry, or null if no entry with that id exists.
+  """
+  updateConfig(config: ConfigInput!): Config @authorize @cost(weight: "10")
+}
+
+type ConfigQueries {
+  "A config entry by id, or null. Requires ConfigReadValue."
+  configById(id: Int!): Config @authorize @cost(weight: "10")
+  "A config entry by name (e.g. \"messages.sendCooldown\"), or null. Requires ConfigReadValue."
+  configByName(name: String!): Config @authorize @cost(weight: "10")
+  "All config entries. Requires ConfigReadValue."
+  list: [Config!]! @authorize @cost(weight: "10")
+}
+
+"A DM conversation as seen by the current user."
+type DirectMessage {
+  channel: Channel!
+  "Participants other than the current user, sorted by nickname."
+  otherUsers: [DirectMessageUser!]!
+}
+
+"Public info of a user, for DM lists and user search."
+type DirectMessageUser {
+  id: UUID!
+  nickname: String!
+  avatarUrl: String
+}
+
+"An unsent message the user is composing. At most one per user, channel and thread (parentId)."
+type DraftMessage {
+  id: Int!
+  channelId: Int!
+  userId: UUID!
+  content: String!
+  "Attachments already uploaded for this draft."
+  attachmentIds: [Int!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  "Thread root message id, or null for a top-level draft."
+  parentId: Int
+}
+
+type DraftMessageMutations {
+  """
+  Creates or overwrites the current user's draft for a channel/thread (matched by channelId + parentId).
+  Requires ChannelCreateMessage on the channel.
+  """
+  updateDraftMessage(messageDto: DraftMessageDtoInput!): DraftMessage
+    @authorize
+    @cost(weight: "10")
+  """
+  Deletes one of the current user's drafts. Requires ChannelReadChannel on the draft's channel.
+  
+  **Returns:**
+  False if the draft doesn't exist or belongs to another user.
+  """
+  deleteMessage("Draft id." id: Int!): Boolean! @authorize @cost(weight: "10")
+}
+
+type DraftMessageQueries {
+  "The current user's drafts in channels they can still read."
+  draftMessages: [DraftMessage!]! @authorize @cost(weight: "10")
+}
+
+"Outcome of an install/uninstall run."
+type InstallSystemResult {
+  "\"success\", \"installed\" (already installed, nothing done) or \"failed\"."
+  status: String!
+  "Error details when status is \"failed\"."
+  message: String
+}
+
+type InstallWizardMutations {
+  """
+  Runs migrations and seeds a fresh system: admin and user roles, a default workspace with
+  public/private channels, an admin user, test users and default config. Safe to call again: returns
+  status "installed" if the system is already installed.
+  """
+  installSystem: InstallSystemResult! @cost(weight: "10")
+  "Rolls back every migration, deleting ALL data. Development use only."
+  unInstallSystem: InstallSystemResult! @cost(weight: "10")
+}
+
+type MessageMutations {
+  """
+  Posts a message, optionally as a thread reply (parentId) or a quote-reply (replyTo).
+  Requires ChannelCreateMessage on the channel. URL previews are generated from the content.
+  """
+  addMessage(messageDto: MessageDtoInput!): MessageWithUser
+    @authorize
+    @cost(weight: "10")
+  """
+  Edits a message's content and attachments. Requires ChannelEditMessage, or ChannelEditOwnMessage
+  for your own message. NOT_FOUND if the message doesn't exist.
+  
+  
+  **Returns:**
+  True if the message was updated.
+  """
+  updateMessage(message: MessageUpdateDtoInput!): Boolean!
+    @authorize
+    @cost(weight: "10")
+  """
+  Deletes a message. Deleting a thread root also deletes its replies. Requires ChannelDeleteMessage,
+  or ChannelDeleteOwnMessage for your own message. NOT_FOUND if the message doesn't exist.
+  
+  
+  **Returns:**
+  True if the message was deleted.
+  """
+  deleteMessage("Message to delete." id: Int!): Boolean!
+    @authorize
+    @cost(weight: "10")
+  "Adds the current user's reaction to a message. No-op if it already exists."
+  addReaction(
+    "Reaction code (e.g. an emoji shortcode)."
+    code: String!
+    "Message to react to."
+    messageId: Int!
+  ): ReactionEndpointOutput! @authorize @cost(weight: "10")
+  "Removes the current user's reaction from a message. Returns status \"error\" if it didn't exist."
+  deleteReaction(
+    "Reaction code to remove."
+    code: String!
+    "Message to remove the reaction from."
+    messageId: Int!
+  ): ReactionEndpointOutput! @authorize @cost(weight: "10")
+}
+
+type MessageQueries {
+  "Top-level messages of a channel (thread replies excluded). Requires ChannelReadMessage on the channel."
+  listChannelMessages(channelId: Int!): MessagesResult!
+    @authorize
+    @cost(weight: "10")
+  "Replies in a thread. Requires ChannelReadMessage on the thread's channel."
+  listThreadMessages("Id of the thread's root message." threadId: Int!): MessagesResult!
+    @authorize
+    @cost(weight: "10")
+}
+
+"A list of messages plus previews of the messages they quote-reply to."
+type MessagesResult {
+  messages: [MessageWithUser!]!
+  "Previews of messages referenced by replyTo in messages."
+  refs: [ReplyToMessage!]!
+}
+
+"Public info of a message's author."
+type MessageUser {
+  id: UUID!
+  nickname: String!
+  fullName: String
+  avatarUrl: String
+  "fullName if set, otherwise nickname."
+  displayName: String!
+}
+
+"A message with its author, attachments, URL previews and reactions resolved."
+type MessageWithUser {
+  user: MessageUser!
+  "Reaction codes the current user has added to this message."
+  myReactions: [String!]!
+  urlPreviews: [UrlPreview!]!
+  attachments: [Attachment!]!
+  reactions: [ReactionInMessage!]!
+  id: Int!
+  channelId: Int!
+  "Author."
+  userId: UUID!
+  content: String!
+  "Delivery state. Currently always \"sent\"."
+  status: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  "Thread root message id if this is a thread reply, otherwise null."
+  parentId: Int
+  "Number of thread replies (only meaningful on thread roots)."
+  childrenCount: Int!
+  "Id of the message this one quote-replies to. Its preview is in MessagesResult.refs."
+  replyTo: Int
+}
+
+"""
+Everything the current user can do, grouped by object type. Objects where the user has no
+permissions are left out (absent means "not visible").
+"""
+type MyPermissions {
+  "System-level permissions (not inherited by workspaces or channels)."
+  global: [Permission!]!
+  workspaces: [ObjectPermissions!]!
+  channelTypes: [ObjectPermissions!]!
+  channels: [ObjectPermissions!]!
+}
+
+"""
+The ACLs attached directly to one secure object. They are not resolved through the
+hierarchy, so use this to see why a permission resolved the way it did.
+"""
+type ObjectAcls {
+  roleAcls: [RoleAcl!]!
+  userAcls: [UserAcl!]!
+}
+
+"Resolved permissions of the current user on one object."
+type ObjectPermissions {
+  "Domain id of the object (workspace, channel type or channel id, not secObjId)."
+  id: Int!
+  "Effective permissions after resolving the hierarchy."
+  permissions: [Permission!]!
+}
+
+"A labelled set of related permissions, for rendering the admin permission editor."
+type PermissionGroup {
+  "Human-readable group name."
+  label: String!
+  "Permissions in this group."
+  list: [Permission!]!
+}
+
+type PermissionQueries {
+  "Every permission, grouped by domain. Each permission appears in exactly one group."
+  list: [PermissionGroup!]!
+}
+
+"Outcome of a reaction change."
+type ReactionEndpointOutput {
+  "\"success\" or \"error\"."
+  status: String!
+  "Error reason when status is \"error\"."
+  message: String
+}
+
+"Aggregated reactions of one code on a message."
+type ReactionInMessage {
+  "Reaction code (e.g. an emoji shortcode)."
+  code: String!
+  "Number of users who reacted with this code."
+  count: Int!
+}
+
+"Short preview of a quote-replied message."
+type ReplyToMessage {
+  id: Int!
+  userId: UUID!
+  content: String!
+}
+
+"A named bundle of ACLs that can be assigned to many users."
+type Role {
+  id: Int!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"The permissions one role has on one secure object."
+type RoleAcl {
+  roleId: Int!
+  "Secure object the permissions apply to: 1 for global, otherwise the secObjId of a workspace, channel type or channel."
+  secObjId: Int!
+  permissions: [Permission!]!
+}
+
+type RoleMutations {
+  "Creates a role with no ACLs. Requires RoleCreateRole."
+  addRole(roleDto: RoleCreateDtoInput!): Role! @authorize @cost(weight: "10")
+  "Renames a role. Requires RoleEditRole. NOT_FOUND if the role doesn't exist."
+  updateRole(roleDto: RoleUpdateDtoInput!): Role! @authorize @cost(weight: "10")
+  """
+  Deletes a role together with its ACLs and user assignments. Requires RoleDeleteRole.
+  
+  **Returns:**
+  True if the role existed and was deleted.
+  """
+  deleteRole("Role to delete." id: Int!): Boolean!
+    @authorize
+    @cost(weight: "10")
+}
+
+type RoleQueries {
+  "A role by id, or null if it doesn't exist."
+  roleById(id: Int!): Role @authorize @cost(weight: "10")
+  "A role by exact name, or null if it doesn't exist."
+  roleByName(name: String!): Role @authorize @cost(weight: "10")
+  "All roles."
+  list: [Role!]! @authorize @cost(weight: "10")
+}
+
+"Link preview metadata scraped from a URL in a message (OpenGraph/oEmbed)."
+type UrlPreview {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  url: String!
+  title: String
+  description: String
+  thumbnailUrl: String
+  videoThumbnailUrl: String
+  siteName: String
+  favIconUrl: String
+  "The page's og:type, e.g. \"website\", \"video\", \"article\"."
+  type: String
+  author: String
+  thumbnailWidth: Int
+  thumbnailHeight: Int
+}
+
+"A user account."
+type User {
+  id: UUID!
+  "Unique handle: 1-20 chars of [a-zA-Z0-9_]."
+  nickname: String!
+  fullName: String
+  "Inactive users are hidden from user search."
+  active: Boolean!
+  "Email address has been verified."
+  verified: Boolean!
+  "Banned users are hidden from user search."
+  banned: Boolean!
+  muted: Boolean!
+  email: String!
+  avatarUrl: String
+}
+
+"The permissions one user has on one secure object."
+type UserAcl {
+  userId: UUID!
+  "Secure object the permissions apply to: 1 for global, otherwise the secObjId of a workspace, channel type or channel."
+  secObjId: Int!
+  permissions: [Permission!]!
+}
+
+"Result of a successful login."
+type UserLoginResponse {
+  id: String!
+  "JWT to send as a Bearer token on subsequent requests."
+  token: String!
+}
+
+type UserMutations {
+  """
+  Creates a user as an admin. Requires UserCreateUser. Assigns roleIds, or the configured default
+  role if none are given. ROLE_NOT_FOUND if any role id doesn't exist.
+  """
+  createUser(userDto: CreateUserDtoInput!): User! @authorize @cost(weight: "10")
+  "Self-registration (no auth). Creates an active user with the configured default role."
+  register(userDto: UserRegisterDtoInput!): User! @cost(weight: "10")
+  """
+  Deletes a user with their role assignments and ACLs. Requires UserDeleteUser.
+  
+  **Returns:**
+  True if the user existed and was deleted.
+  """
+  deleteUser(id: UUID!): Boolean! @authorize @cost(weight: "10")
+  """
+  Updates a user as an admin and replaces their role assignments with roleIds. Requires UserEditUser.
+  NOT_FOUND if the user doesn't exist, ROLE_NOT_FOUND if any role id doesn't exist.
+  """
+  updateUser(userDto: UpdateUserDtoInput!): User! @authorize @cost(weight: "10")
+  "Updates the current user's own profile. Only non-null fields are applied."
+  updateMyProfile(profileDto: UpdateMyProfileDtoInput!): User!
+    @authorize
+    @cost(weight: "10")
+  """
+  Exchanges credentials for a JWT. No auth required.
+  
+  **Returns:**
+  The user id and token, or null if the credentials are wrong.
+  """
+  login(
+    "Email or nickname, case-insensitive."
+    login: String!
+    "Plain-text password."
+    password: String!
+  ): UserLoginResponse @cost(weight: "10")
+}
+
+"The current user together with the names of their roles."
+type UserProfile {
+  user: User!
+  roleNames: [String!]!
+}
+
+type UserQueries {
+  "The current user's profile and role names."
+  myProfile: UserProfile! @authorize @cost(weight: "10")
+  """
+  Everything the current user can do: global permissions plus effective permissions per workspace,
+  channel type and channel. Use it to show or hide UI actions.
+  """
+  myPermissions: MyPermissions! @authorize @cost(weight: "10")
+  "A user by id, or null. Requires UserReadUser unless it's the current user."
+  userById(id: UUID!): User @authorize @cost(weight: "10")
+  "A user by nickname (case-insensitive), or null. Requires UserReadUser unless it's the current user."
+  userByNickname(nickname: String!): User @authorize @cost(weight: "10")
+  "All users matching the filter. Requires UserReadUser."
+  list(filter: UserFilterInput!): [User!]! @authorize @cost(weight: "10")
+  "Nickname autocomplete for starting direct messages: up to 20 active, non-banned users, excluding yourself."
+  searchByNickname(
+    "Case-insensitive nickname prefix. Blank returns an empty list."
+    prefix: String!
+  ): [DirectMessageUser!]! @authorize @cost(weight: "10")
+}
+
+"Assignment of a role to a user. A user can hold several roles."
+type UserRole {
+  userId: UUID!
+  roleId: Int!
+}
+
+type UserRoleMutations {
+  """
+  Assigns a role to a user. Requires UserEditUser. No-op if already assigned.
+  
+  **Returns:**
+  The assignment (existing or new).
+  """
+  assignRole(userId: UUID!, roleId: Int!): UserRole!
+    @authorize
+    @cost(weight: "10")
+  """
+  Removes a role from a user. Requires UserEditUser.
+  
+  **Returns:**
+  True if the user had the role.
+  """
+  unassignRole(userId: UUID!, roleId: Int!): Boolean!
+    @authorize
+    @cost(weight: "10")
+}
+
+"Top-level container of channels; the first level of the permission hierarchy."
+type Workspace {
+  id: Int!
+  name: String!
+  "Secure object id, used to target this workspace's ACLs."
+  secObjId: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type WorkspaceMutations {
+  "Creates a workspace. Requires WorkspaceCreateWorkspace globally."
+  addWorkspace(workspaceDto: WorkspaceDtoInput!): Workspace!
+    @authorize
+    @cost(weight: "10")
+  """
+  Updates a workspace, matched by id. Requires WorkspaceUpdateWorkspace on it.
+  
+  **Returns:**
+  The saved workspace, or null if it doesn't exist.
+  """
+  updateWorkspace(workspace: WorkspaceInput!): Workspace
+    @authorize
+    @cost(weight: "10")
+  """
+  Deletes a workspace. Requires WorkspaceDeleteWorkspace on it.
+  
+  **Returns:**
+  True if the workspace existed and was deleted.
+  """
+  deleteWorkspace(id: Int!): Boolean! @authorize @cost(weight: "10")
+}
+
+type WorkspaceQueries {
+  "A workspace by id, or null if it doesn't exist. Requires WorkspaceReadWorkspace on it."
+  workspaceById(id: Int!): Workspace @authorize @cost(weight: "10")
+  "A workspace by exact name, or null if it doesn't exist. Requires WorkspaceReadWorkspace on it."
+  workspaceByName(name: String!): Workspace @authorize @cost(weight: "10")
+  "Workspaces the current user has WorkspaceReadWorkspace on."
+  list: [Workspace!]! @authorize @cost(weight: "10")
+}
+
+"Input for creating a channel."
+input ChannelDtoInput {
+  name: String!
+  channelTypeId: Int!
+  workspaceId: Int!
+}
+
+"Input for creating a channel group."
+input ChannelGroupDtoInput {
+  name: String!
+  workspaceId: Int!
+  channelIds: [Int!]!
+  order: Int!
+}
+
+"A named, ordered sidebar section of channels within a workspace. It doesn't affect permissions."
+input ChannelGroupInput {
+  id: Int!
+  name: String!
+  workspaceId: Int!
+  "Channels in this group, in display order."
+  channelIds: [Int!]!
+  "Sort position among the workspace's groups."
+  order: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"A conversation: a workspace channel or a direct message (isDm)."
+input ChannelInput {
+  id: Int!
+  name: String!
+  "Channel type. Null for direct messages."
+  channelTypeId: Int
+  "Owning workspace. Null for direct messages."
+  workspaceId: Int
+  "True for a direct-message conversation (no workspace or channel type)."
+  isDm: Boolean!
+  "Secure object id, used to target this channel's ACLs."
+  secObjId: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"Input for creating a channel type."
+input ChannelTypeDtoInput {
+  name: String!
+  key: String!
+}
+
+"A category of channels (e.g. public, private); the second level of the permission hierarchy."
+input ChannelTypeInput {
+  id: Int!
+  name: String!
+  "Stable machine name, e.g. \"public\"."
+  key: String!
+  "Secure object id, used to target this channel type's ACLs."
+  secObjId: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"A system-wide configuration value."
+input ConfigInput {
+  id: Int!
+  "Unique dotted key, e.g. \"messages.sendCooldown\"."
+  name: String!
+  "Value serialized as a string; parse according to type."
+  value: String!
+  "How to parse value: \"string\", \"int\" or \"string[]\" (comma-separated)."
+  type: String
+}
+
+"Input for an admin creating a user."
+input CreateUserDtoInput {
+  "1-20 chars of [a-zA-Z0-9_], trimmed. INVALID_NICKNAME if malformed, NICKNAME_TAKEN if in use."
+  nickname: String!
+  fullName: String
+  active: Boolean!
+  verified: Boolean!
+  banned: Boolean!
+  muted: Boolean!
+  email: String!
+  password: String!
+  "Roles to assign. Null or empty assigns the configured default role."
+  roleIds: [Int!]
+}
+
+"Input for saving a draft."
+input DraftMessageDtoInput {
+  channelId: Int!
+  content: String!
+  attachmentIds: [Int!]
+  parentId: Int
+}
+
+"Input for posting a message."
+input MessageDtoInput {
+  channelId: Int!
+  content: String!
+  "Ids of attachments uploaded beforehand via attachments.upload."
+  attachmentIds: [Int!]
+  "Thread root message id to post as a thread reply."
+  parentId: Int
+  "Message id to quote-reply to."
+  replyTo: Int
+}
+
+"Input for editing a message."
+input MessageUpdateDtoInput {
+  id: Int!
+  content: String!
+  "Full replacement set of attachments. Null removes all."
+  attachmentIds: [Int!]
+}
+
+"Input for creating a role."
+input RoleCreateDtoInput {
+  name: String!
+}
+
+"Input for renaming a role."
+input RoleUpdateDtoInput {
+  id: Int!
+  name: String!
+}
+
+"Input for updating your own profile. Null fields are left unchanged."
+input UpdateMyProfileDtoInput {
+  "1-20 chars of [a-zA-Z0-9_], trimmed. INVALID_NICKNAME if malformed, NICKNAME_TAKEN if in use."
+  nickname: String
+  "Empty string clears it."
+  fullName: String
+  email: String
+  "Empty string clears it."
+  avatarUrl: String
+  "Required when changing the password. FORBIDDEN_ACTION if missing or wrong."
+  currentPassword: String
+  "New password. Requires currentPassword."
+  newPassword: String
+}
+
+"Input for an admin updating a user."
+input UpdateUserDtoInput {
+  id: UUID!
+  "1-20 chars of [a-zA-Z0-9_], trimmed. INVALID_NICKNAME if malformed, NICKNAME_TAKEN if in use."
+  nickname: String!
+  fullName: String
+  active: Boolean!
+  verified: Boolean!
+  banned: Boolean!
+  muted: Boolean!
+  email: String!
+  "New password. Null or blank keeps the current one."
+  password: String
+  "Full replacement set of the user's roles."
+  roleIds: [Int!]!
+}
+
+"Optional filters for users.list; null fields are ignored."
+input UserFilterInput {
+  active: Boolean
+  banned: Boolean
+  "Exact email match, case-insensitive."
+  email: String
+  "Exact nickname match, case-insensitive."
+  nickname: String
+}
+
+"Input for self-registration."
+input UserRegisterDtoInput {
+  "1-20 chars of [a-zA-Z0-9_], trimmed. INVALID_NICKNAME if malformed, NICKNAME_TAKEN if in use."
+  nickname: String!
+  fullName: String
+  email: String!
+  password: String!
+}
+
+"Input for creating a workspace."
+input WorkspaceDtoInput {
+  name: String!
+}
+
+"Top-level container of channels; the first level of the permission hierarchy."
+input WorkspaceInput {
+  id: Int!
+  name: String!
+  "Secure object id, used to target this workspace's ACLs."
+  secObjId: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"Defines when a policy shall be executed."
+enum ApplyPolicy {
+  "Before the resolver was executed."
+  BEFORE_RESOLVER
+  "After the resolver was executed."
+  AFTER_RESOLVER
+  "The policy is applied in the validation step before the execution."
+  VALIDATION
+}
+
+"An action a subject (role or user) can be granted on a secure object via an ACL."
+enum Permission {
+  "Delete attachments. Checked globally."
+  ATTACHMENT_DELETE
+  "Read attachment metadata. Checked globally."
+  ATTACHMENT_READ
+  "Upload attachments. Checked globally."
+  ATTACHMENT_UPLOAD
+  "Create channel groups in a workspace. Checked on the workspace."
+  CHANNEL_ADD_CHANNEL_GROUP
+  "Create channels in a workspace (checked on the workspace); granted globally, also allows creating channel types."
+  CHANNEL_CREATE_CHANNEL
+  "Post messages in a channel. Checked on the channel."
+  CHANNEL_CREATE_MESSAGE
+  "Delete a channel. Checked on the channel."
+  CHANNEL_DELETE_CHANNEL
+  "Delete channel groups in a workspace. Checked on the workspace."
+  CHANNEL_DELETE_CHANNEL_GROUP
+  "Delete a channel type. Checked on the channel type."
+  CHANNEL_DELETE_CHANNEL_TYPE
+  "Delete anyone's messages in a channel. Checked on the channel."
+  CHANNEL_DELETE_MESSAGE
+  "Delete your own messages in a channel. Checked on the channel."
+  CHANNEL_DELETE_OWN_MESSAGE
+  "Edit a channel (checked on the channel) or a channel type (checked on the channel type)."
+  CHANNEL_EDIT_CHANNEL
+  "Edit channel groups in a workspace. Checked on the workspace."
+  CHANNEL_EDIT_CHANNEL_GROUP
+  "Edit anyone's messages in a channel. Checked on the channel."
+  CHANNEL_EDIT_MESSAGE
+  "Edit your own messages in a channel. Checked on the channel."
+  CHANNEL_EDIT_OWN_MESSAGE
+  "See a channel; channels without it are hidden. Checked on the channel."
+  CHANNEL_READ_CHANNEL
+  "Read messages in a channel. Checked on the channel."
+  CHANNEL_READ_MESSAGE
+  "Read system configuration values. Checked globally."
+  CONFIG_READ_VALUE
+  "Update system configuration values. Checked globally."
+  CONFIG_UPDATE_VALUE
+  "Create roles. Checked globally."
+  ROLE_CREATE_ROLE
+  "Delete roles. Checked globally."
+  ROLE_DELETE_ROLE
+  "Edit roles and role ACLs. Checked globally."
+  ROLE_EDIT_ROLE
+  "Create users as an admin. Checked globally."
+  USER_CREATE_USER
+  "Delete users. Checked globally."
+  USER_DELETE_USER
+  "Edit other users, their role assignments and user ACLs. Checked globally."
+  USER_EDIT_USER
+  "List and look up users. Checked globally."
+  USER_READ_USER
+  "Create workspaces. Checked globally."
+  WORKSPACE_CREATE_WORKSPACE
+  "Delete a workspace. Checked on the workspace."
+  WORKSPACE_DELETE_WORKSPACE
+  "See a workspace. Checked on the workspace."
+  WORKSPACE_READ_WORKSPACE
+  "Edit a workspace. Checked on the workspace."
+  WORKSPACE_UPDATE_WORKSPACE
+}
+
+"The `DateTime` scalar type represents a date and time with time zone offset information."
+scalar DateTime
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
+
+"The `Long` scalar type represents a signed 64-bit integer."
+scalar Long
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/long.html")
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload
+
+"The `UUID` scalar type represents a Universally Unique Identifier (UUID) as defined by RFC 9562."
+scalar UUID
+  @specifiedBy(url: "https://scalars.graphql.org/chillicream/uuid.html")
+
+"The authorize directive."
+directive @authorize(
+  "The name of the authorization policy that determines access to the annotated resource."
+  policy: String
+  "Roles that are allowed to access the annotated resource."
+  roles: [String!]
+  "Defines when the authorize directive shall be applied. By default the authorize directive is applied before the resolver is executed."
+  apply: ApplyPolicy! = BEFORE_RESOLVER
+) repeatable on OBJECT | FIELD_DEFINITION
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost(
+  "The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc."
+  weight: String!
+) on
+  | SCALAR
+  | OBJECT
+  | FIELD_DEFINITION
+  | ARGUMENT_DEFINITION
+  | ENUM
+  | INPUT_FIELD_DEFINITION

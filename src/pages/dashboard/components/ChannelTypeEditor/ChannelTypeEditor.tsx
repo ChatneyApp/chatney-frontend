@@ -5,7 +5,6 @@ import { CreateChannelTypeForm } from '@/pages/dashboard/components/ChannelTypeF
 import { Button } from '@/components/Button';
 import { DELETE_CHANNEL_TYPE } from '@/graphql/channelTypes';
 import { useChannelTypesList } from '@/contexts/ChannelTypesListContext';
-import { useRolesList } from '@/contexts/RolesListContext';
 import styles from './ChannelTypeEditor.module.css';
 
 type Props = {
@@ -14,8 +13,7 @@ type Props = {
 
 export const ChannelTypeEditor = ({ channelType }: Props) => {
     const { refetch } = useChannelTypesList();
-    const { roles } = useRolesList();
-    
+
     const [deleteChannelType] = useMutation(DELETE_CHANNEL_TYPE, {
         onCompleted: () => {
             refetch();
@@ -31,9 +29,6 @@ export const ChannelTypeEditor = ({ channelType }: Props) => {
         });
     };
 
-    // Find the role name based on BaseRoleId
-    const baseRole = roles.find(role => role.id === channelType.baseRoleId);
-
     return (
         <div className={styles.container}>
             <div className={styles.label}>
@@ -44,9 +39,6 @@ export const ChannelTypeEditor = ({ channelType }: Props) => {
             </div>
             <div className={styles.key}>
                 <span className={styles.keyTitle}>Key:</span> {channelType.key}
-            </div>
-            <div className={styles.baseRole}>
-                <span className={styles.baseRoleTitle}>Base Role:</span> {baseRole?.name || 'Unknown Role'}
             </div>
             <div className={styles.controls}>
                 <CreateChannelTypeForm cta="Edit" title="Edit Channel Type" submitText="Save Changes" channelType={channelType}/>

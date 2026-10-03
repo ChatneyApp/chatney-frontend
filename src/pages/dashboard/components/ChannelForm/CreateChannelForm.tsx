@@ -81,7 +81,11 @@ export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) =>
                         id: channel.id,
                         name: data.name,
                         channelTypeId: data.channelTypeId,
-                        workspaceId: workspaceId
+                        workspaceId: workspaceId,
+                        isDm: channel.isDm,
+                        secObjId: channel.secObjId,
+                        createdAt: channel.createdAt,
+                        updatedAt: channel.updatedAt,
                     }
                 }
             });

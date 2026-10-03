@@ -1,114 +1,87 @@
-import { ApolloClient, gql, type TypedDocumentNode } from '@apollo/client';
+import { ApolloClient } from '@apollo/client';
 
-import { CreateMessageDto, Message, MessageId, MessagesResult, UpdateMessageDto } from '@/types/messages';
+import { graphql } from '@/graphql/generated';
+import { CreateMessageDto, MessageId, MessagesResult, MessageWithUser, UpdateMessageDto } from '@/types/messages';
 import { ChannelId } from '@/types/channels';
 
-type PostMessageEndpointResponse = {
-    messages?: {
-        addMessage?: Message;
+export const UrlPreviewFieldsFragment = graphql(`
+    fragment UrlPreviewFields on UrlPreview {
+        id
+        createdAt
+        updatedAt
+        url
+        title
+        description
+        thumbnailUrl
+        videoThumbnailUrl
+        siteName
+        favIconUrl
+        type
+        author
+        thumbnailWidth
+        thumbnailHeight
     }
-}
+`);
 
-type DeleteMessageEndpointResponse = {
-    messages?: {
-        deleteMessage?: boolean;
+export const MessageFieldsFragment = graphql(`
+    fragment MessageFields on MessageWithUser {
+        id
+        channelId
+        userId
+        user {
+            id
+            nickname
+            fullName
+            displayName
+            avatarUrl
+        }
+        content
+        attachments {
+            ...AttachmentFields
+        }
+        status
+        createdAt
+        updatedAt
+        urlPreviews {
+            ...UrlPreviewFields
+        }
+        reactions {
+            code
+            count
+        }
+        myReactions
+        parentId
+        childrenCount
+        replyTo
     }
-}
+`);
 
-type AddReactionEndpointResponse = {
-    messages?: {
-        addReaction?: {
-            status: 'error' | 'success';
-            error?: string;
+export const MessagesResultFieldsFragment = graphql(`
+    fragment MessagesResultFields on MessagesResult {
+        messages {
+            ...MessageFields
+        }
+        refs {
+            id
+            userId
+            content
         }
     }
-};
+`);
 
-type DeleteReactionEndpointResponse = {
-    messages?: {
-        deleteReaction?: {
-            status: 'error' | 'success';
-            error?: string;
-        }
-    }
-};
-
-type GetChannelMessagesResponse = {
-    messages: {
-        listChannelMessages: MessagesResult;
-    }
-}
-
-type GetThreadMessagesResponse = {
-    messages: {
-        listThreadMessages: MessagesResult;
-    }
-}
-
-export const postNewMessage = async (client: ApolloClient, messageDto: CreateMessageDto): Promise<Message> => {
-    const POST_MESSAGE = gql`
-        mutation CreateMessage($messageDto: MessageDtoInput!) {
-            messages {
-                addMessage(messageDto: $messageDto) {
-                    id
-                    channelId
-                    userId
-                    user {
-                        id
-                        nickname
-                        fullName
-                        displayName
-                        avatarUrl
-                    }
-                    content
-                    attachments {
-                        id
-                        userId
-                        urlPath
-                        originalFileName
-                        extension
-                        mimeType
-                        size
-                        type
-                        asFile
-                        width
-                        height
-                        duration
-                        createdAt
-                        updatedAt
-                    }
-                    status
-                    createdAt
-                    updatedAt
-                    urlPreviews {
-                        id
-                        createdAt
-                        updatedAt
-                        url
-                        title
-                        description
-                        thumbnailUrl
-                        videoThumbnailUrl
-                        siteName
-                        favIconUrl
-                        type
-                        author
-                        thumbnailWidth
-                        thumbnailHeight
-                    }
-                    reactions {
-                        code
-                        count
-                    }
-                    myReactions
-                    parentId
-                    childrenCount
-                }
+const POST_MESSAGE = graphql(`
+    mutation CreateMessage($messageDto: MessageDtoInput!) {
+        messages {
+            addMessage(messageDto: $messageDto) {
+                ...MessageFields
             }
         }
-    `;
+    }
+`);
+
+export const postNewMessage = async (client: ApolloClient, messageDto: CreateMessageDto): Promise<MessageWithUser> => {
     try {
-        const { data } = await client.mutate<PostMessageEndpointResponse>({
+        const { data } = await client.mutate({
             mutation: POST_MESSAGE,
             variables: { messageDto },
         });
@@ -125,22 +98,17 @@ export const postNewMessage = async (client: ApolloClient, messageDto: CreateMes
     }
 };
 
-type UpdateMessageEndpointResponse = {
-    messages?: {
-        updateMessage?: boolean;
+const UPDATE_MESSAGE = graphql(`
+    mutation UpdateMessage($message: MessageUpdateDtoInput!) {
+        messages {
+            updateMessage(message: $message)
+        }
     }
-}
+`);
 
 export const updateMessage = async (client: ApolloClient, dto: UpdateMessageDto): Promise<boolean> => {
-    const UPDATE_MESSAGE = gql`
-        mutation UpdateMessage($message: MessageUpdateDtoInput!) {
-            messages {
-                updateMessage(message: $message)
-            }
-        }
-    `;
     try {
-        const { data } = await client.mutate<UpdateMessageEndpointResponse>({
+        const { data } = await client.mutate({
             mutation: UPDATE_MESSAGE,
             variables: { message: dto },
         });
@@ -150,16 +118,17 @@ export const updateMessage = async (client: ApolloClient, dto: UpdateMessageDto)
     }
 };
 
-export const deleteMessage = async (client: ApolloClient, messageId: MessageId): Promise<boolean> => {
-    const DELETE_MESSAGE = gql`
-        mutation DeleteMessage($id: Int!) {
-            messages {
-                deleteMessage(id: $id)
-            }
+const DELETE_MESSAGE = graphql(`
+    mutation DeleteMessage($id: Int!) {
+        messages {
+            deleteMessage(id: $id)
         }
-    `;
+    }
+`);
+
+export const deleteMessage = async (client: ApolloClient, messageId: MessageId): Promise<boolean> => {
     try {
-        const { data } = await client.mutate<DeleteMessageEndpointResponse>({
+        const { data } = await client.mutate({
             mutation: DELETE_MESSAGE,
             variables: { id: messageId },
         });
@@ -176,19 +145,21 @@ export const deleteMessage = async (client: ApolloClient, messageId: MessageId):
     }
 };
 
-export const addReaction = async (client: ApolloClient, messageId: MessageId, code: string): Promise<boolean> => {
-    const GQL_MUTATION = gql`
-        mutation AddReaction($code: String!, $messageId: Int!) {
-            messages {
-                addReaction(code: $code, messageId: $messageId) {
-                    status
-                }
+const ADD_REACTION = graphql(`
+    mutation AddReaction($code: String!, $messageId: Int!) {
+        messages {
+            addReaction(code: $code, messageId: $messageId) {
+                status
+                message
             }
         }
-    `;
+    }
+`);
+
+export const addReaction = async (client: ApolloClient, messageId: MessageId, code: string): Promise<boolean> => {
     try {
-        const { data } = await client.mutate<AddReactionEndpointResponse>({
-            mutation: GQL_MUTATION,
+        const { data } = await client.mutate({
+            mutation: ADD_REACTION,
             variables: { code, messageId },
         });
 
@@ -198,8 +169,8 @@ export const addReaction = async (client: ApolloClient, messageId: MessageId, co
             throw new Error('Invalid addReaction response');
         }
 
-        if (result?.status === 'error') {
-            throw new Error(result.error);
+        if (result.status === 'error') {
+            throw new Error(result.message ?? undefined);
         }
 
         return result.status === 'success';
@@ -208,20 +179,21 @@ export const addReaction = async (client: ApolloClient, messageId: MessageId, co
     }
 };
 
-export const deleteReaction = async (client: ApolloClient, messageId: MessageId, code: string): Promise<boolean> => {
-    const GQL_MUTATION = gql`
-        mutation DeleteReaction($code: String!, $messageId: Int!) {
-            messages {
-                deleteReaction(code: $code, messageId: $messageId) {
-                    status
-                    message
-                }
+const DELETE_REACTION = graphql(`
+    mutation DeleteReaction($code: String!, $messageId: Int!) {
+        messages {
+            deleteReaction(code: $code, messageId: $messageId) {
+                status
+                message
             }
         }
-    `;
+    }
+`);
+
+export const deleteReaction = async (client: ApolloClient, messageId: MessageId, code: string): Promise<boolean> => {
     try {
-        const { data } = await client.mutate<DeleteReactionEndpointResponse>({
-            mutation: GQL_MUTATION,
+        const { data } = await client.mutate({
+            mutation: DELETE_REACTION,
             variables: { code, messageId },
         });
 
@@ -231,8 +203,8 @@ export const deleteReaction = async (client: ApolloClient, messageId: MessageId,
             throw new Error('Invalid deleteReaction response');
         }
 
-        if (result?.status === 'error') {
-            throw new Error(result.error);
+        if (result.status === 'error') {
+            throw new Error(result.message ?? undefined);
         }
 
         return result.status === 'success';
@@ -241,79 +213,20 @@ export const deleteReaction = async (client: ApolloClient, messageId: MessageId,
     }
 };
 
-export const getChannelMessagesList = async (client: ApolloClient, channelId: ChannelId): Promise<MessagesResult> => {
-    const GET_MESSAGES: TypedDocumentNode<GetChannelMessagesResponse> = gql`
-    query ($channelId: Int!) {
+const GET_CHANNEL_MESSAGES = graphql(`
+    query GetChannelMessages($channelId: Int!) {
         messages {
             listChannelMessages(channelId: $channelId) {
-                messages {
-                    id
-                    channelId
-                    userId
-                    content
-                    attachments {
-                        id
-                        userId
-                        urlPath
-                        originalFileName
-                        extension
-                        mimeType
-                        size
-                        type
-                        asFile
-                        width
-                        height
-                        duration
-                        createdAt
-                        updatedAt
-                    }
-                    status
-                    createdAt
-                    updatedAt
-                    user {
-                        id
-                        nickname
-                        fullName
-                        displayName
-                        avatarUrl
-                    }
-                    urlPreviews {
-                        id
-                        createdAt
-                        updatedAt
-                        url
-                        title
-                        description
-                        thumbnailUrl
-                        videoThumbnailUrl
-                        siteName
-                        favIconUrl
-                        type
-                        author
-                        thumbnailWidth
-                        thumbnailHeight
-                    }
-                    reactions {
-                        code
-                        count
-                    }
-                    myReactions
-                    parentId
-                    childrenCount
-                    replyTo
-                }
-                refs {
-                    id
-                    userId
-                    content
-                }
+                ...MessagesResultFields
             }
         }
     }
-`;
+`);
+
+export const getChannelMessagesList = async (client: ApolloClient, channelId: ChannelId): Promise<MessagesResult> => {
     try {
         const { data } = await client.query({
-            query: GET_MESSAGES,
+            query: GET_CHANNEL_MESSAGES,
             variables: { channelId },
         });
         return data?.messages?.listChannelMessages ?? { messages: [], refs: [] };
@@ -322,79 +235,20 @@ export const getChannelMessagesList = async (client: ApolloClient, channelId: Ch
     }
 };
 
-export const getThreadMessagesList = async (client: ApolloClient, threadId: MessageId): Promise<MessagesResult> => {
-    const GET_MESSAGES: TypedDocumentNode<GetThreadMessagesResponse> = gql`
-    query ($threadId: Int!) {
+const GET_THREAD_MESSAGES = graphql(`
+    query GetThreadMessages($threadId: Int!) {
         messages {
             listThreadMessages(threadId: $threadId) {
-                messages {
-                    id
-                    channelId
-                    userId
-                    content
-                    attachments {
-                        id
-                        userId
-                        urlPath
-                        originalFileName
-                        extension
-                        mimeType
-                        size
-                        type
-                        asFile
-                        width
-                        height
-                        duration
-                        createdAt
-                        updatedAt
-                    }
-                    status
-                    createdAt
-                    updatedAt
-                    user {
-                        id
-                        nickname
-                        fullName
-                        displayName
-                        avatarUrl
-                    }
-                    urlPreviews {
-                        id
-                        createdAt
-                        updatedAt
-                        url
-                        title
-                        description
-                        thumbnailUrl
-                        videoThumbnailUrl
-                        siteName
-                        favIconUrl
-                        type
-                        author
-                        thumbnailWidth
-                        thumbnailHeight
-                    }
-                    reactions {
-                        code
-                        count
-                    }
-                    myReactions
-                    parentId
-                    childrenCount
-                    replyTo
-                }
-                refs {
-                    id
-                    userId
-                    content
-                }
+                ...MessagesResultFields
             }
         }
     }
-`;
+`);
+
+export const getThreadMessagesList = async (client: ApolloClient, threadId: MessageId): Promise<MessagesResult> => {
     try {
         const { data } = await client.query({
-            query: GET_MESSAGES,
+            query: GET_THREAD_MESSAGES,
             variables: { threadId },
         });
         return data?.messages?.listThreadMessages ?? { messages: [], refs: [] };

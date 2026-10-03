@@ -1,7 +1,7 @@
 import { createContext, PropsWithChildren, useContext } from 'react';
 import { useSuspenseQuery } from '@apollo/client/react';
 
-import { GET_USERS_QUERY } from '@/graphql/adminUsers';
+import { GET_USERS } from '@/graphql/adminUsers';
 import { User } from '@/types/users';
 
 interface UsersListContextValue {
@@ -12,7 +12,7 @@ interface UsersListContextValue {
 const UsersListContext = createContext<UsersListContextValue | null>(null);
 
 export function UsersListProvider({ children }: PropsWithChildren) {
-    const { data, refetch } = useSuspenseQuery(GET_USERS_QUERY, {
+    const { data, refetch } = useSuspenseQuery(GET_USERS, {
         variables: { filter: {} },
         fetchPolicy: 'no-cache',
     });

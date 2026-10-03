@@ -58,9 +58,12 @@ export const CreateWorkspaceForm = ({ cta, title, submitText, workspace }: Props
         if (workspace) {
             await updateWorkspace({
                 variables: {
-                    workspaceId: workspace.id,
-                    input: {
-                        Name: data.name
+                    workspace: {
+                        id: workspace.id,
+                        name: data.name,
+                        secObjId: workspace.secObjId,
+                        createdAt: workspace.createdAt,
+                        updatedAt: workspace.updatedAt,
                     }
                 }
             });

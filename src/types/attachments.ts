@@ -1,4 +1,4 @@
-import { UserId } from '@/types/users';
+import type { AttachmentFieldsFragment } from '@/graphql/generated/graphql';
 
 export type AttachmentId = number;
 
@@ -8,19 +8,4 @@ export type AttachmentUploadMetadata = {
     duration?: number;
 };
 
-export type Attachment = {
-    id: AttachmentId;
-    userId: UserId;
-    urlPath: string;
-    originalFileName: string;
-    extension: string;
-    mimeType: string;
-    size: number;
-    type: 'image' | 'gif' | 'video' | 'audio' | 'binary';
-    asFile: boolean;
-    width: number | null;
-    height: number | null;
-    duration: number | null;
-    createdAt: Date;
-    updatedAt: Date;
-}
+export type Attachment = AttachmentFieldsFragment;

@@ -1,66 +1,39 @@
-import { gql, type TypedDocumentNode } from '@apollo/client';
+import { graphql } from '@/graphql/generated';
 
-import { User } from '@/types/users';
-
-export type UserFilter = {
-    active?: boolean | null;
-    banned?: boolean | null;
-    email?: string | null;
-    nickname?: string | null;
-};
-
-export type GetUsersListResponse = {
-    users: {
-        list: User[];
-    };
-};
-
-const userFields = `
-    id
-    nickname
-    fullName
-    email
-    avatarUrl
-    active
-    verified
-    banned
-    muted
-`;
-
-export const GET_USERS_QUERY: TypedDocumentNode<GetUsersListResponse, { filter: UserFilter }> = gql`
+export const GET_USERS = graphql(`
     query GetUsersList($filter: UserFilterInput!) {
         users {
             list(filter: $filter) {
-                ${userFields}
+                ...UserFields
             }
         }
     }
-`;
+`);
 
-export const CREATE_USER = gql`
+export const CREATE_USER = graphql(`
     mutation CreateUser($userDto: CreateUserDtoInput!) {
         users {
             createUser(userDto: $userDto) {
-                ${userFields}
+                ...UserFields
             }
         }
     }
-`;
+`);
 
-export const UPDATE_USER = gql`
+export const UPDATE_USER = graphql(`
     mutation UpdateUser($userDto: UpdateUserDtoInput!) {
         users {
             updateUser(userDto: $userDto) {
-                ${userFields}
+                ...UserFields
             }
         }
     }
-`;
+`);
 
-export const DELETE_USER = gql`
+export const DELETE_USER = graphql(`
     mutation DeleteUser($id: UUID!) {
         users {
             deleteUser(id: $id)
         }
     }
-`;
+`);

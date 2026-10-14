@@ -5,7 +5,12 @@ import { AtSign, Lock } from 'lucide-react';
 import clsx from 'clsx';
 
 import styles from './AuthForm.module.css';
-import { clientStartPageUrl, userAuthTokenName, userAuthId } from '@/infra/consts';
+import {
+    clientStartPageUrl,
+    forgotPasswordPageUrl,
+    userAuthTokenName,
+    userAuthId,
+} from '@/infra/consts';
 import { loginUser } from '@/graphql/auth';
 
 type FormInputs = {
@@ -73,7 +78,7 @@ export const LoginForm = () => {
                 <div className={styles.field}>
                     <div className={styles.labelRow}>
                         <label htmlFor="password" className={styles.label}>Password</label>
-                        <button type="button" className={styles.forgotLink}>Forgot?</button>
+                        <a href={forgotPasswordPageUrl} className={styles.forgotLink}>Forgot?</a>
                     </div>
                     <div className={clsx(styles.inputWrapper, errors.password && styles.inputWrapperError)}>
                         <Lock size={16} className={styles.inputIcon} aria-hidden />

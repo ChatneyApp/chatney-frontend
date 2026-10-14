@@ -22,6 +22,8 @@ type Documents = {
     "\n    mutation UploadFile($file: Upload!, $asFile: Boolean!, $width: Int, $height: Int, $duration: Int) {\n        attachments {\n            upload(file: $file, asFile: $asFile, width: $width, height: $height, duration: $duration) {\n                ...AttachmentFields\n            }\n        }\n    }\n": typeof types.UploadFileDocument,
     "\n    mutation Login($login: String!, $password: String!) {\n        users {\n            login(login: $login, password: $password) {\n                id\n                token\n            }\n        }\n    }\n": typeof types.LoginDocument,
     "\n    mutation RegisterUser($input: UserRegisterDtoInput!) {\n        users {\n            register(userDto: $input) {\n                id\n                nickname\n                fullName\n                email\n            }\n        }\n    }\n": typeof types.RegisterUserDocument,
+    "\n    mutation RequestPasswordReset($login: String!) {\n        users {\n            requestPasswordReset(login: $login)\n        }\n    }\n": typeof types.RequestPasswordResetDocument,
+    "\n    mutation ResetPassword($code: UUID!, $password: String!) {\n        users {\n            resetPassword(code: $code, password: $password)\n        }\n    }\n": typeof types.ResetPasswordDocument,
     "\n    fragment ChannelGroupFields on ChannelGroup {\n        id\n        name\n        workspaceId\n        channelIds\n        order\n        createdAt\n        updatedAt\n    }\n": typeof types.ChannelGroupFieldsFragmentDoc,
     "\n    mutation CreateChannelGroup($channelGroupDto: ChannelGroupDtoInput!) {\n        channels {\n            addChannelGroup(channelGroupDto: $channelGroupDto) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": typeof types.CreateChannelGroupDocument,
     "\n    mutation UpdateChannelGroup($channelGroup: ChannelGroupInput!) {\n        channels {\n            updateChannelGroup(channelGroup: $channelGroup) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": typeof types.UpdateChannelGroupDocument,
@@ -82,6 +84,8 @@ const documents: Documents = {
     "\n    mutation UploadFile($file: Upload!, $asFile: Boolean!, $width: Int, $height: Int, $duration: Int) {\n        attachments {\n            upload(file: $file, asFile: $asFile, width: $width, height: $height, duration: $duration) {\n                ...AttachmentFields\n            }\n        }\n    }\n": types.UploadFileDocument,
     "\n    mutation Login($login: String!, $password: String!) {\n        users {\n            login(login: $login, password: $password) {\n                id\n                token\n            }\n        }\n    }\n": types.LoginDocument,
     "\n    mutation RegisterUser($input: UserRegisterDtoInput!) {\n        users {\n            register(userDto: $input) {\n                id\n                nickname\n                fullName\n                email\n            }\n        }\n    }\n": types.RegisterUserDocument,
+    "\n    mutation RequestPasswordReset($login: String!) {\n        users {\n            requestPasswordReset(login: $login)\n        }\n    }\n": types.RequestPasswordResetDocument,
+    "\n    mutation ResetPassword($code: UUID!, $password: String!) {\n        users {\n            resetPassword(code: $code, password: $password)\n        }\n    }\n": types.ResetPasswordDocument,
     "\n    fragment ChannelGroupFields on ChannelGroup {\n        id\n        name\n        workspaceId\n        channelIds\n        order\n        createdAt\n        updatedAt\n    }\n": types.ChannelGroupFieldsFragmentDoc,
     "\n    mutation CreateChannelGroup($channelGroupDto: ChannelGroupDtoInput!) {\n        channels {\n            addChannelGroup(channelGroupDto: $channelGroupDto) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": types.CreateChannelGroupDocument,
     "\n    mutation UpdateChannelGroup($channelGroup: ChannelGroupInput!) {\n        channels {\n            updateChannelGroup(channelGroup: $channelGroup) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": types.UpdateChannelGroupDocument,
@@ -180,6 +184,14 @@ export function graphql(source: "\n    mutation Login($login: String!, $password
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    mutation RegisterUser($input: UserRegisterDtoInput!) {\n        users {\n            register(userDto: $input) {\n                id\n                nickname\n                fullName\n                email\n            }\n        }\n    }\n"): (typeof documents)["\n    mutation RegisterUser($input: UserRegisterDtoInput!) {\n        users {\n            register(userDto: $input) {\n                id\n                nickname\n                fullName\n                email\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation RequestPasswordReset($login: String!) {\n        users {\n            requestPasswordReset(login: $login)\n        }\n    }\n"): (typeof documents)["\n    mutation RequestPasswordReset($login: String!) {\n        users {\n            requestPasswordReset(login: $login)\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation ResetPassword($code: UUID!, $password: String!) {\n        users {\n            resetPassword(code: $code, password: $password)\n        }\n    }\n"): (typeof documents)["\n    mutation ResetPassword($code: UUID!, $password: String!) {\n        users {\n            resetPassword(code: $code, password: $password)\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

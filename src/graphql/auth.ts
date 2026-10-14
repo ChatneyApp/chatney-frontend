@@ -27,6 +27,22 @@ const REGISTER_USER = graphql(`
     }
 `);
 
+const REQUEST_PASSWORD_RESET = graphql(`
+    mutation RequestPasswordReset($login: String!) {
+        users {
+            requestPasswordReset(login: $login)
+        }
+    }
+`);
+
+const RESET_PASSWORD = graphql(`
+    mutation ResetPassword($code: UUID!, $password: String!) {
+        users {
+            resetPassword(code: $code, password: $password)
+        }
+    }
+`);
+
 export const loginUser = async ({ client, login, password }: {
     client: ApolloClient,
     login: string,
@@ -83,4 +99,38 @@ export const registerUser = async ({ client, email,
     } catch (error) {
         throw new Error(`Registration failed: ${(error as Error).message}`);
     }
+};
+
+export const requestPasswordReset = async ({
+    client,
+    login,
+}: {
+    client: ApolloClient,
+    login: string,
+}): Promise<void> => {
+    const { data } = await client.mutate({
+        mutation: REQUEST_PASSWORD_RESET,
+        variables: { login },
+    });
+
+    if (data?.users?.requestPasswordReset !== true) {
+        throw new Error('Unable to request a password reset');
+    }
+};
+
+export const resetPassword = async ({
+    client,
+    code,
+    password,
+}: {
+    client: ApolloClient,
+    code: string,
+    password: string,
+}): Promise<boolean> => {
+    const { data } = await client.mutate({
+        mutation: RESET_PASSWORD,
+        variables: { code, password },
+    });
+
+    return data?.users?.resetPassword === true;
 };

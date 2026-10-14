@@ -8,8 +8,14 @@ import { adminRoutes } from '@/pages/admin/routes';
 import { profileRoutes } from '@/pages/profile/routes';
 import { clientRoutes } from '@/pages/client/routes';
 import { LoginRegisterPage } from '@/pages/login/ClientHomePage';
+import { ForgotPasswordPage, ResetPasswordPage } from '@/pages/login/PasswordResetPage';
 import { composeProviders } from '@/infra/composeProviders';
-import { installSystemPageUrl, loginPageUrl } from '@/infra/consts';
+import {
+    forgotPasswordPageUrl,
+    installSystemPageUrl,
+    loginPageUrl,
+    resetPasswordPageUrl,
+} from '@/infra/consts';
 import { InstallSystemPage } from './pages/installation/InstallSystemPage';
 
 const providers = [
@@ -26,6 +32,14 @@ const LoginPageRouterSelector = () => {
         return (
             <LoginRegisterPage/>
         );
+    }
+
+    if (window.location.pathname === forgotPasswordPageUrl) {
+        return <ForgotPasswordPage />;
+    }
+
+    if (window.location.pathname === resetPasswordPageUrl) {
+        return <ResetPasswordPage />;
     }
 
     if (window.location.pathname === installSystemPageUrl) {

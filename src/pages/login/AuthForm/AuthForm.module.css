@@ -86,6 +86,10 @@
     @apply border-red-500/30 bg-red-500/10 text-red-300;
 }
 
+.alertSuccess {
+    @apply border-emerald-500/30 bg-emerald-500/10 text-emerald-300;
+}
+
 .submitButton {
     @apply mt-1 w-full cursor-pointer rounded-2xl border-none bg-gradient-to-r from-[#c4b5fd] via-[#a5b4fc] to-[#818cf8] px-4 py-3.5 text-sm font-semibold text-[#0f172a] shadow-lg shadow-indigo-500/20 transition-all hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50;
 }

@@ -1,61 +1,50 @@
-import { ApolloClient, gql } from '@apollo/client';
+import { ApolloClient } from '@apollo/client';
 
-import { SystemConfigValue } from '@/types/systemConfig';
+import { graphql } from '@/graphql/generated';
 
-export type GetConfigListResponse = {
-    configs: {
-        list: SystemConfigValue[];
+export const ConfigFieldsFragment = graphql(`
+    fragment ConfigFields on Config {
+        id
+        name
+        value
+        type
     }
-}
+`);
 
-export type InstallSystemResponse = {
-    installWizard: {
-        installSystem: {
-            status: string;
-            message?: string | null;
+export const UPDATE_SYSTEM_CONFIG_VALUE = graphql(`
+    mutation UpdateSystemConfigValue($config: ConfigInput!) {
+        configs {
+            updateConfig(config: $config) {
+                ...ConfigFields
+            }
         }
     }
-}
+`);
 
-export const UDPATE_SYSTEM_CONFIG_VALUE = gql`
-  mutation ($config: ConfigInput!) {
-      configs {
-          updateConfig(config: $config) {
-              id
-              name
-              value
-              type
-          }
-      }
-  }
-`;
-
-export const GET_SYSTEM_CONFIG_QUERY  = gql`
-    query {
+export const GET_SYSTEM_CONFIG = graphql(`
+    query GetSystemConfig {
         configs {
             list {
-                id
-                name
-                value
-                type
+                ...ConfigFields
             }
         }
     }
-`;
+`);
 
-export const installSystem = async (client: ApolloClient): Promise<boolean> => {
-    const INSTALL_SYSTEM = gql`
-        mutation {
-            installWizard {
-                installSystem {
-                    status
-                    message
-                }
+const INSTALL_SYSTEM = graphql(`
+    mutation InstallSystem {
+        installWizard {
+            installSystem {
+                status
+                message
             }
         }
-    `;
+    }
+`);
+
+export const installSystem = async (client: ApolloClient): Promise<boolean> => {
     try {
-        const { data } = await client.mutate<InstallSystemResponse>({
+        const { data } = await client.mutate({
             mutation: INSTALL_SYSTEM,
         });
 

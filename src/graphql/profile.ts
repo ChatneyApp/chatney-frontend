@@ -1,59 +1,24 @@
-import { gql, type TypedDocumentNode } from '@apollo/client';
+import { graphql } from '@/graphql/generated';
 
-import { User } from '@/types/users';
-
-export type UserProfile = {
-    user: User;
-    roleNames: string[];
-};
-
-export type GetMyProfileResponse = {
-    users: {
-        myProfile: UserProfile;
-    };
-};
-
-export type UpdateMyProfileResponse = {
-    users: {
-        updateMyProfile: User;
-    };
-};
-
-export const GET_MY_PROFILE: TypedDocumentNode<GetMyProfileResponse> = gql`
+export const GET_MY_PROFILE = graphql(`
     query GetMyProfile {
         users {
             myProfile {
                 roleNames
                 user {
-                    id
-                    nickname
-                    fullName
-                    email
-                    avatarUrl
-                    active
-                    verified
-                    banned
-                    muted
+                    ...UserFields
                 }
             }
         }
     }
-`;
+`);
 
-export const UPDATE_MY_PROFILE = gql`
+export const UPDATE_MY_PROFILE = graphql(`
     mutation UpdateMyProfile($profileDto: UpdateMyProfileDtoInput!) {
         users {
             updateMyProfile(profileDto: $profileDto) {
-                id
-                nickname
-                fullName
-                email
-                avatarUrl
-                active
-                verified
-                banned
-                muted
+                ...UserFields
             }
         }
     }
-`;
+`);

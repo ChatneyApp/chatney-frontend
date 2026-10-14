@@ -1,21 +1,10 @@
-import { ChannelTypeId } from '@/types/channelTypes';
-import { UserId } from '@/types/users';
-import { WorkspaceId } from '@/types/workspaces';
+import type { ChannelFieldsFragment, DirectMessageUserFieldsFragment } from '@/graphql/generated/graphql';
 
 export type ChannelId = number;
 
-export type DirectMessageUser = {
-    id: UserId;
-    nickname: string;
-    avatarUrl?: string | null;
-};
+export type DirectMessageUser = DirectMessageUserFieldsFragment;
 
-export type Channel = {
-    id: ChannelId;
-    name: string;
-    channelTypeId: ChannelTypeId;
-    workspaceId: WorkspaceId | null;
-    isDm?: boolean;
+export type Channel = ChannelFieldsFragment & {
     otherUsers?: DirectMessageUser[];
 };
 

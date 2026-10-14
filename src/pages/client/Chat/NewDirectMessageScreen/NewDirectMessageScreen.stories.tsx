@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { MockedProvider } from '@apollo/client/testing/react';
 import { action } from 'storybook/actions';
 import { NewDirectMessageScreen } from './NewDirectMessageScreen';
-import { SEARCH_USERS_BY_NICKNAME_QUERY } from '@/graphql/users';
+import { SEARCH_USERS_BY_NICKNAME } from '@/graphql/users';
 import { mockDirectMessageUser } from '@/test-utils/fixtures/channels';
 
 const mocks = [
     {
-        request: { query: SEARCH_USERS_BY_NICKNAME_QUERY, variables: { prefix: 'gra' } },
+        request: { query: SEARCH_USERS_BY_NICKNAME, variables: { prefix: 'gra' } },
         result: {
             data: {
                 users: {

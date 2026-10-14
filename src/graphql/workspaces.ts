@@ -1,28 +1,31 @@
-import { ApolloClient, gql } from '@apollo/client';
+import { ApolloClient } from '@apollo/client';
 
+import { graphql } from '@/graphql/generated';
 import { Workspace } from '@/types/workspaces';
 
-const AddWorkspaceMutation = gql`
+export const WorkspaceFieldsFragment = graphql(`
+    fragment WorkspaceFields on Workspace {
+        id
+        name
+        secObjId
+        createdAt
+        updatedAt
+    }
+`);
+
+export const AddWorkspaceMutation = graphql(`
     mutation AddWorkspace($name: String!) {
         workspaces {
             addWorkspace(workspaceDto: { name: $name }) {
-                id
-                name
-                createdAt
-                updatedAt
+                ...WorkspaceFields
             }
         }
     }
-`;
-type AddWorkspaceMutationResponse = {
-    workspaces?: {
-        addWorkspace?: Workspace;
-    }
-}
+`);
 
 export const addWorkspace = async (client: ApolloClient, name: string): Promise<Workspace> => {
     try {
-        const { data } = await client.mutate<AddWorkspaceMutationResponse>({
+        const { data } = await client.mutate({
             mutation: AddWorkspaceMutation,
             variables: { name },
         });
@@ -39,41 +42,37 @@ export const addWorkspace = async (client: ApolloClient, name: string): Promise<
     }
 };
 
-export const UPDATE_WORKSPACE = gql`
-    mutation UpdateWorkspace($workspaceId: Int!, $input: MutateWorkspaceDto!) {
-        updateWorkspace(workspaceId: $workspaceId, input: $input) {
-            Id
-            Name
-        }
-    }
-`;
-
-export const DELETE_WORKSPACE = gql`
-    mutation DeleteWorkspace($workspaceId: Int!) {
-        deleteWorkspace(workspaceId: $workspaceId)
-    }
-`;
-
-type GetWorkspacesListResponse = {
-    workspaces?: {
-        list?: Workspace[];
-    }
-}
-export const getWorkspacesQuery = async (client: ApolloClient) => {
-    const GET_WORKSPACES_QUERY = gql`
-    {
+export const UPDATE_WORKSPACE = graphql(`
+    mutation UpdateWorkspace($workspace: WorkspaceInput!) {
         workspaces {
-            list {
-                id
-                name
-                createdAt
-                updatedAt
+            updateWorkspace(workspace: $workspace) {
+                ...WorkspaceFields
             }
         }
     }
-`;
-    const { data } = await client.query<GetWorkspacesListResponse>({
-        query: GET_WORKSPACES_QUERY,
+`);
+
+export const DELETE_WORKSPACE = graphql(`
+    mutation DeleteWorkspace($id: Int!) {
+        workspaces {
+            deleteWorkspace(id: $id)
+        }
+    }
+`);
+
+const GET_WORKSPACES = graphql(`
+    query GetWorkspaces {
+        workspaces {
+            list {
+                ...WorkspaceFields
+            }
+        }
+    }
+`);
+
+export const getWorkspacesQuery = async (client: ApolloClient) => {
+    const { data } = await client.query({
+        query: GET_WORKSPACES,
     });
 
     return data?.workspaces?.list ?? [];

@@ -1,50 +1,48 @@
-import { gql, type TypedDocumentNode } from '@apollo/client';
+import { graphql } from '@/graphql/generated';
 
-import { Role } from '@/types/roles';
-
-export type GetRolesListResponse = {
-    roles: {
-        list: Role[];
+export const RoleFieldsFragment = graphql(`
+    fragment RoleFields on Role {
+        id
+        name
+        createdAt
+        updatedAt
     }
-}
+`);
 
-export const CREATE_ROLE = gql`
-    mutation ($roleDto: RoleCreateDtoInput!) {
+export const CREATE_ROLE = graphql(`
+    mutation CreateRole($roleDto: RoleCreateDtoInput!) {
         roles {
-            addRole (roleDto: $roleDto) {
-                id
-                name
+            addRole(roleDto: $roleDto) {
+                ...RoleFields
             }
         }
     }
-`;
+`);
 
-export const EDIT_ROLE = gql`
-    mutation ($roleDto: RoleUpdateDtoInput!) {
+export const EDIT_ROLE = graphql(`
+    mutation UpdateRole($roleDto: RoleUpdateDtoInput!) {
         roles {
-            updateRole (roleDto: $roleDto) {
-                id
-                name
+            updateRole(roleDto: $roleDto) {
+                ...RoleFields
             }
         }
     }
-`;
+`);
 
-export const DELETE_ROLE = gql`
-    mutation($id: Int!) {
+export const DELETE_ROLE = graphql(`
+    mutation DeleteRole($id: Int!) {
         roles {
             deleteRole(id: $id)
         }
     }
-`;
+`);
 
-export const GET_ROLES_QUERY: TypedDocumentNode<GetRolesListResponse> = gql`
-    {
+export const GET_ROLES = graphql(`
+    query GetRoles {
         roles {
             list {
-                id
-                name
+                ...RoleFields
             }
         }
     }
-`;
+`);

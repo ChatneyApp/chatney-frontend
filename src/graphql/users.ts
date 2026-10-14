@@ -1,35 +1,37 @@
+import { ApolloClient } from '@apollo/client';
+
+import { graphql } from '@/graphql/generated';
 import { User, UserId } from '@/types/users';
 import { DirectMessageUser } from '@/types/channels';
-import { ApolloClient, gql } from '@apollo/client';
 
-type GetUserByIdResponse = {
-    users?: {
-        userById?: User;
+export const UserFieldsFragment = graphql(`
+    fragment UserFields on User {
+        id
+        nickname
+        fullName
+        active
+        verified
+        banned
+        muted
+        email
+        avatarUrl
     }
-}
+`);
 
-const GET_USER_BY_ID_QUERY = gql`
+const GET_USER_BY_ID = graphql(`
     query GetUserById($id: UUID!) {
         users {
             userById(id: $id) {
-                id
-                nickname
-                fullName
-                active
-                verified
-                banned
-                muted
-                email
-                avatarUrl
+                ...UserFields
             }
         }
     }
-`;
+`);
 
 export const getUserById = async (client: ApolloClient, id: UserId): Promise<User> => {
     try {
-        const { data } = await client.query<GetUserByIdResponse>({
-            query: GET_USER_BY_ID_QUERY,
+        const { data } = await client.query({
+            query: GET_USER_BY_ID,
             variables: { id },
             fetchPolicy: 'no-cache', // Optional: Prevents caching if you want always fresh data
         });
@@ -46,31 +48,23 @@ export const getUserById = async (client: ApolloClient, id: UserId): Promise<Use
     }
 };
 
-export const SEARCH_USERS_BY_NICKNAME_QUERY = gql`
+export const SEARCH_USERS_BY_NICKNAME = graphql(`
     query SearchUsersByNickname($prefix: String!) {
         users {
             searchByNickname(prefix: $prefix) {
-                id
-                nickname
-                avatarUrl
+                ...DirectMessageUserFields
             }
         }
     }
-`;
-
-type SearchUsersByNicknameResponse = {
-    users?: {
-        searchByNickname?: DirectMessageUser[];
-    }
-};
+`);
 
 export const searchUsersByNickname = async (
     client: ApolloClient,
     prefix: string,
 ): Promise<DirectMessageUser[]> => {
     try {
-        const { data } = await client.query<SearchUsersByNicknameResponse>({
-            query: SEARCH_USERS_BY_NICKNAME_QUERY,
+        const { data } = await client.query({
+            query: SEARCH_USERS_BY_NICKNAME,
             variables: { prefix },
             fetchPolicy: 'no-cache',
         });

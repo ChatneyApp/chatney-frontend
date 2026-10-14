@@ -2,7 +2,7 @@ import { createContext, PropsWithChildren, startTransition, useContext, useEffec
 import { useSuspenseQuery } from '@apollo/client/react';
 
 import { Role } from '@/types/roles';
-import { GET_ROLES_QUERY } from '@/graphql/roles';
+import { GET_ROLES } from '@/graphql/roles';
 import { useWebsocket } from '@/contexts/WebSocketProvider';
 import { WebSocketEventType } from '@/communication/WebSocketEventEmitter';
 
@@ -14,7 +14,7 @@ interface RolesListContextValue {
 const RolesListContext = createContext<RolesListContextValue | null>(null);
 
 export function RolesListProvider({ children }: PropsWithChildren) {
-    const { data, refetch } = useSuspenseQuery(GET_ROLES_QUERY, {
+    const { data, refetch } = useSuspenseQuery(GET_ROLES, {
         fetchPolicy: 'no-cache',
     });
     const { eventEmitter } = useWebsocket();

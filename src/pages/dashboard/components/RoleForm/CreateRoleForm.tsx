@@ -73,7 +73,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
         if (role) {
             await editRole({
                 variables: {
-                    role: {
+                    roleDto: {
                         id: role.id,
                         name: data.name,
                     }

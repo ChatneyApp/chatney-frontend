@@ -2,7 +2,7 @@ import { createContext, PropsWithChildren, startTransition, useContext, useEffec
 import { useSuspenseQuery } from '@apollo/client/react';
 
 import { ChannelType } from '@/types/channelTypes';
-import { GET_CHANNEL_TYPES_QUERY } from '@/graphql/channelTypes';
+import { GET_CHANNEL_TYPES } from '@/graphql/channelTypes';
 import { useWebsocket } from '@/contexts/WebSocketProvider';
 import { WebSocketEventType } from '@/communication/WebSocketEventEmitter';
 
@@ -14,7 +14,7 @@ interface ChannelTypesListContextValue {
 export const ChannelTypesListContext = createContext<ChannelTypesListContextValue | null>(null);
 
 export function ChannelTypesListProvider({ children }: PropsWithChildren) {
-    const { data, refetch } = useSuspenseQuery(GET_CHANNEL_TYPES_QUERY, {
+    const { data, refetch } = useSuspenseQuery(GET_CHANNEL_TYPES, {
         fetchPolicy: 'cache-and-network',
     });
     const { eventEmitter } = useWebsocket();

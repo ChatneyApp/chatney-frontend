@@ -1,30 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { gql } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing/react';
+import { AddWorkspaceMutation } from '@/graphql/workspaces';
 import { withWorkspacesList } from '@/test-utils/decorators/withWorkspacesList';
 import { withUser } from '@/test-utils/decorators/withUser';
 import { WorkspacesList } from './WorkspacesList';
 
-const ADD_WORKSPACE_MUTATION = gql`
-    mutation AddWorkspace($name: String!) {
-        workspaces {
-            addWorkspace(workspaceDto: { name: $name }) {
-                id
-                name
-                createdAt
-                updatedAt
-            }
-        }
-    }
-`;
-
 const mocks = [
     {
-        request: { query: ADD_WORKSPACE_MUTATION, variables: { name: 'New Team' } },
+        request: { query: AddWorkspaceMutation, variables: { name: 'New Team' } },
         result: {
             data: {
                 workspaces: {
-                    addWorkspace: { id: 3, name: 'New Team', createdAt: '2026-01-15T10:00:00Z', updatedAt: '2026-01-15T10:00:00Z' },
+                    addWorkspace: { id: 3, name: 'New Team', secObjId: 3, createdAt: '2026-01-15T10:00:00Z', updatedAt: '2026-01-15T10:00:00Z' },
                 },
             },
         },

@@ -1,10 +1,4 @@
-import { ChannelId } from '@/types/channels';
+import type { ChannelGroupFieldsFragment } from '@/graphql/generated/graphql';
 
 export type ChannelGroupId = number;
-export type ChannelGroup = {
-    id: ChannelGroupId;
-    name: string;
-    channelIds: ChannelId[];
-    workspaceId: string;
-    order: number;
-}
+export type ChannelGroup = ChannelGroupFieldsFragment;

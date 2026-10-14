@@ -1,3 +1,5 @@
+import type { ConfigFieldsFragment } from '@/graphql/generated/graphql';
+
 export type SystemConfigId = number;
 export enum SystemConfigType {
     Int = 'int',
@@ -5,9 +7,4 @@ export enum SystemConfigType {
     String = 'string',
     StringArray = 'string[]',
 }
-export type SystemConfigValue = {
-    id: SystemConfigId;
-    name: string;
-    value: string;
-    type: SystemConfigType;
-}
+export type SystemConfigValue = ConfigFieldsFragment;

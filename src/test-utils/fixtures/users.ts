@@ -13,6 +13,7 @@ export const mockUser1: User = {
     banned: false,
     muted: false,
     email: 'ada@chatney.dev',
+    avatarUrl: null,
 };
 
 export const mockUser2: User = {
@@ -24,6 +25,7 @@ export const mockUser2: User = {
     banned: false,
     muted: false,
     email: 'grace@chatney.dev',
+    avatarUrl: null,
 };
 
 export const mockMessageUser1: MessageUser = {

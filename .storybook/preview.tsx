@@ -1,9 +1,11 @@
-import type { Preview } from '@storybook/react-vite'
-import { initialize, mswLoader } from 'msw-storybook-addon'
-import '../src/index.css'
-import { attachmentUrlHandlers } from '../src/test-utils/mocks/attachmentUrlHandlers'
+import type { Preview } from '@storybook/react-vite';
+import { initialize, mswLoader } from 'msw-storybook-addon';
 
-initialize({ onUnhandledRequest: 'bypass' })
+import { attachmentUrlHandlers } from '../src/test-utils/mocks/attachmentUrlHandlers';
+
+import '../src/index.css';
+
+initialize({ onUnhandledRequest: 'bypass' });
 
 const preview: Preview = {
   parameters: {

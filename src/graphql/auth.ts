@@ -1,24 +1,9 @@
-import { ApolloClient, gql } from '@apollo/client';
-import { UserAuthorization, UserId } from '@/types/users';
+import { ApolloClient } from '@apollo/client';
 
-type LoginUserResponse = {
-    users?: {
-        login?: UserAuthorization;
-    }
-}
+import { graphql } from '@/graphql/generated';
+import { UserId } from '@/types/users';
 
-type RegisterUserResponse = {
-    users?: {
-        register?: {
-            id?: string;
-            nickname?: string;
-            fullName?: string | null;
-            email?: string;
-        }
-    }
-}
-
-const LOGIN_USER_MUTATION = gql`
+const LOGIN_USER = graphql(`
     mutation Login($login: String!, $password: String!) {
         users {
             login(login: $login, password: $password) {
@@ -27,9 +12,9 @@ const LOGIN_USER_MUTATION = gql`
             }
         }
     }
-`;
+`);
 
-const REGISTER_USER_MUTATION = gql`
+const REGISTER_USER = graphql(`
     mutation RegisterUser($input: UserRegisterDtoInput!) {
         users {
             register(userDto: $input) {
@@ -40,7 +25,7 @@ const REGISTER_USER_MUTATION = gql`
             }
         }
     }
-`;
+`);
 
 export const loginUser = async ({ client, login, password }: {
     client: ApolloClient,
@@ -48,8 +33,8 @@ export const loginUser = async ({ client, login, password }: {
     password: string,
 }): Promise<{ token: string, id: UserId }> => {
     try {
-        const { data } = await client.mutate<LoginUserResponse>({
-            mutation: LOGIN_USER_MUTATION,
+        const { data } = await client.mutate({
+            mutation: LOGIN_USER,
             variables: { login, password },
         });
 
@@ -78,8 +63,8 @@ export const registerUser = async ({ client, email,
     password: string,
 }): Promise<void> => {
     try {
-        const { data } = await client.mutate<RegisterUserResponse>({
-            mutation: REGISTER_USER_MUTATION,
+        const { data } = await client.mutate({
+            mutation: REGISTER_USER,
             variables: {
                 input: {
                     email,

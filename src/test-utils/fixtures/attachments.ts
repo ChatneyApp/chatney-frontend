@@ -8,7 +8,7 @@ import { mockUserId1 } from './users';
  * that host in Storybook and serves real sample bytes based on the file extension, so previews
  * render normally despite the fake path.
  */
-const now = new Date('2026-01-15T10:00:00Z');
+const now = '2026-01-15T10:00:00Z';
 
 export const mockImageAttachment: Attachment = {
     id: 1,

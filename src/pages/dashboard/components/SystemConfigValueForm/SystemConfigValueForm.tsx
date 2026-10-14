@@ -5,7 +5,7 @@ import { Dialog } from 'radix-ui';
 
 import styles from './SystemConfigValueForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
-import { UDPATE_SYSTEM_CONFIG_VALUE } from '@/graphql/systemConfig';
+import { UPDATE_SYSTEM_CONFIG_VALUE } from '@/graphql/systemConfig';
 import { Button } from '@/components/Button';
 import { SystemConfigValue } from '@/types/systemConfig';
 import { useSystemConfig } from '@/contexts/SystemConfigProvider';
@@ -33,7 +33,7 @@ export const SystemConfigValueForm = ({ cta, title, submitText, systemConfigValu
         }
     });
 
-    const [updateValue, { loading }] = useMutation(UDPATE_SYSTEM_CONFIG_VALUE, {
+    const [updateValue, { loading }] = useMutation(UPDATE_SYSTEM_CONFIG_VALUE, {
         onCompleted: () => {
             setOpen(false);
             reset();

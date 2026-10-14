@@ -1,59 +1,51 @@
-import { gql, type TypedDocumentNode } from '@apollo/client';
+import { graphql } from '@/graphql/generated';
 
-import { ChannelGroup } from '@/types/channelGroups';
-
-export type GetChannelGroupsListResponse = {
-    channels: {
-        workspaceChannelGroupList: ChannelGroup[];
+export const ChannelGroupFieldsFragment = graphql(`
+    fragment ChannelGroupFields on ChannelGroup {
+        id
+        name
+        workspaceId
+        channelIds
+        order
+        createdAt
+        updatedAt
     }
-}
+`);
 
-export const CREATE_CHANNEL_GROUP = gql`
-    mutation($channelGroupDto: ChannelGroupDtoInput!) {
+export const CREATE_CHANNEL_GROUP = graphql(`
+    mutation CreateChannelGroup($channelGroupDto: ChannelGroupDtoInput!) {
         channels {
             addChannelGroup(channelGroupDto: $channelGroupDto) {
-                id
-                name
-                workspaceId
-                channelIds
-                order
+                ...ChannelGroupFields
             }
         }
     }
-`;
+`);
 
-export const UPDATE_CHANNEL_GROUP = gql`
-    mutation ($channelGroup: ChannelGroupInput!) {
+export const UPDATE_CHANNEL_GROUP = graphql(`
+    mutation UpdateChannelGroup($channelGroup: ChannelGroupInput!) {
         channels {
             updateChannelGroup(channelGroup: $channelGroup) {
-                id
-                name
-                workspaceId
-                channelIds
-                order
+                ...ChannelGroupFields
             }
         }
     }
-`;
+`);
 
-export const DELETE_CHANNEL_GROUP = gql`
-    mutation ($id: Int!) {
+export const DELETE_CHANNEL_GROUP = graphql(`
+    mutation DeleteChannelGroup($id: Int!) {
         channels {
             deleteChannelGroup(id: $id)
         }
     }
-`;
+`);
 
-export const GET_WORKSPACE_CHANNEL_GROUPS_QUERY: TypedDocumentNode<GetChannelGroupsListResponse> = gql`
-    query ($workspaceId: Int!) {
+export const GET_WORKSPACE_CHANNEL_GROUPS = graphql(`
+    query GetWorkspaceChannelGroups($workspaceId: Int!) {
         channels {
             workspaceChannelGroupList(workspaceId: $workspaceId) {
-                id
-                name
-                workspaceId
-                channelIds
-                order
+                ...ChannelGroupFields
             }
         }
     }
-`;
+`);

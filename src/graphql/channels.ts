@@ -1,45 +1,85 @@
-import { ApolloClient, gql, type TypedDocumentNode } from '@apollo/client';
+import { ApolloCache, ApolloClient } from '@apollo/client';
 
-import { Channel, DirectMessageUser } from '@/types/channels';
+import { graphql } from '@/graphql/generated';
+import type { DirectMessageFieldsFragment } from '@/graphql/generated/graphql';
+import { Channel, ChannelId } from '@/types/channels';
 import { WorkspaceId } from '@/types/workspaces';
 import { ChannelTypeId } from '@/types/channelTypes';
 
-export const GetWorkspaceChannelsQuery = gql`
+export const ChannelFieldsFragment = graphql(`
+    fragment ChannelFields on Channel {
+        id
+        name
+        channelTypeId
+        workspaceId
+        isDm
+        secObjId
+        createdAt
+        updatedAt
+    }
+`);
+
+export const GET_WORKSPACE_CHANNELS = graphql(`
     query GetWorkspaceChannels($workspaceId: Int!) {
         channels {
             workspaceChannelList(workspaceId: $workspaceId) {
-                id
-                name
-                channelTypeId
-                workspaceId
-                isDm
+                ...ChannelFields
             }
         }
     }
-`;
-export type GetChannelsListResponse = {
-    channels: {
-        workspaceChannelList: Channel[];
-    }
-}
-export type GetChannelResponse = {
-    GetChannel: Channel;
-}
+`);
 
-export const CREATE_CHANNEL = gql`
-    mutation($channelDto: ChannelDtoInput!) {
+/** Appends a channel to its workspace's cached list. Does nothing if that list was never loaded or already has the channel. */
+export const addChannelToCache = (cache: ApolloCache, channel: Channel) => {
+    if (channel.workspaceId === null) {
+        return;
+    }
+
+    cache.updateQuery(
+        { query: GET_WORKSPACE_CHANNELS, variables: { workspaceId: channel.workspaceId } },
+        (data) => {
+            if (!data || data.channels.workspaceChannelList.some(listed => listed.id === channel.id)) {
+                return;
+            }
+
+            return {
+                channels: {
+                    ...data.channels,
+                    workspaceChannelList: [...data.channels.workspaceChannelList, channel],
+                },
+            };
+        },
+    );
+};
+
+/** Updates a cached channel in place. Does nothing if the channel is not in the cache. */
+export const patchChannelInCache = (cache: ApolloCache, { id, name, channelTypeId }: Pick<Channel, 'id' | 'name' | 'channelTypeId'>) => {
+    cache.modify<Channel>({
+        id: cache.identify({ __typename: 'Channel', id }),
+        fields: {
+            name: () => name,
+            channelTypeId: () => channelTypeId,
+        },
+    });
+};
+
+/** Drops a channel from the cache; lists that referenced it stop returning it. */
+export const removeChannelFromCache = (cache: ApolloCache, id: ChannelId) => {
+    cache.evict({ id: cache.identify({ __typename: 'Channel', id }) });
+    cache.gc();
+};
+
+export const CREATE_CHANNEL = graphql(`
+    mutation CreateChannel($channelDto: ChannelDtoInput!) {
         channels {
             addChannel(channelDto: $channelDto) {
-                id
-                name
-                channelTypeId
-                workspaceId
+                ...ChannelFields
             }
         }
     }
-`;
+`);
 
-const AddChannelMutation = gql`
+export const AddChannelMutation = graphql(`
     mutation AddChannel(
         $name: String!
         $channelTypeId: Int!
@@ -51,26 +91,22 @@ const AddChannelMutation = gql`
                 channelTypeId: $channelTypeId
                 workspaceId: $workspaceId
             }) {
-                id
-                name
-                channelTypeId
-                workspaceId
-                createdAt
-                updatedAt
+                ...ChannelFields
             }
         }
     }
-`;
-type AddChannelResponse = {
-    channels?: {
-        addChannel?: Channel;
-    }
-}
+`);
+
 export const addChannel = async (client: ApolloClient, name: string, channelTypeId: ChannelTypeId, workspaceId: WorkspaceId): Promise<Channel> => {
     try {
-        const { data } = await client.mutate<AddChannelResponse>({
+        const { data } = await client.mutate({
             mutation: AddChannelMutation,
             variables: { name, channelTypeId, workspaceId },
+            update: (cache, { data }) => {
+                if (data) {
+                    addChannelToCache(cache, data.channels.addChannel);
+                }
+            },
         });
 
         const channel = data?.channels?.addChannel;
@@ -85,83 +121,44 @@ export const addChannel = async (client: ApolloClient, name: string, channelType
     }
 };
 
-export const GET_CHANNEL: TypedDocumentNode<GetChannelResponse> = gql`
-    query ($channelId: Int!) {
-        GetChannel(channelId: $channelId) {
-            Id
-            Name
-            ChannelTypeId
-            WorkspaceId
-        }
-    }
-`;
-
-export const UPDATE_CHANNEL = gql`
-    mutation ($channel: ChannelInput!) {
+export const UPDATE_CHANNEL = graphql(`
+    mutation UpdateChannel($channel: ChannelInput!) {
         channels {
             updateChannel(channel: $channel) {
-                id
-                name
-                channelTypeId
-                workspaceId
+                ...ChannelFields
             }
         }
     }
-`;
+`);
 
-export const DELETE_CHANNEL = gql`
-    mutation ($id: Int!) {
+export const DELETE_CHANNEL = graphql(`
+    mutation DeleteChannel($id: Int!) {
         channels {
             deleteChannel(id: $id)
         }
     }
-`;
+`);
 
-export const getWorkspaceChannels = async ({
-    client,
-    workspaceId,
-}: {
-    client: ApolloClient,
-    workspaceId: WorkspaceId,
-}): Promise<Array<Channel>> => {
-    try {
-        const { data } = await client.query<GetChannelsListResponse>({
-            query: GetWorkspaceChannelsQuery,
-            variables: { workspaceId },
-            fetchPolicy: 'no-cache', // Optional: Ensures fresh data
-        });
-
-        const channels = data?.channels?.workspaceChannelList;
-
-        if (!Array.isArray(channels)) {
-            throw new Error('Invalid workspaceChannelList response');
-        }
-
-        return channels;
-    } catch (error) {
-        throw new Error(`Fetching channels failed: ${(error as Error).message}`);
+export const DirectMessageUserFieldsFragment = graphql(`
+    fragment DirectMessageUserFields on DirectMessageUser {
+        id
+        nickname
+        avatarUrl
     }
-};
+`);
 
-const DirectMessageFields = gql`
+export const DirectMessageFields = graphql(`
     fragment DirectMessageFields on DirectMessage {
         channel {
-            id
-            name
-            channelTypeId
-            workspaceId
-            isDm
+            ...ChannelFields
         }
         otherUsers {
-            id
-            nickname
-            avatarUrl
+            ...DirectMessageUserFields
         }
     }
-`;
+`);
 
-const GetDirectMessagesQuery = gql`
-    ${DirectMessageFields}
+const GetDirectMessagesQuery = graphql(`
     query GetDirectMessages {
         channels {
             directMessageList {
@@ -169,27 +166,16 @@ const GetDirectMessagesQuery = gql`
             }
         }
     }
-`;
+`);
 
-type DirectMessageResponse = {
-    channel: Channel;
-    otherUsers: DirectMessageUser[];
-};
-
-type GetDirectMessagesResponse = {
-    channels?: {
-        directMessageList?: DirectMessageResponse[];
-    }
-};
-
-const toChannel = (directMessage: DirectMessageResponse): Channel => ({
+const toChannel = (directMessage: DirectMessageFieldsFragment): Channel => ({
     ...directMessage.channel,
     otherUsers: directMessage.otherUsers,
 });
 
 export const getDirectMessages = async (client: ApolloClient): Promise<Channel[]> => {
     try {
-        const { data } = await client.query<GetDirectMessagesResponse>({
+        const { data } = await client.query({
             query: GetDirectMessagesQuery,
             fetchPolicy: 'no-cache',
         });
@@ -205,8 +191,7 @@ export const getDirectMessages = async (client: ApolloClient): Promise<Channel[]
     }
 };
 
-const OpenDirectMessageMutation = gql`
-    ${DirectMessageFields}
+const OpenDirectMessageMutation = graphql(`
     mutation OpenDirectMessage($otherUserIds: [UUID!]!) {
         channels {
             openDirectMessage(otherUserIds: $otherUserIds) {
@@ -214,17 +199,11 @@ const OpenDirectMessageMutation = gql`
             }
         }
     }
-`;
-
-type OpenDirectMessageResponse = {
-    channels?: {
-        openDirectMessage?: DirectMessageResponse;
-    }
-};
+`);
 
 export const openDirectMessage = async (client: ApolloClient, otherUserIds: string[]): Promise<Channel> => {
     try {
-        const { data } = await client.mutate<OpenDirectMessageResponse>({
+        const { data } = await client.mutate({
             mutation: OpenDirectMessageMutation,
             variables: { otherUserIds },
         });

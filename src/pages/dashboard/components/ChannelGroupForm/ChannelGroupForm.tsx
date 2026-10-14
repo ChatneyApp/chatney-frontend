@@ -87,6 +87,8 @@ export const ChannelGroupForm = ({ cta, title, submitText, channelGroup }: Props
                         channelIds: data.channelIds,
                         order: data.order,
                         workspaceId,
+                        createdAt: channelGroup.createdAt,
+                        updatedAt: channelGroup.updatedAt,
                     }
                 }
             });

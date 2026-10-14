@@ -1,29 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { gql } from '@apollo/client';
 import { MockedProvider } from '@apollo/client/testing/react';
+import { AddChannelMutation } from '@/graphql/channels';
 import { action } from 'storybook/actions';
 import { CreateChannelModal } from './CreateChannelModal';
 import { withWorkspacesList } from '@/test-utils/decorators/withWorkspacesList';
 import { withChannelTypesList } from '@/test-utils/decorators/withChannelTypesList';
 
-const ADD_CHANNEL_MUTATION = gql`
-    mutation AddChannel($name: String!, $channelTypeId: Int!, $workspaceId: Int!) {
-        channels {
-            addChannel(channelDto: { name: $name, channelTypeId: $channelTypeId, workspaceId: $workspaceId }) {
-                id
-                name
-                channelTypeId
-                workspaceId
-                createdAt
-                updatedAt
-            }
-        }
-    }
-`;
-
 const mocks = [
     {
-        request: { query: ADD_CHANNEL_MUTATION, variables: { name: 'announcements', channelTypeId: 1, workspaceId: 1 } },
+        request: { query: AddChannelMutation, variables: { name: 'announcements', channelTypeId: 1, workspaceId: 1 } },
         result: {
             data: {
                 channels: {
@@ -32,6 +17,8 @@ const mocks = [
                         name: 'announcements',
                         channelTypeId: 1,
                         workspaceId: 1,
+                        isDm: false,
+                        secObjId: 3,
                         createdAt: '2026-01-15T10:00:00Z',
                         updatedAt: '2026-01-15T10:00:00Z',
                     },

@@ -17,7 +17,6 @@ type Story = StoryObj<typeof ChannelList>;
 const sharedArgs = {
     setActiveChannel: action('setActiveChannel'),
     onComposeDirectMessage: action('onComposeDirectMessage'),
-    refetchChannels: action('refetchChannels'),
     isComposingDirectMessage: false,
 };
 

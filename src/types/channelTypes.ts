@@ -1,9 +1,4 @@
-import { RoleId } from '@/types/roles';
+import type { ChannelTypeFieldsFragment } from '@/graphql/generated/graphql';
 
 export type ChannelTypeId = number;
-export type ChannelType = {
-    id: ChannelTypeId;
-    name: string;
-    key: string;
-    baseRoleId: RoleId;
-} 
+export type ChannelType = ChannelTypeFieldsFragment;

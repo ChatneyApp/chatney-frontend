@@ -1,54 +1,50 @@
-import { gql, type TypedDocumentNode } from '@apollo/client';
+import { graphql } from '@/graphql/generated';
 
-import { ChannelType } from '@/types/channelTypes';
-
-export type GetChannelTypesListResponse = {
-    channels: {
-        channelTypeList: ChannelType[];
+export const ChannelTypeFieldsFragment = graphql(`
+    fragment ChannelTypeFields on ChannelType {
+        id
+        name
+        key
+        secObjId
+        createdAt
+        updatedAt
     }
-}
+`);
 
-export const CREATE_CHANNEL_TYPE = gql`
-    mutation ($channelTypeDto: ChannelTypeDtoInput!) {
+export const CREATE_CHANNEL_TYPE = graphql(`
+    mutation CreateChannelType($channelTypeDto: ChannelTypeDtoInput!) {
         channels {
             addChannelType(channelTypeDto: $channelTypeDto) {
-                id
-                name
-                key
+                ...ChannelTypeFields
             }
         }
     }
-`;
+`);
 
-export const EDIT_CHANNEL_TYPE = gql`
-    mutation ($channelType: ChannelTypeInput!) {
+export const EDIT_CHANNEL_TYPE = graphql(`
+    mutation UpdateChannelType($channelType: ChannelTypeInput!) {
         channels {
             updateChannelType(channelType: $channelType) {
-                id
-                name
-                key
+                ...ChannelTypeFields
             }
         }
     }
-`;
+`);
 
-export const DELETE_CHANNEL_TYPE = gql`
-    mutation($id: Int!) {
+export const DELETE_CHANNEL_TYPE = graphql(`
+    mutation DeleteChannelType($id: Int!) {
         channels {
             deleteChannelType(id: $id)
         }
     }
-`;
+`);
 
-export const GET_CHANNEL_TYPES_QUERY: TypedDocumentNode<GetChannelTypesListResponse> = gql`
-    {
+export const GET_CHANNEL_TYPES = graphql(`
+    query GetChannelTypes {
         channels {
             channelTypeList {
-                id
-                name
-                key
+                ...ChannelTypeFields
             }
         }
     }
-
-`; 
+`);

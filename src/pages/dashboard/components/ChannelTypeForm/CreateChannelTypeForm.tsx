@@ -9,13 +9,10 @@ import { CREATE_CHANNEL_TYPE, EDIT_CHANNEL_TYPE } from '@/graphql/channelTypes';
 import { Button } from '@/components/Button';
 import { ChannelType } from '@/types/channelTypes';
 import { useChannelTypesList } from '@/contexts/ChannelTypesListContext';
-import { useRolesList } from '@/contexts/RolesListContext';
-import { RoleId } from '@/types/roles';
 
 type FormInputs = {
     label: string;
     key: string;
-    baseRoleId: RoleId;
 };
 
 type Props = {
@@ -30,13 +27,11 @@ export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: P
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const { refetch } = useChannelTypesList();
-    const { roles } = useRolesList();
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
         defaultValues: {
             label: channelType?.name ?? '',
             key: channelType?.key ?? '',
-            baseRoleId: channelType?.baseRoleId ?? 0,
         }
     });
 
@@ -79,9 +74,11 @@ export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: P
                 variables: {
                     channelType: {
                         id: channelType.id,
-                        label: data.label,
+                        name: data.label,
                         key: data.key,
-                        baseRoleId: data.baseRoleId
+                        secObjId: channelType.secObjId,
+                        createdAt: channelType.createdAt,
+                        updatedAt: channelType.updatedAt,
                     },
                 }
             });
@@ -89,9 +86,8 @@ export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: P
             await createChannelType({
                 variables: {
                     channelTypeDto: {
-                        label: data.label,
+                        name: data.label,
                         key: data.key,
-                        baseRoleId: data.baseRoleId
                     }
                 }
             });
@@ -133,23 +129,6 @@ export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: P
                                 className={styles.input}
                             />
                             {errors.key && <span className={styles.errorText}>{errors.key.message}</span>}
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="baseRoleId">Base Role</label>
-                            <select
-                                id="baseRoleId"
-                                {...register('baseRoleId', { required: 'Base Role is required' })}
-                                className={styles.input}
-                            >
-                                <option value="">Select a role</option>
-                                {roles.map(role => (
-                                    <option key={role.id} value={role.id}>
-                                        {role.name}
-                                    </option>
-                                ))}
-                            </select>
-                            {errors.baseRoleId && <span className={styles.errorText}>{errors.baseRoleId.message}</span>}
                         </div>
 
                         <div className={dialogStyles.bottomButtons}>

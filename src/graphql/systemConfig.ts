@@ -1,6 +1,7 @@
 import { ApolloClient } from '@apollo/client';
 
 import { graphql } from '@/graphql/generated';
+import type { InstallSystemInput } from '@/graphql/generated/graphql';
 
 export const ConfigFieldsFragment = graphql(`
     fragment ConfigFields on Config {
@@ -32,9 +33,9 @@ export const GET_SYSTEM_CONFIG = graphql(`
 `);
 
 const INSTALL_SYSTEM = graphql(`
-    mutation InstallSystem {
+    mutation InstallSystem($options: InstallSystemInput!) {
         installWizard {
-            installSystem {
+            installSystem(options: $options) {
                 status
                 message
             }
@@ -42,10 +43,14 @@ const INSTALL_SYSTEM = graphql(`
     }
 `);
 
-export const installSystem = async (client: ApolloClient): Promise<boolean> => {
+export const installSystem = async (
+    client: ApolloClient,
+    options: InstallSystemInput,
+): Promise<boolean> => {
     try {
         const { data } = await client.mutate({
             mutation: INSTALL_SYSTEM,
+            variables: { options },
         });
 
         const result = data?.installWizard?.installSystem;

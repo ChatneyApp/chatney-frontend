@@ -781,6 +781,13 @@ type UserMutations {
     "Plain-text password."
     password: String!
   ): UserLoginResponse @cost(weight: "10")
+  """
+  Sends a one-hour password-reset link when the email or nickname exists.
+  Always returns true so callers cannot discover registered accounts.
+  """
+  requestPasswordReset(login: String!): Boolean! @cost(weight: "10")
+  "Sets a new password when the reset code exists, is unexpired, and has not been used."
+  resetPassword(code: UUID!, password: String!): Boolean! @cost(weight: "10")
 }
 
 "The current user together with the names of their roles."

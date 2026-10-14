@@ -6,7 +6,9 @@ import a11y from 'eslint-plugin-jsx-a11y';
 import graphql from '@graphql-eslint/eslint-plugin';
 
 export default [
-    { ignores: ['dist', 'node_modules', 'public', 'src/graphql/generated'] },
+    {
+        ignores: [ 'dist', 'node_modules', 'public', 'src/graphql/generated', 'storybook-static' ]
+    },
     js.configs.recommended,
     ...tseslint.configs.recommended,
     {

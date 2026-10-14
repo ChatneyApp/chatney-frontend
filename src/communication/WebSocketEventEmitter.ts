@@ -47,7 +47,9 @@ export type UserRoleDeletedPayload = {
     channelTypeId: number | null;
     workspaceId: number | null;
 };
-export type ChannelPayload = Channel;
+export type ChannelPayload = Pick<Channel, 'id' | 'name' | 'channelTypeId' | 'workspaceId' | 'isDm'> & {
+    memberUserIds: UserId[];
+};
 export type ChannelDeletedPayload = {
     id: ChannelId;
     workspaceId: WorkspaceId | null;

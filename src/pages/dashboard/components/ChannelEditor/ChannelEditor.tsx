@@ -2,8 +2,7 @@ import { useMutation } from '@apollo/client/react';
 
 import { Channel } from '@/types/channels';
 import { Button } from '@/components/Button';
-import { DELETE_CHANNEL } from '@/graphql/channels';
-import { useWorkspaceChannelsList } from '@/contexts/OldWorkspaceChannelsListContext';
+import { DELETE_CHANNEL, removeChannelFromCache } from '@/graphql/channels';
 import styles from './ChannelEditor.module.css';
 import { useChannelTypesList } from '@/contexts/ChannelTypesListContext';
 import { CreateChannelForm } from '@/pages/dashboard/components/ChannelForm/CreateChannelForm';
@@ -13,12 +12,13 @@ type Props = {
 }
 
 export const ChannelEditor = ({ channel }: Props) => {
-    const { refetch } = useWorkspaceChannelsList();
     const { channelTypes } = useChannelTypesList();
 
     const [deleteChannel] = useMutation(DELETE_CHANNEL, {
-        onCompleted: () => {
-            refetch();
+        update: (cache, { data }) => {
+            if (data?.channels.deleteChannel) {
+                removeChannelFromCache(cache, channel.id);
+            }
         },
         onError: () => {}
     });

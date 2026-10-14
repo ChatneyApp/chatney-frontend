@@ -2,7 +2,7 @@ import { useState } from 'react';
 import clsx from 'clsx';
 
 import { useWorkspacesList } from '@/contexts/WorkspacesListContext';
-import { Channel, ChannelId, channelDisplayName } from '@/types/channels';
+import { Channel, channelDisplayName } from '@/types/channels';
 import { CreateChannelModal } from '../CreateChannelModal';
 
 import styles from './ChannelsList.module.css';
@@ -14,7 +14,6 @@ type Props = {
     onComposeDirectMessage(): void;
     channels: Channel[];
     directMessages: Channel[];
-    refetchChannels: (channelId?: ChannelId) => void;
 };
 
 export function ChannelList({
@@ -24,7 +23,6 @@ export function ChannelList({
     onComposeDirectMessage,
     channels,
     directMessages,
-    refetchChannels,
 }: Props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { activeWorkspaceId, workspacesList } = useWorkspacesList();
@@ -32,7 +30,6 @@ export function ChannelList({
 
     const handleChannelCreated = (newChannel: Channel) => {
         setIsModalOpen(false);
-        refetchChannels(newChannel.id);
         setActiveChannel(newChannel);
     };
 

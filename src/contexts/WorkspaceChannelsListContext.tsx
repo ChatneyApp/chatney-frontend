@@ -1,81 +1,76 @@
-import { createContext, PropsWithChildren, startTransition, useCallback, useContext, useEffect, useState } from 'react';
-import { useApolloClient } from '@apollo/client/react';
+import { createContext, PropsWithChildren, useContext, useEffect } from 'react';
+import { skipToken, useApolloClient, useQuery } from '@apollo/client/react';
 
-import { Channel, ChannelId } from '@/types/channels';
+import { Channel } from '@/types/channels';
 import { WorkspacesListContext } from './WorkspacesListContext';
-import { getWorkspaceChannels } from '@/graphql/channels';
+import { GET_WORKSPACE_CHANNELS, patchChannelInCache, removeChannelFromCache } from '@/graphql/channels';
 import { useWebsocket } from '@/contexts/WebSocketProvider';
-import { WebSocketEvent, WebSocketEventType } from '@/communication/WebSocketEventEmitter';
+import { ChannelDeletedPayload, ChannelPayload, WebSocketEvent, WebSocketEventType } from '@/communication/WebSocketEventEmitter';
 
 interface WorkspaceChannelsListContextValue {
     channels: Channel[];
-    activeChannel: Channel;
-    refetch: (channelId?: ChannelId) => void;
-    setActiveChannel: (ch: Channel) => void
 }
 
 export const WorkspaceChannelsListContext = createContext<WorkspaceChannelsListContextValue>(null as unknown as WorkspaceChannelsListContextValue);
 
+const noChannels: Channel[] = [];
+
 export function WorkspaceChannelsListProvider({ children }: PropsWithChildren) {
     const { activeWorkspaceId } = useContext(WorkspacesListContext);
-    const [channels, setChannels] = useState<Channel[]>([]);
-    const [activeChannel, setActiveChannel] = useState<Channel>(null as unknown as Channel);
-
-    const client = useApolloClient();
+    const { cache } = useApolloClient();
     const { eventEmitter } = useWebsocket();
 
-    const handleRefresh = useCallback((channelId?: ChannelId) => {
-        startTransition(async () => {
-            if (activeWorkspaceId === null) {
-                return;
-            }
-            try {
-                const channelsList = await getWorkspaceChannels({ client, workspaceId: activeWorkspaceId });
-                setChannels(channelsList);
-                let localActiveChannel = channelsList[0];
-                if (channelId) {
-                    localActiveChannel = channelsList.find(c => c.id === channelId) ?? localActiveChannel;
-                }
-                setActiveChannel(localActiveChannel);
-            } catch (_error) {
-                /* swallow error */
-            }
-        });
-    }, [activeWorkspaceId, client]);
-
-    useEffect(() => {
-        if (activeWorkspaceId === null) {
-            return;
-        }
-        handleRefresh();
-    }, [activeWorkspaceId, handleRefresh]);
+    // The list lives in the Apollo cache: it renders from there at once and is re-checked against the server in the background.
+    const { data, previousData, refetch } = useQuery(
+        GET_WORKSPACE_CHANNELS,
+        activeWorkspaceId === null
+            ? skipToken
+            : { variables: { workspaceId: activeWorkspaceId }, fetchPolicy: 'cache-and-network' },
+    );
+    // While another workspace is loading, keep showing the previous list.
+    const channels = (data ?? previousData)?.channels.workspaceChannelList ?? noChannels;
 
     useEffect(() => {
         const controller = new AbortController();
         const { signal } = controller;
 
-        const onChannelsChanged = (event: WebSocketEvent) => {
-            const payload = event.payload;
-            if ('isDm' in payload && payload.isDm === true) {
+        const onChannelCreated = (event: WebSocketEvent) => {
+            const channel = event.payload as ChannelPayload;
+            if (channel.isDm || activeWorkspaceId === null || channel.workspaceId !== activeWorkspaceId) {
                 return;
             }
-            if ('workspaceId' in payload && payload.workspaceId !== activeWorkspaceId) {
+            if (channels.some(listed => listed.id === channel.id)) {
                 return;
             }
-            handleRefresh('id' in payload ? payload.id : undefined);
+            // The event reaches every user whatever their permissions, so ask the server whether the channel is listed for this one.
+            refetch().catch(() => {
+                /* swallow error */
+            });
         };
 
-        eventEmitter.addEventListener(WebSocketEventType.NEW_CHANNEL, onChannelsChanged, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.UPDATED_CHANNEL, onChannelsChanged, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.DELETED_CHANNEL, onChannelsChanged, { signal });
+        const onChannelUpdated = (event: WebSocketEvent) => {
+            const channel = event.payload as ChannelPayload;
+            if (!channel.isDm) {
+                patchChannelInCache(cache, channel);
+            }
+        };
+
+        const onChannelDeleted = (event: WebSocketEvent) => {
+            const channel = event.payload as ChannelDeletedPayload;
+            if (!channel.isDm) {
+                removeChannelFromCache(cache, channel.id);
+            }
+        };
+
+        eventEmitter.addEventListener(WebSocketEventType.NEW_CHANNEL, onChannelCreated, { signal });
+        eventEmitter.addEventListener(WebSocketEventType.UPDATED_CHANNEL, onChannelUpdated, { signal });
+        eventEmitter.addEventListener(WebSocketEventType.DELETED_CHANNEL, onChannelDeleted, { signal });
 
         return () => controller.abort();
-    }, [eventEmitter, handleRefresh, activeWorkspaceId]);
+    }, [eventEmitter, cache, refetch, activeWorkspaceId, channels]);
 
     return (
-        <WorkspaceChannelsListContext.Provider
-            value={{ channels: channels, refetch: handleRefresh, activeChannel, setActiveChannel }}
-        >
+        <WorkspaceChannelsListContext.Provider value={{ channels }}>
             {children}
         </WorkspaceChannelsListContext.Provider>
     );

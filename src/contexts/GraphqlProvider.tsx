@@ -50,7 +50,12 @@ const errorLink = new ErrorLink(({ error }) => {
 
 const client = new ApolloClient({
     link: from([errorLink, authLink, uploadLink]),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+        typePolicies: {
+            // Namespace object without an id: merge its fields, otherwise each query under `channels` replaces the others.
+            ChannelQueries: { merge: true },
+        },
+    }),
 });
 
 export const GraphqlProvider = ({ children }: PropsWithChildren) => {

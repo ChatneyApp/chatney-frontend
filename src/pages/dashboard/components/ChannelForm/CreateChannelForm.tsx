@@ -5,7 +5,7 @@ import { Dialog } from 'radix-ui';
 
 import styles from './CreateChannelForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
-import { CREATE_CHANNEL, UPDATE_CHANNEL } from '@/graphql/channels';
+import { addChannelToCache, CREATE_CHANNEL, UPDATE_CHANNEL } from '@/graphql/channels';
 import { Button } from '@/components/Button';
 import { Channel } from '@/types/channels';
 import { useWorkspaceChannelsList } from '@/contexts/OldWorkspaceChannelsListContext';
@@ -28,7 +28,7 @@ export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) =>
     const [open, setOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const { refetch, workspace } = useWorkspaceChannelsList();
+    const { workspace } = useWorkspaceChannelsList();
     const { channelTypes } = useChannelTypesList();
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>({
@@ -39,10 +39,14 @@ export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) =>
     });
 
     const [createChannel, { loading: createLoading }] = useMutation(CREATE_CHANNEL, {
+        update: (cache, { data }) => {
+            if (data) {
+                addChannelToCache(cache, data.channels.addChannel);
+            }
+        },
         onCompleted: () => {
             setOpen(false);
             reset();
-            refetch();
         },
         onError: (error) => {
             setErrorMessage(`Error creating channel: ${error.message}`);
@@ -50,11 +54,11 @@ export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) =>
         }
     });
 
+    // No cache update needed: the mutation returns the channel with its id, so Apollo updates the cached entity itself.
     const [updateChannel, { loading: updateLoading }] = useMutation(UPDATE_CHANNEL, {
         onCompleted: () => {
             setOpen(false);
             reset();
-            refetch();
         },
         onError: (error) => {
             setErrorMessage(`Error updating channel: ${error.message}`);

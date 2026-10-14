@@ -18,7 +18,7 @@ export function ChatPage() {
     const navigate = useNavigate();
     const isComposingDirectMessage = Boolean(useMatch('/client/chat/new'));
     const { eventEmitter } = useWebsocket();
-    const { channels, refetch } = useWorkspaceChannelsList();
+    const { channels } = useWorkspaceChannelsList();
     const { directMessages, refetch: refetchDirectMessages } = useDirectMessagesList();
     const [activeChannel, setActiveChannel] = useState<Channel | null>(null);
     const [threadMessage, setThreadMessage] = useState<MessageWithUser | null>(null);
@@ -83,7 +83,6 @@ export function ChatPage() {
             <ChannelList
                 channels={channels}
                 directMessages={directMessages}
-                refetchChannels={refetch}
                 activeChannel={isComposingDirectMessage ? null : activeChannel}
                 isComposingDirectMessage={isComposingDirectMessage}
                 setActiveChannel={handleSelectChannel}

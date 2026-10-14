@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, startTransition, useContext } from 'react';
+import { createContext, PropsWithChildren, useContext } from 'react';
 import { useSuspenseQuery } from '@apollo/client/react';
 
 import { Workspace } from '@/types/workspaces';
@@ -8,7 +8,6 @@ import { GET_WORKSPACE_CHANNELS } from '@/graphql/channels';
 interface WorkspaceChannelsListContextValue {
     workspace: Workspace;
     channels: Channel[];
-    refetch: () => void;
 }
 
 const WorkspaceChannelsListContext = createContext<WorkspaceChannelsListContextValue | null>(null);
@@ -18,20 +17,14 @@ type WorkspaceChannelsListProviderProps = {
 } & PropsWithChildren;
 
 export function WorkspaceChannelsListProvider({ workspace, children }: WorkspaceChannelsListProviderProps) {
-    const { data, refetch } = useSuspenseQuery(GET_WORKSPACE_CHANNELS, {
+    const { data } = useSuspenseQuery(GET_WORKSPACE_CHANNELS, {
         variables: { workspaceId: workspace.id },
-        fetchPolicy: 'no-cache',
+        fetchPolicy: 'cache-and-network',
     });
-
-    const handleRefresh = () => {
-        startTransition(async () => {
-            await refetch();
-        });
-    };
 
     return (
         <WorkspaceChannelsListContext.Provider
-            value={{ channels: data?.channels?.workspaceChannelList, workspace, refetch: handleRefresh }}
+            value={{ channels: data?.channels?.workspaceChannelList, workspace }}
         >
             {children}
         </WorkspaceChannelsListContext.Provider>

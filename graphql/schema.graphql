@@ -397,7 +397,7 @@ type Config {
   name: String!
   "Value serialized as a string; parse according to type."
   value: String!
-  "How to parse value: \"string\", \"int\" or \"string[]\" (comma-separated)."
+  "How to parse value: \"string\", \"int\", \"bool\" or \"string[]\" (comma-separated)."
   type: String
 }
 
@@ -484,25 +484,10 @@ type InstallWizardMutations {
   public/private channels, an admin user, optional test users and default config. Safe to call
   again: returns status "installed" if the system is already installed.
   """
-  installSystem(options: InstallSystemInput!): InstallSystemResult! @cost(weight: "10")
+  installSystem(options: InstallSystemInput!): InstallSystemResult!
+    @cost(weight: "10")
   "Rolls back every migration, deleting ALL data. Development use only."
   unInstallSystem: InstallSystemResult! @cost(weight: "10")
-}
-
-input InstallSystemInput {
-  domainName: String!
-  timeZone: String!
-  seedTestData: Boolean!
-  smtp: SmtpSettingsInput
-}
-
-input SmtpSettingsInput {
-  host: String!
-  port: Int!
-  username: String
-  password: String
-  enableSsl: Boolean!
-  fromAddress: String!
 }
 
 type MessageMutations {
@@ -998,6 +983,13 @@ input DraftMessageDtoInput {
   parentId: Int
 }
 
+input InstallSystemInput {
+  domainName: String!
+  timeZone: String!
+  seedTestData: Boolean!
+  smtp: SmtpSettingsInput
+}
+
 "Input for posting a message."
 input MessageDtoInput {
   channelId: Int!
@@ -1027,6 +1019,15 @@ input RoleCreateDtoInput {
 input RoleUpdateDtoInput {
   id: Int!
   name: String!
+}
+
+input SmtpSettingsInput {
+  host: String!
+  port: Int!
+  username: String
+  password: String
+  enableSsl: Boolean!
+  fromAddress: String!
 }
 
 "Input for updating your own profile. Null fields are left unchanged."

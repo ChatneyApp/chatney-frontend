@@ -15,6 +15,7 @@ validation:
   nicknameTooLong_one: Nickname must be at most {{count}} character
   nicknameTooLong_other: Nickname must be at most {{count}} characters
   nicknameInvalid: Nickname can only contain letters, numbers, and underscores
+  nicknameTaken: This nickname is already taken
   emailRequired: Email is required
   loginRequired: Email or nickname is required
   passwordRequired: Password is required
@@ -159,6 +160,15 @@ admin:
       password: Password
       newPassword: New password
       passwordHint: Leave blank to keep current password
+      roles: Roles
+      rolesCreateHint: Leave all unchecked to assign the default role
+    errors:
+      createForbidden: You don't have permission to create users.
+      createFailed: Couldn't create the user. Please try again.
+      editForbidden: You don't have permission to edit users.
+      editNotFound: This user no longer exists.
+      editFailed: Couldn't save the user. Please try again.
+      roleNotFound: One of the selected roles no longer exists. Check the roles and try again.
 
 chat:
   emptyMessages: No messages here yet

@@ -14,7 +14,8 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...UserFields\n            }\n        }\n    }\n": typeof types.GetUsersListDocument,
+    "\n    fragment AdminUserFields on User {\n        ...UserFields\n        roleIds\n    }\n": typeof types.AdminUserFieldsFragmentDoc,
+    "\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...AdminUserFields\n            }\n        }\n    }\n": typeof types.GetUsersListDocument,
     "\n    mutation CreateUser($userDto: CreateUserDtoInput!) {\n        users {\n            createUser(userDto: $userDto) {\n                ...UserFields\n            }\n        }\n    }\n": typeof types.CreateUserDocument,
     "\n    mutation UpdateUser($userDto: UpdateUserDtoInput!) {\n        users {\n            updateUser(userDto: $userDto) {\n                ...UserFields\n            }\n        }\n    }\n": typeof types.UpdateUserDocument,
     "\n    mutation DeleteUser($id: UUID!) {\n        users {\n            deleteUser(id: $id)\n        }\n    }\n": typeof types.DeleteUserDocument,
@@ -76,7 +77,8 @@ type Documents = {
     "\n    query GetWorkspaces {\n        workspaces {\n            list {\n                ...WorkspaceFields\n            }\n        }\n    }\n": typeof types.GetWorkspacesDocument,
 };
 const documents: Documents = {
-    "\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...UserFields\n            }\n        }\n    }\n": types.GetUsersListDocument,
+    "\n    fragment AdminUserFields on User {\n        ...UserFields\n        roleIds\n    }\n": types.AdminUserFieldsFragmentDoc,
+    "\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...AdminUserFields\n            }\n        }\n    }\n": types.GetUsersListDocument,
     "\n    mutation CreateUser($userDto: CreateUserDtoInput!) {\n        users {\n            createUser(userDto: $userDto) {\n                ...UserFields\n            }\n        }\n    }\n": types.CreateUserDocument,
     "\n    mutation UpdateUser($userDto: UpdateUserDtoInput!) {\n        users {\n            updateUser(userDto: $userDto) {\n                ...UserFields\n            }\n        }\n    }\n": types.UpdateUserDocument,
     "\n    mutation DeleteUser($id: UUID!) {\n        users {\n            deleteUser(id: $id)\n        }\n    }\n": types.DeleteUserDocument,
@@ -155,7 +157,11 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...UserFields\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...UserFields\n            }\n        }\n    }\n"];
+export function graphql(source: "\n    fragment AdminUserFields on User {\n        ...UserFields\n        roleIds\n    }\n"): (typeof documents)["\n    fragment AdminUserFields on User {\n        ...UserFields\n        roleIds\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...AdminUserFields\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...AdminUserFields\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

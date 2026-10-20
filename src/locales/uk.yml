@@ -17,6 +17,7 @@ validation:
   nicknameTooLong_many: Нікнейм має містити не більше {{count}} символів
   nicknameTooLong_other: Нікнейм має містити не більше {{count}} символу
   nicknameInvalid: Нікнейм може містити лише латинські літери, цифри та підкреслення
+  nicknameTaken: Цей нікнейм уже зайнятий
   emailRequired: Вкажіть email
   loginRequired: Вкажіть email або нікнейм
   passwordRequired: Вкажіть пароль
@@ -163,6 +164,15 @@ admin:
       password: Пароль
       newPassword: Новий пароль
       passwordHint: Залиште порожнім, щоб не змінювати поточний пароль
+      roles: Ролі
+      rolesCreateHint: Якщо нічого не позначено, буде призначено роль за замовчуванням
+    errors:
+      createForbidden: У вас немає прав на створення користувачів.
+      createFailed: Не вдалося створити користувача. Спробуйте ще раз.
+      editForbidden: У вас немає прав на редагування користувачів.
+      editNotFound: Цей користувач більше не існує.
+      editFailed: Не вдалося зберегти користувача. Спробуйте ще раз.
+      roleNotFound: Однієї з вибраних ролей більше не існує. Перевірте ролі та спробуйте ще раз.
 
 chat:
   emptyMessages: Тут ще немає повідомлень

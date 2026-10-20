@@ -5,14 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { DELETE_USER } from '@/graphql/adminUsers';
 import { useUsersList } from '@/contexts/UsersListContext';
 import { useUser } from '@/contexts/UserContext';
-import { User } from '@/types/users';
+import { AdminUser } from '@/types/users';
 import { getUserDisplayName } from '@/helpers/nickname';
 
 import { UserFormModal } from './UserFormModal';
 import styles from './UsersTable.module.css';
 
 type Props = {
-    users: User[];
+    users: AdminUser[];
 };
 
 function StatusBadge({
@@ -38,12 +38,12 @@ export function UsersTable({ users }: Props) {
     const { t } = useTranslation();
     const { refetch } = useUsersList();
     const currentUser = useUser()?.user;
-    const [editingUser, setEditingUser] = useState<User | null>(null);
+    const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
     const [deleteUser] = useMutation(DELETE_USER, {
         onCompleted: () => refetch(),
     });
 
-    const handleDelete = async (user: User) => {
+    const handleDelete = async (user: AdminUser) => {
         if (user.id === currentUser?.id) {
             return;
         }

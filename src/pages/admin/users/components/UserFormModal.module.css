@@ -46,6 +46,10 @@
     @apply rounded border-gray-500 bg-gray-700 text-indigo-500 focus:ring-indigo-500;
 }
 
+.errorMessage {
+    @apply rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300;
+}
+
 .hint {
     @apply text-xs text-gray-500;
 }

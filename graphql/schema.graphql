@@ -728,6 +728,8 @@ type User {
   muted: Boolean!
   email: String!
   avatarUrl: String
+  "Ids of the user's roles. Filled only by users.list for callers with UserEditUser; empty otherwise."
+  roleIds: [Int!]!
 }
 
 "The permissions one user has on one secure object."
@@ -808,7 +810,7 @@ type UserQueries {
   userById(id: UUID!): User @authorize @cost(weight: "10")
   "A user by nickname (case-insensitive), or null. Requires UserReadUser unless it's the current user."
   userByNickname(nickname: String!): User @authorize @cost(weight: "10")
-  "All users matching the filter. Requires UserReadUser."
+  "All users matching the filter. Requires UserReadUser. roleIds is filled only if the caller also has UserEditUser."
   list(filter: UserFilterInput!): [User!]! @authorize @cost(weight: "10")
   "Nickname autocomplete for starting direct messages: up to 20 active, non-banned users, excluding yourself."
   searchByNickname(

@@ -1,10 +1,18 @@
 import { graphql } from '@/graphql/generated';
 
+// roleIds is filled only by users.list (and only for callers with UserEditUser), so it stays out of UserFields
+export const AdminUserFieldsFragment = graphql(`
+    fragment AdminUserFields on User {
+        ...UserFields
+        roleIds
+    }
+`);
+
 export const GET_USERS = graphql(`
     query GetUsersList($filter: UserFilterInput!) {
         users {
             list(filter: $filter) {
-                ...UserFields
+                ...AdminUserFields
             }
         }
     }

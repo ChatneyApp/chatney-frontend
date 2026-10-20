@@ -2,10 +2,10 @@ import { createContext, PropsWithChildren, useContext } from 'react';
 import { useSuspenseQuery } from '@apollo/client/react';
 
 import { GET_USERS } from '@/graphql/adminUsers';
-import { User } from '@/types/users';
+import { AdminUser } from '@/types/users';
 
 interface UsersListContextValue {
-    users: User[];
+    users: AdminUser[];
     refetch: () => void;
 }
 

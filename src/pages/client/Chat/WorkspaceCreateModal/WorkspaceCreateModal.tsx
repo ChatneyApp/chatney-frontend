@@ -1,6 +1,7 @@
 import { FormEventHandler, useState } from 'react';
 import { useApolloClient } from '@apollo/client/react';
 import { Dialog } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import { addWorkspace } from '@/graphql/workspaces';
 import { Workspace } from '@/types/workspaces';
@@ -13,6 +14,7 @@ interface WorkspaceCreateModalProps {
 }
 
 export function WorkspaceCreateModal({ onClose, onWorkspaceCreated }: WorkspaceCreateModalProps) {
+    const { t } = useTranslation();
     const [workspaceName, setWorkspaceName] = useState('');
     const client = useApolloClient();
 
@@ -38,16 +40,16 @@ export function WorkspaceCreateModal({ onClose, onWorkspaceCreated }: WorkspaceC
             <Dialog.Portal>
                 <Dialog.Overlay className={styles.overlay} />
                 <Dialog.Content className={styles.container}>
-                    <Dialog.Title className={styles.title}>Create Workspace</Dialog.Title>
+                    <Dialog.Title className={styles.title}>{t('chat.createWorkspace.title')}</Dialog.Title>
                     <form className={styles.form} onSubmit={handleCreate}>
                         <label className={styles.field}>
-                            <span className={styles.label}>Workspace name</span>
+                            <span className={styles.label}>{t('chat.createWorkspace.name')}</span>
                             <input
                                 type="text"
                                 value={workspaceName}
                                 onChange={(e) => setWorkspaceName(e.target.value)}
                                 className={styles.input}
-                                placeholder="Workspace name"
+                                placeholder={t('chat.createWorkspace.name')}
                             />
                         </label>
                         <div className={styles.bottomButtons}>
@@ -56,14 +58,14 @@ export function WorkspaceCreateModal({ onClose, onWorkspaceCreated }: WorkspaceC
                                 onClick={onClose}
                                 className={styles.cancelButton}
                             >
-                                Cancel
+                                {t('common.cancel')}
                             </button>
                             <button
                                 type="submit"
                                 disabled={!workspaceName.trim()}
                                 className={styles.createButton}
                             >
-                                Create
+                                {t('common.create')}
                             </button>
                         </div>
                     </form>

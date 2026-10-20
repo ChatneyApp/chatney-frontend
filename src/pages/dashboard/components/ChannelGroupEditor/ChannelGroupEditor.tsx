@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client/react';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/Button';
 import { DELETE_CHANNEL_GROUP } from '@/graphql/channelGroups';
@@ -13,6 +14,7 @@ type Props = {
 }
 
 export const ChannelGroupEditor = ({ channelGroup }: Props) => {
+    const { t } = useTranslation();
     const { refetch } = useWorkspaceChannelGroupsList();
     const { channels } = useWorkspaceChannelsList();
 
@@ -40,7 +42,7 @@ export const ChannelGroupEditor = ({ channelGroup }: Props) => {
                 {channelGroup.name}
             </div>
             <div className={styles.order}>
-                Order: {channelGroup.order}
+                {t('dashboard.channelGroups.orderValue', { order: channelGroup.order })}
             </div>
             <div className={styles.uuid}>
                 {channelGroup.id}
@@ -55,9 +57,9 @@ export const ChannelGroupEditor = ({ channelGroup }: Props) => {
                 </div>
             </div>
             <div className={styles.controls}>
-                <ChannelGroupForm cta="Edit" title="Edit Channel Group" submitText="Save Changes" channelGroup={channelGroup}/>
+                <ChannelGroupForm cta={t('common.edit')} title={t('dashboard.channelGroups.editTitle')} submitText={t('common.saveChanges')} channelGroup={channelGroup}/>
                 <Button onClick={handleDelete}>
-                    Delete
+                    {t('common.delete')}
                 </Button>
             </div>
         </div>

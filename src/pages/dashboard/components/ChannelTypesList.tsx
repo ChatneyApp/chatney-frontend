@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ChannelTypeEditor } from '@/pages/dashboard/components/ChannelTypeEditor/ChannelTypeEditor';
 import { CreateChannelTypeForm } from '@/pages/dashboard/components/ChannelTypeForm/CreateChannelTypeForm';
@@ -7,6 +8,7 @@ import { RolesListProvider } from '@/contexts/RolesListContext';
 import { EmptyListMessage } from '@/pages/dashboard/components/EmptyListMessage';
 
 const ChannelTypesListCore = () => {
+    const { t } = useTranslation();
     const { channelTypes } = useChannelTypesList();
 
     return <div>
@@ -15,21 +17,25 @@ const ChannelTypesListCore = () => {
         ))}
         {!channelTypes.length && (
             <EmptyListMessage>
-                No channels types found. Create one using the form above.
+                {t('dashboard.channelTypes.empty')}
             </EmptyListMessage>
         )}
     </div>;
 };
 
-export const ChannelTypesList = () => (
-    <>
-        <Suspense fallback={<div>Loading...</div>}>
-            <RolesListProvider>
-                <ChannelTypesListProvider>
-                    <CreateChannelTypeForm cta="Create channel type" title="Create Channel Type" submitText="Create Channel Type"/>
-                    <ChannelTypesListCore/>
-                </ChannelTypesListProvider>
-            </RolesListProvider>
-        </Suspense>
-    </>
-);
+export const ChannelTypesList = () => {
+    const { t } = useTranslation();
+
+    return (
+        <>
+            <Suspense fallback={<div>{t('common.loading')}</div>}>
+                <RolesListProvider>
+                    <ChannelTypesListProvider>
+                        <CreateChannelTypeForm cta={t('dashboard.channelTypes.create')} title={t('dashboard.channelTypes.createTitle')} submitText={t('dashboard.channelTypes.createTitle')}/>
+                        <ChannelTypesListCore/>
+                    </ChannelTypesListProvider>
+                </RolesListProvider>
+            </Suspense>
+        </>
+    );
+};

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent } from 'react';
 import { Pause, Play } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Attachment } from '@/types/attachments';
 import {
@@ -33,6 +34,7 @@ const readWaveform = async (attachmentUrl: string) => {
 };
 
 export const AudioAttachment = ({ attachment, attachmentUrl }: Props) => {
+    const { t } = useTranslation();
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -199,7 +201,7 @@ export const AudioAttachment = ({ attachment, attachmentUrl }: Props) => {
     return (
         <div className={styles.audioPlayer}>
             <audio ref={audioRef} src={attachmentUrl} preload="metadata" />
-            <button className={styles.audioButton} type="button" onClick={() => void togglePlayback()} aria-label={isPlaying ? 'Pause audio' : 'Play audio'}>
+            <button className={styles.audioButton} type="button" onClick={() => void togglePlayback()} aria-label={isPlaying ? t('chat.attachments.pauseAudio') : t('chat.attachments.playAudio')}>
                 {isPlaying ? <Pause size={18} /> : <Play size={18} />}
             </button>
             <div className={styles.audioBody}>
@@ -209,7 +211,7 @@ export const AudioAttachment = ({ attachment, attachmentUrl }: Props) => {
                     onKeyDown={handleWaveformKeyDown}
                     role="slider"
                     tabIndex={0}
-                    aria-label="Audio position"
+                    aria-label={t('chat.attachments.audioPosition')}
                     aria-valuemin={0}
                     aria-valuemax={duration}
                     aria-valuenow={currentTime}

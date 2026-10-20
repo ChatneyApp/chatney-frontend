@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client/react';
+import { useTranslation } from 'react-i18next';
 
 import { Workspace } from '@/types/workspaces';
 import { DELETE_WORKSPACE } from '@/graphql/workspaces';
@@ -13,6 +14,7 @@ type Props = {
 }
 
 export const WorkspaceEditor = ({ workspace }: Props) => {
+    const { t } = useTranslation();
     const { refetch } = useWorkspacesList();
     const [deleteWorkspace] = useMutation(DELETE_WORKSPACE, {
         onCompleted: () => {
@@ -39,13 +41,13 @@ export const WorkspaceEditor = ({ workspace }: Props) => {
             </div>
             <div className={styles.controls}>
                 <CreateWorkspaceForm 
-                    cta="Edit" 
-                    title="Edit Workspace" 
-                    submitText="Save Changes" 
+                    cta={t('common.edit')}
+                    title={t('dashboard.workspaces.editTitle')}
+                    submitText={t('common.saveChanges')}
                     workspace={workspace}
                 />
                 <Button onClick={handleDelete} className="text-red-400">
-                    Delete
+                    {t('common.delete')}
                 </Button>
             </div>
         </div>

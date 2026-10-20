@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import { Dialog } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import styles from './CreateChannelTypeForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
@@ -23,6 +24,7 @@ type Props = {
 }
 
 export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: Props) => {
+    const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -42,7 +44,7 @@ export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: P
             refetch();
         },
         onError: (error) => {
-            setErrorMessage(`Error creating channel type: ${error.message}`);
+            setErrorMessage(t('dashboard.channelTypes.createError', { message: error.message }));
             setSuccessMessage(null);
         }
     });
@@ -54,7 +56,7 @@ export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: P
             refetch();
         },
         onError: (error) => {
-            setErrorMessage(`Error editing channel type: ${error.message}`);
+            setErrorMessage(t('dashboard.channelTypes.editError', { message: error.message }));
             setSuccessMessage(null);
         }
     });
@@ -112,20 +114,20 @@ export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: P
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className={styles.formGroup}>
-                            <label htmlFor="label">Label</label>
+                            <label htmlFor="label">{t('dashboard.channelTypes.label')}</label>
                             <input
                                 id="label"
-                                {...register('label', { required: 'Label is required' })}
+                                {...register('label', { required: t('dashboard.channelTypes.labelRequired') })}
                                 className={styles.input}
                             />
                             {errors.label && <span className={styles.errorText}>{errors.label.message}</span>}
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label htmlFor="key">Key</label>
+                            <label htmlFor="key">{t('dashboard.channelTypes.key')}</label>
                             <input
                                 id="key"
-                                {...register('key', { required: 'Key is required' })}
+                                {...register('key', { required: t('dashboard.channelTypes.keyRequired') })}
                                 className={styles.input}
                             />
                             {errors.key && <span className={styles.errorText}>{errors.key.message}</span>}
@@ -133,15 +135,15 @@ export const CreateChannelTypeForm = ({ cta, title, submitText, channelType }: P
 
                         <div className={dialogStyles.bottomButtons}>
                             <Dialog.Close asChild>
-                                <Button aria-label="Close">
-                                    Cancel
+                                <Button aria-label={t('common.close')}>
+                                    {t('common.cancel')}
                                 </Button>
                             </Dialog.Close>
                             <Button
                                 type="submit"
                                 disabled={createLoading || editLoading}
                             >
-                                {createLoading || editLoading ? 'Saving...' : submitText}
+                                {createLoading || editLoading ? t('common.saving') : submitText}
                             </Button>
                         </div>
                     </form>

@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client/react';
+import { useTranslation } from 'react-i18next';
 
 import { Channel } from '@/types/channels';
 import { Button } from '@/components/Button';
@@ -12,6 +13,7 @@ type Props = {
 }
 
 export const ChannelEditor = ({ channel }: Props) => {
+    const { t } = useTranslation();
     const { channelTypes } = useChannelTypesList();
 
     const [deleteChannel] = useMutation(DELETE_CHANNEL, {
@@ -42,12 +44,12 @@ export const ChannelEditor = ({ channel }: Props) => {
                 {channel.id}
             </div>
             <div className={styles.channelType}>
-                Channel type: {channelType?.name ?? 'Unknown Channel Type'}
+                {t('dashboard.channels.channelTypeValue', { name: channelType?.name ?? t('dashboard.channels.unknownChannelType') })}
             </div>
             <div className={styles.controls}>
-                <CreateChannelForm cta="Edit" title="Edit Channel" submitText="Save Changes" channel={channel}/>
+                <CreateChannelForm cta={t('common.edit')} title={t('dashboard.channels.editTitle')} submitText={t('common.saveChanges')} channel={channel}/>
                 <Button onClick={handleDelete}>
-                    Delete
+                    {t('common.delete')}
                 </Button>
             </div>
         </div>

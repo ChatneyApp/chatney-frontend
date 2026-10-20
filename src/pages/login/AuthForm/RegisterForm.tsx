@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useApolloClient } from '@apollo/client/react';
 import { AtSign, Lock, User } from 'lucide-react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 import styles from './AuthForm.module.css';
 import { registerUser } from '@/graphql/auth';
@@ -16,6 +17,7 @@ type FormInputs = {
 };
 
 export const RegisterForm = () => {
+    const { t } = useTranslation();
     const apollo = useApolloClient();
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -42,7 +44,7 @@ export const RegisterForm = () => {
             });
             window.location.href = '/login';
         } catch (error) {
-            setErrorMessage(`Error registering: ${(error as Error).message}`);
+            setErrorMessage(t('auth.registerError', { message: (error as Error).message }));
         }
 
         setLoading(false);
@@ -58,7 +60,7 @@ export const RegisterForm = () => {
 
             <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                 <div className={styles.field}>
-                    <label htmlFor="email" className={styles.label}>Email</label>
+                    <label htmlFor="email" className={styles.label}>{t('auth.email')}</label>
                     <div className={clsx(styles.inputWrapper, errors.email && styles.inputWrapperError)}>
                         <AtSign size={16} className={styles.inputIcon} aria-hidden />
                         <input
@@ -66,7 +68,7 @@ export const RegisterForm = () => {
                             type="email"
                             placeholder="name@company.com"
                             autoComplete="email"
-                            {...register('email', { required: 'Email is required' })}
+                            {...register('email', { required: t('validation.emailRequired') })}
                             className={styles.input}
                         />
                     </div>
@@ -74,7 +76,7 @@ export const RegisterForm = () => {
                 </div>
 
                 <div className={styles.field}>
-                    <label htmlFor="password" className={styles.label}>Password</label>
+                    <label htmlFor="password" className={styles.label}>{t('auth.password')}</label>
                     <div className={clsx(styles.inputWrapper, errors.password && styles.inputWrapperError)}>
                         <Lock size={16} className={styles.inputIcon} aria-hidden />
                         <input
@@ -82,7 +84,7 @@ export const RegisterForm = () => {
                             type="password"
                             placeholder="••••••••"
                             autoComplete="new-password"
-                            {...register('password', { required: 'Password is required' })}
+                            {...register('password', { required: t('validation.passwordRequired') })}
                             className={styles.input}
                         />
                     </div>
@@ -90,14 +92,14 @@ export const RegisterForm = () => {
                 </div>
 
                 <div className={styles.field}>
-                    <label htmlFor="nickname" className={styles.label}>Nickname</label>
+                    <label htmlFor="nickname" className={styles.label}>{t('auth.nickname')}</label>
                     <div className={clsx(styles.inputWrapper, errors.nickname && styles.inputWrapperError)}>
                         <User size={16} className={styles.inputIcon} aria-hidden />
                         <input
                             id="nickname"
                             placeholder="your_nickname"
                             autoComplete="username"
-                            {...register('nickname', { validate: validateNickname })}
+                            {...register('nickname', { validate: (value) => validateNickname(value, t) })}
                             maxLength={MAX_NICKNAME_LENGTH}
                             className={styles.input}
                         />
@@ -106,12 +108,12 @@ export const RegisterForm = () => {
                 </div>
 
                 <div className={styles.field}>
-                    <label htmlFor="fullName" className={styles.label}>Full name (optional)</label>
+                    <label htmlFor="fullName" className={styles.label}>{t('auth.fullNameOptional')}</label>
                     <div className={styles.inputWrapper}>
                         <User size={16} className={styles.inputIcon} aria-hidden />
                         <input
                             id="fullName"
-                            placeholder="Jane Doe"
+                            placeholder={t('auth.fullNamePlaceholder')}
                             autoComplete="name"
                             {...register('fullName')}
                             className={styles.input}
@@ -120,7 +122,7 @@ export const RegisterForm = () => {
                 </div>
 
                 <button type="submit" className={styles.submitButton} disabled={loading}>
-                    {loading ? 'Creating account...' : 'Create account'}
+                    {loading ? t('auth.creatingAccount') : t('auth.createAccount')}
                 </button>
             </form>
         </div>

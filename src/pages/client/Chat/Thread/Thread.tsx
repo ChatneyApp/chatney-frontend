@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { MessagesSquare, X } from 'lucide-react';
 import { useApolloClient } from '@apollo/client/react';
+import { useTranslation } from 'react-i18next';
 
 import { WebSocketEventEmitter } from '@/communication/WebSocketEventEmitter';
 import { getThreadMessagesList } from '@/graphql/messages';
@@ -23,6 +24,7 @@ type Props = {
 };
 
 export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
+    const { t } = useTranslation();
     const apolloClient = useApolloClient();
 
     const loadMessages = useCallback(() => {
@@ -36,7 +38,7 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
     const header = (
         <>
             <MessagesSquare className={styles.headerIcon} />
-            <span className={styles.headerTitle}>Thread</span>
+            <span className={styles.headerTitle}>{t('chat.thread.title')}</span>
             <X
                 className={styles.closeButton}
                 onClick={onCloseThread}
@@ -53,7 +55,7 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
             eventEmitter={eventEmitter}
             loadMessages={loadMessages}
             isMessageInContext={isMessageInContext}
-            emptyState={<div>No messages here yet</div>}
+            emptyState={<div>{t('chat.emptyMessages')}</div>}
         />
     );
 };

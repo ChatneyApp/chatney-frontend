@@ -1,4 +1,5 @@
 import { Suspense, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { RolesListProvider } from '@/contexts/RolesListContext';
 import { UsersListProvider, useUsersList } from '@/contexts/UsersListContext';
@@ -8,6 +9,7 @@ import { UsersTable } from './components/UsersTable';
 import styles from './UsersPage.module.css';
 
 function UsersPageContent() {
+    const { t } = useTranslation();
     const { users } = useUsersList();
     const [createOpen, setCreateOpen] = useState(false);
 
@@ -15,9 +17,9 @@ function UsersPageContent() {
         <div className={styles.page}>
             <header className={styles.header}>
                 <div>
-                    <h1 className={styles.title}>Users</h1>
+                    <h1 className={styles.title}>{t('admin.users.title')}</h1>
                     <p className={styles.subtitle}>
-                        Manage user accounts, roles, and access status
+                        {t('admin.users.subtitle')}
                     </p>
                 </div>
                 <button
@@ -25,7 +27,7 @@ function UsersPageContent() {
                     className={styles.createButton}
                     onClick={() => setCreateOpen(true)}
                 >
-                    Create user
+                    {t('admin.users.create')}
                 </button>
             </header>
 
@@ -37,8 +39,10 @@ function UsersPageContent() {
 }
 
 export function UsersPage() {
+    const { t } = useTranslation();
+
     return (
-        <Suspense fallback={<div className={styles.loading}>Loading users...</div>}>
+        <Suspense fallback={<div className={styles.loading}>{t('admin.users.loading')}</div>}>
             <RolesListProvider>
                 <UsersListProvider>
                     <UsersPageContent />

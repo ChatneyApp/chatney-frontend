@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import { Dialog } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import { CREATE_CHANNEL_GROUP, UPDATE_CHANNEL_GROUP } from '@/graphql/channelGroups';
 import { Button } from '@/components/Button';
@@ -26,6 +27,7 @@ type Props = {
 };
 
 export const ChannelGroupForm = ({ cta, title, submitText, channelGroup }: Props) => {
+    const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -49,7 +51,7 @@ export const ChannelGroupForm = ({ cta, title, submitText, channelGroup }: Props
             refetch();
         },
         onError: (error) => {
-            setErrorMessage(`Error creating channel group: ${error.message}`);
+            setErrorMessage(t('dashboard.channelGroups.createError', { message: error.message }));
             setSuccessMessage(null);
         }
     });
@@ -61,7 +63,7 @@ export const ChannelGroupForm = ({ cta, title, submitText, channelGroup }: Props
             refetch();
         },
         onError: (error) => {
-            setErrorMessage(`Error updating channel group: ${error.message}`);
+            setErrorMessage(t('dashboard.channelGroups.editError', { message: error.message }));
             setSuccessMessage(null);
         }
     });
@@ -136,22 +138,22 @@ export const ChannelGroupForm = ({ cta, title, submitText, channelGroup }: Props
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className={styles.formGroup}>
-                            <label htmlFor="name">Channel Group Name</label>
+                            <label htmlFor="name">{t('dashboard.channelGroups.name')}</label>
                             <input
                                 id="name"
-                                {...register('name', { required: 'Channel group name is required' })}
+                                {...register('name', { required: t('dashboard.channelGroups.nameRequired') })}
                                 className={styles.input}
                             />
                             {errors.name && <span className={styles.errorText}>{errors.name.message}</span>}
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label htmlFor="order">Display Order</label>
+                            <label htmlFor="order">{t('dashboard.channelGroups.order')}</label>
                             <input
                                 id="order"
                                 type="number"
                                 {...register('order', {
-                                    required: 'Order is required',
+                                    required: t('dashboard.channelGroups.orderRequired'),
                                     valueAsNumber: true
                                 })}
                                 className={styles.input}
@@ -160,7 +162,7 @@ export const ChannelGroupForm = ({ cta, title, submitText, channelGroup }: Props
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label>Channels</label>
+                            <label>{t('dashboard.channelGroups.channels')}</label>
                             <div className={styles.channelsContainer}>
                                 {channels.map(channel => (
                                     <div key={channel.id} className={styles.channelItem}>
@@ -183,15 +185,15 @@ export const ChannelGroupForm = ({ cta, title, submitText, channelGroup }: Props
 
                         <div className={dialogStyles.bottomButtons}>
                             <Dialog.Close asChild>
-                                <Button aria-label="Close">
-                                    Cancel
+                                <Button aria-label={t('common.close')}>
+                                    {t('common.cancel')}
                                 </Button>
                             </Dialog.Close>
                             <Button
                                 type="submit"
                                 disabled={createLoading || updateLoading}
                             >
-                                {createLoading || updateLoading ? 'Saving...' : submitText}
+                                {createLoading || updateLoading ? t('common.saving') : submitText}
                             </Button>
                         </div>
                     </form>

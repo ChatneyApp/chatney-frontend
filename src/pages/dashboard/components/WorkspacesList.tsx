@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { WorkspaceEditor } from '@/pages/dashboard/components/WorkspaceEditor/WorkspaceEditor';
 import { CreateWorkspaceForm } from '@/pages/dashboard/components/WorkspaceForm/CreateWorkspaceForm';
@@ -6,6 +7,7 @@ import { WorkspacesListProvider, useWorkspacesList } from '@/contexts/Workspaces
 import { EmptyListMessage } from '@/pages/dashboard/components/EmptyListMessage';
 
 const WorkspacesListCore = () => {
+    const { t } = useTranslation();
     const { workspacesList } = useWorkspacesList();
 
     return <div>
@@ -14,19 +16,23 @@ const WorkspacesListCore = () => {
         ))}
         {!workspacesList.length && (
             <EmptyListMessage>
-                No workspaces found. Create one using the form above.
+                {t('dashboard.workspaces.empty')}
             </EmptyListMessage>
         )}
     </div>;
 };
 
-export const WorkspacesList = () => (
-    <>
-        <Suspense fallback={<div>Loading...</div>}>
-            <WorkspacesListProvider>
-                <CreateWorkspaceForm cta="Create workspace" title="Create Workspace" submitText="Create Workspace"/>
-                <WorkspacesListCore/>
-            </WorkspacesListProvider>
-        </Suspense>
-    </>
-);
+export const WorkspacesList = () => {
+    const { t } = useTranslation();
+
+    return (
+        <>
+            <Suspense fallback={<div>{t('common.loading')}</div>}>
+                <WorkspacesListProvider>
+                    <CreateWorkspaceForm cta={t('dashboard.workspaces.create')} title={t('dashboard.workspaces.createTitle')} submitText={t('dashboard.workspaces.createTitle')}/>
+                    <WorkspacesListCore/>
+                </WorkspacesListProvider>
+            </Suspense>
+        </>
+    );
+};

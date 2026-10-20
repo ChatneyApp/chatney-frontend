@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { useSuspenseQuery } from '@apollo/client/react';
+import { useTranslation } from 'react-i18next';
 
 import { formatPermissionLabel } from '@/helpers/permissions';
 
@@ -44,8 +45,12 @@ const PermissionsListCore = () => {
     </>;
 }
 
-export const PermissionsList = () => (
-    <Suspense fallback={<div>Loading...</div>}>
-        <PermissionsListCore/>
-    </Suspense>
-);
+export const PermissionsList = () => {
+    const { t } = useTranslation();
+
+    return (
+        <Suspense fallback={<div>{t('common.loading')}</div>}>
+            <PermissionsListCore/>
+        </Suspense>
+    );
+};

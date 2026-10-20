@@ -1,0 +1,350 @@
+common:
+  ok: ОК
+  cancel: Отмена
+  edit: Изменить
+  delete: Удалить
+  saving: Сохранение...
+  saveChanges: Сохранить изменения
+  optional: Необязательно
+  comingSoon: Скоро
+  close: Закрыть
+  loading: Загрузка...
+  processing: Обработка...
+  create: Создать
+
+validation:
+  nicknameRequired: Укажите никнейм
+  nicknameTooLong_one: Никнейм должен содержать не более {{count}} символа
+  nicknameTooLong_few: Никнейм должен содержать не более {{count}} символов
+  nicknameTooLong_many: Никнейм должен содержать не более {{count}} символов
+  nicknameTooLong_other: Никнейм должен содержать не более {{count}} символа
+  nicknameInvalid: Никнейм может содержать только латинские буквы, цифры и подчёркивания
+  emailRequired: Укажите email
+  loginRequired: Укажите email или никнейм
+  passwordRequired: Укажите пароль
+  passwordTooShort_one: Пароль должен содержать не менее {{count}} символа
+  passwordTooShort_few: Пароль должен содержать не менее {{count}} символов
+  passwordTooShort_many: Пароль должен содержать не менее {{count}} символов
+  passwordTooShort_other: Пароль должен содержать не менее {{count}} символа
+  confirmPasswordRequired: Подтвердите пароль
+  passwordsDoNotMatch: Пароли не совпадают
+  newPasswordsDoNotMatch: Новые пароли не совпадают
+  currentPasswordRequired: Укажите текущий пароль
+
+userStatus:
+  active: Активен
+  inactive: Неактивен
+  verified: Подтверждён
+  notVerified: Не подтверждён
+  banned: Заблокирован
+  muted: Без права голоса
+
+auth:
+  signInTitle: Вход в Chatney
+  registerTitle: Создайте аккаунт
+  signInSubtitle: Общайтесь с командой и рабочими пространствами.
+  registerSubtitle: Присоединяйтесь к команде и начните работать вместе.
+  socialOptions: Вход через соцсети
+  orEmail: Или по email
+  newHere: Впервые здесь?
+  createAccountLink: Создать аккаунт
+  haveAccount: Уже есть аккаунт?
+  signInLink: Войти
+  footer:
+    privacy: Политика конфиденциальности
+    terms: Условия использования
+    support: Связаться с поддержкой
+  workEmail: Рабочий email
+  email: Email
+  emailOrNickname: Email или никнейм
+  password: Пароль
+  confirmPassword: Подтверждение пароля
+  nickname: Никнейм
+  fullNameOptional: Полное имя (необязательно)
+  fullNamePlaceholder: Иван Иванов
+  forgot: Забыли?
+  signingIn: Вход...
+  signInSubmit: Войти в Chatney
+  loginError: "Ошибка входа: {{message}}"
+  creatingAccount: Создание аккаунта...
+  createAccount: Создать аккаунт
+  registerError: "Ошибка регистрации: {{message}}"
+  backToSignIn: Вернуться ко входу
+  forgotPassword:
+    title: Забыли пароль?
+    subtitle: Введите email или никнейм, связанный с вашим аккаунтом.
+    submitted: Если такой email существует, вы получите ссылку для сброса пароля.
+    failed: Не удалось запросить сброс пароля. Попробуйте ещё раз.
+    sending: Отправка...
+    submit: Отправить ссылку
+  resetPassword:
+    title: Сброс пароля
+    subtitle: Придумайте новый пароль для аккаунта Chatney.
+    completed: Пароль сброшен. Теперь вы можете войти.
+    invalidLink: Ссылка для сброса пароля недействительна.
+    expiredLink: Ссылка для сброса пароля недействительна или устарела.
+    failed: Не удалось сбросить пароль. Попробуйте ещё раз.
+    resetting: Сброс...
+    submit: Сбросить пароль
+
+install:
+  submit: Установить
+  loading: "Загрузка:"
+  errorMessage: "Сообщение об ошибке:"
+  error: "Ошибка установки системы: {{message}}"
+
+profile:
+  title: Профиль
+  backToChat: Вернуться в чат
+  loading: Загрузка профиля...
+  updated: Профиль обновлён
+  noRole: Роль не назначена
+  accountDetails: Данные аккаунта
+  nickname: Никнейм
+  fullName: Полное имя
+  email: Email
+  avatarUrl: URL аватара
+  avatarUrlHint: Необязательная ссылка на изображение для аватара
+  changePassword: Смена пароля
+  currentPassword: Текущий пароль
+  newPassword: Новый пароль
+  confirmNewPassword: Подтверждение нового пароля
+
+admin:
+  nav:
+    brand: Администрирование
+    roles: Роли
+    users: Пользователи
+    backToChat: Вернуться в чат
+  roles:
+    title: Роли
+    subtitle: Управление ролями доступа и их правами
+    create: Создать роль
+    loading: Загрузка ролей...
+    empty: Ролей пока нет. Создайте первую роль, чтобы начать.
+    id: ID {{id}}
+    columns:
+      role: Роль
+      actions: Действия
+    form:
+      createTitle: Создание роли
+      editTitle: Редактирование роли
+      name: Название
+      nameRequired: Укажите название роли
+    deleteDialog:
+      title: Удаление роли
+      description: Удалить роль «{{name}}»? Это действие нельзя отменить.
+    errors:
+      createForbidden: У вас нет прав на создание ролей.
+      createFailed: Не удалось создать роль. Попробуйте ещё раз.
+      editForbidden: У вас нет прав на изменение ролей.
+      editNotFound: Эта роль больше не существует.
+      editFailed: Не удалось сохранить роль. Попробуйте ещё раз.
+      deleteForbidden: У вас нет прав на удаление ролей.
+      deleteNotFound: Эта роль больше не существует.
+      deleteFailed: Не удалось удалить роль. Попробуйте ещё раз.
+  users:
+    title: Пользователи
+    subtitle: Управление аккаунтами, ролями и статусом доступа
+    create: Создать пользователя
+    loading: Загрузка пользователей...
+    empty: Пользователи не найдены. Создайте первого пользователя, чтобы начать.
+    deleteConfirm: Удалить пользователя «{{name}}»? Это действие нельзя отменить.
+    you: (вы)
+    cannotDeleteSelf: Нельзя удалить собственный аккаунт
+    columns:
+      user: Пользователь
+      status: Статус
+      actions: Действия
+    form:
+      createTitle: Создание пользователя
+      editTitle: Редактирование пользователя
+      nickname: Никнейм
+      fullName: Полное имя
+      email: Email
+      password: Пароль
+      newPassword: Новый пароль
+      passwordHint: Оставьте пустым, чтобы не менять текущий пароль
+
+dashboard:
+  menu:
+    home: Главная панели
+    permissions: Права
+    roles: Роли
+    channelTypes: Типы каналов
+    workspaces: Пространства
+    channels: Каналы
+    channelGroups: Группы каналов
+    users: Пользователи
+    config: Настройки
+  pages:
+    home: Главная панели
+    permissions: Права
+    roles: Роли
+    channelTypes: Типы каналов
+    workspaces: Рабочие пространства
+    channels: Каналы
+    channelGroups: Группы каналов
+    users: Пользователи
+    config: Настройки
+  noWorkspaces: Рабочие пространства не найдены. Создайте его в разделе <link>Рабочие пространства</link>.
+  workspaceTabs: Рабочие пространства
+  roles:
+    create: Создать роль
+    createTitle: Создание роли
+    editTitle: Редактирование роли
+    empty: Роли не найдены. Создайте роль с помощью формы выше.
+    name: Название роли
+    nameRequired: Укажите название роли
+    createError: "Ошибка создания роли: {{message}}"
+    editError: "Ошибка изменения роли: {{message}}"
+  channels:
+    create: Создать канал
+    createTitle: Создание канала
+    editTitle: Редактирование канала
+    empty: Каналы не найдены. Создайте канал с помощью формы выше.
+    name: Название канала
+    nameRequired: Укажите название канала
+    channelType: Тип канала
+    channelTypeRequired: Выберите тип канала
+    selectChannelType: Выберите тип канала
+    channelTypeValue: "Тип канала: {{name}}"
+    unknownChannelType: Неизвестный тип канала
+    createError: "Ошибка создания канала: {{message}}"
+    editError: "Ошибка изменения канала: {{message}}"
+  channelGroups:
+    create: Создать группу каналов
+    createTitle: Создание группы каналов
+    editTitle: Редактирование группы каналов
+    empty: Группы каналов не найдены. Создайте группу с помощью формы выше.
+    name: Название группы каналов
+    nameRequired: Укажите название группы каналов
+    order: Порядок отображения
+    orderRequired: Укажите порядок
+    orderValue: "Порядок: {{order}}"
+    channels: Каналы
+    createError: "Ошибка создания группы каналов: {{message}}"
+    editError: "Ошибка изменения группы каналов: {{message}}"
+  channelTypes:
+    create: Создать тип канала
+    createTitle: Создание типа канала
+    editTitle: Редактирование типа канала
+    empty: Типы каналов не найдены. Создайте тип с помощью формы выше.
+    label: Название
+    labelTitle: "Название:"
+    labelRequired: Укажите название
+    key: Ключ
+    keyTitle: "Ключ:"
+    keyRequired: Укажите ключ
+    createError: "Ошибка создания типа канала: {{message}}"
+    editError: "Ошибка изменения типа канала: {{message}}"
+  workspaces:
+    create: Создать пространство
+    createTitle: Создание рабочего пространства
+    editTitle: Редактирование рабочего пространства
+    empty: Рабочие пространства не найдены. Создайте пространство с помощью формы выше.
+    name: Название рабочего пространства
+    nameRequired: Укажите название рабочего пространства
+    createError: "Ошибка создания рабочего пространства: {{message}}"
+    editError: "Ошибка изменения рабочего пространства: {{message}}"
+  config:
+    empty: Системные настройки не найдены.
+    editTitle: Изменение {{name}}
+    value: Значение
+    valueRequired: Укажите значение
+    editError: "Ошибка изменения значения: {{message}}"
+
+chat:
+  emptyMessages: Здесь пока нет сообщений
+  scrollToBottom: Прокрутить вниз
+  channels:
+    createChannel: Создать канал
+    directMessages: Личные сообщения
+    newMessage: Новое сообщение
+  createChannel:
+    title: Создание канала
+    name: Название канала
+    type: Тип канала
+  createWorkspace:
+    button: Создать рабочее пространство
+    title: Создание рабочего пространства
+    name: Название рабочего пространства
+  newDirectMessage:
+    title: Новое личное сообщение
+    nickname: Никнейм
+    searchPlaceholder: Поиск по никнейму
+    to: Кому
+    searching: Поиск…
+    noUsers: Пользователи не найдены
+    open: Открыть
+  userMenu:
+    admin: Администрирование
+    settings: Настройки
+    profile: Профиль
+    help: Помощь и поддержка
+    logout: Выйти
+    yourProfile: Ваш профиль
+  thread:
+    title: Тред
+  message:
+    edited: (изменено)
+  messageInput:
+    placeholder: Введите сообщение...
+    editPlaceholder: Измените сообщение…
+    editingMessage: Редактирование сообщения
+    save: Сохранить
+    send: Отправить
+    sendFileTitle: Отправка файла
+    sendAsFile: Отправить как файл
+    compress: Сжать
+    fileBadge: ФАЙЛ
+    unknownFileType: Неизвестный тип файла
+    unknownMimeType: Неизвестный MIME-тип
+  attachments:
+    delete: Удалить вложение
+    convert: Конвертация
+    upload: Загрузка
+    uploadFailed: Не удалось обработать или загрузить файл.
+    playAudio: Воспроизвести аудио
+    pauseAudio: Приостановить аудио
+    audioPosition: Позиция воспроизведения
+    closePreview: Закрыть просмотр
+  recorder:
+    voiceTitle: Голосовое сообщение
+    videoTitle: Видеосообщение
+    requestingMicrophone: Запрос доступа к микрофону…
+    requestingCamera: Запрос доступа к камере…
+    recording: Запись…
+    paused: Пауза
+    preview: Предпросмотр
+    microphoneUnavailable: Микрофон недоступен. Проверьте разрешения браузера и попробуйте ещё раз.
+    cameraUnavailable: Камера недоступна. Проверьте разрешения браузера и попробуйте ещё раз.
+    playPreview: Воспроизвести запись
+    pausePreview: Приостановить запись
+    pause: Пауза
+    resume: Продолжить
+    stop: Стоп
+    reRecord: Перезаписать
+    addToMessage: Добавить в сообщение
+  reactions:
+    add: Добавить реакцию
+    search: Поиск эмодзи
+    searchPlaceholder: Поиск эмодзи...
+    noMatches: Подходящих эмодзи нет
+    suggestions: Подсказки эмодзи
+    categoriesLabel: Категории эмодзи
+    countLabel_one: "Реакция {{code}}: {{count}} человек"
+    countLabel_few: "Реакция {{code}}: {{count}} человека"
+    countLabel_many: "Реакция {{code}}: {{count}} человек"
+    countLabel_other: "Реакция {{code}}: {{count}} человека"
+    categories:
+      smileys: Смайлы и люди
+      hearts: Сердца и любовь
+      gestures: Жесты и руки
+      animals: Животные и природа
+      food: Еда и напитки
+      activities: Занятия и спорт
+      travel: Путешествия и места
+      objects: Предметы
+      symbols: Символы
+      flags: Флаги

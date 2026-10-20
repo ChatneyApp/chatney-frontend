@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client/react';
-
+import { useTranslation } from 'react-i18next';
 
 import { Role } from '@/types/roles';
 import { CreateRoleForm } from '@/pages/dashboard/components/RoleForm/CreateRoleForm';
@@ -12,6 +12,7 @@ type Props = {
     role: Role;
 }
 export const RoleEditor = ({ role }: Props) => {
+    const { t } = useTranslation();
     const { refetch } = useRolesList();
     const [deleteRole] = useMutation(DELETE_ROLE, {
         onCompleted: () => {
@@ -37,9 +38,9 @@ export const RoleEditor = ({ role }: Props) => {
                 {role.id}
             </div>
             <div className={styles.controls}>
-                <CreateRoleForm cta="Edit" title="Edit Role" submitText="Save Changes" role={role}/>
+                <CreateRoleForm cta={t('common.edit')} title={t('dashboard.roles.editTitle')} submitText={t('common.saveChanges')} role={role}/>
                 <Button onClick={handleDelete} className="text-red-400">
-                    Delete
+                    {t('common.delete')}
                 </Button>
             </div>
         </div>

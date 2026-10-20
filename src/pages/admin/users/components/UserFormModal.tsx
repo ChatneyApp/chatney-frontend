@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client/react';
 import { Dialog } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import { CREATE_USER, UPDATE_USER } from '@/graphql/adminUsers';
 import { useUsersList } from '@/contexts/UsersListContext';
@@ -27,6 +28,7 @@ type Props = {
 };
 
 export function UserFormModal({ open, onOpenChange, user }: Props) {
+    const { t } = useTranslation();
     const { refetch } = useUsersList();
     const isEditing = Boolean(user);
 
@@ -127,16 +129,16 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
                 <Dialog.Overlay className={styles.overlay} />
                 <Dialog.Content className={styles.container}>
                     <Dialog.Title className={styles.title}>
-                        {isEditing ? 'Edit user' : 'Create user'}
+                        {isEditing ? t('admin.users.form.editTitle') : t('admin.users.form.createTitle')}
                     </Dialog.Title>
 
                     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                         <div className={styles.field}>
-                            <label className={styles.label} htmlFor="user-nickname">Nickname</label>
+                            <label className={styles.label} htmlFor="user-nickname">{t('admin.users.form.nickname')}</label>
                             <input
                                 id="user-nickname"
                                 className={styles.input}
-                                {...register('nickname', { validate: validateNickname })}
+                                {...register('nickname', { validate: (value) => validateNickname(value, t) })}
                                 maxLength={MAX_NICKNAME_LENGTH}
                             />
                             {errors.nickname && (
@@ -145,22 +147,22 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
                         </div>
 
                         <div className={styles.field}>
-                            <label className={styles.label} htmlFor="user-full-name">Full name</label>
+                            <label className={styles.label} htmlFor="user-full-name">{t('admin.users.form.fullName')}</label>
                             <input
                                 id="user-full-name"
                                 className={styles.input}
-                                placeholder="Optional"
+                                placeholder={t('common.optional')}
                                 {...register('fullName')}
                             />
                         </div>
 
                         <div className={styles.field}>
-                            <label className={styles.label} htmlFor="user-email">Email</label>
+                            <label className={styles.label} htmlFor="user-email">{t('admin.users.form.email')}</label>
                             <input
                                 id="user-email"
                                 type="email"
                                 className={styles.input}
-                                {...register('email', { required: 'Email is required' })}
+                                {...register('email', { required: t('validation.emailRequired') })}
                             />
                             {errors.email && (
                                 <span className={styles.errorText}>{errors.email.message}</span>
@@ -169,7 +171,7 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
 
                         <div className={styles.field}>
                             <label className={styles.label} htmlFor="user-password">
-                                {isEditing ? 'New password' : 'Password'}
+                                {isEditing ? t('admin.users.form.newPassword') : t('admin.users.form.password')}
                             </label>
                             <input
                                 id="user-password"
@@ -177,17 +179,17 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
                                 autoComplete="new-password"
                                 className={styles.input}
                                 {...register('password', {
-                                    required: isEditing ? false : 'Password is required',
+                                    required: isEditing ? false : t('validation.passwordRequired'),
                                     validate: (value) => {
                                         if (!value || value.length >= 6) {
                                             return true;
                                         }
-                                        return 'Password must be at least 6 characters';
+                                        return t('validation.passwordTooShort', { count: 6 });
                                     },
                                 })}
                             />
                             {isEditing && (
-                                <span className={styles.hint}>Leave blank to keep current password</span>
+                                <span className={styles.hint}>{t('admin.users.form.passwordHint')}</span>
                             )}
                             {errors.password && (
                                 <span className={styles.errorText}>{errors.password.message}</span>
@@ -197,26 +199,26 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
                         <div className={styles.checkboxRow}>
                             <label className={styles.checkboxLabel}>
                                 <input type="checkbox" className={styles.checkbox} {...register('active')} />
-                                Active
+                                {t('userStatus.active')}
                             </label>
                             <label className={styles.checkboxLabel}>
                                 <input type="checkbox" className={styles.checkbox} {...register('verified')} />
-                                Verified
+                                {t('userStatus.verified')}
                             </label>
                             <label className={styles.checkboxLabel}>
                                 <input type="checkbox" className={styles.checkbox} {...register('banned')} />
-                                Banned
+                                {t('userStatus.banned')}
                             </label>
                             <label className={styles.checkboxLabel}>
                                 <input type="checkbox" className={styles.checkbox} {...register('muted')} />
-                                Muted
+                                {t('userStatus.muted')}
                             </label>
                         </div>
 
                         <div className={styles.bottomButtons}>
                             <Dialog.Close asChild>
                                 <button type="button" className={styles.cancelButton}>
-                                    Cancel
+                                    {t('common.cancel')}
                                 </button>
                             </Dialog.Close>
                             <button
@@ -225,10 +227,10 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
                                 disabled={isSubmitting}
                             >
                                 {isSubmitting
-                                    ? 'Saving...'
+                                    ? t('common.saving')
                                     : isEditing
-                                      ? 'Save changes'
-                                      : 'Create user'}
+                                      ? t('common.saveChanges')
+                                      : t('admin.users.create')}
                             </button>
                         </div>
                     </form>

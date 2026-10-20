@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { Reaction } from '@/types/messages';
 
 import styles from './MessageReaction.module.css';
@@ -12,6 +13,7 @@ type Props = {
 }
 
 export const MessageReaction = ({ reaction, isMine, onAddReaction, onDeleteReaction }: Props) => {
+    const { t } = useTranslation();
     const handleClick = () => {
         if (isMine) {
             onDeleteReaction(reaction.code);
@@ -26,7 +28,7 @@ export const MessageReaction = ({ reaction, isMine, onAddReaction, onDeleteReact
             key={reaction.code}
             className={clsx(styles.reaction, { [styles.mine]: isMine })}
             onClick={handleClick}
-            aria-label={`${reaction.code} reaction count ${reaction.count}`}
+            aria-label={t('chat.reactions.countLabel', { code: reaction.code, count: reaction.count })}
         >
             <div className={styles.reactionBody}>{REACTION_DETAILS[reaction.code].emoji}</div>
             <div className={styles.counter}>{reaction.count}</div>

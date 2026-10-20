@@ -1,0 +1,350 @@
+common:
+  ok: ОК
+  cancel: Скасувати
+  edit: Редагувати
+  delete: Видалити
+  saving: Збереження...
+  saveChanges: Зберегти зміни
+  optional: Необов'язково
+  comingSoon: Незабаром
+  close: Закрити
+  loading: Завантаження...
+  processing: Обробка...
+  create: Створити
+
+validation:
+  nicknameRequired: Вкажіть нікнейм
+  nicknameTooLong_one: Нікнейм має містити не більше {{count}} символу
+  nicknameTooLong_few: Нікнейм має містити не більше {{count}} символів
+  nicknameTooLong_many: Нікнейм має містити не більше {{count}} символів
+  nicknameTooLong_other: Нікнейм має містити не більше {{count}} символу
+  nicknameInvalid: Нікнейм може містити лише латинські літери, цифри та підкреслення
+  emailRequired: Вкажіть email
+  loginRequired: Вкажіть email або нікнейм
+  passwordRequired: Вкажіть пароль
+  passwordTooShort_one: Пароль має містити щонайменше {{count}} символ
+  passwordTooShort_few: Пароль має містити щонайменше {{count}} символи
+  passwordTooShort_many: Пароль має містити щонайменше {{count}} символів
+  passwordTooShort_other: Пароль має містити щонайменше {{count}} символу
+  confirmPasswordRequired: Підтвердіть пароль
+  passwordsDoNotMatch: Паролі не збігаються
+  newPasswordsDoNotMatch: Нові паролі не збігаються
+  currentPasswordRequired: Вкажіть поточний пароль
+
+userStatus:
+  active: Активний
+  inactive: Неактивний
+  verified: Підтверджений
+  notVerified: Не підтверджений
+  banned: Заблокований
+  muted: Без права голосу
+
+auth:
+  signInTitle: Вхід до Chatney
+  registerTitle: Створіть акаунт
+  signInSubtitle: Спілкуйтеся з командою та робочими просторами.
+  registerSubtitle: Приєднуйтеся до команди й почніть працювати разом.
+  socialOptions: Вхід через соцмережі
+  orEmail: Або через email
+  newHere: Вперше тут?
+  createAccountLink: Створити акаунт
+  haveAccount: Вже маєте акаунт?
+  signInLink: Увійти
+  footer:
+    privacy: Політика конфіденційності
+    terms: Умови використання
+    support: Зв'язатися з підтримкою
+  workEmail: Робочий email
+  email: Email
+  emailOrNickname: Email або нікнейм
+  password: Пароль
+  confirmPassword: Підтвердження пароля
+  nickname: Нікнейм
+  fullNameOptional: Повне ім'я (необов'язково)
+  fullNamePlaceholder: Тарас Шевченко
+  forgot: Забули?
+  signingIn: Вхід...
+  signInSubmit: Увійти до Chatney
+  loginError: "Помилка входу: {{message}}"
+  creatingAccount: Створення акаунта...
+  createAccount: Створити акаунт
+  registerError: "Помилка реєстрації: {{message}}"
+  backToSignIn: Повернутися до входу
+  forgotPassword:
+    title: Забули пароль?
+    subtitle: Введіть email або нікнейм, пов'язаний з вашим акаунтом.
+    submitted: Якщо такий email існує, ви отримаєте посилання для скидання пароля.
+    failed: Не вдалося надіслати запит на скидання пароля. Спробуйте ще раз.
+    sending: Надсилання...
+    submit: Надіслати посилання
+  resetPassword:
+    title: Скидання пароля
+    subtitle: Придумайте новий пароль для акаунта Chatney.
+    completed: Пароль скинуто. Тепер ви можете увійти.
+    invalidLink: Посилання для скидання пароля недійсне.
+    expiredLink: Посилання для скидання пароля недійсне або застаріле.
+    failed: Не вдалося скинути пароль. Спробуйте ще раз.
+    resetting: Скидання...
+    submit: Скинути пароль
+
+install:
+  submit: Встановити
+  loading: "Завантаження:"
+  errorMessage: "Повідомлення про помилку:"
+  error: "Помилка встановлення системи: {{message}}"
+
+profile:
+  title: Профіль
+  backToChat: Повернутися до чату
+  loading: Завантаження профілю...
+  updated: Профіль оновлено
+  noRole: Роль не призначено
+  accountDetails: Дані акаунта
+  nickname: Нікнейм
+  fullName: Повне ім'я
+  email: Email
+  avatarUrl: URL аватара
+  avatarUrlHint: Необов'язкове посилання на зображення для аватара
+  changePassword: Зміна пароля
+  currentPassword: Поточний пароль
+  newPassword: Новий пароль
+  confirmNewPassword: Підтвердження нового пароля
+
+admin:
+  nav:
+    brand: Адміністрування
+    roles: Ролі
+    users: Користувачі
+    backToChat: Повернутися до чату
+  roles:
+    title: Ролі
+    subtitle: Керування ролями доступу та їхніми правами
+    create: Створити роль
+    loading: Завантаження ролей...
+    empty: Ролей ще немає. Створіть першу роль, щоб почати.
+    id: ID {{id}}
+    columns:
+      role: Роль
+      actions: Дії
+    form:
+      createTitle: Створення ролі
+      editTitle: Редагування ролі
+      name: Назва
+      nameRequired: Вкажіть назву ролі
+    deleteDialog:
+      title: Видалення ролі
+      description: Видалити роль «{{name}}»? Цю дію не можна скасувати.
+    errors:
+      createForbidden: У вас немає прав на створення ролей.
+      createFailed: Не вдалося створити роль. Спробуйте ще раз.
+      editForbidden: У вас немає прав на редагування ролей.
+      editNotFound: Ця роль більше не існує.
+      editFailed: Не вдалося зберегти роль. Спробуйте ще раз.
+      deleteForbidden: У вас немає прав на видалення ролей.
+      deleteNotFound: Ця роль більше не існує.
+      deleteFailed: Не вдалося видалити роль. Спробуйте ще раз.
+  users:
+    title: Користувачі
+    subtitle: Керування акаунтами, ролями та статусом доступу
+    create: Створити користувача
+    loading: Завантаження користувачів...
+    empty: Користувачів не знайдено. Створіть першого користувача, щоб почати.
+    deleteConfirm: Видалити користувача «{{name}}»? Цю дію не можна скасувати.
+    you: (ви)
+    cannotDeleteSelf: Не можна видалити власний акаунт
+    columns:
+      user: Користувач
+      status: Статус
+      actions: Дії
+    form:
+      createTitle: Створення користувача
+      editTitle: Редагування користувача
+      nickname: Нікнейм
+      fullName: Повне ім'я
+      email: Email
+      password: Пароль
+      newPassword: Новий пароль
+      passwordHint: Залиште порожнім, щоб не змінювати поточний пароль
+
+dashboard:
+  menu:
+    home: Головна панелі
+    permissions: Права
+    roles: Ролі
+    channelTypes: Типи каналів
+    workspaces: Простори
+    channels: Канали
+    channelGroups: Групи каналів
+    users: Користувачі
+    config: Налаштування
+  pages:
+    home: Головна панелі
+    permissions: Права
+    roles: Ролі
+    channelTypes: Типи каналів
+    workspaces: Робочі простори
+    channels: Канали
+    channelGroups: Групи каналів
+    users: Користувачі
+    config: Налаштування
+  noWorkspaces: Робочих просторів не знайдено. Створіть його в розділі <link>Робочі простори</link>.
+  workspaceTabs: Робочі простори
+  roles:
+    create: Створити роль
+    createTitle: Створення ролі
+    editTitle: Редагування ролі
+    empty: Ролей не знайдено. Створіть роль за допомогою форми вище.
+    name: Назва ролі
+    nameRequired: Вкажіть назву ролі
+    createError: "Помилка створення ролі: {{message}}"
+    editError: "Помилка редагування ролі: {{message}}"
+  channels:
+    create: Створити канал
+    createTitle: Створення каналу
+    editTitle: Редагування каналу
+    empty: Каналів не знайдено. Створіть канал за допомогою форми вище.
+    name: Назва каналу
+    nameRequired: Вкажіть назву каналу
+    channelType: Тип каналу
+    channelTypeRequired: Оберіть тип каналу
+    selectChannelType: Оберіть тип каналу
+    channelTypeValue: "Тип каналу: {{name}}"
+    unknownChannelType: Невідомий тип каналу
+    createError: "Помилка створення каналу: {{message}}"
+    editError: "Помилка редагування каналу: {{message}}"
+  channelGroups:
+    create: Створити групу каналів
+    createTitle: Створення групи каналів
+    editTitle: Редагування групи каналів
+    empty: Груп каналів не знайдено. Створіть групу за допомогою форми вище.
+    name: Назва групи каналів
+    nameRequired: Вкажіть назву групи каналів
+    order: Порядок відображення
+    orderRequired: Вкажіть порядок
+    orderValue: "Порядок: {{order}}"
+    channels: Канали
+    createError: "Помилка створення групи каналів: {{message}}"
+    editError: "Помилка редагування групи каналів: {{message}}"
+  channelTypes:
+    create: Створити тип каналу
+    createTitle: Створення типу каналу
+    editTitle: Редагування типу каналу
+    empty: Типів каналів не знайдено. Створіть тип за допомогою форми вище.
+    label: Назва
+    labelTitle: "Назва:"
+    labelRequired: Вкажіть назву
+    key: Ключ
+    keyTitle: "Ключ:"
+    keyRequired: Вкажіть ключ
+    createError: "Помилка створення типу каналу: {{message}}"
+    editError: "Помилка редагування типу каналу: {{message}}"
+  workspaces:
+    create: Створити простір
+    createTitle: Створення робочого простору
+    editTitle: Редагування робочого простору
+    empty: Робочих просторів не знайдено. Створіть простір за допомогою форми вище.
+    name: Назва робочого простору
+    nameRequired: Вкажіть назву робочого простору
+    createError: "Помилка створення робочого простору: {{message}}"
+    editError: "Помилка редагування робочого простору: {{message}}"
+  config:
+    empty: Системних налаштувань не знайдено.
+    editTitle: Редагування {{name}}
+    value: Значення
+    valueRequired: Вкажіть значення
+    editError: "Помилка редагування значення: {{message}}"
+
+chat:
+  emptyMessages: Тут ще немає повідомлень
+  scrollToBottom: Прокрутити донизу
+  channels:
+    createChannel: Створити канал
+    directMessages: Особисті повідомлення
+    newMessage: Нове повідомлення
+  createChannel:
+    title: Створення каналу
+    name: Назва каналу
+    type: Тип каналу
+  createWorkspace:
+    button: Створити робочий простір
+    title: Створення робочого простору
+    name: Назва робочого простору
+  newDirectMessage:
+    title: Нове особисте повідомлення
+    nickname: Нікнейм
+    searchPlaceholder: Пошук за нікнеймом
+    to: Кому
+    searching: Пошук…
+    noUsers: Користувачів не знайдено
+    open: Відкрити
+  userMenu:
+    admin: Адміністрування
+    settings: Налаштування
+    profile: Профіль
+    help: Допомога та підтримка
+    logout: Вийти
+    yourProfile: Ваш профіль
+  thread:
+    title: Тред
+  message:
+    edited: (змінено)
+  messageInput:
+    placeholder: Введіть повідомлення...
+    editPlaceholder: Змініть повідомлення…
+    editingMessage: Редагування повідомлення
+    save: Зберегти
+    send: Надіслати
+    sendFileTitle: Надсилання файлу
+    sendAsFile: Надіслати як файл
+    compress: Стиснути
+    fileBadge: ФАЙЛ
+    unknownFileType: Невідомий тип файлу
+    unknownMimeType: Невідомий MIME-тип
+  attachments:
+    delete: Видалити вкладення
+    convert: Конвертація
+    upload: Завантаження
+    uploadFailed: Не вдалося обробити або завантажити файл.
+    playAudio: Відтворити аудіо
+    pauseAudio: Призупинити аудіо
+    audioPosition: Позиція відтворення
+    closePreview: Закрити перегляд
+  recorder:
+    voiceTitle: Голосове повідомлення
+    videoTitle: Відеоповідомлення
+    requestingMicrophone: Запит доступу до мікрофона…
+    requestingCamera: Запит доступу до камери…
+    recording: Запис…
+    paused: Пауза
+    preview: Попередній перегляд
+    microphoneUnavailable: Мікрофон недоступний. Перевірте дозволи браузера та спробуйте ще раз.
+    cameraUnavailable: Камера недоступна. Перевірте дозволи браузера та спробуйте ще раз.
+    playPreview: Відтворити запис
+    pausePreview: Призупинити запис
+    pause: Пауза
+    resume: Продовжити
+    stop: Стоп
+    reRecord: Перезаписати
+    addToMessage: Додати до повідомлення
+  reactions:
+    add: Додати реакцію
+    search: Пошук емодзі
+    searchPlaceholder: Пошук емодзі...
+    noMatches: Відповідних емодзі немає
+    suggestions: Підказки емодзі
+    categoriesLabel: Категорії емодзі
+    countLabel_one: "Реакція {{code}}: {{count}} людина"
+    countLabel_few: "Реакція {{code}}: {{count}} людини"
+    countLabel_many: "Реакція {{code}}: {{count}} людей"
+    countLabel_other: "Реакція {{code}}: {{count}} людини"
+    categories:
+      smileys: Смайли та люди
+      hearts: Серця та кохання
+      gestures: Жести та руки
+      animals: Тварини та природа
+      food: Їжа та напої
+      activities: Заняття та спорт
+      travel: Подорожі та місця
+      objects: Предмети
+      symbols: Символи
+      flags: Прапори

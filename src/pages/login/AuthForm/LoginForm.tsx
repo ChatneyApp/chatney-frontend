@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useApolloClient } from '@apollo/client/react';
 import { AtSign, Lock } from 'lucide-react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 import styles from './AuthForm.module.css';
 import {
@@ -19,6 +20,7 @@ type FormInputs = {
 };
 
 export const LoginForm = () => {
+    const { t } = useTranslation();
     const apollo = useApolloClient();
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -44,7 +46,7 @@ export const LoginForm = () => {
             localStorage.setItem(userAuthId, out.id.toString());
             window.location.href = clientStartPageUrl;
         } catch (error) {
-            setErrorMessage(`Login error: ${(error as Error).message}`);
+            setErrorMessage(t('auth.loginError', { message: (error as Error).message }));
         }
 
         setLoading(false);
@@ -60,7 +62,7 @@ export const LoginForm = () => {
 
             <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                 <div className={styles.field}>
-                    <label htmlFor="login" className={styles.label}>Work email</label>
+                    <label htmlFor="login" className={styles.label}>{t('auth.workEmail')}</label>
                     <div className={clsx(styles.inputWrapper, errors.login && styles.inputWrapperError)}>
                         <AtSign size={16} className={styles.inputIcon} aria-hidden />
                         <input
@@ -68,7 +70,7 @@ export const LoginForm = () => {
                             type="text"
                             placeholder="name@company.com"
                             autoComplete="username"
-                            {...register('login', { required: 'Email or nickname is required' })}
+                            {...register('login', { required: t('validation.loginRequired') })}
                             className={styles.input}
                         />
                     </div>
@@ -77,8 +79,8 @@ export const LoginForm = () => {
 
                 <div className={styles.field}>
                     <div className={styles.labelRow}>
-                        <label htmlFor="password" className={styles.label}>Password</label>
-                        <a href={forgotPasswordPageUrl} className={styles.forgotLink}>Forgot?</a>
+                        <label htmlFor="password" className={styles.label}>{t('auth.password')}</label>
+                        <a href={forgotPasswordPageUrl} className={styles.forgotLink}>{t('auth.forgot')}</a>
                     </div>
                     <div className={clsx(styles.inputWrapper, errors.password && styles.inputWrapperError)}>
                         <Lock size={16} className={styles.inputIcon} aria-hidden />
@@ -87,7 +89,7 @@ export const LoginForm = () => {
                             type="password"
                             placeholder="••••••••"
                             autoComplete="current-password"
-                            {...register('password', { required: 'Password is required' })}
+                            {...register('password', { required: t('validation.passwordRequired') })}
                             className={styles.input}
                         />
                     </div>
@@ -95,7 +97,7 @@ export const LoginForm = () => {
                 </div>
 
                 <button type="submit" className={styles.submitButton} disabled={loading}>
-                    {loading ? 'Signing in...' : 'Enter Chatney'}
+                    {loading ? t('auth.signingIn') : t('auth.signInSubmit')}
                 </button>
             </form>
         </div>

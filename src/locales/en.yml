@@ -1,0 +1,344 @@
+common:
+  ok: OK
+  cancel: Cancel
+  edit: Edit
+  delete: Delete
+  saving: Saving...
+  saveChanges: Save changes
+  optional: Optional
+  comingSoon: Coming soon
+  close: Close
+  loading: Loading...
+  processing: Processing...
+  create: Create
+
+validation:
+  nicknameRequired: Nickname is required
+  nicknameTooLong_one: Nickname must be at most {{count}} character
+  nicknameTooLong_other: Nickname must be at most {{count}} characters
+  nicknameInvalid: Nickname can only contain letters, numbers, and underscores
+  emailRequired: Email is required
+  loginRequired: Email or nickname is required
+  passwordRequired: Password is required
+  passwordTooShort_one: Password must be at least {{count}} character
+  passwordTooShort_other: Password must be at least {{count}} characters
+  confirmPasswordRequired: Please confirm your password
+  passwordsDoNotMatch: Passwords do not match
+  newPasswordsDoNotMatch: New passwords do not match
+  currentPasswordRequired: Current password is required
+
+userStatus:
+  active: Active
+  inactive: Inactive
+  verified: Verified
+  notVerified: Not verified
+  banned: Banned
+  muted: Muted
+
+auth:
+  signInTitle: Sign in to Chatney
+  registerTitle: Create your account
+  signInSubtitle: Connect with your team and workspaces.
+  registerSubtitle: Join your team and start collaborating.
+  socialOptions: Social sign-in options
+  orEmail: Or email
+  newHere: New here?
+  createAccountLink: Create an account
+  haveAccount: Already have an account?
+  signInLink: Sign in
+  footer:
+    privacy: Privacy Policy
+    terms: Terms of Service
+    support: Contact Support
+  workEmail: Work email
+  email: Email
+  emailOrNickname: Email or nickname
+  password: Password
+  confirmPassword: Confirm password
+  nickname: Nickname
+  fullNameOptional: Full name (optional)
+  fullNamePlaceholder: Jane Doe
+  forgot: Forgot?
+  signingIn: Signing in...
+  signInSubmit: Enter Chatney
+  loginError: "Login error: {{message}}"
+  creatingAccount: Creating account...
+  createAccount: Create account
+  registerError: "Error registering: {{message}}"
+  backToSignIn: Back to sign in
+  forgotPassword:
+    title: Forgot your password?
+    subtitle: Enter the email or nickname associated with your account.
+    submitted: If the email exists, you will get a password reset link.
+    failed: Unable to request a password reset. Please try again.
+    sending: Sending...
+    submit: Send reset link
+  resetPassword:
+    title: Reset your password
+    subtitle: Choose a new password for your Chatney account.
+    completed: Your password has been reset. You can now sign in.
+    invalidLink: This password reset link is invalid.
+    expiredLink: This password reset link is invalid or has expired.
+    failed: Unable to reset your password. Please try again.
+    resetting: Resetting...
+    submit: Reset password
+
+install:
+  submit: Install
+  loading: "Loading:"
+  errorMessage: "Error message:"
+  error: "System install error: {{message}}"
+
+profile:
+  title: Profile
+  backToChat: Back to chat
+  loading: Loading profile...
+  updated: Profile updated successfully
+  noRole: No role assigned
+  accountDetails: Account details
+  nickname: Nickname
+  fullName: Full name
+  email: Email
+  avatarUrl: Avatar URL
+  avatarUrlHint: Optional image URL for your avatar
+  changePassword: Change password
+  currentPassword: Current password
+  newPassword: New password
+  confirmNewPassword: Confirm new password
+
+admin:
+  nav:
+    brand: Admin
+    roles: Roles
+    users: Users
+    backToChat: Back to chat
+  roles:
+    title: Roles
+    subtitle: Manage access roles and their permissions
+    create: Create role
+    loading: Loading roles...
+    empty: No roles yet. Create the first role to get started.
+    id: ID {{id}}
+    columns:
+      role: Role
+      actions: Actions
+    form:
+      createTitle: Create role
+      editTitle: Edit role
+      name: Name
+      nameRequired: Role name is required
+    deleteDialog:
+      title: Delete role
+      description: Delete role "{{name}}"? This action cannot be undone.
+    errors:
+      createForbidden: You don't have permission to create roles.
+      createFailed: Couldn't create the role. Please try again.
+      editForbidden: You don't have permission to edit roles.
+      editNotFound: This role no longer exists.
+      editFailed: Couldn't save the role. Please try again.
+      deleteForbidden: You don't have permission to delete roles.
+      deleteNotFound: This role no longer exists.
+      deleteFailed: Couldn't delete the role. Please try again.
+  users:
+    title: Users
+    subtitle: Manage user accounts, roles, and access status
+    create: Create user
+    loading: Loading users...
+    empty: No users found. Create the first user to get started.
+    deleteConfirm: Delete user "{{name}}"? This action cannot be undone.
+    you: (you)
+    cannotDeleteSelf: You cannot delete your own account
+    columns:
+      user: User
+      status: Status
+      actions: Actions
+    form:
+      createTitle: Create user
+      editTitle: Edit user
+      nickname: Nickname
+      fullName: Full name
+      email: Email
+      password: Password
+      newPassword: New password
+      passwordHint: Leave blank to keep current password
+
+dashboard:
+  menu:
+    home: Dashboard home
+    permissions: Permissions
+    roles: Roles
+    channelTypes: Channel types
+    workspaces: Workspaces
+    channels: Channels
+    channelGroups: Channel groups
+    users: Users
+    config: Config
+  pages:
+    home: Dashboard home
+    permissions: Permissions
+    roles: Roles
+    channelTypes: Channel Types
+    workspaces: Workspaces
+    channels: Channels
+    channelGroups: Channel Groups
+    users: Users
+    config: Config
+  noWorkspaces: No workspaces found. Create one at <link>Workspaces</link>.
+  workspaceTabs: Workspaces
+  roles:
+    create: Create role
+    createTitle: Create Role
+    editTitle: Edit Role
+    empty: No roles found. Create one using the form above.
+    name: Role Name
+    nameRequired: Role name is required
+    createError: "Error creating role: {{message}}"
+    editError: "Error updating role: {{message}}"
+  channels:
+    create: Create channel
+    createTitle: Create Channel
+    editTitle: Edit Channel
+    empty: No channels found. Create one using the form above.
+    name: Channel Name
+    nameRequired: Channel name is required
+    channelType: Channel Type
+    channelTypeRequired: Channel type is required
+    selectChannelType: Select a channel type
+    channelTypeValue: "Channel type: {{name}}"
+    unknownChannelType: Unknown Channel Type
+    createError: "Error creating channel: {{message}}"
+    editError: "Error updating channel: {{message}}"
+  channelGroups:
+    create: Create channel group
+    createTitle: Create Channel Group
+    editTitle: Edit Channel Group
+    empty: No channel groups found. Create one using the form above.
+    name: Channel Group Name
+    nameRequired: Channel group name is required
+    order: Display Order
+    orderRequired: Order is required
+    orderValue: "Order: {{order}}"
+    channels: Channels
+    createError: "Error creating channel group: {{message}}"
+    editError: "Error updating channel group: {{message}}"
+  channelTypes:
+    create: Create channel type
+    createTitle: Create Channel Type
+    editTitle: Edit Channel Type
+    empty: No channel types found. Create one using the form above.
+    label: Label
+    labelTitle: "Label:"
+    labelRequired: Label is required
+    key: Key
+    keyTitle: "Key:"
+    keyRequired: Key is required
+    createError: "Error creating channel type: {{message}}"
+    editError: "Error editing channel type: {{message}}"
+  workspaces:
+    create: Create workspace
+    createTitle: Create Workspace
+    editTitle: Edit Workspace
+    empty: No workspaces found. Create one using the form above.
+    name: Workspace Name
+    nameRequired: Workspace name is required
+    createError: "Error creating workspace: {{message}}"
+    editError: "Error updating workspace: {{message}}"
+  config:
+    empty: No system config values found.
+    editTitle: Edit {{name}}
+    value: Value
+    valueRequired: Value is required
+    editError: "Error updating value: {{message}}"
+
+chat:
+  emptyMessages: No messages here yet
+  scrollToBottom: Scroll to bottom
+  channels:
+    createChannel: Create channel
+    directMessages: Direct messages
+    newMessage: New message
+  createChannel:
+    title: Create Channel
+    name: Channel name
+    type: Channel type
+  createWorkspace:
+    button: Create workspace
+    title: Create Workspace
+    name: Workspace name
+  newDirectMessage:
+    title: New direct message
+    nickname: Nickname
+    searchPlaceholder: Search by nickname
+    to: To
+    searching: Searching…
+    noUsers: No users found
+    open: Open
+  userMenu:
+    admin: Admin
+    settings: Settings
+    profile: Profile
+    help: Help & Support
+    logout: Logout
+    yourProfile: Your Profile
+  thread:
+    title: Thread
+  message:
+    edited: (edited)
+  messageInput:
+    placeholder: Type a message...
+    editPlaceholder: Edit message…
+    editingMessage: Editing message
+    save: Save
+    send: Send
+    sendFileTitle: Send file
+    sendAsFile: Send as file
+    compress: Compress
+    fileBadge: FILE
+    unknownFileType: Unknown file type
+    unknownMimeType: Unknown MIME type
+  attachments:
+    delete: Delete attachment
+    convert: Convert
+    upload: Upload
+    uploadFailed: Couldn't process or upload the file.
+    playAudio: Play audio
+    pauseAudio: Pause audio
+    audioPosition: Audio position
+    closePreview: Close preview
+  recorder:
+    voiceTitle: Voice message
+    videoTitle: Video message
+    requestingMicrophone: Requesting microphone…
+    requestingCamera: Requesting camera…
+    recording: Recording…
+    paused: Paused
+    preview: Preview
+    microphoneUnavailable: Microphone is not available. Check the browser permissions and try again.
+    cameraUnavailable: Camera is not available. Check the browser permissions and try again.
+    playPreview: Play preview
+    pausePreview: Pause preview
+    pause: Pause
+    resume: Resume
+    stop: Stop
+    reRecord: Re-record
+    addToMessage: Add to message
+  reactions:
+    add: Add reaction
+    search: Search emojis
+    searchPlaceholder: Search emojis...
+    noMatches: No matching emojis
+    suggestions: Emoji suggestions
+    categoriesLabel: Emoji categories
+    countLabel_one: "{{code}} reaction, {{count}} person"
+    countLabel_other: "{{code}} reaction, {{count}} people"
+    categories:
+      smileys: Smileys & People
+      hearts: Hearts & Love
+      gestures: Gestures & Hands
+      animals: Animals & Nature
+      food: Food & Drink
+      activities: Activities & Sports
+      travel: Travel & Places
+      objects: Objects
+      symbols: Symbols
+      flags: Flags

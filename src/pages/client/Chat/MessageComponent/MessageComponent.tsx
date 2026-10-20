@@ -1,5 +1,6 @@
 import { CornerUpLeft, Pencil, XCircle } from 'lucide-react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
 import { isDev } from '@/helpers/env';
 import { MessageReactions } from '@/pages/client/Chat/MessageReactions';
@@ -23,6 +24,7 @@ type Props = {
     onOpenThread?(parentId: MessageWithUser): void;
 };
 export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, onReply, onEdit, onAddReaction, onDeleteReaction, onOpenThread }: Props) => {
+    const { t } = useTranslation();
     const isMine = message.userId === currentUserId;
     const avatarUrl = message.user.avatarUrl ?? `https://i.pravatar.cc/?img=${message.userId}`;
     const handleToggleThread = () => {
@@ -52,7 +54,7 @@ export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, o
                     <span className={styles.timestamp}>
                         {formatTimestamp(new Date(message.updatedAt))}
                         {new Date(message.updatedAt).getTime() !== new Date(message.createdAt).getTime() && (
-                            <span className={styles.editedLabel}> (edited)</span>
+                            <span className={styles.editedLabel}> {t('chat.message.edited')}</span>
                         )}
                     </span>
                     <CornerUpLeft

@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { Check, Mic, Paperclip, SendHorizontal, Video, X } from 'lucide-react';
 import { Dialog } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/Button';
 import { formatFileSize } from '@/helpers/utils';
@@ -83,6 +84,7 @@ const canUploadAsFile = (file: File) =>
     file.type.startsWith('image/') || file.type.startsWith('video/') || file.type.startsWith('audio/');
 
 export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdit, onCancelEdit, onClearReply }: Props) {
+    const { t } = useTranslation();
     const [isSending, setIsSending] = useState(false);
     const [text, setText] = useState('');
     const [attachments, setAttachments] = useState<EditorAttachment[]>([]);
@@ -325,8 +327,8 @@ export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdi
 
         return (
             <div className={styles.filePreviewFallback}>
-                <span className={styles.filePreviewFallbackIcon}>FILE</span>
-                <span>{mimeType || 'Unknown file type'}</span>
+                <span className={styles.filePreviewFallbackIcon}>{t('chat.messageInput.fileBadge')}</span>
+                <span>{mimeType || t('chat.messageInput.unknownFileType')}</span>
             </div>
         );
     };
@@ -337,7 +339,7 @@ export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdi
                 <Dialog.Portal>
                     <Dialog.Overlay className={dialogStyles.overlay}/>
                     <Dialog.Content className={dialogStyles.container}>
-                        <Dialog.Title className={dialogStyles.title}>Send file</Dialog.Title>
+                        <Dialog.Title className={dialogStyles.title}>{t('chat.messageInput.sendFileTitle')}</Dialog.Title>
                         {pendingFile && (
                             <div className={styles.filePreviewDialog}>
                                 <div className={styles.filePreviewArea}>
@@ -346,7 +348,7 @@ export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdi
                                 <div className={styles.filePreviewMeta}>
                                     <span className={styles.filePreviewName}>{pendingFile.name}</span>
                                     <span className={styles.filePreviewDetails}>
-                                        {pendingFile.type || 'Unknown MIME type'} - {formatFileSize(pendingFile.size)}
+                                        {pendingFile.type || t('chat.messageInput.unknownMimeType')} - {formatFileSize(pendingFile.size)}
                                     </span>
                                 </div>
                                 {canUploadAsFile(pendingFile) && (
@@ -361,7 +363,7 @@ export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdi
                                                 }
                                             }}
                                         />
-                                        <span>Send as file</span>
+                                        <span>{t('chat.messageInput.sendAsFile')}</span>
                                     </label>
                                 )}
                                 {canCompressFile(pendingFile) && (
@@ -372,17 +374,17 @@ export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdi
                                             disabled={uploadPendingFileAsFile}
                                             onChange={(e) => setCompressPendingFile(e.target.checked)}
                                         />
-                                        <span>Compress</span>
+                                        <span>{t('chat.messageInput.compress')}</span>
                                     </label>
                                 )}
                             </div>
                         )}
                         <div className={dialogStyles.bottomButtons}>
                             <Button type="button" onClick={closeFilePreview}>
-                                Cancel
+                                {t('common.cancel')}
                             </Button>
                             <Button type="button" onClick={confirmPendingFile}>
-                                Send
+                                {t('chat.messageInput.send')}
                             </Button>
                         </div>
                     </Dialog.Content>
@@ -390,7 +392,7 @@ export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdi
             </Dialog.Root>
             {isEditing && (
                 <div className={styles.editBanner}>
-                    <span>Editing message</span>
+                    <span>{t('chat.messageInput.editingMessage')}</span>
                     <X className={styles.replyPreviewClear} onClick={onCancelEdit} />
                 </div>
             )}
@@ -465,7 +467,7 @@ export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdi
                     <textarea
                         ref={inputRef}
                         rows={1}
-                        placeholder={isEditing ? 'Edit message…' : 'Type a message...'}
+                        placeholder={isEditing ? t('chat.messageInput.editPlaceholder') : t('chat.messageInput.placeholder')}
                         className="block w-full resize-none max-h-40 overflow-y-auto bg-transparent text-white placeholder-[#5f6a8c] p-2 focus:outline-none"
                         value={text}
                         onChange={handleTextChange}
@@ -478,7 +480,7 @@ export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdi
                     type="submit"
                     disabled={!canSubmit}
                     className={styles.sendButton}
-                    title={isEditing ? 'Save' : 'Send'}
+                    title={isEditing ? t('chat.messageInput.save') : t('chat.messageInput.send')}
                 >
                     {isEditing ? <Check /> : <SendHorizontal />}
                 </button>

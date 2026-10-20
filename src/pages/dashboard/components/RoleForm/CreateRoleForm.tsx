@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import { Dialog } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import styles from './CreateRoleForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
@@ -21,6 +22,7 @@ type Props = {
     role?: Role;
 }
 export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
+    const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -41,7 +43,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
             refetch();
         },
         onError: (error) => {
-            setErrorMessage(`Error creating role: ${error.message}`);
+            setErrorMessage(t('dashboard.roles.createError', { message: error.message }));
             setSuccessMessage(null);
         }
     });
@@ -55,7 +57,7 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
             refetch();
         },
         onError: (error) => {
-            setErrorMessage(`Error creating role: ${error.message}`);
+            setErrorMessage(t('dashboard.roles.editError', { message: error.message }));
             setSuccessMessage(null);
         }
     });
@@ -111,10 +113,10 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
 
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className={styles.formGroup}>
-                                <label htmlFor="name">Role Name</label>
+                                <label htmlFor="name">{t('dashboard.roles.name')}</label>
                                 <input
                                     id="name"
-                                    {...register('name', { required: 'Role name is required' })}
+                                    {...register('name', { required: t('dashboard.roles.nameRequired') })}
                                     className={styles.input}
                                 />
                                 {errors.name && <span className={styles.errorText}>{errors.name.message}</span>}
@@ -122,15 +124,15 @@ export const CreateRoleForm = ({ cta, title, submitText, role }: Props) => {
 
                             <div className={dialogStyles.bottomButtons}>
                                 <Dialog.Close asChild>
-                                    <Button aria-label="Close">
-                                        Cancel
+                                    <Button aria-label={t('common.close')}>
+                                        {t('common.cancel')}
                                     </Button>
                                 </Dialog.Close>
                                 <Button
                                     type="submit"
                                     disabled={createLoading || editLoading}
                                 >
-                                    {createLoading || editLoading ? 'Creating...' : submitText}
+                                    {createLoading || editLoading ? t('common.saving') : submitText}
                                 </Button>
                             </div>
                         </form>

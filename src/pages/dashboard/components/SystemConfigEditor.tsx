@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SystemConfigProvider, useSystemConfig } from '@/contexts/SystemConfigProvider';
 import {
@@ -7,6 +8,7 @@ import {
 import { EmptyListMessage } from '@/pages/dashboard/components/EmptyListMessage';
 
 const SystemConfigEditorCore = () => {
+    const { t } = useTranslation();
     const { systemConfig } = useSystemConfig();
 
     return <div>
@@ -15,18 +17,22 @@ const SystemConfigEditorCore = () => {
         ))}
         {!systemConfig.length && (
             <EmptyListMessage>
-                No system config values found.
+                {t('dashboard.config.empty')}
             </EmptyListMessage>
         )}
     </div>;
 };
 
-export const SystemConfigEditor = () => (
-    <>
-        <Suspense fallback={<div>Loading...</div>}>
-            <SystemConfigProvider>
-                <SystemConfigEditorCore/>
-            </SystemConfigProvider>
-        </Suspense>
-    </>
-);
+export const SystemConfigEditor = () => {
+    const { t } = useTranslation();
+
+    return (
+        <>
+            <Suspense fallback={<div>{t('common.loading')}</div>}>
+                <SystemConfigProvider>
+                    <SystemConfigEditorCore/>
+                </SystemConfigProvider>
+            </Suspense>
+        </>
+    );
+};

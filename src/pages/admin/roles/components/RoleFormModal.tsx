@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client/react';
 import { Dialog } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import { CREATE_ROLE, EDIT_ROLE } from '@/graphql/roles';
 import { useRolesList } from '@/contexts/RolesListContext';
 import { Role } from '@/types/roles';
+import { FORBIDDEN_ACTION, getGraphQLErrorCode, NOT_FOUND } from '@/helpers/graphqlErrors';
 
 import styles from './RoleFormModal.module.css';
 
@@ -19,8 +22,10 @@ type Props = {
 };
 
 export function RoleFormModal({ open, onOpenChange, role }: Props) {
+    const { t } = useTranslation();
     const { refetch } = useRolesList();
     const isEditing = Boolean(role);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const {
         register,
@@ -52,32 +57,57 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
     const handleOpenChange = (nextOpen: boolean) => {
         onOpenChange(nextOpen);
         if (!nextOpen) {
+            setErrorMessage(null);
             reset({
                 name: role?.name ?? '',
             });
         }
     };
 
+    const getSubmitErrorMessage = (error: unknown) => {
+        const code = getGraphQLErrorCode(error);
+
+        if (isEditing) {
+            switch (code) {
+                case FORBIDDEN_ACTION:
+                    return t('admin.roles.errors.editForbidden');
+                case NOT_FOUND:
+                    return t('admin.roles.errors.editNotFound');
+                default:
+                    return t('admin.roles.errors.editFailed');
+            }
+        }
+
+        return code === FORBIDDEN_ACTION
+            ? t('admin.roles.errors.createForbidden')
+            : t('admin.roles.errors.createFailed');
+    };
+
     const onSubmit = async (data: FormInputs) => {
-        if (role) {
-            await editRole({
+        setErrorMessage(null);
+        try {
+            if (role) {
+                await editRole({
+                    variables: {
+                        roleDto: {
+                            id: role.id,
+                            name: data.name,
+                        },
+                    },
+                });
+                return;
+            }
+
+            await createRole({
                 variables: {
                     roleDto: {
-                        id: role.id,
                         name: data.name,
                     },
                 },
             });
-            return;
+        } catch (error) {
+            setErrorMessage(getSubmitErrorMessage(error));
         }
-
-        await createRole({
-            variables: {
-                roleDto: {
-                    name: data.name,
-                },
-            },
-        });
     };
 
     const isSubmitting = createLoading || editLoading;
@@ -88,28 +118,32 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
                 <Dialog.Overlay className={styles.overlay} />
                 <Dialog.Content className={styles.container}>
                     <Dialog.Title className={styles.title}>
-                        {isEditing ? 'Edit role' : 'Create role'}
+                        {isEditing ? t('admin.roles.form.editTitle') : t('admin.roles.form.createTitle')}
                     </Dialog.Title>
 
                     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                         <div className={styles.field}>
                             <label className={styles.label} htmlFor="role-name">
-                                Name
+                                {t('admin.roles.form.name')}
                             </label>
                             <input
                                 id="role-name"
                                 className={styles.input}
-                                {...register('name', { required: 'Role name is required' })}
+                                {...register('name', { required: t('admin.roles.form.nameRequired') })}
                             />
                             {errors.name && (
                                 <span className={styles.errorText}>{errors.name.message}</span>
                             )}
                         </div>
 
+                        {errorMessage && (
+                            <div role="alert" className={styles.errorMessage}>{errorMessage}</div>
+                        )}
+
                         <div className={styles.bottomButtons}>
                             <Dialog.Close asChild>
                                 <button type="button" className={styles.cancelButton}>
-                                    Cancel
+                                    {t('common.cancel')}
                                 </button>
                             </Dialog.Close>
                             <button
@@ -118,10 +152,10 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
                                 disabled={isSubmitting}
                             >
                                 {isSubmitting
-                                    ? 'Saving...'
+                                    ? t('common.saving')
                                     : isEditing
-                                      ? 'Save changes'
-                                      : 'Create role'}
+                                      ? t('common.saveChanges')
+                                      : t('admin.roles.create')}
                             </button>
                         </div>
                     </form>

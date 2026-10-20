@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { Link } from 'react-router';
 import { Tabs } from 'radix-ui';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { useWorkspacesList, WorkspacesListProvider } from '@/contexts/WorkspacesListContext';
 import { useWorkspaceChannelsList, WorkspaceChannelsListProvider } from '@/contexts/OldWorkspaceChannelsListContext';
@@ -11,29 +12,34 @@ import { TabsContent, TabsList, TabsTrigger } from '@/pages/dashboard/components
 import { EmptyListMessage } from '@/pages/dashboard/components/EmptyListMessage';
 
 const ChannelsListCore = () => {
+    const { t } = useTranslation();
     const { channels } = useWorkspaceChannelsList();
 
     return <div>
-        <CreateChannelForm cta="Create channel" title="Create Channel" submitText="Create Channel"/>
+        <CreateChannelForm cta={t('dashboard.channels.create')} title={t('dashboard.channels.createTitle')} submitText={t('dashboard.channels.createTitle')}/>
         {channels.map(channel => (
             <ChannelEditor key={channel.id} channel={channel}/>
         ))}
         {!channels.length && (
             <EmptyListMessage>
-                No channels found. Create one using the form above.
+                {t('dashboard.channels.empty')}
             </EmptyListMessage>
         )}
     </div>;
 };
 
 const WorkspaceChannelsList = () => {
+    const { t } = useTranslation();
     const { workspacesList } = useWorkspacesList();
 
     const defaultWorkspace = workspacesList[0];
 
     if (!defaultWorkspace) {
         return <div>
-            No workspaces found. Create one at <Link to="/dashboard/workspaces">Workspaces</Link>.
+            <Trans
+                i18nKey="dashboard.noWorkspaces"
+                components={{ link: <Link to="/dashboard/workspaces" /> }}
+            />
         </div>;
     }
 
@@ -41,7 +47,7 @@ const WorkspaceChannelsList = () => {
         defaultValue={defaultWorkspace.id.toString()}
     >
         <TabsList
-            aria-label="Manage your account"
+            aria-label={t('dashboard.workspaceTabs')}
         >
             {workspacesList.map(workspace => (
                 <TabsTrigger
@@ -65,14 +71,18 @@ const WorkspaceChannelsList = () => {
     </Tabs.Root>
 }
 
-export const ChannelsList = () => (
-    <>
-        <Suspense fallback={<div>Loading...</div>}>
-            <ChannelTypesListProvider>
-                <WorkspacesListProvider>
-                    <WorkspaceChannelsList/>
-                </WorkspacesListProvider>
-            </ChannelTypesListProvider>
-        </Suspense>
-    </>
-);
+export const ChannelsList = () => {
+    const { t } = useTranslation();
+
+    return (
+        <>
+            <Suspense fallback={<div>{t('common.loading')}</div>}>
+                <ChannelTypesListProvider>
+                    <WorkspacesListProvider>
+                        <WorkspaceChannelsList/>
+                    </WorkspacesListProvider>
+                </ChannelTypesListProvider>
+            </Suspense>
+        </>
+    );
+};

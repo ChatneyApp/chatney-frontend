@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client/react';
+import { useTranslation } from 'react-i18next';
 
 import { DELETE_USER } from '@/graphql/adminUsers';
 import { useUsersList } from '@/contexts/UsersListContext';
@@ -34,6 +35,7 @@ function StatusBadge({
 }
 
 export function UsersTable({ users }: Props) {
+    const { t } = useTranslation();
     const { refetch } = useUsersList();
     const currentUser = useUser()?.user;
     const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -47,7 +49,7 @@ export function UsersTable({ users }: Props) {
         }
 
         const confirmed = window.confirm(
-            `Delete user "${getUserDisplayName(user)}"? This action cannot be undone.`,
+            t('admin.users.deleteConfirm', { name: getUserDisplayName(user) }),
         );
         if (!confirmed) {
             return;
@@ -59,7 +61,7 @@ export function UsersTable({ users }: Props) {
     if (!users.length) {
         return (
             <div className={styles.empty}>
-                No users found. Create the first user to get started.
+                {t('admin.users.empty')}
             </div>
         );
     }
@@ -70,9 +72,9 @@ export function UsersTable({ users }: Props) {
                 <table className={styles.table}>
                     <thead className={styles.thead}>
                         <tr>
-                            <th className={styles.th}>User</th>
-                            <th className={styles.th}>Status</th>
-                            <th className={styles.th}>Actions</th>
+                            <th className={styles.th}>{t('admin.users.columns.user')}</th>
+                            <th className={styles.th}>{t('admin.users.columns.status')}</th>
+                            <th className={styles.th}>{t('admin.users.columns.actions')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -84,24 +86,24 @@ export function UsersTable({ users }: Props) {
                                     <td className={styles.td}>
                                         <div className={styles.userName}>
                                             {getUserDisplayName(user)}
-                                            {isSelf && ' (you)'}
+                                            {isSelf && ` ${t('admin.users.you')}`}
                                         </div>
                                         <div className={styles.userEmail}>@{user.nickname} · {user.email}</div>
                                     </td>
                                     <td className={styles.td}>
                                         <div className={styles.badges}>
                                             <StatusBadge
-                                                label={user.active ? 'Active' : 'Inactive'}
+                                                label={user.active ? t('userStatus.active') : t('userStatus.inactive')}
                                                 variant={user.active ? 'positive' : 'neutral'}
                                             />
                                             {user.verified && (
-                                                <StatusBadge label="Verified" variant="positive" />
+                                                <StatusBadge label={t('userStatus.verified')} variant="positive" />
                                             )}
                                             {user.banned && (
-                                                <StatusBadge label="Banned" variant="danger" />
+                                                <StatusBadge label={t('userStatus.banned')} variant="danger" />
                                             )}
                                             {user.muted && (
-                                                <StatusBadge label="Muted" variant="warning" />
+                                                <StatusBadge label={t('userStatus.muted')} variant="warning" />
                                             )}
                                         </div>
                                     </td>
@@ -112,16 +114,16 @@ export function UsersTable({ users }: Props) {
                                                 className={`${styles.actionButton} ${styles.editButton}`}
                                                 onClick={() => setEditingUser(user)}
                                             >
-                                                Edit
+                                                {t('common.edit')}
                                             </button>
                                             <button
                                                 type="button"
                                                 className={`${styles.actionButton} ${styles.deleteButton}`}
                                                 onClick={() => handleDelete(user)}
                                                 disabled={isSelf}
-                                                title={isSelf ? 'You cannot delete your own account' : undefined}
+                                                title={isSelf ? t('admin.users.cannotDeleteSelf') : undefined}
                                             >
-                                                Delete
+                                                {t('common.delete')}
                                             </button>
                                         </div>
                                     </td>

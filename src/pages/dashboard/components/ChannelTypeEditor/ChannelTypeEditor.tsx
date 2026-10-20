@@ -1,4 +1,5 @@
 import { useMutation } from '@apollo/client/react';
+import { useTranslation } from 'react-i18next';
 
 import { ChannelType } from '@/types/channelTypes';
 import { CreateChannelTypeForm } from '@/pages/dashboard/components/ChannelTypeForm/CreateChannelTypeForm';
@@ -12,6 +13,7 @@ type Props = {
 }
 
 export const ChannelTypeEditor = ({ channelType }: Props) => {
+    const { t } = useTranslation();
     const { refetch } = useChannelTypesList();
 
     const [deleteChannelType] = useMutation(DELETE_CHANNEL_TYPE, {
@@ -32,18 +34,18 @@ export const ChannelTypeEditor = ({ channelType }: Props) => {
     return (
         <div className={styles.container}>
             <div className={styles.label}>
-                <span className={styles.labelTitle}>Label:</span> {channelType.name}
+                <span className={styles.labelTitle}>{t('dashboard.channelTypes.labelTitle')}</span> {channelType.name}
             </div>
             <div className={styles.uuid}>
                 {channelType.id}
             </div>
             <div className={styles.key}>
-                <span className={styles.keyTitle}>Key:</span> {channelType.key}
+                <span className={styles.keyTitle}>{t('dashboard.channelTypes.keyTitle')}</span> {channelType.key}
             </div>
             <div className={styles.controls}>
-                <CreateChannelTypeForm cta="Edit" title="Edit Channel Type" submitText="Save Changes" channelType={channelType}/>
+                <CreateChannelTypeForm cta={t('common.edit')} title={t('dashboard.channelTypes.editTitle')} submitText={t('common.saveChanges')} channelType={channelType}/>
                 <Button onClick={handleDelete}>
-                    Delete
+                    {t('common.delete')}
                 </Button>
             </div>
         </div>

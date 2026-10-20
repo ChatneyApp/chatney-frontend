@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 import { useWorkspacesList } from '@/contexts/WorkspacesListContext';
 import { Channel, channelDisplayName } from '@/types/channels';
@@ -24,6 +25,7 @@ export function ChannelList({
     channels,
     directMessages,
 }: Props) {
+    const { t } = useTranslation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { activeWorkspaceId, workspacesList } = useWorkspacesList();
     const activeWorkspace = workspacesList.find(workspace => workspace.id === activeWorkspaceId);
@@ -45,7 +47,7 @@ export function ChannelList({
                 className={styles.createChannelButton}
                 onClick={() => setIsModalOpen(true)}
             >
-                + Create channel
+                + {t('chat.channels.createChannel')}
             </div>
 
             {channels.map((channel) => (
@@ -60,14 +62,14 @@ export function ChannelList({
                 </div>
             ))}
 
-            <div className={styles.sectionTitle}>Direct messages</div>
+            <div className={styles.sectionTitle}>{t('chat.channels.directMessages')}</div>
             <div
                 className={clsx(styles.createChannelButton, {
                     [styles.channelItemActive]: isComposingDirectMessage,
                 })}
                 onClick={onComposeDirectMessage}
             >
-                + New message
+                + {t('chat.channels.newMessage')}
             </div>
 
             {directMessages.map((channel) => (

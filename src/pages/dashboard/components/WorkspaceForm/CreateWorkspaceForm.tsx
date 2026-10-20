@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useApolloClient, useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import { Dialog } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import styles from './CreateWorkspaceForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
@@ -22,6 +23,7 @@ type Props = {
 }
 
 export const CreateWorkspaceForm = ({ cta, title, submitText, workspace }: Props) => {
+    const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -40,7 +42,7 @@ export const CreateWorkspaceForm = ({ cta, title, submitText, workspace }: Props
             refetch();
         },
         onError: (error) => {
-            setErrorMessage(`Error updating workspace: ${error.message}`);
+            setErrorMessage(t('dashboard.workspaces.editError', { message: error.message }));
             setSuccessMessage(null);
         }
     });
@@ -71,7 +73,7 @@ export const CreateWorkspaceForm = ({ cta, title, submitText, workspace }: Props
             try {
                 await addWorkspace(apolloClient, data.name);
             } catch (error) {
-                setErrorMessage(`Error creating workspace: ${(error as Error).message}`);
+                setErrorMessage(t('dashboard.workspaces.createError', { message: (error as Error).message }));
                 setSuccessMessage(null);
             } finally {
                 setOpen(false);
@@ -102,10 +104,10 @@ export const CreateWorkspaceForm = ({ cta, title, submitText, workspace }: Props
 
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className={styles.formGroup}>
-                                <label htmlFor="name">Workspace Name</label>
+                                <label htmlFor="name">{t('dashboard.workspaces.name')}</label>
                                 <input
                                     id="name"
-                                    {...register('name', { required: 'Workspace name is required' })}
+                                    {...register('name', { required: t('dashboard.workspaces.nameRequired') })}
                                     className={styles.input}
                                 />
                                 {errors.name && <span className={styles.errorText}>{errors.name.message}</span>}
@@ -113,15 +115,15 @@ export const CreateWorkspaceForm = ({ cta, title, submitText, workspace }: Props
 
                             <div className={dialogStyles.bottomButtons}>
                                 <Dialog.Close asChild>
-                                    <Button aria-label="Close">
-                                        Cancel
+                                    <Button aria-label={t('common.close')}>
+                                        {t('common.cancel')}
                                     </Button>
                                 </Dialog.Close>
                                 <Button
                                     type="submit"
                                     disabled={updateLoading}
                                 >
-                                    {updateLoading ? 'Processing...' : submitText}
+                                    {updateLoading ? t('common.processing') : submitText}
                                 </Button>
                             </div>
                         </form>

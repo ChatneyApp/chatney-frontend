@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import { Dialog } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import styles from './SystemConfigValueForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
@@ -22,6 +23,7 @@ type Props = {
 };
 
 export const SystemConfigValueForm = ({ cta, title, submitText, systemConfigValue }: Props) => {
+    const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -40,7 +42,7 @@ export const SystemConfigValueForm = ({ cta, title, submitText, systemConfigValu
             refetch();
         },
         onError: (error) => {
-            setErrorMessage(`Error updating value: ${error.message}`);
+            setErrorMessage(t('dashboard.config.editError', { message: error.message }));
             setSuccessMessage(null);
         }
     });
@@ -84,10 +86,10 @@ export const SystemConfigValueForm = ({ cta, title, submitText, systemConfigValu
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className={styles.formGroup}>
-                            <label htmlFor="value">Value</label>
+                            <label htmlFor="value">{t('dashboard.config.value')}</label>
                             <input
                                 id="value"
-                                {...register('value', { required: 'Value is required' })}
+                                {...register('value', { required: t('dashboard.config.valueRequired') })}
                                 className={styles.input}
                             />
                             {errors.value && <span className={styles.errorText}>{errors.value.message}</span>}
@@ -95,15 +97,15 @@ export const SystemConfigValueForm = ({ cta, title, submitText, systemConfigValu
 
                         <div className={dialogStyles.bottomButtons}>
                             <Dialog.Close asChild>
-                                <Button aria-label="Close">
-                                    Cancel
+                                <Button aria-label={t('common.close')}>
+                                    {t('common.cancel')}
                                 </Button>
                             </Dialog.Close>
                             <Button
                                 type="submit"
                                 disabled={loading}
                             >
-                                {loading ? 'Saving...' : submitText}
+                                {loading ? t('common.saving') : submitText}
                             </Button>
                         </div>
                     </form>

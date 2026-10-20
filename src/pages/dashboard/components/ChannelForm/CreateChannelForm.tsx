@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import { Dialog } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import styles from './CreateChannelForm.module.css';
 import dialogStyles from '@/components/Popup/Popup.module.css';
@@ -25,6 +26,7 @@ type Props = {
 };
 
 export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) => {
+    const { t } = useTranslation();
     const [open, setOpen] = useState(false);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -49,7 +51,7 @@ export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) =>
             reset();
         },
         onError: (error) => {
-            setErrorMessage(`Error creating channel: ${error.message}`);
+            setErrorMessage(t('dashboard.channels.createError', { message: error.message }));
             setSuccessMessage(null);
         }
     });
@@ -61,7 +63,7 @@ export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) =>
             reset();
         },
         onError: (error) => {
-            setErrorMessage(`Error updating channel: ${error.message}`);
+            setErrorMessage(t('dashboard.channels.editError', { message: error.message }));
             setSuccessMessage(null);
         }
     });
@@ -123,23 +125,23 @@ export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) =>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className={styles.formGroup}>
-                            <label htmlFor="name">Channel Name</label>
+                            <label htmlFor="name">{t('dashboard.channels.name')}</label>
                             <input
                                 id="name"
-                                {...register('name', { required: 'Channel name is required' })}
+                                {...register('name', { required: t('dashboard.channels.nameRequired') })}
                                 className={styles.input}
                             />
                             {errors.name && <span className={styles.errorText}>{errors.name.message}</span>}
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label htmlFor="channelTypeId">Channel Type</label>
+                            <label htmlFor="channelTypeId">{t('dashboard.channels.channelType')}</label>
                             <select
                                 id="channelTypeId"
-                                {...register('channelTypeId', { required: 'Channel type is required' })}
+                                {...register('channelTypeId', { required: t('dashboard.channels.channelTypeRequired') })}
                                 className={styles.select}
                             >
-                                <option value="">Select a channel type</option>
+                                <option value="">{t('dashboard.channels.selectChannelType')}</option>
                                 {channelTypes.filter(type => type.key !== 'dm').map(type => (
                                     <option key={type.id} value={type.id}>
                                         {type.name}
@@ -151,15 +153,15 @@ export const CreateChannelForm = ({ cta, title, submitText, channel }: Props) =>
 
                         <div className={dialogStyles.bottomButtons}>
                             <Dialog.Close asChild>
-                                <Button aria-label="Close">
-                                    Cancel
+                                <Button aria-label={t('common.close')}>
+                                    {t('common.cancel')}
                                 </Button>
                             </Dialog.Close>
                             <Button
                                 type="submit"
                                 disabled={createLoading || updateLoading}
                             >
-                                {createLoading || updateLoading ? 'Saving...' : submitText}
+                                {createLoading || updateLoading ? t('common.saving') : submitText}
                             </Button>
                         </div>
                     </form>

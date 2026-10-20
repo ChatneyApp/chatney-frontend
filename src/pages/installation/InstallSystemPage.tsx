@@ -3,9 +3,11 @@ import { clientStartPageUrl } from '@/infra/consts';
 import { useApolloClient } from '@apollo/client/react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import styles from './Form.module.css';
 
 export const InstallSystemPage = () => {
+    const { t } = useTranslation();
     const apollo = useApolloClient();
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -18,7 +20,7 @@ export const InstallSystemPage = () => {
             await installSystem(apollo);
             window.location.href = clientStartPageUrl;
         } catch (error) {
-            setErrorMessage(`System install error: ${(error as Error).message}`);
+            setErrorMessage(t('install.error', { message: (error as Error).message }));
         }
 
         setLoading(false);
@@ -28,10 +30,10 @@ export const InstallSystemPage = () => {
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.formGroup}>
                 <button className={`${styles.input} cursor-pointer`}>
-                    Install</button>
+                    {t('install.submit')}</button>
             </div>
         </form>
-        <p>Loading: {loading}</p>
-        <p className={styles.errorText}>Error message: {errorMessage}</p>
+        <p>{t('install.loading')} {loading}</p>
+        <p className={styles.errorText}>{t('install.errorMessage')} {errorMessage}</p>
     </div>
 }

@@ -1,8 +1,14 @@
+import { useTranslation } from 'react-i18next';
+
 import { SystemConfigEditor } from '@/pages/dashboard/components/SystemConfigEditor';
 
-export const DashboardConfigPage = () => (
-    <div>
-        <h2>Channel Types</h2>
-        <SystemConfigEditor/>
-    </div>
-);
+export const DashboardConfigPage = () => {
+    const { t } = useTranslation();
+
+    return (
+        <div>
+            <h2>{t('dashboard.pages.config')}</h2>
+            <SystemConfigEditor/>
+        </div>
+    );
+};

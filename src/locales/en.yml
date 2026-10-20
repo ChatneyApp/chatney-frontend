@@ -8,8 +8,6 @@ common:
   optional: Optional
   comingSoon: Coming soon
   close: Close
-  loading: Loading...
-  processing: Processing...
   create: Create
 
 validation:
@@ -161,94 +159,6 @@ admin:
       password: Password
       newPassword: New password
       passwordHint: Leave blank to keep current password
-
-dashboard:
-  menu:
-    home: Dashboard home
-    permissions: Permissions
-    roles: Roles
-    channelTypes: Channel types
-    workspaces: Workspaces
-    channels: Channels
-    channelGroups: Channel groups
-    users: Users
-    config: Config
-  pages:
-    home: Dashboard home
-    permissions: Permissions
-    roles: Roles
-    channelTypes: Channel Types
-    workspaces: Workspaces
-    channels: Channels
-    channelGroups: Channel Groups
-    users: Users
-    config: Config
-  noWorkspaces: No workspaces found. Create one at <link>Workspaces</link>.
-  workspaceTabs: Workspaces
-  roles:
-    create: Create role
-    createTitle: Create Role
-    editTitle: Edit Role
-    empty: No roles found. Create one using the form above.
-    name: Role Name
-    nameRequired: Role name is required
-    createError: "Error creating role: {{message}}"
-    editError: "Error updating role: {{message}}"
-  channels:
-    create: Create channel
-    createTitle: Create Channel
-    editTitle: Edit Channel
-    empty: No channels found. Create one using the form above.
-    name: Channel Name
-    nameRequired: Channel name is required
-    channelType: Channel Type
-    channelTypeRequired: Channel type is required
-    selectChannelType: Select a channel type
-    channelTypeValue: "Channel type: {{name}}"
-    unknownChannelType: Unknown Channel Type
-    createError: "Error creating channel: {{message}}"
-    editError: "Error updating channel: {{message}}"
-  channelGroups:
-    create: Create channel group
-    createTitle: Create Channel Group
-    editTitle: Edit Channel Group
-    empty: No channel groups found. Create one using the form above.
-    name: Channel Group Name
-    nameRequired: Channel group name is required
-    order: Display Order
-    orderRequired: Order is required
-    orderValue: "Order: {{order}}"
-    channels: Channels
-    createError: "Error creating channel group: {{message}}"
-    editError: "Error updating channel group: {{message}}"
-  channelTypes:
-    create: Create channel type
-    createTitle: Create Channel Type
-    editTitle: Edit Channel Type
-    empty: No channel types found. Create one using the form above.
-    label: Label
-    labelTitle: "Label:"
-    labelRequired: Label is required
-    key: Key
-    keyTitle: "Key:"
-    keyRequired: Key is required
-    createError: "Error creating channel type: {{message}}"
-    editError: "Error editing channel type: {{message}}"
-  workspaces:
-    create: Create workspace
-    createTitle: Create Workspace
-    editTitle: Edit Workspace
-    empty: No workspaces found. Create one using the form above.
-    name: Workspace Name
-    nameRequired: Workspace name is required
-    createError: "Error creating workspace: {{message}}"
-    editError: "Error updating workspace: {{message}}"
-  config:
-    empty: No system config values found.
-    editTitle: Edit {{name}}
-    value: Value
-    valueRequired: Value is required
-    editError: "Error updating value: {{message}}"
 
 chat:
   emptyMessages: No messages here yet

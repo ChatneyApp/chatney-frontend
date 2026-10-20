@@ -3,7 +3,6 @@ import { BrowserRouter, Routes } from 'react-router';
 import { GraphqlProvider } from '@/contexts/GraphqlProvider';
 import { UserProvider } from '@/contexts/UserContext';
 
-import { dashboardRoutes } from '@/pages/dashboard/routes';
 import { adminRoutes } from '@/pages/admin/routes';
 import { profileRoutes } from '@/pages/profile/routes';
 import { clientRoutes } from '@/pages/client/routes';
@@ -51,7 +50,6 @@ const LoginPageRouterSelector = () => {
     return (
         <ComposedProviders>
             <Routes>
-                {dashboardRoutes()}
                 {adminRoutes()}
                 {profileRoutes()}
                 {clientRoutes()}

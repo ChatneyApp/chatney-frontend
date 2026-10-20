@@ -97,8 +97,7 @@ Keep fragments focused and feature-owned as they grow; avoid giant "everything" 
 
 - [`src/contexts/WorkspaceChannelsListContext.tsx`](src/contexts/WorkspaceChannelsListContext.tsx) reads `GetWorkspaceChannels` with `useQuery` and `cache-and-network`, holds no copy in `useState`, and exposes only `{ channels }`.
 - [`src/graphql/channels.ts`](src/graphql/channels.ts) has the cache helpers `addChannelToCache`, `patchChannelInCache`, and `removeChannelFromCache`.
-- Create and delete mutations call those helpers in `update`. Edit needs nothing: `UpdateChannel` returns the channel with its `id`, so Apollo updates the entity itself.
-- The dashboard reads the same query from the same cache, so a channel created, renamed, or deleted there is already correct in the chat without a request.
+- The `AddChannel` mutation calls `addChannelToCache` in `update`. The other two helpers are used by the WebSocket handlers.
 - WebSocket events write to the cache instead of reloading the list: `updatedChannel` patches the entity, `deletedChannel` evicts it, `newChannel` triggers one list request for the active workspace.
 
 Two things learned doing it, which apply to every other domain:
@@ -287,7 +286,6 @@ Differences from the original recipe:
 - [ ] Update or invalidate the cache after mutations and WebSocket events (channels done).
 - [ ] Add pagination to messages and other unbounded lists (needs the backend).
 - [ ] Add cache-policy unit tests. Jest has no `@/` alias yet, so tests cannot import `src/graphql/*.ts`.
-- [ ] Merge `OldWorkspaceChannelsListContext.tsx` into the main channels context; both now read the same cached query.
 
 GraphQL subscriptions are optional. The existing WebSocket layer can remain if it has a broader event protocol; it should update Apollo state more precisely rather than forcing whole-list reloads.
 

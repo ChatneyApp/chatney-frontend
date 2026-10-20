@@ -8,8 +8,6 @@ common:
   optional: Необов'язково
   comingSoon: Незабаром
   close: Закрити
-  loading: Завантаження...
-  processing: Обробка...
   create: Створити
 
 validation:
@@ -165,94 +163,6 @@ admin:
       password: Пароль
       newPassword: Новий пароль
       passwordHint: Залиште порожнім, щоб не змінювати поточний пароль
-
-dashboard:
-  menu:
-    home: Головна панелі
-    permissions: Права
-    roles: Ролі
-    channelTypes: Типи каналів
-    workspaces: Простори
-    channels: Канали
-    channelGroups: Групи каналів
-    users: Користувачі
-    config: Налаштування
-  pages:
-    home: Головна панелі
-    permissions: Права
-    roles: Ролі
-    channelTypes: Типи каналів
-    workspaces: Робочі простори
-    channels: Канали
-    channelGroups: Групи каналів
-    users: Користувачі
-    config: Налаштування
-  noWorkspaces: Робочих просторів не знайдено. Створіть його в розділі <link>Робочі простори</link>.
-  workspaceTabs: Робочі простори
-  roles:
-    create: Створити роль
-    createTitle: Створення ролі
-    editTitle: Редагування ролі
-    empty: Ролей не знайдено. Створіть роль за допомогою форми вище.
-    name: Назва ролі
-    nameRequired: Вкажіть назву ролі
-    createError: "Помилка створення ролі: {{message}}"
-    editError: "Помилка редагування ролі: {{message}}"
-  channels:
-    create: Створити канал
-    createTitle: Створення каналу
-    editTitle: Редагування каналу
-    empty: Каналів не знайдено. Створіть канал за допомогою форми вище.
-    name: Назва каналу
-    nameRequired: Вкажіть назву каналу
-    channelType: Тип каналу
-    channelTypeRequired: Оберіть тип каналу
-    selectChannelType: Оберіть тип каналу
-    channelTypeValue: "Тип каналу: {{name}}"
-    unknownChannelType: Невідомий тип каналу
-    createError: "Помилка створення каналу: {{message}}"
-    editError: "Помилка редагування каналу: {{message}}"
-  channelGroups:
-    create: Створити групу каналів
-    createTitle: Створення групи каналів
-    editTitle: Редагування групи каналів
-    empty: Груп каналів не знайдено. Створіть групу за допомогою форми вище.
-    name: Назва групи каналів
-    nameRequired: Вкажіть назву групи каналів
-    order: Порядок відображення
-    orderRequired: Вкажіть порядок
-    orderValue: "Порядок: {{order}}"
-    channels: Канали
-    createError: "Помилка створення групи каналів: {{message}}"
-    editError: "Помилка редагування групи каналів: {{message}}"
-  channelTypes:
-    create: Створити тип каналу
-    createTitle: Створення типу каналу
-    editTitle: Редагування типу каналу
-    empty: Типів каналів не знайдено. Створіть тип за допомогою форми вище.
-    label: Назва
-    labelTitle: "Назва:"
-    labelRequired: Вкажіть назву
-    key: Ключ
-    keyTitle: "Ключ:"
-    keyRequired: Вкажіть ключ
-    createError: "Помилка створення типу каналу: {{message}}"
-    editError: "Помилка редагування типу каналу: {{message}}"
-  workspaces:
-    create: Створити простір
-    createTitle: Створення робочого простору
-    editTitle: Редагування робочого простору
-    empty: Робочих просторів не знайдено. Створіть простір за допомогою форми вище.
-    name: Назва робочого простору
-    nameRequired: Вкажіть назву робочого простору
-    createError: "Помилка створення робочого простору: {{message}}"
-    editError: "Помилка редагування робочого простору: {{message}}"
-  config:
-    empty: Системних налаштувань не знайдено.
-    editTitle: Редагування {{name}}
-    value: Значення
-    valueRequired: Вкажіть значення
-    editError: "Помилка редагування значення: {{message}}"
 
 chat:
   emptyMessages: Тут ще немає повідомлень

@@ -8,8 +8,6 @@ common:
   optional: Необязательно
   comingSoon: Скоро
   close: Закрыть
-  loading: Загрузка...
-  processing: Обработка...
   create: Создать
 
 validation:
@@ -165,94 +163,6 @@ admin:
       password: Пароль
       newPassword: Новый пароль
       passwordHint: Оставьте пустым, чтобы не менять текущий пароль
-
-dashboard:
-  menu:
-    home: Главная панели
-    permissions: Права
-    roles: Роли
-    channelTypes: Типы каналов
-    workspaces: Пространства
-    channels: Каналы
-    channelGroups: Группы каналов
-    users: Пользователи
-    config: Настройки
-  pages:
-    home: Главная панели
-    permissions: Права
-    roles: Роли
-    channelTypes: Типы каналов
-    workspaces: Рабочие пространства
-    channels: Каналы
-    channelGroups: Группы каналов
-    users: Пользователи
-    config: Настройки
-  noWorkspaces: Рабочие пространства не найдены. Создайте его в разделе <link>Рабочие пространства</link>.
-  workspaceTabs: Рабочие пространства
-  roles:
-    create: Создать роль
-    createTitle: Создание роли
-    editTitle: Редактирование роли
-    empty: Роли не найдены. Создайте роль с помощью формы выше.
-    name: Название роли
-    nameRequired: Укажите название роли
-    createError: "Ошибка создания роли: {{message}}"
-    editError: "Ошибка изменения роли: {{message}}"
-  channels:
-    create: Создать канал
-    createTitle: Создание канала
-    editTitle: Редактирование канала
-    empty: Каналы не найдены. Создайте канал с помощью формы выше.
-    name: Название канала
-    nameRequired: Укажите название канала
-    channelType: Тип канала
-    channelTypeRequired: Выберите тип канала
-    selectChannelType: Выберите тип канала
-    channelTypeValue: "Тип канала: {{name}}"
-    unknownChannelType: Неизвестный тип канала
-    createError: "Ошибка создания канала: {{message}}"
-    editError: "Ошибка изменения канала: {{message}}"
-  channelGroups:
-    create: Создать группу каналов
-    createTitle: Создание группы каналов
-    editTitle: Редактирование группы каналов
-    empty: Группы каналов не найдены. Создайте группу с помощью формы выше.
-    name: Название группы каналов
-    nameRequired: Укажите название группы каналов
-    order: Порядок отображения
-    orderRequired: Укажите порядок
-    orderValue: "Порядок: {{order}}"
-    channels: Каналы
-    createError: "Ошибка создания группы каналов: {{message}}"
-    editError: "Ошибка изменения группы каналов: {{message}}"
-  channelTypes:
-    create: Создать тип канала
-    createTitle: Создание типа канала
-    editTitle: Редактирование типа канала
-    empty: Типы каналов не найдены. Создайте тип с помощью формы выше.
-    label: Название
-    labelTitle: "Название:"
-    labelRequired: Укажите название
-    key: Ключ
-    keyTitle: "Ключ:"
-    keyRequired: Укажите ключ
-    createError: "Ошибка создания типа канала: {{message}}"
-    editError: "Ошибка изменения типа канала: {{message}}"
-  workspaces:
-    create: Создать пространство
-    createTitle: Создание рабочего пространства
-    editTitle: Редактирование рабочего пространства
-    empty: Рабочие пространства не найдены. Создайте пространство с помощью формы выше.
-    name: Название рабочего пространства
-    nameRequired: Укажите название рабочего пространства
-    createError: "Ошибка создания рабочего пространства: {{message}}"
-    editError: "Ошибка изменения рабочего пространства: {{message}}"
-  config:
-    empty: Системные настройки не найдены.
-    editTitle: Изменение {{name}}
-    value: Значение
-    valueRequired: Укажите значение
-    editError: "Ошибка изменения значения: {{message}}"
 
 chat:
   emptyMessages: Здесь пока нет сообщений

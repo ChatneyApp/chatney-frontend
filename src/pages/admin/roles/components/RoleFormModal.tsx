@@ -154,8 +154,8 @@ export function RoleFormModal({ open, onOpenChange, role }: Props) {
                                 {isSubmitting
                                     ? t('common.saving')
                                     : isEditing
-                                      ? t('common.saveChanges')
-                                      : t('admin.roles.create')}
+                                        ? t('common.saveChanges')
+                                        : t('admin.roles.create')}
                             </button>
                         </div>
                     </form>

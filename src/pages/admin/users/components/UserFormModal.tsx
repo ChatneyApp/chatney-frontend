@@ -229,8 +229,8 @@ export function UserFormModal({ open, onOpenChange, user }: Props) {
                                 {isSubmitting
                                     ? t('common.saving')
                                     : isEditing
-                                      ? t('common.saveChanges')
-                                      : t('admin.users.create')}
+                                        ? t('common.saveChanges')
+                                        : t('admin.users.create')}
                             </button>
                         </div>
                     </form>

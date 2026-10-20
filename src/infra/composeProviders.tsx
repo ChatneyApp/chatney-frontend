@@ -6,11 +6,11 @@ export function composeProviders(providers: ProviderComponent[]) {
     return providers.reduce(
         (AccumulatedProviders, CurrentProvider) =>
             ({ children }: PropsWithChildren) =>
-            (
-                <AccumulatedProviders>
-                    <CurrentProvider>{children}</CurrentProvider>
-                </AccumulatedProviders>
-            ),
+                (
+                    <AccumulatedProviders>
+                        <CurrentProvider>{children}</CurrentProvider>
+                    </AccumulatedProviders>
+                ),
         ({ children }: PropsWithChildren) => children
     );
 }

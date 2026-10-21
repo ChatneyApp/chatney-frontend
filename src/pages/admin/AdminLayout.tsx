@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router';
-import { MessageSquare, Shield, Users } from 'lucide-react';
+import { LayoutGrid, MessageSquare, Shield, Users } from 'lucide-react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
@@ -26,6 +26,10 @@ export function AdminLayout() {
                         <NavLink to="/admin/users" className={isActiveLink}>
                             <Users size={16} />
                             {t('admin.nav.users')}
+                        </NavLink>
+                        <NavLink to="/admin/workspaces" className={isActiveLink}>
+                            <LayoutGrid size={16} />
+                            {t('admin.nav.workspaces')}
                         </NavLink>
                     </nav>
                     <div className={styles.sidebarFooter}>

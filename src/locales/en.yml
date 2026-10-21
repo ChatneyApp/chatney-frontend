@@ -173,6 +173,7 @@ admin:
     brand: Admin
     roles: Roles
     users: Users
+    workspaces: Workspaces
     backToChat: Back to chat
   roles:
     title: Roles
@@ -299,6 +300,34 @@ admin:
       editNotFound: This user no longer exists.
       editFailed: Couldn't save the user. Please try again.
       roleNotFound: One of the selected roles no longer exists. Check the roles and try again.
+  workspaces:
+    title: Workspaces
+    subtitle: Manage workspaces and their names
+    create: Create workspace
+    loading: Loading workspaces...
+    empty: No workspaces yet. Create the first workspace to get started.
+    id: ID {{id}}
+    columns:
+      workspace: Workspace
+      created: Created
+      actions: Actions
+    form:
+      createTitle: Create workspace
+      editTitle: Edit workspace
+      name: Name
+      nameRequired: Workspace name is required
+    deleteDialog:
+      title: Delete workspace
+      description: Delete workspace "{{name}}" with all its channels? This action cannot be undone.
+    errors:
+      createForbidden: You don't have permission to create workspaces.
+      createFailed: Couldn't create the workspace. Please try again.
+      editForbidden: You don't have permission to edit this workspace.
+      editNotFound: This workspace no longer exists.
+      editFailed: Couldn't save the workspace. Please try again.
+      deleteForbidden: You don't have permission to delete this workspace.
+      deleteNotFound: This workspace no longer exists.
+      deleteFailed: Couldn't delete the workspace. Please try again.
 
 chat:
   emptyMessages: No messages here yet

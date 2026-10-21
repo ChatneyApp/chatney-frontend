@@ -200,6 +200,8 @@ type AclQueries {
     "Secure object id (from a workspace, channel type or channel)."
     secObjId: Int!
   ): ObjectAcls! @authorize @cost(weight: "10")
+  "All workspaces, channel types and non-DM channels. Requires RoleReadRole."
+  secureObjects: SecureObjectList! @authorize @cost(weight: "10")
 }
 
 "An uploaded file's metadata."
@@ -694,6 +696,13 @@ type RoleQueries {
   list: [Role!]! @authorize @cost(weight: "10")
 }
 
+"Every object a role ACL can target, for the admin role editor. Direct messages are left out."
+type SecureObjectList {
+  workspaces: [Workspace!]!
+  channelTypes: [ChannelType!]!
+  channels: [Channel!]!
+}
+
 "Link preview metadata scraped from a URL in a message (OpenGraph/oEmbed)."
 type UrlPreview {
   id: Int!
@@ -1137,6 +1146,8 @@ enum Permission {
   ROLE_DELETE_ROLE
   "Edit roles and role ACLs. Checked globally."
   ROLE_EDIT_ROLE
+  "View roles and the objects role ACLs can target. Checked globally."
+  ROLE_READ_ROLE
   "Create users as an admin. Checked globally."
   USER_CREATE_USER
   "Delete users. Checked globally."

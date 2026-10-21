@@ -14,6 +14,11 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
+    "\n    fragment RoleAclFields on RoleAcl {\n        roleId\n        secObjId\n        permissions\n    }\n": typeof types.RoleAclFieldsFragmentDoc,
+    "\n    query GetRoleAcls($roleId: Int!) {\n        acls {\n            roleAcls(roleId: $roleId) {\n                ...RoleAclFields\n            }\n        }\n    }\n": typeof types.GetRoleAclsDocument,
+    "\n    query GetSecureObjects {\n        acls {\n            secureObjects {\n                workspaces {\n                    ...WorkspaceFields\n                }\n                channelTypes {\n                    ...ChannelTypeFields\n                }\n                channels {\n                    ...ChannelFields\n                }\n            }\n        }\n    }\n": typeof types.GetSecureObjectsDocument,
+    "\n    mutation SetRoleAcl($roleId: Int!, $secObjId: Int!, $permissions: [Permission!]!) {\n        acls {\n            setRoleAcl(roleId: $roleId, secObjId: $secObjId, permissions: $permissions) {\n                ...RoleAclFields\n            }\n        }\n    }\n": typeof types.SetRoleAclDocument,
+    "\n    mutation DeleteRoleAcl($roleId: Int!, $secObjId: Int!) {\n        acls {\n            deleteRoleAcl(roleId: $roleId, secObjId: $secObjId)\n        }\n    }\n": typeof types.DeleteRoleAclDocument,
     "\n    fragment AdminUserFields on User {\n        ...UserFields\n        roleIds\n    }\n": typeof types.AdminUserFieldsFragmentDoc,
     "\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...AdminUserFields\n            }\n        }\n    }\n": typeof types.GetUsersListDocument,
     "\n    mutation CreateUser($userDto: CreateUserDtoInput!) {\n        users {\n            createUser(userDto: $userDto) {\n                ...UserFields\n            }\n        }\n    }\n": typeof types.CreateUserDocument,
@@ -77,6 +82,11 @@ type Documents = {
     "\n    query GetWorkspaces {\n        workspaces {\n            list {\n                ...WorkspaceFields\n            }\n        }\n    }\n": typeof types.GetWorkspacesDocument,
 };
 const documents: Documents = {
+    "\n    fragment RoleAclFields on RoleAcl {\n        roleId\n        secObjId\n        permissions\n    }\n": types.RoleAclFieldsFragmentDoc,
+    "\n    query GetRoleAcls($roleId: Int!) {\n        acls {\n            roleAcls(roleId: $roleId) {\n                ...RoleAclFields\n            }\n        }\n    }\n": types.GetRoleAclsDocument,
+    "\n    query GetSecureObjects {\n        acls {\n            secureObjects {\n                workspaces {\n                    ...WorkspaceFields\n                }\n                channelTypes {\n                    ...ChannelTypeFields\n                }\n                channels {\n                    ...ChannelFields\n                }\n            }\n        }\n    }\n": types.GetSecureObjectsDocument,
+    "\n    mutation SetRoleAcl($roleId: Int!, $secObjId: Int!, $permissions: [Permission!]!) {\n        acls {\n            setRoleAcl(roleId: $roleId, secObjId: $secObjId, permissions: $permissions) {\n                ...RoleAclFields\n            }\n        }\n    }\n": types.SetRoleAclDocument,
+    "\n    mutation DeleteRoleAcl($roleId: Int!, $secObjId: Int!) {\n        acls {\n            deleteRoleAcl(roleId: $roleId, secObjId: $secObjId)\n        }\n    }\n": types.DeleteRoleAclDocument,
     "\n    fragment AdminUserFields on User {\n        ...UserFields\n        roleIds\n    }\n": types.AdminUserFieldsFragmentDoc,
     "\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...AdminUserFields\n            }\n        }\n    }\n": types.GetUsersListDocument,
     "\n    mutation CreateUser($userDto: CreateUserDtoInput!) {\n        users {\n            createUser(userDto: $userDto) {\n                ...UserFields\n            }\n        }\n    }\n": types.CreateUserDocument,
@@ -154,6 +164,26 @@ const documents: Documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    fragment RoleAclFields on RoleAcl {\n        roleId\n        secObjId\n        permissions\n    }\n"): (typeof documents)["\n    fragment RoleAclFields on RoleAcl {\n        roleId\n        secObjId\n        permissions\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    query GetRoleAcls($roleId: Int!) {\n        acls {\n            roleAcls(roleId: $roleId) {\n                ...RoleAclFields\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetRoleAcls($roleId: Int!) {\n        acls {\n            roleAcls(roleId: $roleId) {\n                ...RoleAclFields\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    query GetSecureObjects {\n        acls {\n            secureObjects {\n                workspaces {\n                    ...WorkspaceFields\n                }\n                channelTypes {\n                    ...ChannelTypeFields\n                }\n                channels {\n                    ...ChannelFields\n                }\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetSecureObjects {\n        acls {\n            secureObjects {\n                workspaces {\n                    ...WorkspaceFields\n                }\n                channelTypes {\n                    ...ChannelTypeFields\n                }\n                channels {\n                    ...ChannelFields\n                }\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation SetRoleAcl($roleId: Int!, $secObjId: Int!, $permissions: [Permission!]!) {\n        acls {\n            setRoleAcl(roleId: $roleId, secObjId: $secObjId, permissions: $permissions) {\n                ...RoleAclFields\n            }\n        }\n    }\n"): (typeof documents)["\n    mutation SetRoleAcl($roleId: Int!, $secObjId: Int!, $permissions: [Permission!]!) {\n        acls {\n            setRoleAcl(roleId: $roleId, secObjId: $secObjId, permissions: $permissions) {\n                ...RoleAclFields\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation DeleteRoleAcl($roleId: Int!, $secObjId: Int!) {\n        acls {\n            deleteRoleAcl(roleId: $roleId, secObjId: $secObjId)\n        }\n    }\n"): (typeof documents)["\n    mutation DeleteRoleAcl($roleId: Int!, $secObjId: Int!) {\n        acls {\n            deleteRoleAcl(roleId: $roleId, secObjId: $secObjId)\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

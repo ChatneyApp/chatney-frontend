@@ -102,7 +102,7 @@ Keep fragments focused and feature-owned as they grow; avoid giant "everything" 
 
 Two things learned doing it, which apply to every other domain:
 
-- **`merge: true` goes in per namespace, together with that namespace's queries.** `ChannelQueries`, `MessageQueries` and the other namespace types have no `id`, so by default each query replaces its siblings in the cache, and two watched queries in one namespace would refetch each other in a loop. [`src/contexts/GraphqlProvider.tsx`](src/contexts/GraphqlProvider.tsx) sets `merge: true` for `ChannelQueries` only. Do not switch it on for `MessageQueries` before the message list is migrated: the message queries are `cache-first` and only refetch today because the cache entry gets replaced. The `Cache data may be lost when replacing the messages field` console warning is that remaining case.
+- **`merge: true` goes in per namespace, together with that namespace's queries.** `ChannelQueries`, `MessageQueries` and the other namespace types have no `id`, so by default each query replaces its siblings in the cache, and two watched queries in one namespace would refetch each other in a loop. [`src/contexts/GraphqlProvider.tsx`](src/contexts/GraphqlProvider.tsx) sets `merge: true` for `ChannelQueries` and `AclQueries` only (the role editor loads `roleAcls` and `secureObjects` side by side). Do not switch it on for `MessageQueries` before the message list is migrated: the message queries are `cache-first` and only refetch today because the cache entry gets replaced. The `Cache data may be lost when replacing the messages field` console warning is that remaining case.
 - **A WebSocket event is not always safe to write into a list.** `newChannel` is sent to every connected user regardless of `ChannelReadChannel`, and carries only `id`, `name`, `channelTypeId`, `workspaceId`, `isDm`, `memberUserIds`. The server filters `workspaceChannelList` by permission, so a new channel is fetched, not appended. Patching and evicting are safe because they are no-ops for entities the user never loaded.
 
 Still bypassing the cache — eight `no-cache` call sites:
@@ -280,7 +280,7 @@ Differences from the original recipe:
 
 - [x] Migrate one domain end to end as the reference: workspace channels.
 - [ ] Remove routine `no-cache` usage (8 call sites left).
-- [ ] Add `merge: true` for each remaining namespace type as its queries move to the cache (`ChannelQueries` done).
+- [ ] Add `merge: true` for each remaining namespace type as its queries move to the cache (`ChannelQueries`, `AclQueries` done).
 - [ ] Define list pagination policies.
 - [ ] Keep active selections in React state/context, but let Apollo own fetched entities (channels done; workspaces, direct messages, messages left).
 - [ ] Update or invalidate the cache after mutations and WebSocket events (channels done).

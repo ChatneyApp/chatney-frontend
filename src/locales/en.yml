@@ -126,6 +126,8 @@ admin:
       editTitle: Edit role
       name: Name
       nameRequired: Role name is required
+      permissions: Permissions
+      loading: Loading permissions...
     deleteDialog:
       title: Delete role
       description: Delete role "{{name}}"? This action cannot be undone.
@@ -138,6 +140,71 @@ admin:
       deleteForbidden: You don't have permission to delete roles.
       deleteNotFound: This role no longer exists.
       deleteFailed: Couldn't delete the role. Please try again.
+      permissionsFailed: The role was saved, but some permissions couldn't be saved. Please try again.
+      permissionsLoadForbidden: You don't have permission to view role permissions.
+      permissionsLoadFailed: Couldn't load role permissions. Please try again.
+    permissionsBlock:
+      global: Global (system-wide)
+      channelName: "{{workspace}} / #{{channel}}"
+      unknownObject: "Unknown object #{{id}}"
+      empty: This role has no permissions yet. Add an object below to grant permissions on it.
+      selectedCount_one: "{{count}} permission"
+      selectedCount_other: "{{count}} permissions"
+      remove: Remove {{name}}
+      objectToAdd: Object to grant permissions on
+      chooseObject: Choose an object...
+      allAdded: All objects are already added
+      add: Add
+      kinds:
+        global: Global
+        workspace: Workspace
+        channelType: Channel type
+        channel: Channel
+        unknown: Unknown
+      groups:
+        workspaces: Workspaces
+        channelTypes: Channel types
+        channels: Channels
+        channelsIn: Channels in {{workspace}}
+    permissionGroups:
+      config: System config
+      workspace: Workspaces
+      channel: Channels
+      user: Users
+      role: Roles
+      attachment: Attachments
+    permissionNames:
+      ATTACHMENT_DELETE: Delete attachments
+      ATTACHMENT_READ: View attachments
+      ATTACHMENT_UPLOAD: Upload attachments
+      CHANNEL_ADD_CHANNEL_GROUP: Create channel groups
+      CHANNEL_CREATE_CHANNEL: Create channels
+      CHANNEL_CREATE_MESSAGE: Post messages
+      CHANNEL_DELETE_CHANNEL: Delete channels
+      CHANNEL_DELETE_CHANNEL_GROUP: Delete channel groups
+      CHANNEL_DELETE_CHANNEL_TYPE: Delete channel types
+      CHANNEL_DELETE_MESSAGE: Delete any message
+      CHANNEL_DELETE_OWN_MESSAGE: Delete own messages
+      CHANNEL_EDIT_CHANNEL: Edit channels
+      CHANNEL_EDIT_CHANNEL_GROUP: Edit channel groups
+      CHANNEL_EDIT_MESSAGE: Edit any message
+      CHANNEL_EDIT_OWN_MESSAGE: Edit own messages
+      CHANNEL_READ_CHANNEL: See channels
+      CHANNEL_READ_MESSAGE: Read messages
+      CONFIG_READ_VALUE: View config values
+      CONFIG_UPDATE_VALUE: Update config values
+      ROLE_CREATE_ROLE: Create roles
+      ROLE_DELETE_ROLE: Delete roles
+      ROLE_EDIT_ROLE: Edit roles and their permissions
+      ROLE_READ_ROLE: View roles
+      USER_CREATE_USER: Create users
+      USER_DELETE_USER: Delete users
+      USER_EDIT_USER: Edit users and their permissions
+      USER_READ_USER: View users
+      WORKSPACE_CREATE_WORKSPACE: Create workspaces
+      WORKSPACE_DELETE_WORKSPACE: Delete workspaces
+      WORKSPACE_READ_WORKSPACE: See workspaces
+      WORKSPACE_UPDATE_WORKSPACE: Edit workspaces
   users:
     title: Users
     subtitle: Manage user accounts, roles, and access status

@@ -130,6 +130,8 @@ admin:
       editTitle: Редагування ролі
       name: Назва
       nameRequired: Вкажіть назву ролі
+      permissions: Права
+      loading: Завантаження прав...
     deleteDialog:
       title: Видалення ролі
       description: Видалити роль «{{name}}»? Цю дію не можна скасувати.
@@ -142,6 +144,73 @@ admin:
       deleteForbidden: У вас немає прав на видалення ролей.
       deleteNotFound: Ця роль більше не існує.
       deleteFailed: Не вдалося видалити роль. Спробуйте ще раз.
+      permissionsFailed: Роль збережено, але частину прав зберегти не вдалося. Спробуйте ще раз.
+      permissionsLoadForbidden: У вас немає прав на перегляд прав ролей.
+      permissionsLoadFailed: Не вдалося завантажити права ролі. Спробуйте ще раз.
+    permissionsBlock:
+      global: Глобально (уся система)
+      channelName: "{{workspace}} / #{{channel}}"
+      unknownObject: "Невідомий об'єкт #{{id}}"
+      empty: Ця роль поки не має прав. Додайте об'єкт нижче, щоб надати на нього права.
+      selectedCount_one: "{{count}} право"
+      selectedCount_few: "{{count}} права"
+      selectedCount_many: "{{count}} прав"
+      selectedCount_other: "{{count}} права"
+      remove: Прибрати {{name}}
+      objectToAdd: Об'єкт, на який надаються права
+      chooseObject: Оберіть об'єкт...
+      allAdded: Усі об'єкти вже додано
+      add: Додати
+      kinds:
+        global: Глобально
+        workspace: Простір
+        channelType: Тип каналу
+        channel: Канал
+        unknown: Невідомо
+      groups:
+        workspaces: Простори
+        channelTypes: Типи каналів
+        channels: Канали
+        channelsIn: Канали в {{workspace}}
+    permissionGroups:
+      config: Налаштування системи
+      workspace: Простори
+      channel: Канали
+      user: Користувачі
+      role: Ролі
+      attachment: Вкладення
+    permissionNames:
+      ATTACHMENT_DELETE: Видалення вкладень
+      ATTACHMENT_READ: Перегляд вкладень
+      ATTACHMENT_UPLOAD: Завантаження вкладень
+      CHANNEL_ADD_CHANNEL_GROUP: Створення груп каналів
+      CHANNEL_CREATE_CHANNEL: Створення каналів
+      CHANNEL_CREATE_MESSAGE: Надсилання повідомлень
+      CHANNEL_DELETE_CHANNEL: Видалення каналів
+      CHANNEL_DELETE_CHANNEL_GROUP: Видалення груп каналів
+      CHANNEL_DELETE_CHANNEL_TYPE: Видалення типів каналів
+      CHANNEL_DELETE_MESSAGE: Видалення будь-яких повідомлень
+      CHANNEL_DELETE_OWN_MESSAGE: Видалення своїх повідомлень
+      CHANNEL_EDIT_CHANNEL: Редагування каналів
+      CHANNEL_EDIT_CHANNEL_GROUP: Редагування груп каналів
+      CHANNEL_EDIT_MESSAGE: Редагування будь-яких повідомлень
+      CHANNEL_EDIT_OWN_MESSAGE: Редагування своїх повідомлень
+      CHANNEL_READ_CHANNEL: Видимість каналів
+      CHANNEL_READ_MESSAGE: Читання повідомлень
+      CONFIG_READ_VALUE: Перегляд налаштувань
+      CONFIG_UPDATE_VALUE: Зміна налаштувань
+      ROLE_CREATE_ROLE: Створення ролей
+      ROLE_DELETE_ROLE: Видалення ролей
+      ROLE_EDIT_ROLE: Редагування ролей та їхніх прав
+      ROLE_READ_ROLE: Перегляд ролей
+      USER_CREATE_USER: Створення користувачів
+      USER_DELETE_USER: Видалення користувачів
+      USER_EDIT_USER: Редагування користувачів та їхніх прав
+      USER_READ_USER: Перегляд користувачів
+      WORKSPACE_CREATE_WORKSPACE: Створення просторів
+      WORKSPACE_DELETE_WORKSPACE: Видалення просторів
+      WORKSPACE_READ_WORKSPACE: Видимість просторів
+      WORKSPACE_UPDATE_WORKSPACE: Редагування просторів
   users:
     title: Користувачі
     subtitle: Керування акаунтами, ролями та статусом доступу

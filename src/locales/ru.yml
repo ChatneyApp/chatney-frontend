@@ -87,10 +87,73 @@ auth:
     submit: Сбросить пароль
 
 install:
+  starting: Запуск Chatney...
+  eyebrow: Первоначальная настройка
+  heading: Сделайте Chatney своим.
+  intro: Ещё несколько деталей — и ваше личное пространство для команды будет готово.
+  secureNote: Настройки хранятся на вашем сервере
+  stepCounter: Шаг {{current}} из {{total}}
+  completed: Настройка завершена
+  back: Назад
+  continue: Продолжить
   submit: Установить
-  loading: "Загрузка:"
-  errorMessage: "Сообщение об ошибке:"
+  installing: Установка...
   error: "Ошибка установки системы: {{message}}"
+  steps:
+    workspace:
+      title: Рабочее пространство
+      description: Домен и региональные настройки
+    email:
+      title: Почта
+      description: Отправка через SMTP (необязательно)
+    review:
+      title: Проверка
+      description: Подтверждение и установка
+  workspace:
+    title: Настройки рабочего пространства
+    description: Укажите публичный адрес и часовой пояс для этой установки.
+    domainName: Доменное имя
+    domainNameHint: Используется в ссылках в приглашениях и письмах для сброса пароля.
+    domainNameRequired: Укажите доменное имя
+    timeZone: Часовой пояс
+    timeZoneHint: Даты и запланированные действия будут использовать этот часовой пояс.
+    timeZoneRequired: Укажите часовой пояс
+    seedTestData: Добавить тестовые данные
+    seedTestDataHint: Создать двух тестовых пользователей, чтобы сразу начать знакомство.
+  email:
+    title: Отправка почты
+    description: Подключите SMTP-сервер для сброса паролей. Этот шаг можно пропустить.
+    smtpEnabled: Настроить SMTP-сервер
+    smtpEnabledHint: Включить отправку системных писем
+    host: SMTP-хост
+    hostRequired: Укажите SMTP-хост
+    port: Порт
+    portRequired: Укажите порт
+    portInvalid: Укажите корректный порт
+    username: Имя пользователя
+    password: Пароль
+    fromAddress: Адрес отправителя
+    fromAddressRequired: Укажите адрес отправителя
+    enableSsl: Использовать защищённое TLS-соединение
+    skippedTitle: Почтовый сервер не настроен
+    skippedDescription: Письма для сброса пароля будут недоступны, пока не настроен SMTP.
+  review:
+    title: Проверьте настройки
+    description: Проверьте выбранные параметры перед завершающим шагом установки.
+    domain: Домен
+    timeZone: Часовой пояс
+    email: Почта
+    testData: Тестовые данные
+    notConfigured: Не настроено
+    included: Добавлены
+    notIncluded: Не добавлены
+    databaseTitle: База данных будет инициализирована
+    databaseDescription: Это может занять некоторое время. Не закрывайте страницу до завершения установки.
+  success:
+    eyebrow: Установка завершена
+    title: Всё успешно установлено!
+    description: Chatney настроен и готов к работе вашей команды.
+    goToApp: Перейти в Chatney
 
 profile:
   title: Профиль

@@ -87,10 +87,73 @@ auth:
     submit: Скинути пароль
 
 install:
+  starting: Запуск Chatney...
+  eyebrow: Початкове налаштування
+  heading: Зробіть Chatney своїм.
+  intro: Ще кілька деталей — і ваш приватний простір для команди буде готовий.
+  secureNote: Налаштування зберігаються на вашому сервері
+  stepCounter: Крок {{current}} з {{total}}
+  completed: Налаштування завершено
+  back: Назад
+  continue: Продовжити
   submit: Встановити
-  loading: "Завантаження:"
-  errorMessage: "Повідомлення про помилку:"
+  installing: Встановлення...
   error: "Помилка встановлення системи: {{message}}"
+  steps:
+    workspace:
+      title: Робочий простір
+      description: Домен і регіональні налаштування
+    email:
+      title: Пошта
+      description: Надсилання через SMTP (необов'язково)
+    review:
+      title: Перевірка
+      description: Підтвердження та встановлення
+  workspace:
+    title: Налаштування робочого простору
+    description: Вкажіть публічну адресу та часовий пояс для цього встановлення.
+    domainName: Доменне ім'я
+    domainNameHint: Використовується в посиланнях у запрошеннях і листах для скидання пароля.
+    domainNameRequired: Вкажіть доменне ім'я
+    timeZone: Часовий пояс
+    timeZoneHint: Дати та заплановані дії використовуватимуть цей часовий пояс.
+    timeZoneRequired: Вкажіть часовий пояс
+    seedTestData: Додати тестові дані
+    seedTestDataHint: Створити двох тестових користувачів, щоб одразу почати знайомство.
+  email:
+    title: Надсилання пошти
+    description: Підключіть SMTP-сервер для скидання паролів. Цей крок можна пропустити.
+    smtpEnabled: Налаштувати SMTP-сервер
+    smtpEnabledHint: Увімкнути надсилання системних листів
+    host: SMTP-хост
+    hostRequired: Вкажіть SMTP-хост
+    port: Порт
+    portRequired: Вкажіть порт
+    portInvalid: Вкажіть коректний порт
+    username: Ім'я користувача
+    password: Пароль
+    fromAddress: Адреса відправника
+    fromAddressRequired: Вкажіть адресу відправника
+    enableSsl: Використовувати захищене TLS-з'єднання
+    skippedTitle: Поштовий сервер не налаштовано
+    skippedDescription: Листи для скидання пароля будуть недоступні, доки не налаштовано SMTP.
+  review:
+    title: Перевірте налаштування
+    description: Перевірте вибрані параметри перед завершальним кроком встановлення.
+    domain: Домен
+    timeZone: Часовий пояс
+    email: Пошта
+    testData: Тестові дані
+    notConfigured: Не налаштовано
+    included: Додано
+    notIncluded: Не додано
+    databaseTitle: База даних буде ініціалізована
+    databaseDescription: Це може зайняти деякий час. Не закривайте сторінку до завершення встановлення.
+  success:
+    eyebrow: Встановлення завершено
+    title: Усе успішно встановлено!
+    description: Chatney налаштовано й готово до роботи вашої команди.
+    goToApp: Перейти до Chatney
 
 profile:
   title: Профіль

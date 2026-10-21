@@ -52,10 +52,10 @@ const timeZones = [
 ];
 
 const steps = [
-    { title: 'Workspace', description: 'Domain and regional settings', icon: Globe2 },
-    { title: 'Email', description: 'Optional SMTP delivery', icon: Mail },
-    { title: 'Review', description: 'Confirm and install', icon: ShieldCheck },
-];
+    { id: 'workspace', icon: Globe2 },
+    { id: 'email', icon: Mail },
+    { id: 'review', icon: ShieldCheck },
+] as const;
 
 export const InstallSystemPage = () => {
     const { t } = useTranslation();
@@ -128,9 +128,9 @@ export const InstallSystemPage = () => {
                         <span>Chatney</span>
                     </div>
                     <div className={styles.intro}>
-                        <span className={styles.eyebrow}>First-time setup</span>
-                        <h1>Make Chatney yours.</h1>
-                        <p>A few details and your private team space will be ready.</p>
+                        <span className={styles.eyebrow}>{t('install.eyebrow')}</span>
+                        <h1>{t('install.heading')}</h1>
+                        <p>{t('install.intro')}</p>
                     </div>
                     <ol className={styles.steps}>
                         {steps.map((item, index) => {
@@ -139,7 +139,7 @@ export const InstallSystemPage = () => {
                             return (
                                 <li
                                     className={`${styles.step} ${!installed && index === step ? styles.stepActive : ''} ${isDone ? styles.stepDone : ''}`}
-                                    key={item.title}
+                                    key={item.id}
                                 >
                                     <button
                                         type="button"
@@ -151,20 +151,20 @@ export const InstallSystemPage = () => {
                                             {isDone ? <Check size={17} /> : <Icon size={17} />}
                                         </span>
                                         <span>
-                                            <strong>{item.title}</strong>
-                                            <small>{item.description}</small>
+                                            <strong>{t(`install.steps.${item.id}.title`)}</strong>
+                                            <small>{t(`install.steps.${item.id}.description`)}</small>
                                         </span>
                                     </button>
                                 </li>
                             );
                         })}
                     </ol>
-                    <p className={styles.secureNote}><ShieldCheck size={15} /> Settings stay on your server</p>
+                    <p className={styles.secureNote}><ShieldCheck size={15} /> {t('install.secureNote')}</p>
                 </aside>
 
                 <form className={styles.form} onSubmit={event => event.preventDefault()}>
                     <div className={styles.formHeader}>
-                        <span>{installed ? 'Setup complete' : `Step ${step + 1} of ${steps.length}`}</span>
+                        <span>{installed ? t('install.completed') : t('install.stepCounter', { current: step + 1, total: steps.length })}</span>
                         <div className={styles.progress}><i style={{ width: installed ? '100%' : `${((step + 1) / steps.length) * 100}%` }} /></div>
                     </div>
 
@@ -173,37 +173,37 @@ export const InstallSystemPage = () => {
                             <div className={styles.panelTitle}>
                                 <span className={styles.panelIcon}><Globe2 size={22} /></span>
                                 <div>
-                                    <h2>Workspace settings</h2>
-                                    <p>Set the public address and local time for this installation.</p>
+                                    <h2>{t('install.workspace.title')}</h2>
+                                    <p>{t('install.workspace.description')}</p>
                                 </div>
                             </div>
                             <label className={styles.field}>
-                                <span>Domain name</span>
+                                <span>{t('install.workspace.domainName')}</span>
                                 <input
                                     type="url"
                                     placeholder="https://chat.example.com"
-                                    {...register('domainName', { required: 'Domain name is required' })}
+                                    {...register('domainName', { required: t('install.workspace.domainNameRequired') })}
                                 />
-                                <small>Used for links in invitations and password reset emails.</small>
+                                <small>{t('install.workspace.domainNameHint')}</small>
                                 {errors.domainName && <em>{errors.domainName.message}</em>}
                             </label>
                             <label className={styles.field}>
-                                <span>Time zone</span>
-                                <select {...register('timeZone', { required: 'Time zone is required' })}>
+                                <span>{t('install.workspace.timeZone')}</span>
+                                <select {...register('timeZone', { required: t('install.workspace.timeZoneRequired') })}>
                                     {!timeZones.includes(browserTimeZone) && (
                                         <option value={browserTimeZone}>{browserTimeZone}</option>
                                     )}
                                     {timeZones.map(timeZone => <option value={timeZone} key={timeZone}>{timeZone}</option>)}
                                 </select>
-                                <small>Dates and scheduled activity will use this time zone.</small>
+                                <small>{t('install.workspace.timeZoneHint')}</small>
                             </label>
                             <label className={styles.checkCard}>
                                 <input type="checkbox" {...register('seedTestData')} />
                                 <span className={styles.checkBox}><Check size={13} /></span>
                                 <Database size={20} />
                                 <span>
-                                    <strong>Add testing data</strong>
-                                    <small>Create two sample users so you can explore right away.</small>
+                                    <strong>{t('install.workspace.seedTestData')}</strong>
+                                    <small>{t('install.workspace.seedTestDataHint')}</small>
                                 </span>
                             </label>
                         </section>
@@ -214,14 +214,14 @@ export const InstallSystemPage = () => {
                             <div className={styles.panelTitle}>
                                 <span className={styles.panelIcon}><Mail size={22} /></span>
                                 <div>
-                                    <h2>Email delivery</h2>
-                                    <p>Connect an SMTP server for password resets. You can skip this for now.</p>
+                                    <h2>{t('install.email.title')}</h2>
+                                    <p>{t('install.email.description')}</p>
                                 </div>
                             </div>
                             <label className={styles.toggleRow}>
                                 <span>
-                                    <strong>Configure SMTP server</strong>
-                                    <small>Enable outgoing system email</small>
+                                    <strong>{t('install.email.smtpEnabled')}</strong>
+                                    <small>{t('install.email.smtpEnabledHint')}</small>
                                 </span>
                                 <input type="checkbox" {...register('smtpEnabled')} />
                                 <i />
@@ -230,22 +230,22 @@ export const InstallSystemPage = () => {
                                 <div className={styles.smtpFields}>
                                     <div className={styles.fieldGrid}>
                                         <label className={styles.field}>
-                                            <span>SMTP host</span>
+                                            <span>{t('install.email.host')}</span>
                                             <input
                                                 placeholder="smtp.example.com"
-                                                {...register('smtp.host', { required: 'SMTP host is required' })}
+                                                {...register('smtp.host', { required: t('install.email.hostRequired') })}
                                             />
                                             {errors.smtp?.host && <em>{errors.smtp.host.message}</em>}
                                         </label>
                                         <label className={styles.field}>
-                                            <span>Port</span>
+                                            <span>{t('install.email.port')}</span>
                                             <input
                                                 type="number"
                                                 {...register('smtp.port', {
-                                                    required: 'Port is required',
+                                                    required: t('install.email.portRequired'),
                                                     valueAsNumber: true,
-                                                    min: { value: 1, message: 'Use a valid port' },
-                                                    max: { value: 65535, message: 'Use a valid port' },
+                                                    min: { value: 1, message: t('install.email.portInvalid') },
+                                                    max: { value: 65535, message: t('install.email.portInvalid') },
                                                 })}
                                             />
                                             {errors.smtp?.port && <em>{errors.smtp.port.message}</em>}
@@ -253,34 +253,34 @@ export const InstallSystemPage = () => {
                                     </div>
                                     <div className={styles.fieldGrid}>
                                         <label className={styles.field}>
-                                            <span>Username <b>Optional</b></span>
+                                            <span>{t('install.email.username')} <b>{t('common.optional')}</b></span>
                                             <input autoComplete="username" {...register('smtp.username')} />
                                         </label>
                                         <label className={styles.field}>
-                                            <span>Password <b>Optional</b></span>
+                                            <span>{t('install.email.password')} <b>{t('common.optional')}</b></span>
                                             <input type="password" autoComplete="new-password" {...register('smtp.password')} />
                                         </label>
                                     </div>
                                     <label className={styles.field}>
-                                        <span>From address</span>
+                                        <span>{t('install.email.fromAddress')}</span>
                                         <input
                                             type="email"
                                             placeholder="noreply@example.com"
-                                            {...register('smtp.fromAddress', { required: 'From address is required' })}
+                                            {...register('smtp.fromAddress', { required: t('install.email.fromAddressRequired') })}
                                         />
                                         {errors.smtp?.fromAddress && <em>{errors.smtp.fromAddress.message}</em>}
                                     </label>
                                     <label className={styles.inlineCheck}>
                                         <input type="checkbox" {...register('smtp.enableSsl')} />
                                         <span className={styles.checkBox}><Check size={13} /></span>
-                                        Use a secure TLS connection
+                                        {t('install.email.enableSsl')}
                                     </label>
                                 </div>
                             )}
                             {!values.smtpEnabled && (
                                 <div className={styles.skipMessage}>
                                     <Mail size={20} />
-                                    <span><strong>No email server</strong>Password reset emails will be unavailable until SMTP is configured.</span>
+                                    <span><strong>{t('install.email.skippedTitle')}</strong>{t('install.email.skippedDescription')}</span>
                                 </div>
                             )}
                         </section>
@@ -291,21 +291,21 @@ export const InstallSystemPage = () => {
                             <div className={styles.panelTitle}>
                                 <span className={styles.panelIcon}><ShieldCheck size={22} /></span>
                                 <div>
-                                    <h2>Review your settings</h2>
-                                    <p>Check your choices before moving to the final installation step.</p>
+                                    <h2>{t('install.review.title')}</h2>
+                                    <p>{t('install.review.description')}</p>
                                 </div>
                             </div>
                             <dl className={styles.review}>
-                                <div><dt>Domain</dt><dd>{values.domainName}</dd></div>
-                                <div><dt>Time zone</dt><dd>{values.timeZone}</dd></div>
-                                <div><dt>Email</dt><dd>{values.smtpEnabled ? `${values.smtp.host}:${values.smtp.port}` : 'Not configured'}</dd></div>
-                                <div><dt>Testing data</dt><dd>{values.seedTestData ? 'Included' : 'Not included'}</dd></div>
+                                <div><dt>{t('install.review.domain')}</dt><dd>{values.domainName}</dd></div>
+                                <div><dt>{t('install.review.timeZone')}</dt><dd>{values.timeZone}</dd></div>
+                                <div><dt>{t('install.review.email')}</dt><dd>{values.smtpEnabled ? `${values.smtp.host}:${values.smtp.port}` : t('install.review.notConfigured')}</dd></div>
+                                <div><dt>{t('install.review.testData')}</dt><dd>{values.seedTestData ? t('install.review.included') : t('install.review.notIncluded')}</dd></div>
                             </dl>
                             <div className={styles.installNote}>
                                 <Database size={20} />
-                                <span><strong>Your database will be initialized</strong>This can take a few moments. Keep this page open until setup completes.</span>
+                                <span><strong>{t('install.review.databaseTitle')}</strong>{t('install.review.databaseDescription')}</span>
                             </div>
-                            {errorMessage && <div className={styles.errorText} role="alert">{t('install.errorMessage')} {errorMessage}</div>}
+                            {errorMessage && <div className={styles.errorText} role="alert">{errorMessage}</div>}
                         </section>
                     )}
 
@@ -313,12 +313,12 @@ export const InstallSystemPage = () => {
                         <section className={styles.successPanel}>
                             <span className={styles.successIcon}><CircleCheckBig size={38} /></span>
                             <div>
-                                <span className={styles.eyebrow}>Installation complete</span>
-                                <h2>Everything installed successfully!</h2>
-                                <p>Chatney is configured and ready for your team.</p>
+                                <span className={styles.eyebrow}>{t('install.success.eyebrow')}</span>
+                                <h2>{t('install.success.title')}</h2>
+                                <p>{t('install.success.description')}</p>
                             </div>
                             <a className={styles.primaryButton} href={clientStartPageUrl}>
-                                Go to Chatney <ArrowRight size={18} />
+                                {t('install.success.goToApp')} <ArrowRight size={18} />
                             </a>
                         </section>
                     )}
@@ -327,12 +327,12 @@ export const InstallSystemPage = () => {
                         <div className={`${styles.actions} ${step === steps.length - 1 ? styles.installActions : ''}`}>
                             {step > 0 ? (
                                 <button type="button" className={styles.backButton} onClick={() => setStep(current => current - 1)} disabled={loading}>
-                                    <ChevronLeft size={18} /> Back
+                                    <ChevronLeft size={18} /> {t('install.back')}
                                 </button>
                             ) : <span />}
                             {step < steps.length - 1 ? (
                                 <button type="button" className={styles.primaryButton} onClick={goNext}>
-                                    Continue <ChevronRight size={18} />
+                                    {t('install.continue')} <ChevronRight size={18} />
                                 </button>
                             ) : (
                                 <button
@@ -341,7 +341,7 @@ export const InstallSystemPage = () => {
                                     disabled={loading}
                                     onClick={handleSubmit(onSubmit)}
                                 >
-                                    {loading ? <><LoaderCircle className={styles.spinner} size={22} /> Installing...</> : 'Install'}
+                                    {loading ? <><LoaderCircle className={styles.spinner} size={22} /> {t('install.installing')}</> : t('install.submit')}
                                 </button>
                             )}
                         </div>

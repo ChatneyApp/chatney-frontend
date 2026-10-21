@@ -1,6 +1,7 @@
 import { LoaderCircle, MessageCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { useApolloClient } from '@apollo/client/react';
 
 import { GraphqlProvider } from '@/contexts/GraphqlProvider';
@@ -32,13 +33,17 @@ const ComposedProviders = composeProviders(providers);
 
 type InstallationStatus = 'checking' | 'installed' | 'not-installed';
 
-const AppLoadingScreen = () => (
-    <main className={styles.loadingPage}>
-        <span className={styles.loadingLogo}><MessageCircle size={24} /></span>
-        <LoaderCircle className={styles.spinner} size={20} />
-        <span>Starting Chatney...</span>
-    </main>
-);
+const AppLoadingScreen = () => {
+    const { t } = useTranslation();
+
+    return (
+        <main className={styles.loadingPage}>
+            <span className={styles.loadingLogo}><MessageCircle size={24} /></span>
+            <LoaderCircle className={styles.spinner} size={20} />
+            <span>{t('install.starting')}</span>
+        </main>
+    );
+};
 
 const LoginPageRouterSelector = () => {
     const apollo = useApolloClient();

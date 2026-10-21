@@ -83,10 +83,73 @@ auth:
     submit: Reset password
 
 install:
+  starting: Starting Chatney...
+  eyebrow: First-time setup
+  heading: Make Chatney yours.
+  intro: A few details and your private team space will be ready.
+  secureNote: Settings stay on your server
+  stepCounter: Step {{current}} of {{total}}
+  completed: Setup complete
+  back: Back
+  continue: Continue
   submit: Install
-  loading: "Loading:"
-  errorMessage: "Error message:"
+  installing: Installing...
   error: "System install error: {{message}}"
+  steps:
+    workspace:
+      title: Workspace
+      description: Domain and regional settings
+    email:
+      title: Email
+      description: Optional SMTP delivery
+    review:
+      title: Review
+      description: Confirm and install
+  workspace:
+    title: Workspace settings
+    description: Set the public address and local time for this installation.
+    domainName: Domain name
+    domainNameHint: Used for links in invitations and password reset emails.
+    domainNameRequired: Domain name is required
+    timeZone: Time zone
+    timeZoneHint: Dates and scheduled activity will use this time zone.
+    timeZoneRequired: Time zone is required
+    seedTestData: Add testing data
+    seedTestDataHint: Create two sample users so you can explore right away.
+  email:
+    title: Email delivery
+    description: Connect an SMTP server for password resets. You can skip this for now.
+    smtpEnabled: Configure SMTP server
+    smtpEnabledHint: Enable outgoing system email
+    host: SMTP host
+    hostRequired: SMTP host is required
+    port: Port
+    portRequired: Port is required
+    portInvalid: Use a valid port
+    username: Username
+    password: Password
+    fromAddress: From address
+    fromAddressRequired: From address is required
+    enableSsl: Use a secure TLS connection
+    skippedTitle: No email server
+    skippedDescription: Password reset emails will be unavailable until SMTP is configured.
+  review:
+    title: Review your settings
+    description: Check your choices before moving to the final installation step.
+    domain: Domain
+    timeZone: Time zone
+    email: Email
+    testData: Testing data
+    notConfigured: Not configured
+    included: Included
+    notIncluded: Not included
+    databaseTitle: Your database will be initialized
+    databaseDescription: This can take a few moments. Keep this page open until setup completes.
+  success:
+    eyebrow: Installation complete
+    title: Everything installed successfully!
+    description: Chatney is configured and ready for your team.
+    goToApp: Go to Chatney
 
 profile:
   title: Profile

@@ -1,24 +1,375 @@
 @reference "tailwindcss";
 
+.page {
+    @apply flex min-h-screen items-center justify-center bg-[#090d18] px-5 py-10 text-slate-200;
+    background-image:
+        radial-gradient(circle at 15% 15%, rgb(99 102 241 / 12%), transparent 28rem),
+        radial-gradient(circle at 90% 85%, rgb(56 189 248 / 8%), transparent 26rem);
+}
+
+.shell {
+    @apply grid w-full max-w-[980px] overflow-hidden rounded-[28px] border border-white/10 bg-[#111827] shadow-2xl shadow-black/40 md:grid-cols-[310px_1fr];
+}
+
+.sidebar {
+    @apply relative flex min-h-[650px] flex-col overflow-hidden border-b border-white/10 bg-[#0d1424] p-8 md:border-r md:border-b-0;
+}
+
+.sidebar::after {
+    content: '';
+    @apply pointer-events-none absolute -right-32 -bottom-36 h-80 w-80 rounded-full bg-indigo-500/10 blur-3xl;
+}
+
+.brand {
+    @apply flex items-center gap-3 text-lg font-semibold tracking-tight text-white;
+}
+
+.logo {
+    @apply flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-400 text-slate-950 shadow-lg shadow-indigo-500/20;
+}
+
+.intro {
+    @apply mt-16;
+}
+
+.eyebrow {
+    @apply text-[10px] font-semibold tracking-[0.2em] text-indigo-400 uppercase;
+}
+
+.intro h1 {
+    @apply m-0 mt-3 p-0 text-3xl leading-tight font-semibold tracking-tight text-white;
+}
+
+.intro p {
+    @apply mt-3 text-sm leading-relaxed text-slate-400;
+}
+
+.steps {
+    @apply mt-10 flex list-none flex-col gap-3 p-0;
+}
+
+.step {
+    @apply rounded-2xl text-slate-500 transition-colors;
+}
+
+.stepButton {
+    @apply flex w-full cursor-pointer items-center gap-3 rounded-2xl border-0 bg-transparent px-3 py-3 text-left text-inherit transition hover:bg-white/[0.025] disabled:cursor-default disabled:hover:bg-transparent;
+}
+
+.stepActive {
+    @apply bg-white/5 text-white;
+}
+
+.stepDone {
+    @apply text-slate-300;
+}
+
+.stepIcon {
+    @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5;
+}
+
+.stepActive .stepIcon {
+    @apply border-indigo-400/30 bg-indigo-400/15 text-indigo-300;
+}
+
+.stepDone .stepIcon {
+    @apply border-emerald-400/20 bg-emerald-400/10 text-emerald-400;
+}
+
+.step strong,
+.step small {
+    @apply block;
+}
+
+.step strong {
+    @apply text-sm font-medium;
+}
+
+.step small {
+    @apply mt-0.5 text-xs text-slate-500;
+}
+
+.secureNote {
+    @apply z-10 mt-auto flex items-center gap-2 text-xs text-slate-600;
+}
+
 .form {
-    @apply w-1/2 mx-auto p-6 bg-white rounded-lg shadow-md text-gray-700;
+    @apply flex min-h-[650px] min-w-0 flex-col bg-[#131b2d] p-6 sm:p-10;
 }
 
-.formGroup {
-    @apply mb-4;
+.formHeader {
+    @apply flex items-center gap-4 text-[10px] font-semibold tracking-[0.15em] text-slate-500 uppercase;
 }
 
-.input {
-    @apply w-full p-2 border border-gray-300 rounded mb-4;
+.progress {
+    @apply h-1 flex-1 overflow-hidden rounded-full bg-white/5;
 }
 
-.label {
-    @apply block mb-2;
+.progress i {
+    @apply block h-full rounded-full bg-indigo-400 transition-all duration-300;
 }
-.label:after {
-    @apply content-['*'] text-red-500;
+
+.panel {
+    @apply mt-12 flex flex-col gap-6;
+}
+
+.panelTitle {
+    @apply mb-2 flex items-start gap-4;
+}
+
+.panelIcon {
+    @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-indigo-400/10 text-indigo-300;
+}
+
+.panelTitle h2 {
+    @apply m-0 p-0 text-xl font-semibold tracking-tight text-white;
+}
+
+.panelTitle p {
+    @apply mt-1.5 max-w-lg text-sm leading-relaxed text-slate-400;
+}
+
+.field {
+    @apply flex flex-col gap-2;
+}
+
+.field > span {
+    @apply text-xs font-medium text-slate-300;
+}
+
+.field b {
+    @apply ml-1 font-normal text-slate-600;
+}
+
+.field input,
+.field select {
+    @apply h-12 w-full rounded-xl border border-white/10 bg-[#0d1424] px-4 text-sm text-white outline-none transition focus:border-indigo-400/50 focus:ring-2 focus:ring-indigo-400/10;
+}
+
+.field select {
+    color-scheme: dark;
+}
+
+.field > small {
+    @apply text-xs text-slate-600;
+}
+
+.field em {
+    @apply text-xs not-italic text-rose-400;
+}
+
+.fieldGrid {
+    @apply grid gap-4 sm:grid-cols-[1fr_130px];
+}
+
+.checkCard {
+    @apply flex cursor-pointer items-center gap-3 rounded-2xl border border-white/10 bg-[#0d1424]/70 p-4 transition hover:border-white/20;
+}
+
+.checkCard input,
+.inlineCheck input {
+    @apply sr-only;
+}
+
+.checkBox {
+    @apply flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-white/20 text-transparent transition;
+}
+
+.checkCard input:checked + .checkBox,
+.inlineCheck input:checked + .checkBox {
+    @apply border-indigo-400 bg-indigo-400 text-slate-950;
+}
+
+.checkCard > svg {
+    @apply shrink-0 text-slate-500;
+}
+
+.checkCard strong,
+.checkCard small {
+    @apply block;
+}
+
+.checkCard strong {
+    @apply text-sm font-medium text-slate-200;
+}
+
+.checkCard small {
+    @apply mt-0.5 text-xs text-slate-500;
+}
+
+.toggleRow {
+    @apply flex items-center rounded-2xl border border-white/10 bg-[#0d1424]/70 p-4;
+}
+
+.toggleRow > span {
+    @apply mr-auto;
+}
+
+.toggleRow strong,
+.toggleRow small {
+    @apply block;
+}
+
+.toggleRow strong {
+    @apply text-sm font-medium text-slate-200;
+}
+
+.toggleRow small {
+    @apply mt-1 text-xs text-slate-500;
+}
+
+.toggleRow input {
+    @apply sr-only;
+}
+
+.toggleRow i {
+    @apply relative h-6 w-11 cursor-pointer rounded-full bg-slate-700 transition;
+}
+
+.toggleRow i::after {
+    content: '';
+    @apply absolute top-1 left-1 h-4 w-4 rounded-full bg-slate-300 transition-transform;
+}
+
+.toggleRow input:checked + i {
+    @apply bg-indigo-400;
+}
+
+.toggleRow input:checked + i::after {
+    @apply translate-x-5 bg-white;
+}
+
+.smtpFields {
+    @apply flex flex-col gap-5 border-t border-white/5 pt-6;
+}
+
+.inlineCheck {
+    @apply flex cursor-pointer items-center gap-3 text-xs text-slate-400;
+}
+
+.skipMessage,
+.installNote {
+    @apply flex items-center gap-3 rounded-2xl border border-white/5 bg-white/[0.025] p-4 text-slate-500;
+}
+
+.skipMessage strong,
+.skipMessage span,
+.installNote strong,
+.installNote span {
+    @apply block;
+}
+
+.skipMessage span,
+.installNote span {
+    @apply text-xs leading-relaxed;
+}
+
+.skipMessage strong,
+.installNote strong {
+    @apply mb-0.5 text-sm font-medium text-slate-300;
+}
+
+.review {
+    @apply overflow-hidden rounded-2xl border border-white/10 bg-[#0d1424]/70;
+}
+
+.review div {
+    @apply grid grid-cols-[120px_1fr] gap-4 border-b border-white/5 px-5 py-4 last:border-b-0;
+}
+
+.review dt {
+    @apply text-xs text-slate-500;
+}
+
+.review dd {
+    @apply m-0 truncate text-right text-sm text-slate-200;
 }
 
 .errorText {
-    @apply text-red-500 text-sm;
+    @apply rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300;
+}
+
+.actions {
+    @apply mt-auto flex items-center justify-between border-t border-white/5 pt-7;
+}
+
+.installActions {
+    @apply relative justify-center;
+}
+
+.installActions .backButton {
+    @apply absolute left-0;
+}
+
+.backButton,
+.primaryButton,
+.installButton {
+    @apply flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl border-0 px-5 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.backButton {
+    @apply bg-transparent text-slate-400 hover:bg-white/5 hover:text-white;
+}
+
+.primaryButton {
+    @apply bg-indigo-400 text-slate-950 shadow-lg shadow-indigo-500/15 hover:bg-indigo-300;
+}
+
+.installButton {
+    @apply h-14 min-w-56 bg-emerald-400 px-12 text-base font-semibold text-emerald-950 shadow-xl shadow-emerald-500/20 hover:scale-[1.02] hover:bg-emerald-300;
+}
+
+.successPanel {
+    @apply my-auto flex flex-col items-center px-4 py-12 text-center;
+}
+
+.successIcon {
+    @apply mb-7 flex h-20 w-20 items-center justify-center rounded-full border border-emerald-400/20 bg-emerald-400/10 text-emerald-400 shadow-xl shadow-emerald-500/10;
+}
+
+.successPanel h2 {
+    @apply m-0 mt-3 p-0 text-2xl font-semibold tracking-tight text-white;
+}
+
+.successPanel p {
+    @apply mb-8 mt-2 text-sm text-slate-400;
+}
+
+.spinner {
+    @apply animate-spin;
+}
+
+@media (max-width: 767px) {
+    .sidebar {
+        @apply min-h-0;
+    }
+
+    .intro {
+        @apply mt-8;
+    }
+
+    .steps {
+        @apply mt-6 grid grid-cols-3;
+    }
+
+    .stepButton {
+        @apply justify-center p-2;
+    }
+
+    .stepButton > span:last-child,
+    .secureNote {
+        @apply hidden;
+    }
+
+    .form {
+        @apply min-h-[610px];
+    }
+
+    .installActions {
+        @apply flex-col-reverse gap-3;
+    }
+
+    .installActions .backButton {
+        @apply static;
+    }
 }

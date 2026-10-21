@@ -1,0 +1,13 @@
+@reference "tailwindcss";
+
+.loadingPage {
+    @apply flex min-h-screen flex-col items-center justify-center gap-4 bg-[#090d18] px-5 text-sm text-slate-400;
+}
+
+.loadingLogo {
+    @apply mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-400 text-slate-950 shadow-lg shadow-indigo-500/20;
+}
+
+.spinner {
+    @apply animate-spin text-indigo-300;
+}

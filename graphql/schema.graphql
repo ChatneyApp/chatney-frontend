@@ -10,6 +10,8 @@ type Query {
   channels: ChannelQueries!
   "System-wide configuration values."
   configs: ConfigQueries!
+  "Public system installation status."
+  installWizard: InstallWizardQueries!
   "Channel messages, threads and reactions."
   messages: MessageQueries!
   "The current user's unsent message drafts."
@@ -24,6 +26,11 @@ type Query {
   users: UserQueries!
   "Workspaces."
   workspaces: WorkspaceQueries!
+}
+
+type InstallWizardQueries {
+  "Whether the system installation completed successfully."
+  isInstalled: Boolean!
 }
 
 type Mutation {

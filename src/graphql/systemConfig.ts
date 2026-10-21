@@ -32,6 +32,23 @@ export const GET_SYSTEM_CONFIG = graphql(`
     }
 `);
 
+const GET_INSTALLATION_STATUS = graphql(`
+    query GetInstallationStatus {
+        installWizard {
+            isInstalled
+        }
+    }
+`);
+
+export const isSystemInstalled = async (client: ApolloClient): Promise<boolean> => {
+    const { data } = await client.query({
+        query: GET_INSTALLATION_STATUS,
+        fetchPolicy: 'network-only',
+    });
+
+    return data?.installWizard.isInstalled === true;
+};
+
 const INSTALL_SYSTEM = graphql(`
     mutation InstallSystem($options: InstallSystemInput!) {
         installWizard {

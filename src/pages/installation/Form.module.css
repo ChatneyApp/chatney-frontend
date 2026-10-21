@@ -49,7 +49,11 @@
 }
 
 .step {
-    @apply flex items-center gap-3 rounded-2xl px-3 py-3 text-slate-500 transition-colors;
+    @apply rounded-2xl text-slate-500 transition-colors;
+}
+
+.stepButton {
+    @apply flex w-full cursor-pointer items-center gap-3 rounded-2xl border-0 bg-transparent px-3 py-3 text-left text-inherit transition hover:bg-white/[0.025] disabled:cursor-default disabled:hover:bg-transparent;
 }
 
 .stepActive {
@@ -289,8 +293,17 @@
     @apply mt-auto flex items-center justify-between border-t border-white/5 pt-7;
 }
 
+.installActions {
+    @apply relative justify-center;
+}
+
+.installActions .backButton {
+    @apply absolute left-0;
+}
+
 .backButton,
-.primaryButton {
+.primaryButton,
+.installButton {
     @apply flex h-11 cursor-pointer items-center justify-center gap-2 rounded-xl border-0 px-5 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50;
 }
 
@@ -300,6 +313,26 @@
 
 .primaryButton {
     @apply bg-indigo-400 text-slate-950 shadow-lg shadow-indigo-500/15 hover:bg-indigo-300;
+}
+
+.installButton {
+    @apply h-14 min-w-56 bg-emerald-400 px-12 text-base font-semibold text-emerald-950 shadow-xl shadow-emerald-500/20 hover:scale-[1.02] hover:bg-emerald-300;
+}
+
+.successPanel {
+    @apply my-auto flex flex-col items-center px-4 py-12 text-center;
+}
+
+.successIcon {
+    @apply mb-7 flex h-20 w-20 items-center justify-center rounded-full border border-emerald-400/20 bg-emerald-400/10 text-emerald-400 shadow-xl shadow-emerald-500/10;
+}
+
+.successPanel h2 {
+    @apply m-0 mt-3 p-0 text-2xl font-semibold tracking-tight text-white;
+}
+
+.successPanel p {
+    @apply mb-8 mt-2 text-sm text-slate-400;
 }
 
 .spinner {
@@ -319,16 +352,24 @@
         @apply mt-6 grid grid-cols-3;
     }
 
-    .step {
+    .stepButton {
         @apply justify-center p-2;
     }
 
-    .step > span:last-child,
+    .stepButton > span:last-child,
     .secureNote {
         @apply hidden;
     }
 
     .form {
         @apply min-h-[610px];
+    }
+
+    .installActions {
+        @apply flex-col-reverse gap-3;
+    }
+
+    .installActions .backButton {
+        @apply static;
     }
 }

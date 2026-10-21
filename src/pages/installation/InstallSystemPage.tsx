@@ -2,7 +2,9 @@ import { installSystem } from '@/graphql/systemConfig';
 import { clientStartPageUrl } from '@/infra/consts';
 import { useApolloClient } from '@apollo/client/react';
 import {
+    ArrowRight,
     Check,
+    CircleCheckBig,
     ChevronLeft,
     ChevronRight,
     Database,
@@ -57,6 +59,8 @@ const steps = [
 export const InstallSystemPage = () => {
     const apollo = useApolloClient();
     const [step, setStep] = useState(0);
+    const [furthestStep, setFurthestStep] = useState(0);
+    const [installed, setInstalled] = useState(false);
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
@@ -91,7 +95,7 @@ export const InstallSystemPage = () => {
                 seedTestData: form.seedTestData,
                 smtp: form.smtpEnabled ? form.smtp : null,
             });
-            window.location.href = clientStartPageUrl;
+            setInstalled(true);
         } catch (error) {
             setErrorMessage(`System install error: ${(error as Error).message}`);
         } finally {
@@ -107,7 +111,9 @@ export const InstallSystemPage = () => {
                 : (['smtpEnabled'] as const));
 
         if (await trigger(fields)) {
-            setStep(current => current + 1);
+            const nextStep = step + 1;
+            setStep(nextStep);
+            setFurthestStep(current => Math.max(current, nextStep));
         }
     };
 
@@ -127,18 +133,26 @@ export const InstallSystemPage = () => {
                     <ol className={styles.steps}>
                         {steps.map((item, index) => {
                             const Icon = item.icon;
+                            const isDone = installed || index < step;
                             return (
                                 <li
-                                    className={`${styles.step} ${index === step ? styles.stepActive : ''} ${index < step ? styles.stepDone : ''}`}
+                                    className={`${styles.step} ${!installed && index === step ? styles.stepActive : ''} ${isDone ? styles.stepDone : ''}`}
                                     key={item.title}
                                 >
-                                    <span className={styles.stepIcon}>
-                                        {index < step ? <Check size={17} /> : <Icon size={17} />}
-                                    </span>
-                                    <span>
-                                        <strong>{item.title}</strong>
-                                        <small>{item.description}</small>
-                                    </span>
+                                    <button
+                                        type="button"
+                                        className={styles.stepButton}
+                                        disabled={loading || installed || index > furthestStep}
+                                        onClick={() => setStep(index)}
+                                    >
+                                        <span className={styles.stepIcon}>
+                                            {isDone ? <Check size={17} /> : <Icon size={17} />}
+                                        </span>
+                                        <span>
+                                            <strong>{item.title}</strong>
+                                            <small>{item.description}</small>
+                                        </span>
+                                    </button>
                                 </li>
                             );
                         })}
@@ -146,13 +160,13 @@ export const InstallSystemPage = () => {
                     <p className={styles.secureNote}><ShieldCheck size={15} /> Settings stay on your server</p>
                 </aside>
 
-                <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+                <form className={styles.form} onSubmit={event => event.preventDefault()}>
                     <div className={styles.formHeader}>
-                        <span>Step {step + 1} of {steps.length}</span>
-                        <div className={styles.progress}><i style={{ width: `${((step + 1) / steps.length) * 100}%` }} /></div>
+                        <span>{installed ? 'Setup complete' : `Step ${step + 1} of ${steps.length}`}</span>
+                        <div className={styles.progress}><i style={{ width: installed ? '100%' : `${((step + 1) / steps.length) * 100}%` }} /></div>
                     </div>
 
-                    {step === 0 && (
+                    {!installed && step === 0 && (
                         <section className={styles.panel}>
                             <div className={styles.panelTitle}>
                                 <span className={styles.panelIcon}><Globe2 size={22} /></span>
@@ -193,7 +207,7 @@ export const InstallSystemPage = () => {
                         </section>
                     )}
 
-                    {step === 1 && (
+                    {!installed && step === 1 && (
                         <section className={styles.panel}>
                             <div className={styles.panelTitle}>
                                 <span className={styles.panelIcon}><Mail size={22} /></span>
@@ -270,13 +284,13 @@ export const InstallSystemPage = () => {
                         </section>
                     )}
 
-                    {step === 2 && (
+                    {!installed && step === 2 && (
                         <section className={styles.panel}>
                             <div className={styles.panelTitle}>
                                 <span className={styles.panelIcon}><ShieldCheck size={22} /></span>
                                 <div>
-                                    <h2>Ready to install</h2>
-                                    <p>Review your choices. Chatney will create the database structure and defaults.</p>
+                                    <h2>Review your settings</h2>
+                                    <p>Check your choices before moving to the final installation step.</p>
                                 </div>
                             </div>
                             <dl className={styles.review}>
@@ -293,22 +307,43 @@ export const InstallSystemPage = () => {
                         </section>
                     )}
 
-                    <div className={styles.actions}>
-                        {step > 0 ? (
-                            <button type="button" className={styles.backButton} onClick={() => setStep(current => current - 1)} disabled={loading}>
-                                <ChevronLeft size={18} /> Back
-                            </button>
-                        ) : <span />}
-                        {step < steps.length - 1 ? (
-                            <button type="button" className={styles.primaryButton} onClick={goNext}>
-                                Continue <ChevronRight size={18} />
-                            </button>
-                        ) : (
-                            <button type="submit" className={styles.primaryButton} disabled={loading}>
-                                {loading ? <><LoaderCircle className={styles.spinner} size={18} /> Installing...</> : 'Install Chatney'}
-                            </button>
-                        )}
-                    </div>
+                    {installed && (
+                        <section className={styles.successPanel}>
+                            <span className={styles.successIcon}><CircleCheckBig size={38} /></span>
+                            <div>
+                                <span className={styles.eyebrow}>Installation complete</span>
+                                <h2>Everything installed successfully!</h2>
+                                <p>Chatney is configured and ready for your team.</p>
+                            </div>
+                            <a className={styles.primaryButton} href={clientStartPageUrl}>
+                                Go to Chatney <ArrowRight size={18} />
+                            </a>
+                        </section>
+                    )}
+
+                    {!installed && (
+                        <div className={`${styles.actions} ${step === steps.length - 1 ? styles.installActions : ''}`}>
+                            {step > 0 ? (
+                                <button type="button" className={styles.backButton} onClick={() => setStep(current => current - 1)} disabled={loading}>
+                                    <ChevronLeft size={18} /> Back
+                                </button>
+                            ) : <span />}
+                            {step < steps.length - 1 ? (
+                                <button type="button" className={styles.primaryButton} onClick={goNext}>
+                                    Continue <ChevronRight size={18} />
+                                </button>
+                            ) : (
+                                <button
+                                    type="button"
+                                    className={styles.installButton}
+                                    disabled={loading}
+                                    onClick={handleSubmit(onSubmit)}
+                                >
+                                    {loading ? <><LoaderCircle className={styles.spinner} size={22} /> Installing...</> : 'Install'}
+                                </button>
+                            )}
+                        </div>
+                    )}
                 </form>
             </div>
         </main>

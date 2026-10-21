@@ -65,6 +65,7 @@ type Documents = {
     "\n    fragment ConfigFields on Config {\n        id\n        name\n        value\n        type\n    }\n": typeof types.ConfigFieldsFragmentDoc,
     "\n    mutation UpdateSystemConfigValue($config: ConfigInput!) {\n        configs {\n            updateConfig(config: $config) {\n                ...ConfigFields\n            }\n        }\n    }\n": typeof types.UpdateSystemConfigValueDocument,
     "\n    query GetSystemConfig {\n        configs {\n            list {\n                ...ConfigFields\n            }\n        }\n    }\n": typeof types.GetSystemConfigDocument,
+    "\n    query GetInstallationStatus {\n        installWizard {\n            isInstalled\n        }\n    }\n": typeof types.GetInstallationStatusDocument,
     "\n    mutation InstallSystem($options: InstallSystemInput!) {\n        installWizard {\n            installSystem(options: $options) {\n                status\n                message\n            }\n        }\n    }\n": typeof types.InstallSystemDocument,
     "\n    fragment UserFields on User {\n        id\n        nickname\n        fullName\n        active\n        verified\n        banned\n        muted\n        email\n        avatarUrl\n    }\n": typeof types.UserFieldsFragmentDoc,
     "\n    query GetUserById($id: UUID!) {\n        users {\n            userById(id: $id) {\n                ...UserFields\n            }\n        }\n    }\n": typeof types.GetUserByIdDocument,
@@ -127,6 +128,7 @@ const documents: Documents = {
     "\n    fragment ConfigFields on Config {\n        id\n        name\n        value\n        type\n    }\n": types.ConfigFieldsFragmentDoc,
     "\n    mutation UpdateSystemConfigValue($config: ConfigInput!) {\n        configs {\n            updateConfig(config: $config) {\n                ...ConfigFields\n            }\n        }\n    }\n": types.UpdateSystemConfigValueDocument,
     "\n    query GetSystemConfig {\n        configs {\n            list {\n                ...ConfigFields\n            }\n        }\n    }\n": types.GetSystemConfigDocument,
+    "\n    query GetInstallationStatus {\n        installWizard {\n            isInstalled\n        }\n    }\n": types.GetInstallationStatusDocument,
     "\n    mutation InstallSystem($options: InstallSystemInput!) {\n        installWizard {\n            installSystem(options: $options) {\n                status\n                message\n            }\n        }\n    }\n": types.InstallSystemDocument,
     "\n    fragment UserFields on User {\n        id\n        nickname\n        fullName\n        active\n        verified\n        banned\n        muted\n        email\n        avatarUrl\n    }\n": types.UserFieldsFragmentDoc,
     "\n    query GetUserById($id: UUID!) {\n        users {\n            userById(id: $id) {\n                ...UserFields\n            }\n        }\n    }\n": types.GetUserByIdDocument,
@@ -356,6 +358,10 @@ export function graphql(source: "\n    mutation UpdateSystemConfigValue($config:
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    query GetSystemConfig {\n        configs {\n            list {\n                ...ConfigFields\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetSystemConfig {\n        configs {\n            list {\n                ...ConfigFields\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    query GetInstallationStatus {\n        installWizard {\n            isInstalled\n        }\n    }\n"): (typeof documents)["\n    query GetInstallationStatus {\n        installWizard {\n            isInstalled\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

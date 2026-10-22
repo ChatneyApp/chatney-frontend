@@ -6,6 +6,7 @@ import { UsersPage } from '@/pages/admin/users/UsersPage';
 import { WorkspacesPage } from '@/pages/admin/workspaces/WorkspacesPage';
 import { ChannelTypesPage } from '@/pages/admin/channelTypes/ChannelTypesPage';
 import { WorkspaceChannelsPage } from '@/pages/admin/workspaceChannels/WorkspaceChannelsPage';
+import { ConfigPage } from '@/pages/admin/config/ConfigPage';
 
 export const adminRoutes = () => (
     <Route path="admin" element={<AdminLayout />}>
@@ -15,5 +16,6 @@ export const adminRoutes = () => (
         <Route path="workspaces" element={<WorkspacesPage />} />
         <Route path="workspaces/:workspaceId/channels" element={<WorkspaceChannelsPage />} />
         <Route path="channel-types" element={<ChannelTypesPage />} />
+        <Route path="config" element={<ConfigPage />} />
     </Route>
 );

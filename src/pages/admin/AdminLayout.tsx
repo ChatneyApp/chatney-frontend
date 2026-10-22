@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router';
-import { LayoutGrid, MessageSquare, Shield, Tags, Users } from 'lucide-react';
+import { LayoutGrid, MessageSquare, Settings, Shield, Tags, Users } from 'lucide-react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
@@ -34,6 +34,10 @@ export function AdminLayout() {
                         <NavLink to="/admin/channel-types" className={isActiveLink}>
                             <Tags size={16} />
                             {t('admin.nav.channelTypes')}
+                        </NavLink>
+                        <NavLink to="/admin/config" className={isActiveLink}>
+                            <Settings size={16} />
+                            {t('admin.nav.config')}
                         </NavLink>
                     </nav>
                     <div className={styles.sidebarFooter}>

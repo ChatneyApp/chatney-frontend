@@ -179,6 +179,7 @@ admin:
     users: Пользователи
     workspaces: Рабочие пространства
     channelTypes: Типы каналов
+    config: Конфигурация
     backToChat: Вернуться в чат
   roles:
     title: Роли
@@ -411,6 +412,45 @@ admin:
       deleteForbidden: У вас нет прав на удаление этого канала.
       deleteNotFound: Этот канал больше не существует.
       deleteFailed: Не удалось удалить канал. Попробуйте ещё раз.
+  config:
+    title: Конфигурация
+    subtitle: Управление общесистемными настройками
+    loading: Загрузка конфигурации...
+    sections:
+      general: Общие
+      email: Почта (SMTP)
+    missingFields:
+      general: Некоторые настройки не были созданы при установке, поэтому их нельзя изменить здесь.
+      email: Некоторые настройки SMTP не были созданы при установке (SMTP был пропущен), поэтому их нельзя изменить здесь.
+    fields:
+      newUserDefaultRole: Роль по умолчанию для новых пользователей
+      domainName: Доменное имя
+      timeZone: Часовой пояс
+      smtpEnabled: Отправлять письма
+      smtpHost: SMTP-сервер
+      smtpPort: SMTP-порт
+      smtpUsername: Имя пользователя
+      smtpPassword: Пароль
+      smtpEnableSsl: Использовать SSL/TLS
+      smtpFromAddress: Адрес отправителя
+    hints:
+      newUserDefaultRole: Назначается пользователям, которые регистрируются сами или создаются без ролей.
+      domainName: Адрес приложения с протоколом, используется в ссылках в письмах. Например, https://chat.example.com
+      timeZone: Даты и запланированные действия используют этот часовой пояс.
+      smtpEnabled: Включает письма, например ссылки для сброса пароля.
+    listHint: По одному значению в строке.
+    unknownRole: 'Неизвестная роль (#{{id}})'
+    validation:
+      domainInvalid: 'Введите адрес с http:// или https:// без пути, например https://chat.example.com'
+      intInvalid: Введите целое число
+      intOutOfRange: Введите целое число от {{min}} до {{max}}
+      emailInvalid: Введите корректный адрес электронной почты
+    save: Сохранить
+    saved: Настройки сохранены
+    errors:
+      forbidden: У вас нет прав на изменение конфигурации.
+      notFound: Некоторые настройки больше не существуют. Обновите страницу и попробуйте ещё раз.
+      failed: Не удалось сохранить некоторые настройки. Попробуйте ещё раз.
 
 chat:
   emptyMessages: Здесь пока нет сообщений

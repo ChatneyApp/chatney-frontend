@@ -1,4 +1,5 @@
 import { installSystem } from '@/graphql/systemConfig';
+import { getTimeZoneOptions } from '@/helpers/timeZones';
 import { clientStartPageUrl } from '@/infra/consts';
 import { useApolloClient } from '@apollo/client/react';
 import {
@@ -33,23 +34,6 @@ type InstallFormValues = {
         fromAddress: string;
     };
 };
-
-const timeZones = [
-    'UTC',
-    'America/Los_Angeles',
-    'America/Denver',
-    'America/Chicago',
-    'America/New_York',
-    'America/Sao_Paulo',
-    'Europe/London',
-    'Europe/Berlin',
-    'Europe/Kyiv',
-    'Asia/Dubai',
-    'Asia/Kolkata',
-    'Asia/Singapore',
-    'Asia/Tokyo',
-    'Australia/Sydney',
-];
 
 const steps = [
     { id: 'workspace', icon: Globe2 },
@@ -190,10 +174,7 @@ export const InstallSystemPage = () => {
                             <label className={styles.field}>
                                 <span>{t('install.workspace.timeZone')}</span>
                                 <select {...register('timeZone', { required: t('install.workspace.timeZoneRequired') })}>
-                                    {!timeZones.includes(browserTimeZone) && (
-                                        <option value={browserTimeZone}>{browserTimeZone}</option>
-                                    )}
-                                    {timeZones.map(timeZone => <option value={timeZone} key={timeZone}>{timeZone}</option>)}
+                                    {getTimeZoneOptions(browserTimeZone).map(timeZone => <option value={timeZone} key={timeZone}>{timeZone}</option>)}
                                 </select>
                                 <small>{t('install.workspace.timeZoneHint')}</small>
                             </label>

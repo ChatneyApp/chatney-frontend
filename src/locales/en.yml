@@ -175,6 +175,7 @@ admin:
     users: Users
     workspaces: Workspaces
     channelTypes: Channel types
+    config: Configuration
     backToChat: Back to chat
   roles:
     title: Roles
@@ -401,6 +402,45 @@ admin:
       deleteForbidden: You don't have permission to delete this channel.
       deleteNotFound: This channel no longer exists.
       deleteFailed: Couldn't delete the channel. Please try again.
+  config:
+    title: Configuration
+    subtitle: Manage system-wide settings
+    loading: Loading configuration...
+    sections:
+      general: General
+      email: Email (SMTP)
+    missingFields:
+      general: Some settings weren't created during installation and can't be edited here.
+      email: Some SMTP settings weren't created during installation (SMTP was skipped), so they can't be edited here.
+    fields:
+      newUserDefaultRole: Default role for new users
+      domainName: Domain name
+      timeZone: Time zone
+      smtpEnabled: Send emails
+      smtpHost: SMTP host
+      smtpPort: SMTP port
+      smtpUsername: Username
+      smtpPassword: Password
+      smtpEnableSsl: Use SSL/TLS
+      smtpFromAddress: From address
+    hints:
+      newUserDefaultRole: Assigned to users who sign up themselves or are created without roles.
+      domainName: Address of the app with protocol, used for links in emails. For example, https://chat.example.com
+      timeZone: Dates and scheduled activity use this time zone.
+      smtpEnabled: Enables emails such as password reset links.
+    listHint: One value per line.
+    unknownRole: 'Unknown role (#{{id}})'
+    validation:
+      domainInvalid: 'Enter an address with http:// or https:// and no path, for example https://chat.example.com'
+      intInvalid: Enter a whole number
+      intOutOfRange: Enter a whole number from {{min}} to {{max}}
+      emailInvalid: Enter a valid email address
+    save: Save
+    saved: Settings saved
+    errors:
+      forbidden: You don't have permission to change the configuration.
+      notFound: Some settings no longer exist. Reload the page and try again.
+      failed: Couldn't save some settings. Please try again.
 
 chat:
   emptyMessages: No messages here yet

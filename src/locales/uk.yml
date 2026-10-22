@@ -179,6 +179,7 @@ admin:
     users: Користувачі
     workspaces: Робочі простори
     channelTypes: Типи каналів
+    config: Конфігурація
     backToChat: Повернутися до чату
   roles:
     title: Ролі
@@ -411,6 +412,45 @@ admin:
       deleteForbidden: У вас немає прав на видалення цього каналу.
       deleteNotFound: Цей канал більше не існує.
       deleteFailed: Не вдалося видалити канал. Спробуйте ще раз.
+  config:
+    title: Конфігурація
+    subtitle: Керування загальносистемними налаштуваннями
+    loading: Завантаження конфігурації...
+    sections:
+      general: Загальні
+      email: Пошта (SMTP)
+    missingFields:
+      general: Деякі налаштування не було створено під час встановлення, тому їх не можна змінити тут.
+      email: Деякі налаштування SMTP не було створено під час встановлення (SMTP було пропущено), тому їх не можна змінити тут.
+    fields:
+      newUserDefaultRole: Роль за замовчуванням для нових користувачів
+      domainName: Доменне ім'я
+      timeZone: Часовий пояс
+      smtpEnabled: Надсилати листи
+      smtpHost: SMTP-сервер
+      smtpPort: SMTP-порт
+      smtpUsername: Ім'я користувача
+      smtpPassword: Пароль
+      smtpEnableSsl: Використовувати SSL/TLS
+      smtpFromAddress: Адреса відправника
+    hints:
+      newUserDefaultRole: Призначається користувачам, які реєструються самі або створюються без ролей.
+      domainName: Адреса застосунку з протоколом, використовується в посиланнях у листах. Наприклад, https://chat.example.com
+      timeZone: Дати та заплановані дії використовують цей часовий пояс.
+      smtpEnabled: Вмикає листи, наприклад посилання для скидання пароля.
+    listHint: По одному значенню в рядку.
+    unknownRole: 'Невідома роль (#{{id}})'
+    validation:
+      domainInvalid: 'Введіть адресу з http:// або https:// без шляху, наприклад https://chat.example.com'
+      intInvalid: Введіть ціле число
+      intOutOfRange: Введіть ціле число від {{min}} до {{max}}
+      emailInvalid: Введіть коректну адресу електронної пошти
+    save: Зберегти
+    saved: Налаштування збережено
+    errors:
+      forbidden: У вас немає прав на зміну конфігурації.
+      notFound: Деякі налаштування більше не існують. Оновіть сторінку та спробуйте ще раз.
+      failed: Не вдалося зберегти деякі налаштування. Спробуйте ще раз.
 
 chat:
   emptyMessages: Тут ще немає повідомлень

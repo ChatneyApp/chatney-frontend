@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { GET_WORKSPACES } from '@/graphql/workspaces';
 import { useWebsocket } from '@/contexts/WebSocketProvider';
 import { WebSocketEventType } from '@/communication/WebSocketEventEmitter';
+import { sortById } from '@/helpers/utils';
 
 import { WorkspaceFormModal } from './components/WorkspaceFormModal';
 import { WorkspacesTable } from './components/WorkspacesTable';
@@ -53,7 +54,7 @@ function WorkspacesPageContent() {
                 </button>
             </header>
 
-            <WorkspacesTable workspaces={data.workspaces.list} onChanged={handleRefresh} />
+            <WorkspacesTable workspaces={sortById(data.workspaces.list)} onChanged={handleRefresh} />
 
             <WorkspaceFormModal open={createOpen} onOpenChange={setCreateOpen} onSaved={handleRefresh} />
         </div>

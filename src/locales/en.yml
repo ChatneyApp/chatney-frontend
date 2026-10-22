@@ -308,6 +308,7 @@ admin:
     loading: Loading workspaces...
     empty: No workspaces yet. Create the first workspace to get started.
     id: ID {{id}}
+    channels: Channels
     columns:
       workspace: Workspace
       created: Created
@@ -363,6 +364,43 @@ admin:
       deleteForbidden: You don't have permission to delete this channel type.
       deleteNotFound: This channel type no longer exists.
       deleteFailed: Couldn't delete the channel type. Please try again.
+  workspaceChannels:
+    title: "{{workspace}} — Channels"
+    subtitle: Manage the channels of this workspace
+    back: Workspaces
+    create: Create channel
+    loading: Loading channels...
+    empty: No channels yet. Create the first channel to get started.
+    notFound: This workspace doesn't exist.
+    id: ID {{id}}
+    unknownType: Unknown type
+    columns:
+      channel: Channel
+      type: Type
+      created: Created
+      actions: Actions
+    form:
+      createTitle: Create channel
+      editTitle: Edit channel
+      name: Name
+      nameRequired: Channel name is required
+      type: Channel type
+      typeRequired: Channel type is required
+      tooLong_one: Must be at most {{count}} character
+      tooLong_other: Must be at most {{count}} characters
+    deleteDialog:
+      title: Delete channel
+      description: Delete channel "{{name}}" with all its messages? This action cannot be undone.
+    errors:
+      createForbidden: You don't have permission to create channels in this workspace.
+      createFailed: Couldn't create the channel. Please try again.
+      workspaceNotFound: This workspace no longer exists.
+      editForbidden: You don't have permission to edit this channel.
+      editNotFound: This channel no longer exists.
+      editFailed: Couldn't save the channel. Please try again.
+      deleteForbidden: You don't have permission to delete this channel.
+      deleteNotFound: This channel no longer exists.
+      deleteFailed: Couldn't delete the channel. Please try again.
 
 chat:
   emptyMessages: No messages here yet

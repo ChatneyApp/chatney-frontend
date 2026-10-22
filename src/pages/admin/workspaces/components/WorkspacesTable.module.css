@@ -44,6 +44,10 @@
     @apply cursor-pointer rounded px-2 py-1 text-xs font-medium transition-colors;
 }
 
+.channelsLink {
+    @apply text-gray-300 no-underline hover:bg-gray-700 hover:text-white;
+}
+
 .editButton {
     @apply text-indigo-300 hover:bg-indigo-500/20 hover:text-indigo-200;
 }

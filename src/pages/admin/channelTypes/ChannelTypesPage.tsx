@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { GET_CHANNEL_TYPES } from '@/graphql/channelTypes';
 import { useWebsocket } from '@/contexts/WebSocketProvider';
 import { WebSocketEventType } from '@/communication/WebSocketEventEmitter';
+import { sortById } from '@/helpers/utils';
 
 import { ChannelTypeFormModal } from './components/ChannelTypeFormModal';
 import { ChannelTypesTable } from './components/ChannelTypesTable';
@@ -53,7 +54,7 @@ function ChannelTypesPageContent() {
                 </button>
             </header>
 
-            <ChannelTypesTable channelTypes={data.channels.channelTypeList} onChanged={handleRefresh} />
+            <ChannelTypesTable channelTypes={sortById(data.channels.channelTypeList)} onChanged={handleRefresh} />
 
             <ChannelTypeFormModal open={createOpen} onOpenChange={setCreateOpen} onSaved={handleRefresh} />
         </div>

@@ -314,6 +314,7 @@ admin:
     loading: Завантаження робочих просторів...
     empty: Робочих просторів ще немає. Створіть перший, щоб почати.
     id: ID {{id}}
+    channels: Канали
     columns:
       workspace: Робочий простір
       created: Створено
@@ -371,6 +372,45 @@ admin:
       deleteForbidden: У вас немає прав на видалення цього типу каналу.
       deleteNotFound: Цей тип каналу більше не існує.
       deleteFailed: Не вдалося видалити тип каналу. Спробуйте ще раз.
+  workspaceChannels:
+    title: "{{workspace}} — Канали"
+    subtitle: Керування каналами цього робочого простору
+    back: Робочі простори
+    create: Створити канал
+    loading: Завантаження каналів...
+    empty: Каналів ще немає. Створіть перший, щоб почати.
+    notFound: Такого робочого простору не існує.
+    id: ID {{id}}
+    unknownType: Невідомий тип
+    columns:
+      channel: Канал
+      type: Тип
+      created: Створено
+      actions: Дії
+    form:
+      createTitle: Створення каналу
+      editTitle: Редагування каналу
+      name: Назва
+      nameRequired: Вкажіть назву каналу
+      type: Тип каналу
+      typeRequired: Виберіть тип каналу
+      tooLong_one: Не більше {{count}} символу
+      tooLong_few: Не більше {{count}} символів
+      tooLong_many: Не більше {{count}} символів
+      tooLong_other: Не більше {{count}} символу
+    deleteDialog:
+      title: Видалення каналу
+      description: Видалити канал «{{name}}» разом з усіма його повідомленнями? Цю дію не можна скасувати.
+    errors:
+      createForbidden: У вас немає прав на створення каналів у цьому робочому просторі.
+      createFailed: Не вдалося створити канал. Спробуйте ще раз.
+      workspaceNotFound: Цей робочий простір більше не існує.
+      editForbidden: У вас немає прав на редагування цього каналу.
+      editNotFound: Цей канал більше не існує.
+      editFailed: Не вдалося зберегти канал. Спробуйте ще раз.
+      deleteForbidden: У вас немає прав на видалення цього каналу.
+      deleteNotFound: Цей канал більше не існує.
+      deleteFailed: Не вдалося видалити канал. Спробуйте ще раз.
 
 chat:
   emptyMessages: Тут ще немає повідомлень

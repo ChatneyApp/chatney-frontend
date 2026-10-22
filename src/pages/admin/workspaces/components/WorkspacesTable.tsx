@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client/react';
+import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { DateTime } from 'luxon';
 
@@ -89,6 +90,12 @@ export function WorkspacesTable({ workspaces, onChanged }: Props) {
                                 </td>
                                 <td className={styles.td}>
                                     <div className={styles.actions}>
+                                        <Link
+                                            to={`/admin/workspaces/${workspace.id}/channels`}
+                                            className={`${styles.actionButton} ${styles.channelsLink}`}
+                                        >
+                                            {t('admin.workspaces.channels')}
+                                        </Link>
                                         <button
                                             type="button"
                                             className={`${styles.actionButton} ${styles.editButton}`}

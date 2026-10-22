@@ -68,3 +68,7 @@ export const formatFileSize = (size: number) => {
 
     return `${(size / 1024 / 1024).toFixed(1)} MB`;
 };
+
+/** Returns a copy of the list ordered by numeric id, ascending. */
+export const sortById = <T extends { id: number }>(list: readonly T[]): T[] =>
+    [...list].sort((a, b) => a.id - b.id);

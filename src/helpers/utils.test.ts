@@ -1,4 +1,4 @@
-import { formatFileSize, hexToUint8Array } from './utils';
+import { formatFileSize, hexToUint8Array, sortById } from './utils';
 
 describe('hexToUint8Array', () => {
     it.each([
@@ -23,5 +23,14 @@ describe('formatFileSize', () => {
         [2.5 * 1024 * 1024, '2.5 MB'],
     ] satisfies Array<[number, string]>)('formats %s bytes as %s', (size, expectedSize) => {
         expect(formatFileSize(size)).toBe(expectedSize);
+    });
+});
+
+describe('sortById', () => {
+    it('orders items by id ascending without mutating the input', () => {
+        const list = [{ id: 3 }, { id: 1 }, { id: 2 }];
+
+        expect(sortById(list)).toEqual([{ id: 1 }, { id: 2 }, { id: 3 }]);
+        expect(list).toEqual([{ id: 3 }, { id: 1 }, { id: 2 }]);
     });
 });

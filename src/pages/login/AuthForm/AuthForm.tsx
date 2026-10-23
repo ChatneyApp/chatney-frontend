@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Github, Monitor } from 'lucide-react';
+import { RotateCwFadingClock, Monitor } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { LoginForm } from './LoginForm';
@@ -29,7 +29,7 @@ export const AuthForm = () => {
                     <>
                         <div className={styles.socialRow} aria-label={t('auth.socialOptions')}>
                             <button type="button" className={styles.socialButton} disabled title={t('common.comingSoon')}>
-                                <Github size={20} strokeWidth={1.75} />
+                                <RotateCwFadingClock size={20} strokeWidth={1.75} />
                             </button>
                             <button type="button" className={styles.socialButton} disabled title={t('common.comingSoon')}>
                                 <Monitor size={20} strokeWidth={1.75} />

@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 
 import { useWorkspacesList } from '@/contexts/WorkspacesListContext';
 import { Channel, channelDisplayName } from '@/types/channels';
+import { ChannelGroup } from '@/types/channelGroups';
+import { GroupedChannels } from '@/helpers/channelGroups';
 import { CreateChannelModal } from '../CreateChannelModal';
 
 import styles from './ChannelsList.module.css';
@@ -13,7 +15,7 @@ type Props = {
     isComposingDirectMessage: boolean;
     setActiveChannel(channel: Channel): void;
     onComposeDirectMessage(): void;
-    channels: Channel[];
+    groupedChannels: GroupedChannels<ChannelGroup, Channel>;
     directMessages: Channel[];
 };
 
@@ -22,7 +24,7 @@ export function ChannelList({
     isComposingDirectMessage,
     setActiveChannel,
     onComposeDirectMessage,
-    channels,
+    groupedChannels,
     directMessages,
 }: Props) {
     const { t } = useTranslation();
@@ -34,6 +36,18 @@ export function ChannelList({
         setIsModalOpen(false);
         setActiveChannel(newChannel);
     };
+
+    const renderChannel = (channel: Channel) => (
+        <div
+            key={channel.id}
+            onClick={() => setActiveChannel(channel)}
+            className={clsx(styles.channelItem, {
+                [styles.channelItemActive]: activeChannel?.id === channel.id,
+            })}
+        >
+            {channelDisplayName(channel)}
+        </div>
+    );
 
     return (
         <div className={styles.container}>
@@ -50,17 +64,14 @@ export function ChannelList({
                 + {t('chat.channels.createChannel')}
             </div>
 
-            {channels.map((channel) => (
-                <div
-                    key={channel.id}
-                    onClick={() => setActiveChannel(channel)}
-                    className={clsx(styles.channelItem, {
-                        [styles.channelItemActive]: activeChannel?.id === channel.id,
-                    })}
-                >
-                    {channelDisplayName(channel)}
+            {groupedChannels.groups.map(({ group, channels: sectionChannels }) => (
+                <div key={group.id} className={styles.group}>
+                    <div title={group.name} className={styles.groupTitle}>{group.name}</div>
+                    {sectionChannels.map(renderChannel)}
                 </div>
             ))}
+
+            {groupedChannels.ungrouped.map(renderChannel)}
 
             <div className={styles.sectionTitle}>{t('chat.channels.directMessages')}</div>
             <div
@@ -72,17 +83,7 @@ export function ChannelList({
                 + {t('chat.channels.newMessage')}
             </div>
 
-            {directMessages.map((channel) => (
-                <div
-                    key={channel.id}
-                    onClick={() => setActiveChannel(channel)}
-                    className={clsx(styles.channelItem, {
-                        [styles.channelItemActive]: activeChannel?.id === channel.id,
-                    })}
-                >
-                    {channelDisplayName(channel)}
-                </div>
-            ))}
+            {directMessages.map(renderChannel)}
 
             {isModalOpen && (
                 <CreateChannelModal

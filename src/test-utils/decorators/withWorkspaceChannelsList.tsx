@@ -4,6 +4,7 @@ import { mockChannelsList } from '@/test-utils/fixtures/channels';
 
 const defaultValue = {
     channels: mockChannelsList,
+    loaded: true,
 };
 
 /** Supplies a static WorkspaceChannelsListContext value instead of the real provider, which fetches over Apollo on mount. */

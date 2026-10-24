@@ -30,7 +30,7 @@ All components under `src/pages/client/Chat` (plus `ChatPage.tsx` and `ClientLay
 | MessageInput | `MessageInput/MessageInput.stories.tsx` | Baseline states (empty, editing, replying) plus editing-while-a-reply-is-pending, which documents that the edit banner takes priority over the reply quote (see ChatMessageList.tsx wiring). Voice/video recording and real upload flows in its children are *not* exercised here (see VoiceRecorderModal/VideoRecorderModal below, and MessageEditorAttachment's skipped "pending" variant) |
 | MessageEditorAttachment | `MessageEditorAttachment/MessageEditorAttachment.stories.tsx` | "Uploaded" variant only (image + audio). The "pending" variant is **skipped** — it fires a real `uploadFileWithProgress` XHR in a `useEffect` on mount that can't be intercepted without a module-mocking addon (none installed in this pass) |
 | WorkspaceCreateModal | `WorkspaceCreateModal/WorkspaceCreateModal.stories.tsx` | `MockedProvider` with an `AddWorkspace` mutation mock |
-| ChannelsList | `ChannelsList/ChannelsList.stories.tsx` | `WorkspacesListContext` decorator; default + empty-channels variants. Opening "+ Create channel" mounts `CreateChannelModal`, which is covered separately below |
+| ChannelsList | `ChannelsList/ChannelsList.stories.tsx` | `WorkspacesListContext` decorator; default, grouped-channels (`fixtures/channelGroups.ts`) and empty-channels variants. Opening "+ Create channel" mounts `CreateChannelModal`, which is covered separately below |
 | UserSettingsPopup | `UserSettingsPopup/UserSettingsPopup.stories.tsx` | `UserContext` decorator only |
 
 ## Covered — Tricky (4 of 9, user chose full mock coverage)

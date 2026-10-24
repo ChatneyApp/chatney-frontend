@@ -24,3 +24,11 @@
 .channelItemActive {
     @apply font-bold text-white;
 }
+
+.group {
+    @apply space-y-1;
+}
+
+.groupTitle {
+    @apply truncate px-1 pt-2 text-sm font-semibold text-gray-300;
+}

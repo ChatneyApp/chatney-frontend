@@ -105,12 +105,11 @@ Two things learned doing it, which apply to every other domain:
 - **`merge: true` goes in per namespace, together with that namespace's queries.** `ChannelQueries`, `MessageQueries` and the other namespace types have no `id`, so by default each query replaces its siblings in the cache, and two watched queries in one namespace would refetch each other in a loop. [`src/contexts/GraphqlProvider.tsx`](src/contexts/GraphqlProvider.tsx) sets `merge: true` for `ChannelQueries` and `AclQueries` only (the role editor loads `roleAcls` and `secureObjects` side by side). Do not switch it on for `MessageQueries` before the message list is migrated: the message queries are `cache-first` and only refetch today because the cache entry gets replaced. The `Cache data may be lost when replacing the messages field` console warning is that remaining case.
 - **A WebSocket event is not always safe to write into a list.** `newChannel` is sent to every connected user regardless of `ChannelReadChannel`, and carries only `id`, `name`, `channelTypeId`, `workspaceId`, `isDm`, `memberUserIds`. The server filters `workspaceChannelList` by permission, so a new channel is fetched, not appended. Patching and evicting are safe because they are no-ops for entities the user never loaded.
 
-Still bypassing the cache — eight `no-cache` call sites:
+Still bypassing the cache — seven `no-cache` call sites:
 
 - [`src/contexts/UsersListContext.tsx`](src/contexts/UsersListContext.tsx)
 - [`src/contexts/RolesListContext.tsx`](src/contexts/RolesListContext.tsx)
 - [`src/contexts/SystemConfigProvider.tsx`](src/contexts/SystemConfigProvider.tsx)
-- [`src/contexts/WorkspaceChannelGroupsListContext.tsx`](src/contexts/WorkspaceChannelGroupsListContext.tsx)
 - [`src/pages/profile/ProfilePage.tsx`](src/pages/profile/ProfilePage.tsx)
 - [`src/graphql/users.ts`](src/graphql/users.ts) (two)
 - [`src/graphql/channels.ts`](src/graphql/channels.ts) (direct messages)

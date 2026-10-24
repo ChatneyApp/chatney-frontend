@@ -96,6 +96,12 @@ export function WorkspacesTable({ workspaces, onChanged }: Props) {
                                         >
                                             {t('admin.workspaces.channels')}
                                         </Link>
+                                        <Link
+                                            to={`/admin/workspaces/${workspace.id}/channel-groups`}
+                                            className={`${styles.actionButton} ${styles.channelsLink}`}
+                                        >
+                                            {t('admin.workspaces.channelGroups')}
+                                        </Link>
                                         <button
                                             type="button"
                                             className={`${styles.actionButton} ${styles.editButton}`}

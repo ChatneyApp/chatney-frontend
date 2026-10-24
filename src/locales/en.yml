@@ -310,6 +310,7 @@ admin:
     empty: No workspaces yet. Create the first workspace to get started.
     id: ID {{id}}
     channels: Channels
+    channelGroups: Channel groups
     columns:
       workspace: Workspace
       created: Created
@@ -402,6 +403,43 @@ admin:
       deleteForbidden: You don't have permission to delete this channel.
       deleteNotFound: This channel no longer exists.
       deleteFailed: Couldn't delete the channel. Please try again.
+  workspaceChannelGroups:
+    title: "{{workspace}} — Channel groups"
+    subtitle: Group the channels of this workspace into sidebar sections
+    back: Workspaces
+    create: Create group
+    loading: Loading channel groups...
+    empty: No channel groups yet. Create the first group to get started.
+    notFound: This workspace doesn't exist.
+    id: ID {{id}}
+    noChannels: No channels
+    columns:
+      group: Group
+      channels: Channels
+      created: Created
+      actions: Actions
+    form:
+      createTitle: Create channel group
+      editTitle: Edit channel group
+      name: Name
+      nameRequired: Group name is required
+      tooLong_one: Must be at most {{count}} character
+      tooLong_other: Must be at most {{count}} characters
+      channels: Channels
+      noAvailableChannels: All channels already belong to other groups.
+    deleteDialog:
+      title: Delete channel group
+      description: Delete channel group "{{name}}"? Its channels will not be deleted.
+    errors:
+      createForbidden: You don't have permission to create channel groups in this workspace.
+      createFailed: Couldn't create the channel group. Please try again.
+      workspaceNotFound: This workspace no longer exists.
+      editForbidden: You don't have permission to edit this channel group.
+      editNotFound: This channel group no longer exists.
+      editFailed: Couldn't save the channel group. Please try again.
+      deleteForbidden: You don't have permission to delete this channel group.
+      deleteNotFound: This channel group no longer exists.
+      deleteFailed: Couldn't delete the channel group. Please try again.
   config:
     title: Configuration
     subtitle: Manage system-wide settings

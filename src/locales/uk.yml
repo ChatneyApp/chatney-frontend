@@ -316,6 +316,7 @@ admin:
     empty: Робочих просторів ще немає. Створіть перший, щоб почати.
     id: ID {{id}}
     channels: Канали
+    channelGroups: Групи каналів
     columns:
       workspace: Робочий простір
       created: Створено
@@ -412,6 +413,45 @@ admin:
       deleteForbidden: У вас немає прав на видалення цього каналу.
       deleteNotFound: Цей канал більше не існує.
       deleteFailed: Не вдалося видалити канал. Спробуйте ще раз.
+  workspaceChannelGroups:
+    title: "{{workspace}} — Групи каналів"
+    subtitle: Об'єднуйте канали цього робочого простору в розділи бічної панелі
+    back: Робочі простори
+    create: Створити групу
+    loading: Завантаження груп каналів...
+    empty: Груп каналів ще немає. Створіть першу, щоб почати.
+    notFound: Такого робочого простору не існує.
+    id: ID {{id}}
+    noChannels: Немає каналів
+    columns:
+      group: Група
+      channels: Канали
+      created: Створено
+      actions: Дії
+    form:
+      createTitle: Створення групи каналів
+      editTitle: Редагування групи каналів
+      name: Назва
+      nameRequired: Вкажіть назву групи
+      tooLong_one: Не більше {{count}} символу
+      tooLong_few: Не більше {{count}} символів
+      tooLong_many: Не більше {{count}} символів
+      tooLong_other: Не більше {{count}} символу
+      channels: Канали
+      noAvailableChannels: Усі канали вже входять до інших груп.
+    deleteDialog:
+      title: Видалення групи каналів
+      description: Видалити групу каналів «{{name}}»? Самі канали видалено не буде.
+    errors:
+      createForbidden: У вас немає прав на створення груп каналів у цьому робочому просторі.
+      createFailed: Не вдалося створити групу каналів. Спробуйте ще раз.
+      workspaceNotFound: Цей робочий простір більше не існує.
+      editForbidden: У вас немає прав на редагування цієї групи каналів.
+      editNotFound: Ця група каналів більше не існує.
+      editFailed: Не вдалося зберегти групу каналів. Спробуйте ще раз.
+      deleteForbidden: У вас немає прав на видалення цієї групи каналів.
+      deleteNotFound: Ця група каналів більше не існує.
+      deleteFailed: Не вдалося видалити групу каналів. Спробуйте ще раз.
   config:
     title: Конфігурація
     subtitle: Керування загальносистемними налаштуваннями

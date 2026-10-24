@@ -346,6 +346,18 @@ type ChannelMutations {
     @authorize
     @cost(weight: "10")
   """
+  Sets the order of several channel groups in one request. Requires ChannelEditChannelGroup on each group's
+  workspace. Ids that don't exist are ignored.
+  
+  
+  **Returns:**
+  The updated groups.
+  """
+  updateChannelGroupsOrder(
+    "Object keyed by channel group id, valued by its new order, e.g. {\"5\": 0, \"7\": 1}."
+    orders: IntMap!
+  ): [ChannelGroup!]! @authorize @cost(weight: "10")
+  """
   Deletes a channel group. Requires ChannelDeleteChannelGroup on its workspace.
   
   **Returns:**
@@ -1193,6 +1205,9 @@ enum Permission {
 "The `DateTime` scalar type represents a date and time with time zone offset information."
 scalar DateTime
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
+
+"A JSON object with integer keys and integer values, e.g. {\"5\": 0, \"7\": 1}."
+scalar IntMap
 
 "The `Long` scalar type represents a signed 64-bit integer."
 scalar Long

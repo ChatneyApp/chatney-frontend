@@ -413,8 +413,10 @@ admin:
     notFound: This workspace doesn't exist.
     id: ID {{id}}
     noChannels: No channels
+    dragHandle: Drag to reorder
     columns:
       group: Group
+      order: Order
       channels: Channels
       created: Created
       actions: Actions
@@ -440,6 +442,8 @@ admin:
       deleteForbidden: You don't have permission to delete this channel group.
       deleteNotFound: This channel group no longer exists.
       deleteFailed: Couldn't delete the channel group. Please try again.
+      reorderForbidden: You don't have permission to reorder channel groups in this workspace.
+      reorderFailed: Couldn't save the new order of the groups. Please try again.
   config:
     title: Configuration
     subtitle: Manage system-wide settings

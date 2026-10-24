@@ -72,3 +72,11 @@ export const formatFileSize = (size: number) => {
 /** Returns a copy of the list ordered by numeric id, ascending. */
 export const sortById = <T extends { id: number }>(list: readonly T[]): T[] =>
     [...list].sort((a, b) => a.id - b.id);
+
+/** Returns a copy of the list with the item at index `from` moved to index `to`. */
+export const moveItem = <T>(list: readonly T[], from: number, to: number): T[] => {
+    const result = [...list];
+    const [item] = result.splice(from, 1);
+    result.splice(to, 0, item);
+    return result;
+};

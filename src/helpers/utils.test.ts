@@ -1,4 +1,4 @@
-import { formatFileSize, hexToUint8Array, sortById } from './utils';
+import { formatFileSize, hexToUint8Array, moveItem, sortById } from './utils';
 
 describe('hexToUint8Array', () => {
     it.each([
@@ -32,5 +32,19 @@ describe('sortById', () => {
 
         expect(sortById(list)).toEqual([{ id: 1 }, { id: 2 }, { id: 3 }]);
         expect(list).toEqual([{ id: 3 }, { id: 1 }, { id: 2 }]);
+    });
+});
+
+describe('moveItem', () => {
+    it.each([
+        [0, 2, ['b', 'c', 'a', 'd']],
+        [3, 0, ['d', 'a', 'b', 'c']],
+        [1, 2, ['a', 'c', 'b', 'd']],
+        [2, 2, ['a', 'b', 'c', 'd']],
+    ] satisfies Array<[number, number, string[]]>)('moves the item at %i to %i', (from, to, expected) => {
+        const list = ['a', 'b', 'c', 'd'];
+
+        expect(moveItem(list, from, to)).toEqual(expected);
+        expect(list).toEqual(['a', 'b', 'c', 'd']);
     });
 });

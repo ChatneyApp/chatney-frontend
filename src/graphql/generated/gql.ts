@@ -33,6 +33,7 @@ type Documents = {
     "\n    fragment ChannelGroupFields on ChannelGroup {\n        id\n        name\n        workspaceId\n        channelIds\n        order\n        createdAt\n        updatedAt\n    }\n": typeof types.ChannelGroupFieldsFragmentDoc,
     "\n    mutation CreateChannelGroup($channelGroupDto: ChannelGroupDtoInput!) {\n        channels {\n            addChannelGroup(channelGroupDto: $channelGroupDto) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": typeof types.CreateChannelGroupDocument,
     "\n    mutation UpdateChannelGroup($channelGroup: ChannelGroupInput!) {\n        channels {\n            updateChannelGroup(channelGroup: $channelGroup) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": typeof types.UpdateChannelGroupDocument,
+    "\n    mutation UpdateChannelGroupsOrder($orders: IntMap!) {\n        channels {\n            updateChannelGroupsOrder(orders: $orders) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": typeof types.UpdateChannelGroupsOrderDocument,
     "\n    mutation DeleteChannelGroup($id: Int!) {\n        channels {\n            deleteChannelGroup(id: $id)\n        }\n    }\n": typeof types.DeleteChannelGroupDocument,
     "\n    query GetWorkspaceChannelGroups($workspaceId: Int!) {\n        channels {\n            workspaceChannelGroupList(workspaceId: $workspaceId) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": typeof types.GetWorkspaceChannelGroupsDocument,
     "\n    fragment ChannelTypeFields on ChannelType {\n        id\n        name\n        key\n        secObjId\n        createdAt\n        updatedAt\n    }\n": typeof types.ChannelTypeFieldsFragmentDoc,
@@ -102,6 +103,7 @@ const documents: Documents = {
     "\n    fragment ChannelGroupFields on ChannelGroup {\n        id\n        name\n        workspaceId\n        channelIds\n        order\n        createdAt\n        updatedAt\n    }\n": types.ChannelGroupFieldsFragmentDoc,
     "\n    mutation CreateChannelGroup($channelGroupDto: ChannelGroupDtoInput!) {\n        channels {\n            addChannelGroup(channelGroupDto: $channelGroupDto) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": types.CreateChannelGroupDocument,
     "\n    mutation UpdateChannelGroup($channelGroup: ChannelGroupInput!) {\n        channels {\n            updateChannelGroup(channelGroup: $channelGroup) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": types.UpdateChannelGroupDocument,
+    "\n    mutation UpdateChannelGroupsOrder($orders: IntMap!) {\n        channels {\n            updateChannelGroupsOrder(orders: $orders) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": types.UpdateChannelGroupsOrderDocument,
     "\n    mutation DeleteChannelGroup($id: Int!) {\n        channels {\n            deleteChannelGroup(id: $id)\n        }\n    }\n": types.DeleteChannelGroupDocument,
     "\n    query GetWorkspaceChannelGroups($workspaceId: Int!) {\n        channels {\n            workspaceChannelGroupList(workspaceId: $workspaceId) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": types.GetWorkspaceChannelGroupsDocument,
     "\n    fragment ChannelTypeFields on ChannelType {\n        id\n        name\n        key\n        secObjId\n        createdAt\n        updatedAt\n    }\n": types.ChannelTypeFieldsFragmentDoc,
@@ -242,6 +244,10 @@ export function graphql(source: "\n    mutation CreateChannelGroup($channelGroup
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    mutation UpdateChannelGroup($channelGroup: ChannelGroupInput!) {\n        channels {\n            updateChannelGroup(channelGroup: $channelGroup) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n"): (typeof documents)["\n    mutation UpdateChannelGroup($channelGroup: ChannelGroupInput!) {\n        channels {\n            updateChannelGroup(channelGroup: $channelGroup) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation UpdateChannelGroupsOrder($orders: IntMap!) {\n        channels {\n            updateChannelGroupsOrder(orders: $orders) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n"): (typeof documents)["\n    mutation UpdateChannelGroupsOrder($orders: IntMap!) {\n        channels {\n            updateChannelGroupsOrder(orders: $orders) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -4,6 +4,7 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import a11y from 'eslint-plugin-jsx-a11y';
 import graphql from '@graphql-eslint/eslint-plugin';
+import stylistic from '@stylistic/eslint-plugin';
 
 export default [
     {
@@ -13,7 +14,7 @@ export default [
     ...tseslint.configs.recommended,
     {
         files: ['src/**/*.{ts,tsx}'],
-        plugins: { react, 'react-hooks': reactHooks, 'jsx-a11y': a11y },
+        plugins: { react, 'react-hooks': reactHooks, 'jsx-a11y': a11y, '@stylistic': stylistic },
         languageOptions: {
             ecmaVersion: 'latest',
             sourceType: 'module',
@@ -35,6 +36,7 @@ export default [
                     "ignoreRestSiblings": true
                 }
             ],
+            '@stylistic/indent': ['error', 4, { SwitchCase: 1 }],
             'quotes': ['error', 'single', { avoidEscape: true }],
             'array-bracket-spacing': ['error', 'never'],
             'object-curly-spacing': ['error', 'always'],

@@ -1,16 +1,18 @@
+import type { TFunction } from 'i18next';
+
 export const NICKNAME_PATTERN = /^[a-zA-Z0-9_]+$/;
 export const MAX_NICKNAME_LENGTH = 20;
 
-export function validateNickname(value: string): string | true {
+export function validateNickname(value: string, t: TFunction): string | true {
     const trimmed = value.trim();
     if (!trimmed) {
-        return 'Nickname is required';
+        return t('validation.nicknameRequired');
     }
     if (trimmed.length > MAX_NICKNAME_LENGTH) {
-        return `Nickname must be at most ${MAX_NICKNAME_LENGTH} characters`;
+        return t('validation.nicknameTooLong', { count: MAX_NICKNAME_LENGTH });
     }
     if (!NICKNAME_PATTERN.test(trimmed)) {
-        return 'Nickname can only contain letters, numbers, and underscores';
+        return t('validation.nicknameInvalid');
     }
     return true;
 }

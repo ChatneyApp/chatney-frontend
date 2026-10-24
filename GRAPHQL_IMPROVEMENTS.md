@@ -97,21 +97,19 @@ Keep fragments focused and feature-owned as they grow; avoid giant "everything" 
 
 - [`src/contexts/WorkspaceChannelsListContext.tsx`](src/contexts/WorkspaceChannelsListContext.tsx) reads `GetWorkspaceChannels` with `useQuery` and `cache-and-network`, holds no copy in `useState`, and exposes only `{ channels }`.
 - [`src/graphql/channels.ts`](src/graphql/channels.ts) has the cache helpers `addChannelToCache`, `patchChannelInCache`, and `removeChannelFromCache`.
-- Create and delete mutations call those helpers in `update`. Edit needs nothing: `UpdateChannel` returns the channel with its `id`, so Apollo updates the entity itself.
-- The dashboard reads the same query from the same cache, so a channel created, renamed, or deleted there is already correct in the chat without a request.
+- The `AddChannel` mutation calls `addChannelToCache` in `update`. The other two helpers are used by the WebSocket handlers.
 - WebSocket events write to the cache instead of reloading the list: `updatedChannel` patches the entity, `deletedChannel` evicts it, `newChannel` triggers one list request for the active workspace.
 
 Two things learned doing it, which apply to every other domain:
 
-- **`merge: true` goes in per namespace, together with that namespace's queries.** `ChannelQueries`, `MessageQueries` and the other namespace types have no `id`, so by default each query replaces its siblings in the cache, and two watched queries in one namespace would refetch each other in a loop. [`src/contexts/GraphqlProvider.tsx`](src/contexts/GraphqlProvider.tsx) sets `merge: true` for `ChannelQueries` only. Do not switch it on for `MessageQueries` before the message list is migrated: the message queries are `cache-first` and only refetch today because the cache entry gets replaced. The `Cache data may be lost when replacing the messages field` console warning is that remaining case.
+- **`merge: true` goes in per namespace, together with that namespace's queries.** `ChannelQueries`, `MessageQueries` and the other namespace types have no `id`, so by default each query replaces its siblings in the cache, and two watched queries in one namespace would refetch each other in a loop. [`src/contexts/GraphqlProvider.tsx`](src/contexts/GraphqlProvider.tsx) sets `merge: true` for `ChannelQueries` and `AclQueries` only (the role editor loads `roleAcls` and `secureObjects` side by side). Do not switch it on for `MessageQueries` before the message list is migrated: the message queries are `cache-first` and only refetch today because the cache entry gets replaced. The `Cache data may be lost when replacing the messages field` console warning is that remaining case.
 - **A WebSocket event is not always safe to write into a list.** `newChannel` is sent to every connected user regardless of `ChannelReadChannel`, and carries only `id`, `name`, `channelTypeId`, `workspaceId`, `isDm`, `memberUserIds`. The server filters `workspaceChannelList` by permission, so a new channel is fetched, not appended. Patching and evicting are safe because they are no-ops for entities the user never loaded.
 
-Still bypassing the cache — eight `no-cache` call sites:
+Still bypassing the cache — seven `no-cache` call sites:
 
 - [`src/contexts/UsersListContext.tsx`](src/contexts/UsersListContext.tsx)
 - [`src/contexts/RolesListContext.tsx`](src/contexts/RolesListContext.tsx)
 - [`src/contexts/SystemConfigProvider.tsx`](src/contexts/SystemConfigProvider.tsx)
-- [`src/contexts/WorkspaceChannelGroupsListContext.tsx`](src/contexts/WorkspaceChannelGroupsListContext.tsx)
 - [`src/pages/profile/ProfilePage.tsx`](src/pages/profile/ProfilePage.tsx)
 - [`src/graphql/users.ts`](src/graphql/users.ts) (two)
 - [`src/graphql/channels.ts`](src/graphql/channels.ts) (direct messages)
@@ -281,13 +279,12 @@ Differences from the original recipe:
 
 - [x] Migrate one domain end to end as the reference: workspace channels.
 - [ ] Remove routine `no-cache` usage (8 call sites left).
-- [ ] Add `merge: true` for each remaining namespace type as its queries move to the cache (`ChannelQueries` done).
+- [ ] Add `merge: true` for each remaining namespace type as its queries move to the cache (`ChannelQueries`, `AclQueries` done).
 - [ ] Define list pagination policies.
 - [ ] Keep active selections in React state/context, but let Apollo own fetched entities (channels done; workspaces, direct messages, messages left).
 - [ ] Update or invalidate the cache after mutations and WebSocket events (channels done).
 - [ ] Add pagination to messages and other unbounded lists (needs the backend).
 - [ ] Add cache-policy unit tests. Jest has no `@/` alias yet, so tests cannot import `src/graphql/*.ts`.
-- [ ] Merge `OldWorkspaceChannelsListContext.tsx` into the main channels context; both now read the same cached query.
 
 GraphQL subscriptions are optional. The existing WebSocket layer can remain if it has a broader event protocol; it should update Apollo state more precisely rather than forcing whole-list reloads.
 

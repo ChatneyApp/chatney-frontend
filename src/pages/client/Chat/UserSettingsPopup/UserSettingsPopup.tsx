@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useUser } from '@/contexts/UserContext';
 import { getUserAvatarInitial, getUserDisplayName } from '@/helpers/nickname';
@@ -6,6 +7,7 @@ import { getUserAvatarInitial, getUserDisplayName } from '@/helpers/nickname';
 import styles from './UserSettingsPopup.module.css';
 
 export function UserSettingsPopup() {
+    const { t } = useTranslation();
     const userCtx = useUser();
     const [showPopup, setShowPopup] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -46,28 +48,28 @@ export function UserSettingsPopup() {
                     <ul className={styles.profileLinks}>
                         <li>
                             <a href="/admin/roles" className={styles.profileLink}>
-                                Admin
+                                {t('chat.userMenu.admin')}
                             </a>
                         </li>
                         <li>
                             <a href="/settings" className={styles.profileLink}>
-                                Settings
+                                {t('chat.userMenu.settings')}
                             </a>
                         </li>
                         <li>
                             <a href="/profile" className={styles.profileLink}>
-                                Profile
+                                {t('chat.userMenu.profile')}
                             </a>
                         </li>
                         <li>
                             <a href="/help" className={styles.profileLink}>
-                                Help & Support
+                                {t('chat.userMenu.help')}
                             </a>
                         </li>
                         <br />
                         <li>
                             <a onClick={() => userCtx?.logout()} className={styles.logoutLink}>
-                                Logout
+                                {t('chat.userMenu.logout')}
                             </a>
                         </li>
                     </ul>
@@ -76,7 +78,7 @@ export function UserSettingsPopup() {
 
             <div
                 className={styles.avatar}
-                title="Your Profile"
+                title={t('chat.userMenu.yourProfile')}
                 onClick={() => setShowPopup(!showPopup)}
             >
                 {user ? getUserAvatarInitial(user) : '?'}

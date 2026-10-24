@@ -1,6 +1,7 @@
 import { ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ArrowDownToLine } from 'lucide-react';
 import { useApolloClient } from '@apollo/client/react';
+import { useTranslation } from 'react-i18next';
 
 import { WebSocketEvent, WebSocketEventEmitter, WebSocketEventType } from '@/communication/WebSocketEventEmitter';
 import {
@@ -59,6 +60,7 @@ export const ChatMessageList = ({
     onOpenThread,
     onMessageDeleted,
 }: Props) => {
+    const { t } = useTranslation();
     const userCtx = useUser();
     const apolloClient = useApolloClient();
     const [messages, setMessages] = useState<MessageWithUser[] | null>(null);
@@ -344,7 +346,7 @@ export const ChatMessageList = ({
             </div>
 
             {!isBottomVisible && (
-                <div className={classNames.scrollUpFab} onClick={handleScrollToBottom} title="Scroll to bottom">
+                <div className={classNames.scrollUpFab} onClick={handleScrollToBottom} title={t('chat.scrollToBottom')}>
                     <ArrowDownToLine/>
                 </div>
             )}

@@ -1,0 +1,35 @@
+@reference "tailwindcss";
+
+.overlay {
+    @apply fixed inset-0;
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.container {
+    @apply fixed left-1/2 top-1/2 w-[90vw] max-w-[440px] -translate-x-1/2 -translate-y-1/2
+    rounded-md bg-gray-800 p-5 text-white shadow-xl focus:outline-none;
+}
+
+.title {
+    @apply m-0 text-lg font-semibold;
+}
+
+.description {
+    @apply mt-2 text-sm leading-normal text-gray-300;
+}
+
+.errorMessage {
+    @apply mt-4 rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300;
+}
+
+.bottomButtons {
+    @apply mt-5 flex justify-end gap-2;
+}
+
+.cancelButton {
+    @apply cursor-pointer rounded px-3 py-1.5 text-sm text-gray-300 hover:text-white;
+}
+
+.confirmButton {
+    @apply cursor-pointer rounded bg-red-600 px-4 py-1.5 text-sm text-white hover:bg-red-500 disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400;
+}

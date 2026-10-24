@@ -1,6 +1,7 @@
 import { FormEventHandler, useEffect, useState } from 'react';
 import { useApolloClient } from '@apollo/client/react';
 import { Dialog } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import { addChannel } from '@/graphql/channels';
 import { useWorkspacesList } from '@/contexts/WorkspacesListContext';
@@ -16,6 +17,7 @@ interface CreateChannelModalProps {
 }
 
 export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelModalProps) {
+    const { t } = useTranslation();
     const wsCtx = useWorkspacesList();
     const { channelTypes } = useChannelTypesList();
     const client = useApolloClient();
@@ -57,20 +59,20 @@ export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelM
             <Dialog.Portal>
                 <Dialog.Overlay className={styles.overlay} />
                 <Dialog.Content className={styles.container}>
-                    <Dialog.Title className={styles.title}>Create Channel</Dialog.Title>
+                    <Dialog.Title className={styles.title}>{t('chat.createChannel.title')}</Dialog.Title>
                     <form className={styles.form} onSubmit={handleCreate}>
                         <label className={styles.field}>
-                            <span className={styles.label}>Channel name</span>
+                            <span className={styles.label}>{t('chat.createChannel.name')}</span>
                             <input
                                 type="text"
                                 value={channelName}
                                 onChange={(e) => setChannelName(e.target.value)}
                                 className={styles.input}
-                                placeholder="Channel name"
+                                placeholder={t('chat.createChannel.name')}
                             />
                         </label>
                         <label className={styles.field}>
-                            <span className={styles.label}>Channel type</span>
+                            <span className={styles.label}>{t('chat.createChannel.type')}</span>
                             <select
                                 value={channelTypeId}
                                 onChange={(e) => setChannelTypeId(parseInt(e.target.value, 10))}
@@ -92,14 +94,14 @@ export function CreateChannelModal({ onClose, onChannelCreated }: CreateChannelM
                                 onClick={onClose}
                                 className={styles.cancelButton}
                             >
-                                Cancel
+                                {t('common.cancel')}
                             </button>
                             <button
                                 type="submit"
                                 disabled={!channelName.trim() || !channelTypeId}
                                 className={styles.createButton}
                             >
-                                Create
+                                {t('common.create')}
                             </button>
                         </div>
                     </form>

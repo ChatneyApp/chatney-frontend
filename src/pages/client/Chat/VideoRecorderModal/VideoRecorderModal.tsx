@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { Pause, RotateCcw, Square, Video } from 'lucide-react';
 import { Dialog } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/Button';
 import { useRecordingSession } from '@/hooks/useRecordingSession';
@@ -33,6 +34,7 @@ const getFileExtension = (mimeType: string) => {
 };
 
 export function VideoRecorderModal({ onClose, onRecorded }: Props) {
+    const { t } = useTranslation();
     const liveVideoRef = useRef<HTMLVideoElement | null>(null);
 
     const { stage, elapsedMs, preview, startRecording, pause, resume, stop, cancel } = useRecordingSession({
@@ -76,23 +78,23 @@ export function VideoRecorderModal({ onClose, onRecorded }: Props) {
     const renderStatus = () => {
         switch (stage) {
             case 'requesting':
-                return <span>Requesting camera…</span>;
+                return <span>{t('chat.recorder.requestingCamera')}</span>;
             case 'recording':
                 return (
                     <>
                         <span className={styles.recordingDot} />
-                        <span>Recording…</span>
+                        <span>{t('chat.recorder.recording')}</span>
                     </>
                 );
             case 'paused':
                 return (
                     <>
                         <span className={styles.pausedDot} />
-                        <span>Paused</span>
+                        <span>{t('chat.recorder.paused')}</span>
                     </>
                 );
             case 'preview':
-                return <span>Preview</span>;
+                return <span>{t('chat.recorder.preview')}</span>;
             default:
                 return null;
         }
@@ -106,16 +108,16 @@ export function VideoRecorderModal({ onClose, onRecorded }: Props) {
                     className={`${dialogStyles.container} ${styles.wideContainer}`}
                     aria-describedby={undefined}
                 >
-                    <Dialog.Title className={dialogStyles.title}>Video message</Dialog.Title>
+                    <Dialog.Title className={dialogStyles.title}>{t('chat.recorder.videoTitle')}</Dialog.Title>
                     {stage === 'error'
                         ? (
                             <>
                                 <p className={styles.errorMessage}>
-                                    Camera is not available. Check the browser permissions and try again.
+                                    {t('chat.recorder.cameraUnavailable')}
                                 </p>
                                 <div className={dialogStyles.bottomButtons}>
                                     <Button type="button" onClick={handleCancel}>
-                                        Close
+                                        {t('common.close')}
                                     </Button>
                                 </div>
                             </>
@@ -150,34 +152,34 @@ export function VideoRecorderModal({ onClose, onRecorded }: Props) {
                                 </div>
                                 <div className={dialogStyles.bottomButtons}>
                                     <Button type="button" onClick={handleCancel}>
-                                        Cancel
+                                        {t('common.cancel')}
                                     </Button>
                                     {stage === 'recording' && (
                                         <Button type="button" onClick={pause}>
                                             <Pause size={16} className={styles.buttonIcon} />
-                                            Pause
+                                            {t('chat.recorder.pause')}
                                         </Button>
                                     )}
                                     {stage === 'paused' && (
                                         <Button type="button" onClick={resume}>
                                             <Video size={16} className={styles.buttonIcon} />
-                                            Resume
+                                            {t('chat.recorder.resume')}
                                         </Button>
                                     )}
                                     {(stage === 'recording' || stage === 'paused') && (
                                         <Button type="button" onClick={stop}>
                                             <Square size={16} className={styles.buttonIcon} />
-                                            Stop
+                                            {t('chat.recorder.stop')}
                                         </Button>
                                     )}
                                     {stage === 'preview' && (
                                         <>
                                             <Button type="button" onClick={() => void startRecording()}>
                                                 <RotateCcw size={16} className={styles.buttonIcon} />
-                                                Re-record
+                                                {t('chat.recorder.reRecord')}
                                             </Button>
                                             <Button type="button" onClick={handleAccept}>
-                                                Add to message
+                                                {t('chat.recorder.addToMessage')}
                                             </Button>
                                         </>
                                     )}

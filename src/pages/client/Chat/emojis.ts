@@ -23,21 +23,20 @@ export type ReactionOption = {
 
 export type ReactionCategoryMeta = {
     id: ReactionCategory;
-    title: string;
     Icon: LucideIcon;
 }
 
 export const REACTION_CATEGORIES: ReactionCategoryMeta[] = [
-    { id: ReactionCategory.SMILEYS, title: 'Smileys & People', Icon: Smile },
-    { id: ReactionCategory.HEARTS, title: 'Hearts & Love', Icon: Heart },
-    { id: ReactionCategory.GESTURES, title: 'Gestures & Hands', Icon: Hand },
-    { id: ReactionCategory.ANIMALS, title: 'Animals & Nature', Icon: PawPrint },
-    { id: ReactionCategory.FOOD, title: 'Food & Drink', Icon: Pizza },
-    { id: ReactionCategory.ACTIVITIES, title: 'Activities & Sports', Icon: Trophy },
-    { id: ReactionCategory.TRAVEL, title: 'Travel & Places', Icon: Plane },
-    { id: ReactionCategory.OBJECTS, title: 'Objects', Icon: Lightbulb },
-    { id: ReactionCategory.SYMBOLS, title: 'Symbols', Icon: Hash },
-    { id: ReactionCategory.FLAGS, title: 'Flags', Icon: Flag },
+    { id: ReactionCategory.SMILEYS, Icon: Smile },
+    { id: ReactionCategory.HEARTS, Icon: Heart },
+    { id: ReactionCategory.GESTURES, Icon: Hand },
+    { id: ReactionCategory.ANIMALS, Icon: PawPrint },
+    { id: ReactionCategory.FOOD, Icon: Pizza },
+    { id: ReactionCategory.ACTIVITIES, Icon: Trophy },
+    { id: ReactionCategory.TRAVEL, Icon: Plane },
+    { id: ReactionCategory.OBJECTS, Icon: Lightbulb },
+    { id: ReactionCategory.SYMBOLS, Icon: Hash },
+    { id: ReactionCategory.FLAGS, Icon: Flag },
 ];
 
 export const REACTION_DETAILS: Record<string, Omit<ReactionOption, 'code'>> = {

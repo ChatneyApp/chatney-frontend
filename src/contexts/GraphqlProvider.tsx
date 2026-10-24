@@ -54,6 +54,9 @@ const client = new ApolloClient({
         typePolicies: {
             // Namespace object without an id: merge its fields, otherwise each query under `channels` replaces the others.
             ChannelQueries: { merge: true },
+            AclQueries: { merge: true },
+            // No id field: one ACL per (role, secure object) pair.
+            RoleAcl: { keyFields: ['roleId', 'secObjId'] },
         },
     }),
 });

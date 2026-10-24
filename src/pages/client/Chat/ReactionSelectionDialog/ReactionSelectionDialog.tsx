@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { Popover, Tabs } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import { REACTION_CATEGORIES, REACTION_DETAILS, ReactionCategory, ReactionOption } from '@/pages/client/Chat/emojis';
 
@@ -28,6 +29,7 @@ const toReactionOption = (code: string): ReactionOption => {
 };
 
 export const ReactionSelectionDialog = ({ reactions, myReactions, onSelect }: Props) => {
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [activeCategory, setActiveCategory] = useState<string>(REACTION_CATEGORIES[0].id);
@@ -55,7 +57,7 @@ export const ReactionSelectionDialog = ({ reactions, myReactions, onSelect }: Pr
 
     const renderReactionsGrid = (options: ReactionOption[]) => {
         if (options.length === 0) {
-            return <div className={styles.emptyState}>No matching emojis</div>;
+            return <div className={styles.emptyState}>{t('chat.reactions.noMatches')}</div>;
         }
 
         return (
@@ -81,7 +83,7 @@ export const ReactionSelectionDialog = ({ reactions, myReactions, onSelect }: Pr
                 <button
                     type="button"
                     className={styles.triggerButton}
-                    aria-label="Add reaction"
+                    aria-label={t('chat.reactions.add')}
                 >
                     🙂
                 </button>
@@ -98,8 +100,8 @@ export const ReactionSelectionDialog = ({ reactions, myReactions, onSelect }: Pr
                             className={styles.searchInput}
                             value={searchValue}
                             onChange={(event) => setSearchValue(event.target.value)}
-                            placeholder="Search emojis..."
-                            aria-label="Search emojis"
+                            placeholder={t('chat.reactions.searchPlaceholder')}
+                            aria-label={t('chat.reactions.search')}
                         />
                     </div>
 
@@ -113,14 +115,14 @@ export const ReactionSelectionDialog = ({ reactions, myReactions, onSelect }: Pr
                             onValueChange={setActiveCategory}
                             className={styles.tabsRoot}
                         >
-                            <Tabs.List className={styles.tabsList} aria-label="Emoji categories">
-                                {REACTION_CATEGORIES.map(({ id, title, Icon }) => (
+                            <Tabs.List className={styles.tabsList} aria-label={t('chat.reactions.categoriesLabel')}>
+                                {REACTION_CATEGORIES.map(({ id, Icon }) => (
                                     <Tabs.Trigger
                                         key={id}
                                         value={id}
                                         className={styles.tabTrigger}
-                                        title={title}
-                                        aria-label={title}
+                                        title={t(`chat.reactions.categories.${id}`)}
+                                        aria-label={t(`chat.reactions.categories.${id}`)}
                                     >
                                         <Icon size={18} aria-hidden="true"/>
                                     </Tabs.Trigger>

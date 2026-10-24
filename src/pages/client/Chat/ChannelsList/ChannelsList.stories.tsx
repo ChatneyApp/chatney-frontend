@@ -3,6 +3,8 @@ import { action } from 'storybook/actions';
 import { ChannelList } from './ChannelsList';
 import { withWorkspacesList } from '@/test-utils/decorators/withWorkspacesList';
 import { mockChannel1, mockChannelsList, mockDirectMessage } from '@/test-utils/fixtures/channels';
+import { mockChannelGroup1, mockHiddenChannelGroup } from '@/test-utils/fixtures/channelGroups';
+import { groupChannels } from '@/helpers/channelGroups';
 
 /** Opening "+ Create channel" mounts CreateChannelModal, which needs its own GraphQL/context mocks — see STORYBOOK_COVERAGE.md. */
 const meta: Meta<typeof ChannelList> = {
@@ -24,7 +26,17 @@ const sharedArgs = {
 export const Default: Story = {
     args: {
         ...sharedArgs,
-        channels: mockChannelsList,
+        groupedChannels: groupChannels(mockChannelsList, []),
+        directMessages: [mockDirectMessage],
+        activeChannel: mockChannel1,
+    },
+};
+
+/** Grouped channels come first, under their group's name; ungrouped ones follow. A group with no visible channels is left out. */
+export const Grouped: Story = {
+    args: {
+        ...sharedArgs,
+        groupedChannels: groupChannels(mockChannelsList, [mockChannelGroup1, mockHiddenChannelGroup]),
         directMessages: [mockDirectMessage],
         activeChannel: mockChannel1,
     },
@@ -34,7 +46,7 @@ export const Default: Story = {
 export const Empty: Story = {
     args: {
         ...sharedArgs,
-        channels: [],
+        groupedChannels: groupChannels([], []),
         directMessages: [],
         activeChannel: null,
     },
@@ -44,7 +56,7 @@ export const Empty: Story = {
 export const ComposingDirectMessage: Story = {
     args: {
         ...sharedArgs,
-        channels: mockChannelsList,
+        groupedChannels: groupChannels(mockChannelsList, []),
         directMessages: [mockDirectMessage],
         activeChannel: null,
         isComposingDirectMessage: true,

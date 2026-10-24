@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Music, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { uploadFileWithProgress } from '@/graphql/attachments';
 import { getAttachmentType, getFileIcon } from '@/helpers/attachments/attachmentDisplay';
@@ -57,6 +58,7 @@ const getUploadMimeType = (file: File, shouldProcessFile: boolean) => {
 };
 
 export const MessageEditorAttachment = (props: Props) => {
+    const { t } = useTranslation();
     const isPending = isPendingAttachment(props);
     const pendingFile = isPending ? props.file : null;
     const pendingDraftId = isPending ? props.draftId : null;
@@ -206,16 +208,16 @@ export const MessageEditorAttachment = (props: Props) => {
     return (
         <div className={styles.container}>
             {preview}
-            <button className={styles.deleteButton} type="button" onClick={handleDelete} aria-label="Delete attachment">
+            <button className={styles.deleteButton} type="button" onClick={handleDelete} aria-label={t('chat.attachments.delete')}>
                 <X size={12} />
             </button>
             {conversionProgress != null && conversionProgress < 1 && (
-                <ProgressBar label="Convert" progress={conversionProgress} />
+                <ProgressBar label={t('chat.attachments.convert')} progress={conversionProgress} />
             )}
             {uploadProgress != null && uploadProgress < 1 && (
-                <ProgressBar label="Upload" progress={uploadProgress} />
+                <ProgressBar label={t('chat.attachments.upload')} progress={uploadProgress} />
             )}
-            {error && <div className={styles.error}>{error}</div>}
+            {error && <div className={styles.error} title={error}>{t('chat.attachments.uploadFailed')}</div>}
         </div>
     );
 };

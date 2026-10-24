@@ -1,0 +1,33 @@
+@reference "tailwindcss";
+
+.page {
+    @apply flex h-full flex-col p-6;
+}
+
+.backLink {
+    @apply mb-3 inline-flex items-center gap-1.5 self-start text-sm text-gray-400 no-underline transition-colors hover:text-white;
+}
+
+.header {
+    @apply mb-6 flex items-center justify-between gap-4;
+}
+
+.title {
+    @apply m-0 text-2xl font-semibold text-white;
+}
+
+.subtitle {
+    @apply mt-1 text-sm text-gray-400;
+}
+
+.createButton {
+    @apply cursor-pointer rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-600;
+}
+
+.notFound {
+    @apply rounded-lg border border-dashed border-gray-700 bg-gray-900/40 px-6 py-12 text-center text-gray-400;
+}
+
+.loading {
+    @apply flex flex-1 items-center justify-center text-gray-400;
+}

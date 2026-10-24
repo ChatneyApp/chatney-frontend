@@ -2,10 +2,14 @@ import type { Preview } from '@storybook/react-vite';
 import { initialize, mswLoader } from 'msw-storybook-addon';
 
 import { attachmentUrlHandlers } from '../src/test-utils/mocks/attachmentUrlHandlers';
+import i18n from '../src/i18n';
 
 import '../src/index.css';
 
 initialize({ onUnhandledRequest: 'bypass' });
+
+// Stories (and their text assertions) are written in English, whatever the browser language is.
+i18n.changeLanguage('en');
 
 const preview: Preview = {
   parameters: {

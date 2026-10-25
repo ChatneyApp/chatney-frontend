@@ -8,6 +8,7 @@ import { MessageThreadButton } from '@/pages/client/Chat/MessageThreadButton';
 import { MessageUrlPreviewsComponent } from '@/pages/client/Chat/MessageUrlPreviewsComponent';
 import { UserId } from '@/types/users';
 import { formatTimestamp } from '@/helpers/formatTimestamp';
+import { isMessageEdited } from '@/helpers/messages';
 import { MessageAttachments } from '@/pages/client/Chat/MessageAttachments';
 
 import styles from './MessageComponent.module.css';
@@ -56,7 +57,7 @@ export const MessageComponent = ({ message, currentUserId, replyRef, canReply, c
                     )}
                     <span className={styles.timestamp}>
                         {formatTimestamp(new Date(message.updatedAt))}
-                        {new Date(message.updatedAt).getTime() !== new Date(message.createdAt).getTime() && (
+                        {isMessageEdited(message) && (
                             <span className={styles.editedLabel}> {t('chat.message.edited')}</span>
                         )}
                     </span>

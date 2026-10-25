@@ -62,6 +62,7 @@ type Documents = {
     "\n    query GetChannelMessages($channelId: Int!) {\n        messages {\n            listChannelMessages(channelId: $channelId) {\n                ...MessagesResultFields\n            }\n        }\n    }\n": typeof types.GetChannelMessagesDocument,
     "\n    query GetThreadMessages($threadId: Int!) {\n        messages {\n            listThreadMessages(threadId: $threadId) {\n                ...MessagesResultFields\n            }\n        }\n    }\n": typeof types.GetThreadMessagesDocument,
     "\n    query GetPermissionsList {\n        permissions {\n            list {\n                label\n                list\n            }\n        }\n    }\n": typeof types.GetPermissionsListDocument,
+    "\n    query GetMyPermissions {\n        users {\n            myPermissions {\n                channels {\n                    id\n                    permissions\n                }\n            }\n        }\n    }\n": typeof types.GetMyPermissionsDocument,
     "\n    query GetMyProfile {\n        users {\n            myProfile {\n                roleNames\n                user {\n                    ...UserFields\n                }\n            }\n        }\n    }\n": typeof types.GetMyProfileDocument,
     "\n    mutation UpdateMyProfile($profileDto: UpdateMyProfileDtoInput!) {\n        users {\n            updateMyProfile(profileDto: $profileDto) {\n                ...UserFields\n            }\n        }\n    }\n": typeof types.UpdateMyProfileDocument,
     "\n    fragment RoleFields on Role {\n        id\n        name\n        createdAt\n        updatedAt\n    }\n": typeof types.RoleFieldsFragmentDoc,
@@ -132,6 +133,7 @@ const documents: Documents = {
     "\n    query GetChannelMessages($channelId: Int!) {\n        messages {\n            listChannelMessages(channelId: $channelId) {\n                ...MessagesResultFields\n            }\n        }\n    }\n": types.GetChannelMessagesDocument,
     "\n    query GetThreadMessages($threadId: Int!) {\n        messages {\n            listThreadMessages(threadId: $threadId) {\n                ...MessagesResultFields\n            }\n        }\n    }\n": types.GetThreadMessagesDocument,
     "\n    query GetPermissionsList {\n        permissions {\n            list {\n                label\n                list\n            }\n        }\n    }\n": types.GetPermissionsListDocument,
+    "\n    query GetMyPermissions {\n        users {\n            myPermissions {\n                channels {\n                    id\n                    permissions\n                }\n            }\n        }\n    }\n": types.GetMyPermissionsDocument,
     "\n    query GetMyProfile {\n        users {\n            myProfile {\n                roleNames\n                user {\n                    ...UserFields\n                }\n            }\n        }\n    }\n": types.GetMyProfileDocument,
     "\n    mutation UpdateMyProfile($profileDto: UpdateMyProfileDtoInput!) {\n        users {\n            updateMyProfile(profileDto: $profileDto) {\n                ...UserFields\n            }\n        }\n    }\n": types.UpdateMyProfileDocument,
     "\n    fragment RoleFields on Role {\n        id\n        name\n        createdAt\n        updatedAt\n    }\n": types.RoleFieldsFragmentDoc,
@@ -360,6 +362,10 @@ export function graphql(source: "\n    query GetThreadMessages($threadId: Int!) 
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    query GetPermissionsList {\n        permissions {\n            list {\n                label\n                list\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetPermissionsList {\n        permissions {\n            list {\n                label\n                list\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    query GetMyPermissions {\n        users {\n            myPermissions {\n                channels {\n                    id\n                    permissions\n                }\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetMyPermissions {\n        users {\n            myPermissions {\n                channels {\n                    id\n                    permissions\n                }\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

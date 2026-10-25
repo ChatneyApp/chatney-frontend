@@ -249,16 +249,13 @@ admin:
       ATTACHMENT_DELETE: Удаление вложений
       ATTACHMENT_READ: Просмотр вложений
       ATTACHMENT_UPLOAD: Загрузка вложений
-      CHANNEL_ADD_CHANNEL_GROUP: Создание групп каналов
       CHANNEL_CREATE_CHANNEL: Создание каналов
       CHANNEL_CREATE_MESSAGE: Отправка сообщений
       CHANNEL_DELETE_CHANNEL: Удаление каналов
-      CHANNEL_DELETE_CHANNEL_GROUP: Удаление групп каналов
       CHANNEL_DELETE_CHANNEL_TYPE: Удаление типов каналов
       CHANNEL_DELETE_MESSAGE: Удаление любых сообщений
       CHANNEL_DELETE_OWN_MESSAGE: Удаление своих сообщений
       CHANNEL_EDIT_CHANNEL: Изменение каналов
-      CHANNEL_EDIT_CHANNEL_GROUP: Изменение групп каналов
       CHANNEL_EDIT_MESSAGE: Изменение любых сообщений
       CHANNEL_EDIT_OWN_MESSAGE: Изменение своих сообщений
       CHANNEL_READ_CHANNEL: Видимость каналов
@@ -273,9 +270,13 @@ admin:
       USER_DELETE_USER: Удаление пользователей
       USER_EDIT_USER: Изменение пользователей и их прав
       USER_READ_USER: Просмотр пользователей
+      WORKSPACE_CREATE_CHANNEL_GROUP: Создание групп каналов
       WORKSPACE_CREATE_WORKSPACE: Создание пространств
+      WORKSPACE_DELETE_CHANNEL_GROUP: Удаление групп каналов
       WORKSPACE_DELETE_WORKSPACE: Удаление пространств
+      WORKSPACE_READ_CHANNEL_GROUP: Видимость групп каналов
       WORKSPACE_READ_WORKSPACE: Видимость пространств
+      WORKSPACE_UPDATE_CHANNEL_GROUP: Изменение групп каналов
       WORKSPACE_UPDATE_WORKSPACE: Изменение пространств
   users:
     title: Пользователи
@@ -288,6 +289,7 @@ admin:
     cannotDeleteSelf: Нельзя удалить собственный аккаунт
     columns:
       user: Пользователь
+      roles: Роли
       status: Статус
       actions: Действия
     form:
@@ -542,6 +544,7 @@ chat:
     fileBadge: ФАЙЛ
     unknownFileType: Неизвестный тип файла
     unknownMimeType: Неизвестный MIME-тип
+    noPostPermission: У вас нет прав писать в этот канал
   attachments:
     delete: Удалить вложение
     convert: Конвертация

@@ -29,6 +29,8 @@ const groupLabelKey = (group: PermissionGroup) =>
 export function RolePermissionsEditor({ value, onChange, secureObjects, permissionGroups }: Props) {
     const { t } = useTranslation();
     const [selectedSecObjId, setSelectedSecObjId] = useState('');
+    // Entries the form opened with start collapsed; ones added afterwards open to pick permissions.
+    const [initialSecObjIds] = useState(() => new Set(value.map((acl) => acl.secObjId)));
 
     const entriesBySecObjId = useMemo(
         () => new Map(secureObjects.map((entry) => [entry.secObjId, entry])),
@@ -90,7 +92,7 @@ export function RolePermissionsEditor({ value, onChange, secureObjects, permissi
                 const name = entry?.name ?? t('admin.roles.permissionsBlock.unknownObject', { id: acl.secObjId });
 
                 return (
-                    <details key={acl.secObjId} className={styles.entry} open>
+                    <details key={acl.secObjId} className={styles.entry} open={!initialSecObjIds.has(acl.secObjId)}>
                         <summary className={styles.entryHeader}>
                             <span className={styles.kind}>
                                 {entry ? t(kindLabelKeys[entry.kind]) : t('admin.roles.permissionsBlock.kinds.unknown')}

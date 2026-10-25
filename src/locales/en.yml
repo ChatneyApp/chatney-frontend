@@ -243,16 +243,13 @@ admin:
       ATTACHMENT_DELETE: Delete attachments
       ATTACHMENT_READ: View attachments
       ATTACHMENT_UPLOAD: Upload attachments
-      CHANNEL_ADD_CHANNEL_GROUP: Create channel groups
       CHANNEL_CREATE_CHANNEL: Create channels
       CHANNEL_CREATE_MESSAGE: Post messages
       CHANNEL_DELETE_CHANNEL: Delete channels
-      CHANNEL_DELETE_CHANNEL_GROUP: Delete channel groups
       CHANNEL_DELETE_CHANNEL_TYPE: Delete channel types
       CHANNEL_DELETE_MESSAGE: Delete any message
       CHANNEL_DELETE_OWN_MESSAGE: Delete own messages
       CHANNEL_EDIT_CHANNEL: Edit channels
-      CHANNEL_EDIT_CHANNEL_GROUP: Edit channel groups
       CHANNEL_EDIT_MESSAGE: Edit any message
       CHANNEL_EDIT_OWN_MESSAGE: Edit own messages
       CHANNEL_READ_CHANNEL: See channels
@@ -267,9 +264,13 @@ admin:
       USER_DELETE_USER: Delete users
       USER_EDIT_USER: Edit users and their permissions
       USER_READ_USER: View users
+      WORKSPACE_CREATE_CHANNEL_GROUP: Create channel groups
       WORKSPACE_CREATE_WORKSPACE: Create workspaces
+      WORKSPACE_DELETE_CHANNEL_GROUP: Delete channel groups
       WORKSPACE_DELETE_WORKSPACE: Delete workspaces
+      WORKSPACE_READ_CHANNEL_GROUP: See channel groups
       WORKSPACE_READ_WORKSPACE: See workspaces
+      WORKSPACE_UPDATE_CHANNEL_GROUP: Edit channel groups
       WORKSPACE_UPDATE_WORKSPACE: Edit workspaces
   users:
     title: Users
@@ -282,6 +283,7 @@ admin:
     cannotDeleteSelf: You cannot delete your own account
     columns:
       user: User
+      roles: Roles
       status: Status
       actions: Actions
     form:
@@ -530,6 +532,7 @@ chat:
     fileBadge: FILE
     unknownFileType: Unknown file type
     unknownMimeType: Unknown MIME type
+    noPostPermission: You don't have permission to post in this channel
   attachments:
     delete: Delete attachment
     convert: Convert

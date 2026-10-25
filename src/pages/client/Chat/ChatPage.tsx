@@ -11,7 +11,7 @@ import { MessageWithUser } from '@/types/messages';
 import { WorkspacesList } from './WorkspacesList';
 import { ChannelList } from './ChannelsList';
 import { MessagesList } from './MessagesList';
-import { NewDirectMessageScreen } from './NewDirectMessageScreen/NewDirectMessageScreen';
+import { NewDirectMessageScreen } from './NewDirectMessageScreen';
 
 const chatPageUrl = '/client/chat';
 const newDirectMessageUrl = '/client/chat/new';
@@ -109,6 +109,7 @@ export function ChatPage() {
                     activeChannel={{
                         id: activeChannel.id,
                         name: channelDisplayName(activeChannel),
+                        isDm: activeChannel.isDm,
                     }}
                     activeThreadId={threadMessage?.id}
                     onCloseThread={handleCloseThread}
@@ -118,6 +119,7 @@ export function ChatPage() {
             {threadMessage && !isComposingDirectMessage && (
                 <Thread
                     rootMessage={threadMessage}
+                    isDm={activeChannel?.isDm ?? false}
                     eventEmitter={eventEmitter}
                     onCloseThread={handleCloseThread}
                 />

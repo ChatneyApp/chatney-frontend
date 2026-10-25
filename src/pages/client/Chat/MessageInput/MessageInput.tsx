@@ -35,6 +35,7 @@ type EditingMessage = {
 type Props = {
     editingMessage?: EditingMessage | null;
     replyToMessage?: MessageWithUser | null;
+    disabled?: boolean;
     onSend(text: string, attachmentIds: AttachmentId[]): Promise<void>;
     onSaveEdit?(id: MessageId, text: string, attachmentIds: AttachmentId[]): Promise<void>;
     onCancelEdit?(): void;
@@ -83,7 +84,7 @@ const canCompressFile = (file: File) => file.type.startsWith('video/') || file.t
 const canUploadAsFile = (file: File) =>
     file.type.startsWith('image/') || file.type.startsWith('video/') || file.type.startsWith('audio/');
 
-export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdit, onCancelEdit, onClearReply }: Props) {
+export function MessageInput({ editingMessage, replyToMessage, disabled = false, onSend, onSaveEdit, onCancelEdit, onClearReply }: Props) {
     const { t } = useTranslation();
     const [isSending, setIsSending] = useState(false);
     const [text, setText] = useState('');
@@ -101,6 +102,8 @@ export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdi
     const suggestionsRef = useRef<EmojiSuggestionsPopupHandle>(null);
 
     const isEditing = editingMessage != null;
+    // editing has its own permission, so only composing a new message is blocked
+    const isDisabled = disabled && !isEditing;
 
     useEffect(() => {
         if (editingMessage) {
@@ -209,7 +212,7 @@ export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdi
         .map(({ attachment }) => attachment);
     const hasPendingAttachments = attachments.some(attachment => attachment.kind === 'pending');
     const canSend = text.trim().length > 0 || uploadedAttachments.length > 0;
-    const canSubmit = canSend && !hasPendingAttachments;
+    const canSubmit = canSend && !hasPendingAttachments && !isDisabled;
 
     const openFilePreview = (file: File) => {
         setPendingFile(file);
@@ -453,11 +456,15 @@ export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdi
                 />
             )}
             <form onSubmit={handleSend} className={styles.sendForm}>
-                <Mic className={styles.voiceRecordIcon} onClick={() => setIsVoiceModalOpen(true)} />
-                <Video className={styles.videoRecordIcon} onClick={() => setIsVideoModalOpen(true)} />
-                <div className={styles.fileDropArea}>
-                    <Paperclip className={styles.fileAttachmentIcon} onClick={onFileSelectClick} />
-                </div>
+                {!isDisabled && (
+                    <>
+                        <Mic className={styles.voiceRecordIcon} onClick={() => setIsVoiceModalOpen(true)} />
+                        <Video className={styles.videoRecordIcon} onClick={() => setIsVideoModalOpen(true)} />
+                        <div className={styles.fileDropArea}>
+                            <Paperclip className={styles.fileAttachmentIcon} onClick={onFileSelectClick} />
+                        </div>
+                    </>
+                )}
                 <div className={styles.inputWrapper}>
                     <EmojiSuggestionsPopup
                         ref={suggestionsRef}
@@ -467,8 +474,11 @@ export function MessageInput({ editingMessage, replyToMessage, onSend, onSaveEdi
                     <textarea
                         ref={inputRef}
                         rows={1}
-                        placeholder={isEditing ? t('chat.messageInput.editPlaceholder') : t('chat.messageInput.placeholder')}
-                        className="block w-full resize-none max-h-40 overflow-y-auto bg-transparent text-white placeholder-[#5f6a8c] p-2 focus:outline-none"
+                        placeholder={isEditing
+                            ? t('chat.messageInput.editPlaceholder')
+                            : isDisabled ? t('chat.messageInput.noPostPermission') : t('chat.messageInput.placeholder')}
+                        className="block w-full resize-none max-h-40 overflow-y-auto bg-transparent text-white placeholder-[#5f6a8c] p-2 focus:outline-none disabled:cursor-not-allowed"
+                        disabled={isDisabled}
                         value={text}
                         onChange={handleTextChange}
                         onKeyDown={handleInputKeyDown}

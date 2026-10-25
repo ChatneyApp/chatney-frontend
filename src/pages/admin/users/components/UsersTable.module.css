@@ -32,6 +32,10 @@
     @apply text-xs text-gray-500;
 }
 
+.noRoles {
+    @apply text-gray-500;
+}
+
 .badges {
     @apply flex flex-wrap gap-1;
 }

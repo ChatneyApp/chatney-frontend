@@ -10,3 +10,16 @@ export const GET_PERMISSIONS_LIST = graphql(`
         }
     }
 `);
+
+export const GET_MY_PERMISSIONS = graphql(`
+    query GetMyPermissions {
+        users {
+            myPermissions {
+                channels {
+                    id
+                    permissions
+                }
+            }
+        }
+    }
+`);

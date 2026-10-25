@@ -60,3 +60,11 @@ export const EditingWithPendingReply: Story = {
         onClearReply: action('onClearReply'),
     },
 };
+
+/** The current user can't post in this channel: the input is disabled and attachment buttons are hidden. */
+export const Disabled: Story = {
+    args: {
+        disabled: true,
+        onSend: action('onSend'),
+    },
+};

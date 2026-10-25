@@ -12,6 +12,8 @@ import {
     ReactionChangedPayload,
 } from '@/communication/WebSocketEventEmitter';
 import { useUser } from '@/contexts/UserContext';
+import { useChannelPermissions } from '@/contexts/MyPermissionsContext';
+import { canDeleteMessage, canEditMessage } from '@/helpers/channelPermissions';
 import { addReaction, deleteMessage, deleteReaction, postNewMessage, updateMessage } from '@/graphql/messages';
 import { MessageComponent } from '@/pages/client/Chat/MessageComponent';
 import { MessageInput } from '@/pages/client/Chat/MessageInput';
@@ -28,6 +30,7 @@ type ClassNames = {
 
 type Props = {
     channelId: ChannelId;
+    isDm: boolean;
     parentId: MessageId | null;
     header: ReactNode;
     classNames: ClassNames;
@@ -50,6 +53,7 @@ const subscribedEvents = [
 
 export const ChatMessageList = ({
     channelId,
+    isDm,
     parentId,
     header,
     classNames,
@@ -63,6 +67,7 @@ export const ChatMessageList = ({
     const { t } = useTranslation();
     const userCtx = useUser();
     const apolloClient = useApolloClient();
+    const permissions = useChannelPermissions(channelId, isDm);
     const [messages, setMessages] = useState<MessageWithUser[] | null>(null);
     const [refs, setRefs] = useState<Map<number, ReplyToMessage>>(new Map());
     const [isBottomVisible, setIsBottomVisible] = useState(true);
@@ -74,6 +79,9 @@ export const ChatMessageList = ({
     const autoScrollDone = useRef(false);
     const isBottomVisibleRef = useRef(true);
     const shouldScrollAfterMessagesUpdate = useRef(false);
+    // the permissions can be revoked mid-edit or mid-reply
+    const activeEditingMessage = permissions.canEditOwn ? editingMessage : null;
+    const activeReplyingTo = permissions.canPost ? replyingTo : null;
 
     const handleSend = async (text: string, attachmentIds: AttachmentId[]) => {
         const newMessage: CreateMessageDto = {
@@ -328,20 +336,26 @@ export const ChatMessageList = ({
         <div className={classNames.container}>
             <div className={classNames.header}>{header}</div>
             <div className={classNames.scrollArea} ref={scrollAreaRef}>
-                {messages?.length ? messages.map(message => (
-                    <MessageComponent
-                        key={message.id}
-                        currentUserId={userCtx?.user?.id}
-                        message={message}
-                        replyRef={message.replyTo != null ? refs.get(message.replyTo) : undefined}
-                        onDelete={handleOnDeleteClick}
-                        onReply={handleReply}
-                        onEdit={handleEdit}
-                        onAddReaction={handleAddReaction}
-                        onDeleteReaction={handleDeleteReaction}
-                        onOpenThread={onOpenThread}
-                    />
-                )) : emptyState}
+                {messages?.length ? messages.map(message => {
+                    const isMine = message.userId === userCtx?.user?.id;
+                    return (
+                        <MessageComponent
+                            key={message.id}
+                            currentUserId={userCtx?.user?.id}
+                            message={message}
+                            replyRef={message.replyTo != null ? refs.get(message.replyTo) : undefined}
+                            canReply={permissions.canPost}
+                            canEdit={canEditMessage(permissions, isMine)}
+                            canDelete={canDeleteMessage(permissions, isMine)}
+                            onDelete={handleOnDeleteClick}
+                            onReply={handleReply}
+                            onEdit={handleEdit}
+                            onAddReaction={handleAddReaction}
+                            onDeleteReaction={handleDeleteReaction}
+                            onOpenThread={onOpenThread}
+                        />
+                    );
+                }) : emptyState}
                 <div ref={messagesEndRef} />
             </div>
 
@@ -355,8 +369,9 @@ export const ChatMessageList = ({
                     onSend={handleSend}
                     onSaveEdit={handleSaveEdit}
                     onCancelEdit={() => setEditingMessage(null)}
-                    editingMessage={editingMessage}
-                    replyToMessage={replyingTo}
+                    editingMessage={activeEditingMessage}
+                    disabled={!permissions.canPost}
+                    replyToMessage={activeReplyingTo}
                     onClearReply={handleClearReply}
                 />
             </div>

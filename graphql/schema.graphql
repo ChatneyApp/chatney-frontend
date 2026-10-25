@@ -332,12 +332,12 @@ type ChannelMutations {
   True if it existed and was deleted.
   """
   deleteChannel(id: Int!): Boolean! @authorize @cost(weight: "10")
-  "Creates a channel group (sidebar section). Requires ChannelAddChannelGroup on the workspace."
+  "Creates a channel group (sidebar section). Requires WorkspaceCreateChannelGroup on the workspace."
   addChannelGroup(channelGroupDto: ChannelGroupDtoInput!): ChannelGroup!
     @authorize
     @cost(weight: "10")
   """
-  Updates a channel group, matched by id. Requires ChannelEditChannelGroup on its workspace.
+  Updates a channel group, matched by id. Requires WorkspaceUpdateChannelGroup on its workspace.
   
   **Returns:**
   The saved group, or null if it or its workspace doesn't exist.
@@ -346,7 +346,7 @@ type ChannelMutations {
     @authorize
     @cost(weight: "10")
   """
-  Sets the order of several channel groups in one request. Requires ChannelEditChannelGroup on each group's
+  Sets the order of several channel groups in one request. Requires WorkspaceUpdateChannelGroup on each group's
   workspace. Ids that don't exist are ignored.
   
   
@@ -358,7 +358,7 @@ type ChannelMutations {
     orders: IntMap!
   ): [ChannelGroup!]! @authorize @cost(weight: "10")
   """
-  Deletes a channel group. Requires ChannelDeleteChannelGroup on its workspace.
+  Deletes a channel group. Requires WorkspaceDeleteChannelGroup on its workspace.
   
   **Returns:**
   True if it existed and was deleted.
@@ -388,7 +388,7 @@ type ChannelQueries {
   directMessageList: [DirectMessage!]! @authorize @cost(weight: "10")
   "All channel types."
   channelTypeList: [ChannelType!]! @authorize @cost(weight: "10")
-  "Channel groups (sidebar sections) of a workspace. Requires ChannelReadChannel on the workspace."
+  "Channel groups (sidebar sections) of a workspace. Requires WorkspaceReadChannelGroup on the workspace."
   workspaceChannelGroupList(workspaceId: Int!): [ChannelGroup!]!
     @authorize
     @cost(weight: "10")
@@ -1144,16 +1144,12 @@ enum Permission {
   ATTACHMENT_READ
   "Upload attachments. Checked globally."
   ATTACHMENT_UPLOAD
-  "Create channel groups in a workspace. Checked on the workspace."
-  CHANNEL_ADD_CHANNEL_GROUP
   "Create channels in a workspace (checked on the workspace); granted globally, also allows creating channel types."
   CHANNEL_CREATE_CHANNEL
   "Post messages in a channel. Checked on the channel."
   CHANNEL_CREATE_MESSAGE
   "Delete a channel. Checked on the channel."
   CHANNEL_DELETE_CHANNEL
-  "Delete channel groups in a workspace. Checked on the workspace."
-  CHANNEL_DELETE_CHANNEL_GROUP
   "Delete a channel type. Checked on the channel type."
   CHANNEL_DELETE_CHANNEL_TYPE
   "Delete anyone's messages in a channel. Checked on the channel."
@@ -1162,8 +1158,6 @@ enum Permission {
   CHANNEL_DELETE_OWN_MESSAGE
   "Edit a channel (checked on the channel) or a channel type (checked on the channel type)."
   CHANNEL_EDIT_CHANNEL
-  "Edit channel groups in a workspace. Checked on the workspace."
-  CHANNEL_EDIT_CHANNEL_GROUP
   "Edit anyone's messages in a channel. Checked on the channel."
   CHANNEL_EDIT_MESSAGE
   "Edit your own messages in a channel. Checked on the channel."
@@ -1192,12 +1186,20 @@ enum Permission {
   USER_EDIT_USER
   "List and look up users. Checked globally."
   USER_READ_USER
+  "Create channel groups in a workspace. Checked on the workspace."
+  WORKSPACE_CREATE_CHANNEL_GROUP
   "Create workspaces. Checked globally."
   WORKSPACE_CREATE_WORKSPACE
+  "Delete channel groups in a workspace. Checked on the workspace."
+  WORKSPACE_DELETE_CHANNEL_GROUP
   "Delete a workspace. Checked on the workspace."
   WORKSPACE_DELETE_WORKSPACE
+  "See channel groups of a workspace. Checked on the workspace."
+  WORKSPACE_READ_CHANNEL_GROUP
   "See a workspace. Checked on the workspace."
   WORKSPACE_READ_WORKSPACE
+  "Edit channel groups in a workspace, including their order. Checked on the workspace."
+  WORKSPACE_UPDATE_CHANNEL_GROUP
   "Edit a workspace. Checked on the workspace."
   WORKSPACE_UPDATE_WORKSPACE
 }

@@ -20,14 +20,14 @@ All components under `src/pages/client/Chat` (plus `ChatPage.tsx` and `ClientLay
 | MessageAttachments | `MessageAttachments/MessageAttachments.stories.tsx` | Single, multiple, empty |
 | MessageAttachmentComponent | `MessageAttachmentComponent/MessageAttachmentComponent.stories.tsx` | image/gif/video/audio/binary variants; media previews render via an MSW redirect — see caveat below |
 | FullscreenPreview | `FullscreenPreview/FullscreenPreview.stories.tsx` | Image and video overlay |
-| **MessageComponent** (flagship) | `MessageComponent/MessageComponent.stories.tsx` | 7 variants: default, own message, with attachment, with reactions, edited, with thread, as reply |
+| **MessageComponent** (flagship) | `MessageComponent/MessageComponent.stories.tsx` | 10 variants: default, own message, with attachment, with reactions, edited, with thread, as reply, own message without edit permission, other's message with delete-any permission, without post permission (no reply button) |
 
 ## Covered — Medium (6 components, side effects on interaction or a single mockable context/mutation)
 
 | Component | Story file | What's mocked |
 |---|---|---|
 | AudioAttachment | `AudioAttachment/AudioAttachment.stories.tsx` | Real sample audio URL for a working waveform; a broken-URL variant shows the graceful fallback (empty waveform, no throw) |
-| MessageInput | `MessageInput/MessageInput.stories.tsx` | Baseline states (empty, editing, replying) plus editing-while-a-reply-is-pending, which documents that the edit banner takes priority over the reply quote (see ChatMessageList.tsx wiring). Voice/video recording and real upload flows in its children are *not* exercised here (see VoiceRecorderModal/VideoRecorderModal below, and MessageEditorAttachment's skipped "pending" variant) |
+| MessageInput | `MessageInput/MessageInput.stories.tsx` | Baseline states (empty, editing, replying, disabled without post permission) plus editing-while-a-reply-is-pending, which documents that the edit banner takes priority over the reply quote (see ChatMessageList.tsx wiring). Voice/video recording and real upload flows in its children are *not* exercised here (see VoiceRecorderModal/VideoRecorderModal below, and MessageEditorAttachment's skipped "pending" variant) |
 | MessageEditorAttachment | `MessageEditorAttachment/MessageEditorAttachment.stories.tsx` | "Uploaded" variant only (image + audio). The "pending" variant is **skipped** — it fires a real `uploadFileWithProgress` XHR in a `useEffect` on mount that can't be intercepted without a module-mocking addon (none installed in this pass) |
 | WorkspaceCreateModal | `WorkspaceCreateModal/WorkspaceCreateModal.stories.tsx` | `MockedProvider` with an `AddWorkspace` mutation mock |
 | ChannelsList | `ChannelsList/ChannelsList.stories.tsx` | `WorkspacesListContext` decorator; default, grouped-channels (`fixtures/channelGroups.ts`) and empty-channels variants. Opening "+ Create channel" mounts `CreateChannelModal`, which is covered separately below |

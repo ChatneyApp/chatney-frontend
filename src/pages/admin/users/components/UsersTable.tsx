@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/client/react';
 import { useTranslation } from 'react-i18next';
 
 import { DELETE_USER } from '@/graphql/adminUsers';
+import { useRolesList } from '@/contexts/RolesListContext';
 import { useUsersList } from '@/contexts/UsersListContext';
 import { useUser } from '@/contexts/UserContext';
 import { AdminUser } from '@/types/users';
@@ -37,6 +38,8 @@ function StatusBadge({
 export function UsersTable({ users }: Props) {
     const { t } = useTranslation();
     const { refetch } = useUsersList();
+    const { roles } = useRolesList();
+    const roleNames = new Map(roles.map((role) => [role.id, role.name]));
     const currentUser = useUser()?.user;
     const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
     const [deleteUser] = useMutation(DELETE_USER, {
@@ -73,6 +76,7 @@ export function UsersTable({ users }: Props) {
                     <thead className={styles.thead}>
                         <tr>
                             <th className={styles.th}>{t('admin.users.columns.user')}</th>
+                            <th className={styles.th}>{t('admin.users.columns.roles')}</th>
                             <th className={styles.th}>{t('admin.users.columns.status')}</th>
                             <th className={styles.th}>{t('admin.users.columns.actions')}</th>
                         </tr>
@@ -80,6 +84,8 @@ export function UsersTable({ users }: Props) {
                     <tbody>
                         {users.map((user) => {
                             const isSelf = user.id === currentUser?.id;
+                            // Ids of roles deleted since the users list loaded have no name, so they are skipped
+                            const userRoleNames = user.roleIds.flatMap((roleId) => roleNames.get(roleId) ?? []);
 
                             return (
                                 <tr key={user.id}>
@@ -89,6 +95,11 @@ export function UsersTable({ users }: Props) {
                                             {isSelf && ` ${t('admin.users.you')}`}
                                         </div>
                                         <div className={styles.userEmail}>@{user.nickname} · {user.email}</div>
+                                    </td>
+                                    <td className={styles.td}>
+                                        {userRoleNames.length
+                                            ? userRoleNames.join(' | ')
+                                            : <span className={styles.noRoles}>—</span>}
                                     </td>
                                     <td className={styles.td}>
                                         <div className={styles.badges}>

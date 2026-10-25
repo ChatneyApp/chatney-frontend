@@ -8,10 +8,12 @@ import { WebSocketContextProvider } from '@/contexts/WebSocketProvider';
 import { ChannelTypesListProvider } from '@/contexts/ChannelTypesListContext';
 import { DirectMessagesListProvider } from '@/contexts/DirectMessagesListContext';
 import { RolesListProvider } from '@/contexts/RolesListContext.tsx';
+import { MyPermissionsProvider } from '@/contexts/MyPermissionsContext';
 
 const providers = [
     WebSocketContextProvider,
     RolesListProvider,
+    MyPermissionsProvider,
     ChannelTypesListProvider,
     WorkspacesListProvider,
     WorkspaceChannelsListProvider,

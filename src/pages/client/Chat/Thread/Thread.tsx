@@ -19,11 +19,12 @@ const classNames = {
 
 type Props = {
     rootMessage: MessageWithUser;
+    isDm: boolean;
     eventEmitter: WebSocketEventEmitter;
     onCloseThread(): void;
 };
 
-export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
+export const Thread = ({ rootMessage, isDm, eventEmitter, onCloseThread }: Props) => {
     const { t } = useTranslation();
     const apolloClient = useApolloClient();
 
@@ -49,6 +50,7 @@ export const Thread = ({ rootMessage, eventEmitter, onCloseThread }: Props) => {
     return (
         <ChatMessageList
             channelId={rootMessage.channelId}
+            isDm={isDm}
             parentId={rootMessage.id}
             header={header}
             classNames={classNames}

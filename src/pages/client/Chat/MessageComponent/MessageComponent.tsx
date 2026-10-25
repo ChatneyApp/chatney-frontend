@@ -16,6 +16,9 @@ type Props = {
     message: MessageWithUser;
     currentUserId?: UserId;
     replyRef?: ReplyToMessage;
+    canReply: boolean;
+    canEdit: boolean;
+    canDelete: boolean;
     onDelete(id: MessageId): void;
     onReply(message: MessageWithUser): void;
     onEdit(message: MessageWithUser): void;
@@ -23,7 +26,7 @@ type Props = {
     onDeleteReaction(messageId: MessageId, code: string): void;
     onOpenThread?(parentId: MessageWithUser): void;
 };
-export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, onReply, onEdit, onAddReaction, onDeleteReaction, onOpenThread }: Props) => {
+export const MessageComponent = ({ message, currentUserId, replyRef, canReply, canEdit, canDelete, onDelete, onReply, onEdit, onAddReaction, onDeleteReaction, onOpenThread }: Props) => {
     const { t } = useTranslation();
     const isMine = message.userId === currentUserId;
     const avatarUrl = message.user.avatarUrl ?? `https://i.pravatar.cc/?img=${message.userId}`;
@@ -57,20 +60,24 @@ export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, o
                             <span className={styles.editedLabel}> {t('chat.message.edited')}</span>
                         )}
                     </span>
-                    <CornerUpLeft
-                        className={styles.replyButton}
-                        onClick={() => onReply(message)}
-                    />
-                    {isMine && (
+                    {canReply && (
+                        <CornerUpLeft
+                            className={styles.replyButton}
+                            onClick={() => onReply(message)}
+                        />
+                    )}
+                    {canEdit && (
                         <Pencil
                             className={styles.editButton}
                             onClick={() => onEdit(message)}
                         />
                     )}
-                    <XCircle
-                        className={styles.deleteButton}
-                        onClick={() => onDelete(message.id)}
-                    />
+                    {canDelete && (
+                        <XCircle
+                            className={styles.deleteButton}
+                            onClick={() => onDelete(message.id)}
+                        />
+                    )}
                 </div>
                 {replyRef && (
                     <div className={styles.replyQuote}>

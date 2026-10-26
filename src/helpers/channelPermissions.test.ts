@@ -6,7 +6,7 @@ import {
 } from './channelPermissions';
 
 describe('toChannelPermissions', () => {
-    it('allows posting, editing and deleting own messages and attachments in DMs', () => {
+    it('allows posting, editing and deleting own messages, attachments and reactions in DMs', () => {
         expect(toChannelPermissions(DM_CHANNEL_PERMISSIONS)).toEqual({
             canPost: true,
             canEditOwn: true,
@@ -14,6 +14,8 @@ describe('toChannelPermissions', () => {
             canDeleteAny: false,
             canUploadAttachments: true,
             canDeleteAttachments: true,
+            canAddReactions: true,
+            canRemoveReactions: true,
         });
     });
 
@@ -25,6 +27,8 @@ describe('toChannelPermissions', () => {
             canDeleteAny: false,
             canUploadAttachments: false,
             canDeleteAttachments: false,
+            canAddReactions: false,
+            canRemoveReactions: false,
         });
     });
 });

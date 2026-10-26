@@ -8,11 +8,12 @@ import { REACTION_DETAILS } from '@/pages/client/Chat/emojis.ts';
 type Props = {
     reaction: Reaction;
     isMine: boolean;
+    disabled?: boolean;
     onAddReaction(code: string): void;
     onDeleteReaction(code: string): void;
 }
 
-export const MessageReaction = ({ reaction, isMine, onAddReaction, onDeleteReaction }: Props) => {
+export const MessageReaction = ({ reaction, isMine, disabled, onAddReaction, onDeleteReaction }: Props) => {
     const { t } = useTranslation();
     const handleClick = () => {
         if (isMine) {
@@ -28,6 +29,7 @@ export const MessageReaction = ({ reaction, isMine, onAddReaction, onDeleteReact
             key={reaction.code}
             className={clsx(styles.reaction, { [styles.mine]: isMine })}
             onClick={handleClick}
+            disabled={disabled}
             aria-label={t('chat.reactions.countLabel', { code: reaction.code, count: reaction.count })}
         >
             <div className={styles.reactionBody}>{REACTION_DETAILS[reaction.code].emoji}</div>

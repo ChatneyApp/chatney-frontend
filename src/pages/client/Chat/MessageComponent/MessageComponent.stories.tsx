@@ -21,6 +21,11 @@ export default meta;
 
 type Story = StoryObj<typeof MessageComponent>;
 
+const reactionPermissions = {
+    canAddReaction: true,
+    canRemoveReaction: true,
+};
+
 const callbacks = {
     onDelete: action('onDelete'),
     onReply: action('onReply'),
@@ -38,6 +43,7 @@ export const Default: Story = {
         canReply: true,
         canEdit: false,
         canDelete: false,
+        ...reactionPermissions,
         ...callbacks,
     },
 };
@@ -50,6 +56,7 @@ export const OwnMessage: Story = {
         canReply: true,
         canEdit: true,
         canDelete: true,
+        ...reactionPermissions,
         ...callbacks,
     },
 };
@@ -62,6 +69,7 @@ export const WithAttachment: Story = {
         canReply: true,
         canEdit: false,
         canDelete: false,
+        ...reactionPermissions,
         ...callbacks,
     },
 };
@@ -74,6 +82,7 @@ export const WithReactions: Story = {
         canReply: true,
         canEdit: false,
         canDelete: false,
+        ...reactionPermissions,
         ...callbacks,
     },
 };
@@ -86,6 +95,7 @@ export const Edited: Story = {
         canReply: true,
         canEdit: false,
         canDelete: false,
+        ...reactionPermissions,
         ...callbacks,
     },
 };
@@ -98,6 +108,7 @@ export const WithThread: Story = {
         canReply: true,
         canEdit: false,
         canDelete: false,
+        ...reactionPermissions,
         ...callbacks,
     },
 };
@@ -111,6 +122,7 @@ export const AsReply: Story = {
         canReply: true,
         canEdit: false,
         canDelete: false,
+        ...reactionPermissions,
         ...callbacks,
     },
 };
@@ -123,6 +135,7 @@ export const OwnMessageWithoutEditPermission: Story = {
         canReply: true,
         canEdit: false,
         canDelete: true,
+        ...reactionPermissions,
         ...callbacks,
     },
 };
@@ -135,6 +148,7 @@ export const OthersMessageWithDeleteAnyPermission: Story = {
         canReply: true,
         canEdit: false,
         canDelete: true,
+        ...reactionPermissions,
         ...callbacks,
     },
 };
@@ -147,6 +161,21 @@ export const WithoutPostPermission: Story = {
         canReply: false,
         canEdit: false,
         canDelete: false,
+        ...reactionPermissions,
+        ...callbacks,
+    },
+};
+
+/** A message with reactions in a channel where the current user can't add or remove reactions: no "add reaction" trigger, and the reactions can't be clicked. */
+export const WithoutReactionPermissions: Story = {
+    args: {
+        message: mockMessageWithReactions,
+        currentUserId: mockUserId1,
+        canReply: true,
+        canEdit: false,
+        canDelete: false,
+        canAddReaction: false,
+        canRemoveReaction: false,
         ...callbacks,
     },
 };

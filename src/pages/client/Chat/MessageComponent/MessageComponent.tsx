@@ -20,6 +20,8 @@ type Props = {
     canReply: boolean;
     canEdit: boolean;
     canDelete: boolean;
+    canAddReaction: boolean;
+    canRemoveReaction: boolean;
     onDelete(id: MessageId): void;
     onReply(message: MessageWithUser): void;
     onEdit(message: MessageWithUser): void;
@@ -27,7 +29,7 @@ type Props = {
     onDeleteReaction(messageId: MessageId, code: string): void;
     onOpenThread?(parentId: MessageWithUser): void;
 };
-export const MessageComponent = ({ message, currentUserId, replyRef, canReply, canEdit, canDelete, onDelete, onReply, onEdit, onAddReaction, onDeleteReaction, onOpenThread }: Props) => {
+export const MessageComponent = ({ message, currentUserId, replyRef, canReply, canEdit, canDelete, canAddReaction, canRemoveReaction, onDelete, onReply, onEdit, onAddReaction, onDeleteReaction, onOpenThread }: Props) => {
     const { t } = useTranslation();
     const isMine = message.userId === currentUserId;
     const avatarUrl = message.user.avatarUrl ?? `https://i.pravatar.cc/?img=${message.userId}`;
@@ -93,6 +95,8 @@ export const MessageComponent = ({ message, currentUserId, replyRef, canReply, c
                 <MessageReactions
                     reactions={message.reactions}
                     myReactions={message.myReactions}
+                    canAddReaction={canAddReaction}
+                    canRemoveReaction={canRemoveReaction}
                     onAddReaction={(code) => onAddReaction(message.id, code)}
                     onDeleteReaction={code => onDeleteReaction(message.id, code)}
                 />

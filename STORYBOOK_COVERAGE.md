@@ -12,15 +12,15 @@ All components under `src/pages/client/Chat` (plus `ChatPage.tsx` and `ClientLay
 |---|---|---|
 | ProgressBar | `ProgressBar/ProgressBar.stories.tsx` | 3 variants: mid-upload, just started, complete |
 | MessageThreadButton | `MessageThreadButton/MessageThreadButton.stories.tsx` | 3 variants: default, no replies, many replies |
-| MessageReaction | `MessageReaction/MessageReaction.stories.tsx` | Own vs. others' reaction |
-| MessageReactions | `MessageReactions/MessageReactions.stories.tsx` | With reactions, empty |
+| MessageReaction | `MessageReaction/MessageReaction.stories.tsx` | Own vs. others' reaction, disabled |
+| MessageReactions | `MessageReactions/MessageReactions.stories.tsx` | With reactions, empty, without add permission, without remove permission |
 | ReactionSelectionDialog | `ReactionSelectionDialog/ReactionSelectionDialog.stories.tsx` | Radix Popover/Tabs, full emoji list; with/without existing reactions |
 | EmojiSuggestionsPopup | `EmojiSuggestionsPopup/EmojiSuggestionsPopup.stories.tsx` | Query match, no query, no matches |
 | MessageUrlPreviewsComponent / MessageUrlPreviewComponent | `MessageUrlPreviewsComponent/*.stories.tsx` | Full preview, title-only, empty |
 | MessageAttachments | `MessageAttachments/MessageAttachments.stories.tsx` | Single, multiple, empty |
 | MessageAttachmentComponent | `MessageAttachmentComponent/MessageAttachmentComponent.stories.tsx` | image/gif/video/audio/binary variants; media previews render via an MSW redirect — see caveat below |
 | FullscreenPreview | `FullscreenPreview/FullscreenPreview.stories.tsx` | Image and video overlay |
-| **MessageComponent** (flagship) | `MessageComponent/MessageComponent.stories.tsx` | 10 variants: default, own message, with attachment, with reactions, edited, with thread, as reply, own message without edit permission, other's message with delete-any permission, without post permission (no reply button) |
+| **MessageComponent** (flagship) | `MessageComponent/MessageComponent.stories.tsx` | 11 variants: default, own message, with attachment, with reactions, edited, with thread, as reply, own message without edit permission, other's message with delete-any permission, without post permission (no reply button), without reaction permissions |
 
 ## Covered — Medium (6 components, side effects on interaction or a single mockable context/mutation)
 

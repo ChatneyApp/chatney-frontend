@@ -371,6 +371,8 @@ export const ChatMessageList = ({
                     onCancelEdit={() => setEditingMessage(null)}
                     editingMessage={activeEditingMessage}
                     disabled={!permissions.canPost}
+                    canUploadAttachments={permissions.canUploadAttachments}
+                    canDeleteAttachments={permissions.canDeleteAttachments}
                     replyToMessage={activeReplyingTo}
                     onClearReply={handleClearReply}
                 />

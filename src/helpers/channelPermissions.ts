@@ -18,6 +18,8 @@ export type ChannelPermissions = {
     canEditOwn: boolean;
     canDeleteOwn: boolean;
     canDeleteAny: boolean;
+    canUploadAttachments: boolean;
+    canDeleteAttachments: boolean;
 };
 
 export const toChannelPermissions = (permissions: readonly Permission[]): ChannelPermissions => ({
@@ -25,6 +27,8 @@ export const toChannelPermissions = (permissions: readonly Permission[]): Channe
     canEditOwn: permissions.includes('CHANNEL_EDIT_OWN_MESSAGE'),
     canDeleteOwn: permissions.includes('CHANNEL_DELETE_OWN_MESSAGE'),
     canDeleteAny: permissions.includes('CHANNEL_DELETE_MESSAGE'),
+    canUploadAttachments: permissions.includes('ATTACHMENT_UPLOAD'),
+    canDeleteAttachments: permissions.includes('ATTACHMENT_DELETE'),
 });
 
 export const canEditMessage = (permissions: ChannelPermissions, isMine: boolean) =>

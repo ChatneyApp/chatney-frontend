@@ -6,12 +6,14 @@ import {
 } from './channelPermissions';
 
 describe('toChannelPermissions', () => {
-    it('allows posting, editing and deleting own messages in DMs', () => {
+    it('allows posting, editing and deleting own messages and attachments in DMs', () => {
         expect(toChannelPermissions(DM_CHANNEL_PERMISSIONS)).toEqual({
             canPost: true,
             canEditOwn: true,
             canDeleteOwn: true,
             canDeleteAny: false,
+            canUploadAttachments: true,
+            canDeleteAttachments: true,
         });
     });
 
@@ -21,6 +23,8 @@ describe('toChannelPermissions', () => {
             canEditOwn: false,
             canDeleteOwn: false,
             canDeleteAny: false,
+            canUploadAttachments: false,
+            canDeleteAttachments: false,
         });
     });
 });

@@ -497,8 +497,9 @@ type InstallSystemResult {
 type InstallWizardMutations {
   """
   Runs migrations and seeds a fresh system: admin and user roles, a default workspace with
-  public/private channels, an admin user, optional test users and default config. Safe to call
-  again: returns status "installed" if the system is already installed.
+  public/private/readonly channel types, channels and channel groups, an admin user, optional
+  test users and default config. Safe to call again: returns status "installed" if the system
+  is already installed.
   """
   installSystem(options: InstallSystemInput!): InstallSystemResult!
     @cost(weight: "10")
@@ -541,14 +542,20 @@ type MessageMutations {
   deleteMessage("Message to delete." id: Int!): Boolean!
     @authorize
     @cost(weight: "10")
-  "Adds the current user's reaction to a message. No-op if it already exists."
+  """
+  Adds the current user's reaction to a message. No-op if it already exists.
+  Requires ChannelAddReaction on the message's channel.
+  """
   addReaction(
     "Reaction code (e.g. an emoji shortcode)."
     code: String!
     "Message to react to."
     messageId: Int!
   ): ReactionEndpointOutput! @authorize @cost(weight: "10")
-  "Removes the current user's reaction from a message. Returns status \"error\" if it didn't exist."
+  """
+  Removes the current user's reaction from a message. Returns status "error" if it didn't exist.
+  Requires ChannelRemoveReaction on the message's channel.
+  """
   deleteReaction(
     "Reaction code to remove."
     code: String!
@@ -1144,6 +1151,8 @@ enum Permission {
   ATTACHMENT_READ
   "Upload attachments. Checked globally."
   ATTACHMENT_UPLOAD
+  "Add your reactions to messages in a channel. Checked on the channel."
+  CHANNEL_ADD_REACTION
   "Create channels in a workspace (checked on the workspace); granted globally, also allows creating channel types."
   CHANNEL_CREATE_CHANNEL
   "Post messages in a channel. Checked on the channel."
@@ -1166,6 +1175,8 @@ enum Permission {
   CHANNEL_READ_CHANNEL
   "Read messages in a channel. Checked on the channel."
   CHANNEL_READ_MESSAGE
+  "Remove your reactions from messages in a channel. Checked on the channel."
+  CHANNEL_REMOVE_REACTION
   "Read system configuration values. Checked globally."
   CONFIG_READ_VALUE
   "Update system configuration values. Checked globally."

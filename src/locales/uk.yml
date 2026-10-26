@@ -249,6 +249,7 @@ admin:
       ATTACHMENT_DELETE: Видалення вкладень
       ATTACHMENT_READ: Перегляд вкладень
       ATTACHMENT_UPLOAD: Завантаження вкладень
+      CHANNEL_ADD_REACTION: Додавання реакцій
       CHANNEL_CREATE_CHANNEL: Створення каналів
       CHANNEL_CREATE_MESSAGE: Надсилання повідомлень
       CHANNEL_DELETE_CHANNEL: Видалення каналів
@@ -260,6 +261,7 @@ admin:
       CHANNEL_EDIT_OWN_MESSAGE: Редагування своїх повідомлень
       CHANNEL_READ_CHANNEL: Видимість каналів
       CHANNEL_READ_MESSAGE: Читання повідомлень
+      CHANNEL_REMOVE_REACTION: Видалення реакцій
       CONFIG_READ_VALUE: Перегляд налаштувань
       CONFIG_UPDATE_VALUE: Зміна налаштувань
       ROLE_CREATE_ROLE: Створення ролей

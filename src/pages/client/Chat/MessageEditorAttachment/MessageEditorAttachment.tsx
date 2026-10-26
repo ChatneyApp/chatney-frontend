@@ -15,7 +15,8 @@ import styles from './MessageEditorAttachment.module.css';
 
 type UploadedProps = {
     attachment: Attachment;
-    onDelete(attachmentId: AttachmentId): void;
+    // without it there's no delete button
+    onDelete?(attachmentId: AttachmentId): void;
 };
 
 type PendingProps = {
@@ -24,7 +25,7 @@ type PendingProps = {
     compress: boolean;
     asFile: boolean;
     onUploaded(draftId: string, attachment: Attachment): void;
-    onDelete(draftId: string): void;
+    onDelete?(draftId: string): void;
 };
 
 type Props = UploadedProps | PendingProps;
@@ -198,19 +199,21 @@ export const MessageEditorAttachment = (props: Props) => {
 
     const handleDelete = () => {
         if (isPending) {
-            props.onDelete(props.draftId);
+            props.onDelete?.(props.draftId);
             return;
         }
 
-        props.onDelete(props.attachment.id);
+        props.onDelete?.(props.attachment.id);
     };
 
     return (
         <div className={styles.container}>
             {preview}
-            <button className={styles.deleteButton} type="button" onClick={handleDelete} aria-label={t('chat.attachments.delete')}>
-                <X size={12} />
-            </button>
+            {props.onDelete && (
+                <button className={styles.deleteButton} type="button" onClick={handleDelete} aria-label={t('chat.attachments.delete')}>
+                    <X size={12} />
+                </button>
+            )}
             {conversionProgress != null && conversionProgress < 1 && (
                 <ProgressBar label={t('chat.attachments.convert')} progress={conversionProgress} />
             )}

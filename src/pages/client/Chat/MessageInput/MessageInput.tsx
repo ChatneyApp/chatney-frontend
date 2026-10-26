@@ -36,6 +36,8 @@ type Props = {
     editingMessage?: EditingMessage | null;
     replyToMessage?: MessageWithUser | null;
     disabled?: boolean;
+    canUploadAttachments?: boolean;
+    canDeleteAttachments?: boolean;
     onSend(text: string, attachmentIds: AttachmentId[]): Promise<void>;
     onSaveEdit?(id: MessageId, text: string, attachmentIds: AttachmentId[]): Promise<void>;
     onCancelEdit?(): void;
@@ -84,7 +86,17 @@ const canCompressFile = (file: File) => file.type.startsWith('video/') || file.t
 const canUploadAsFile = (file: File) =>
     file.type.startsWith('image/') || file.type.startsWith('video/') || file.type.startsWith('audio/');
 
-export function MessageInput({ editingMessage, replyToMessage, disabled = false, onSend, onSaveEdit, onCancelEdit, onClearReply }: Props) {
+export function MessageInput({
+    editingMessage,
+    replyToMessage,
+    disabled = false,
+    canUploadAttachments = true,
+    canDeleteAttachments = true,
+    onSend,
+    onSaveEdit,
+    onCancelEdit,
+    onClearReply,
+}: Props) {
     const { t } = useTranslation();
     const [isSending, setIsSending] = useState(false);
     const [text, setText] = useState('');
@@ -426,7 +438,7 @@ export function MessageInput({ editingMessage, replyToMessage, disabled = false,
                                 <MessageEditorAttachment
                                     key={attachment.attachment.id}
                                     attachment={attachment.attachment}
-                                    onDelete={handleDeleteAttachment}
+                                    onDelete={canDeleteAttachments ? handleDeleteAttachment : undefined}
                                 />
                             )
                             : (
@@ -437,7 +449,7 @@ export function MessageInput({ editingMessage, replyToMessage, disabled = false,
                                     compress={attachment.compress}
                                     asFile={attachment.asFile}
                                     onUploaded={handleDraftAttachmentUploaded}
-                                    onDelete={handleDeleteDraftAttachment}
+                                    onDelete={canDeleteAttachments ? handleDeleteDraftAttachment : undefined}
                                 />
                             )
                     ))}
@@ -456,7 +468,7 @@ export function MessageInput({ editingMessage, replyToMessage, disabled = false,
                 />
             )}
             <form onSubmit={handleSend} className={styles.sendForm}>
-                {!isDisabled && (
+                {!isDisabled && canUploadAttachments && (
                     <>
                         <Mic className={styles.voiceRecordIcon} onClick={() => setIsVoiceModalOpen(true)} />
                         <Video className={styles.videoRecordIcon} onClick={() => setIsVideoModalOpen(true)} />

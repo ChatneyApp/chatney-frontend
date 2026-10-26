@@ -68,3 +68,22 @@ export const Disabled: Story = {
         onSend: action('onSend'),
     },
 };
+
+/** The current user can post but not upload attachments: the clip, mic and camera buttons are hidden. */
+export const NoUploadPermission: Story = {
+    args: {
+        canUploadAttachments: false,
+        onSend: action('onSend'),
+    },
+};
+
+/** Editing a message without permission to delete attachments: the attachment has no delete button. */
+export const EditingNoDeleteAttachmentPermission: Story = {
+    args: {
+        editingMessage: { id: 1, content: 'Original text before the edit', attachments: [mockImageAttachment] },
+        canDeleteAttachments: false,
+        onSend: action('onSend'),
+        onSaveEdit: action('onSaveEdit'),
+        onCancelEdit: action('onCancelEdit'),
+    },
+};

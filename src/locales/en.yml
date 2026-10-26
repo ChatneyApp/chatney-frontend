@@ -243,6 +243,7 @@ admin:
       ATTACHMENT_DELETE: Delete attachments
       ATTACHMENT_READ: View attachments
       ATTACHMENT_UPLOAD: Upload attachments
+      CHANNEL_ADD_REACTION: Add reactions
       CHANNEL_CREATE_CHANNEL: Create channels
       CHANNEL_CREATE_MESSAGE: Post messages
       CHANNEL_DELETE_CHANNEL: Delete channels
@@ -254,6 +255,7 @@ admin:
       CHANNEL_EDIT_OWN_MESSAGE: Edit own messages
       CHANNEL_READ_CHANNEL: See channels
       CHANNEL_READ_MESSAGE: Read messages
+      CHANNEL_REMOVE_REACTION: Remove reactions
       CONFIG_READ_VALUE: View config values
       CONFIG_UPDATE_VALUE: Update config values
       ROLE_CREATE_ROLE: Create roles

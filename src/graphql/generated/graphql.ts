@@ -127,16 +127,14 @@ export type Permission =
   | 'ATTACHMENT_READ'
   /** Upload attachments. Checked globally. */
   | 'ATTACHMENT_UPLOAD'
-  /** Create channel groups in a workspace. Checked on the workspace. */
-  | 'CHANNEL_ADD_CHANNEL_GROUP'
+  /** Add your reactions to messages in a channel. Checked on the channel. */
+  | 'CHANNEL_ADD_REACTION'
   /** Create channels in a workspace (checked on the workspace); granted globally, also allows creating channel types. */
   | 'CHANNEL_CREATE_CHANNEL'
   /** Post messages in a channel. Checked on the channel. */
   | 'CHANNEL_CREATE_MESSAGE'
   /** Delete a channel. Checked on the channel. */
   | 'CHANNEL_DELETE_CHANNEL'
-  /** Delete channel groups in a workspace. Checked on the workspace. */
-  | 'CHANNEL_DELETE_CHANNEL_GROUP'
   /** Delete a channel type. Checked on the channel type. */
   | 'CHANNEL_DELETE_CHANNEL_TYPE'
   /** Delete anyone's messages in a channel. Checked on the channel. */
@@ -145,8 +143,6 @@ export type Permission =
   | 'CHANNEL_DELETE_OWN_MESSAGE'
   /** Edit a channel (checked on the channel) or a channel type (checked on the channel type). */
   | 'CHANNEL_EDIT_CHANNEL'
-  /** Edit channel groups in a workspace. Checked on the workspace. */
-  | 'CHANNEL_EDIT_CHANNEL_GROUP'
   /** Edit anyone's messages in a channel. Checked on the channel. */
   | 'CHANNEL_EDIT_MESSAGE'
   /** Edit your own messages in a channel. Checked on the channel. */
@@ -155,6 +151,8 @@ export type Permission =
   | 'CHANNEL_READ_CHANNEL'
   /** Read messages in a channel. Checked on the channel. */
   | 'CHANNEL_READ_MESSAGE'
+  /** Remove your reactions from messages in a channel. Checked on the channel. */
+  | 'CHANNEL_REMOVE_REACTION'
   /** Read system configuration values. Checked globally. */
   | 'CONFIG_READ_VALUE'
   /** Update system configuration values. Checked globally. */
@@ -175,12 +173,20 @@ export type Permission =
   | 'USER_EDIT_USER'
   /** List and look up users. Checked globally. */
   | 'USER_READ_USER'
+  /** Create channel groups in a workspace. Checked on the workspace. */
+  | 'WORKSPACE_CREATE_CHANNEL_GROUP'
   /** Create workspaces. Checked globally. */
   | 'WORKSPACE_CREATE_WORKSPACE'
+  /** Delete channel groups in a workspace. Checked on the workspace. */
+  | 'WORKSPACE_DELETE_CHANNEL_GROUP'
   /** Delete a workspace. Checked on the workspace. */
   | 'WORKSPACE_DELETE_WORKSPACE'
+  /** See channel groups of a workspace. Checked on the workspace. */
+  | 'WORKSPACE_READ_CHANNEL_GROUP'
   /** See a workspace. Checked on the workspace. */
   | 'WORKSPACE_READ_WORKSPACE'
+  /** Edit channel groups in a workspace, including their order. Checked on the workspace. */
+  | 'WORKSPACE_UPDATE_CHANNEL_GROUP'
   /** Edit a workspace. Checked on the workspace. */
   | 'WORKSPACE_UPDATE_WORKSPACE';
 

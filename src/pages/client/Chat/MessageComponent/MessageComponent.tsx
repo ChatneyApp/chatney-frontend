@@ -1,4 +1,4 @@
-import { CornerUpLeft, Pencil, XCircle } from 'lucide-react';
+import { Pencil, Reply, Trash } from 'lucide-react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
@@ -64,19 +64,25 @@ export const MessageComponent = ({ message, currentUserId, replyRef, canReply, c
                         )}
                     </span>
                     {canReply && (
-                        <CornerUpLeft
+                        <Reply
+                            size={16}
+                            strokeWidth={3}
                             className={styles.replyButton}
                             onClick={() => onReply(message)}
                         />
                     )}
                     {canEdit && (
                         <Pencil
+                            size={16}
+                            strokeWidth={3}
                             className={styles.editButton}
                             onClick={() => onEdit(message)}
                         />
                     )}
                     {canDelete && (
-                        <XCircle
+                        <Trash
+                            size={16}
+                            strokeWidth={3}
                             className={styles.deleteButton}
                             onClick={() => onDelete(message.id)}
                         />

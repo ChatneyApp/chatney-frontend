@@ -246,6 +246,7 @@ admin:
       CHANNEL_ADD_REACTION: Add reactions
       CHANNEL_CREATE_CHANNEL: Create channels
       CHANNEL_CREATE_MESSAGE: Post messages
+      CHANNEL_CREATE_THREAD: Start threads
       CHANNEL_DELETE_CHANNEL: Delete channels
       CHANNEL_DELETE_CHANNEL_TYPE: Delete channel types
       CHANNEL_DELETE_MESSAGE: Delete any message

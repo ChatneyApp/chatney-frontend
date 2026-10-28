@@ -7,6 +7,7 @@ export const DM_CHANNEL_PERMISSIONS: readonly Permission[] = [
     'ATTACHMENT_UPLOAD',
     'CHANNEL_ADD_REACTION',
     'CHANNEL_CREATE_MESSAGE',
+    'CHANNEL_CREATE_THREAD',
     'CHANNEL_DELETE_OWN_MESSAGE',
     'CHANNEL_EDIT_OWN_MESSAGE',
     'CHANNEL_READ_CHANNEL',
@@ -16,6 +17,7 @@ export const DM_CHANNEL_PERMISSIONS: readonly Permission[] = [
 
 export type ChannelPermissions = {
     canPost: boolean;
+    canCreateThread: boolean;
     canEditOwn: boolean;
     canDeleteOwn: boolean;
     canDeleteAny: boolean;
@@ -27,6 +29,7 @@ export type ChannelPermissions = {
 
 export const toChannelPermissions = (permissions: readonly Permission[]): ChannelPermissions => ({
     canPost: permissions.includes('CHANNEL_CREATE_MESSAGE'),
+    canCreateThread: permissions.includes('CHANNEL_CREATE_THREAD'),
     canEditOwn: permissions.includes('CHANNEL_EDIT_OWN_MESSAGE'),
     canDeleteOwn: permissions.includes('CHANNEL_DELETE_OWN_MESSAGE'),
     canDeleteAny: permissions.includes('CHANNEL_DELETE_MESSAGE'),

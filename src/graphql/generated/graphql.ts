@@ -133,6 +133,8 @@ export type Permission =
   | 'CHANNEL_CREATE_CHANNEL'
   /** Post messages in a channel. Checked on the channel. */
   | 'CHANNEL_CREATE_MESSAGE'
+  /** Start threads (reply under a message) in a channel. Checked on the channel. */
+  | 'CHANNEL_CREATE_THREAD'
   /** Delete a channel. Checked on the channel. */
   | 'CHANNEL_DELETE_CHANNEL'
   /** Delete a channel type. Checked on the channel type. */

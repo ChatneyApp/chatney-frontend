@@ -6,9 +6,10 @@ import {
 } from './channelPermissions';
 
 describe('toChannelPermissions', () => {
-    it('allows posting, editing and deleting own messages, attachments and reactions in DMs', () => {
+    it('allows posting, threads, editing and deleting own messages, attachments and reactions in DMs', () => {
         expect(toChannelPermissions(DM_CHANNEL_PERMISSIONS)).toEqual({
             canPost: true,
+            canCreateThread: true,
             canEditOwn: true,
             canDeleteOwn: true,
             canDeleteAny: false,
@@ -22,6 +23,7 @@ describe('toChannelPermissions', () => {
     it('allows nothing without permissions', () => {
         expect(toChannelPermissions([])).toEqual({
             canPost: false,
+            canCreateThread: false,
             canEditOwn: false,
             canDeleteOwn: false,
             canDeleteAny: false,

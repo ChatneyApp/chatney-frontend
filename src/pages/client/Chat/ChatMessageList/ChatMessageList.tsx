@@ -79,9 +79,11 @@ export const ChatMessageList = ({
     const autoScrollDone = useRef(false);
     const isBottomVisibleRef = useRef(true);
     const shouldScrollAfterMessagesUpdate = useRef(false);
+    // posting inside a thread also requires the thread permission
+    const canPostHere = permissions.canPost && (parentId === null || permissions.canCreateThread);
     // the permissions can be revoked mid-edit or mid-reply
     const activeEditingMessage = permissions.canEditOwn ? editingMessage : null;
-    const activeReplyingTo = permissions.canPost ? replyingTo : null;
+    const activeReplyingTo = canPostHere ? replyingTo : null;
 
     const handleSend = async (text: string, attachmentIds: AttachmentId[]) => {
         const newMessage: CreateMessageDto = {
@@ -344,11 +346,12 @@ export const ChatMessageList = ({
                             currentUserId={userCtx?.user?.id}
                             message={message}
                             replyRef={message.replyTo != null ? refs.get(message.replyTo) : undefined}
-                            canReply={permissions.canPost}
+                            canReply={canPostHere}
                             canEdit={canEditMessage(permissions, isMine)}
                             canDelete={canDeleteMessage(permissions, isMine)}
                             canAddReaction={permissions.canAddReactions}
                             canRemoveReaction={permissions.canRemoveReactions}
+                            canCreateThread={permissions.canCreateThread}
                             onDelete={handleOnDeleteClick}
                             onReply={handleReply}
                             onEdit={handleEdit}
@@ -372,7 +375,7 @@ export const ChatMessageList = ({
                     onSaveEdit={handleSaveEdit}
                     onCancelEdit={() => setEditingMessage(null)}
                     editingMessage={activeEditingMessage}
-                    disabled={!permissions.canPost}
+                    disabled={!canPostHere}
                     canUploadAttachments={permissions.canUploadAttachments}
                     canDeleteAttachments={permissions.canDeleteAttachments}
                     replyToMessage={activeReplyingTo}

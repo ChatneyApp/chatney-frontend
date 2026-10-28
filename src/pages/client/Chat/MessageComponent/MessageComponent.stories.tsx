@@ -16,6 +16,9 @@ import { mockUserId1 } from '@/test-utils/fixtures/users';
 const meta: Meta<typeof MessageComponent> = {
     title: 'pages/client/Chat/MessageComponent',
     component: MessageComponent,
+    args: {
+        canCreateThread: true,
+    },
 };
 export default meta;
 
@@ -176,6 +179,34 @@ export const WithoutReactionPermissions: Story = {
         canDelete: false,
         canAddReaction: false,
         canRemoveReaction: false,
+        ...callbacks,
+    },
+};
+
+/** A message without replies in a channel where the current user can't start threads: no thread button. */
+export const WithoutThreadPermission: Story = {
+    args: {
+        message: mockPlainMessage,
+        currentUserId: mockUserId1,
+        canReply: true,
+        canEdit: false,
+        canDelete: false,
+        canCreateThread: false,
+        ...reactionPermissions,
+        ...callbacks,
+    },
+};
+
+/** A thread root message in a channel where the current user can't start threads: the thread button stays so the replies can be read. */
+export const WithThreadWithoutThreadPermission: Story = {
+    args: {
+        message: mockThreadedMessage,
+        currentUserId: mockUserId1,
+        canReply: true,
+        canEdit: false,
+        canDelete: false,
+        canCreateThread: false,
+        ...reactionPermissions,
         ...callbacks,
     },
 };

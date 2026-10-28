@@ -515,7 +515,8 @@ type InstallWizardQueries {
 type MessageMutations {
   """
   Posts a message, optionally as a thread reply (parentId) or a quote-reply (replyTo).
-  Requires ChannelCreateMessage on the channel. URL previews are generated from the content.
+  Requires ChannelCreateMessage on the channel, plus ChannelCreateThread for thread replies outside DMs.
+  URL previews are generated from the content.
   """
   addMessage(messageDto: MessageDtoInput!): MessageWithUser
     @authorize
@@ -1157,6 +1158,8 @@ enum Permission {
   CHANNEL_CREATE_CHANNEL
   "Post messages in a channel. Checked on the channel."
   CHANNEL_CREATE_MESSAGE
+  "Start threads (reply under a message) in a channel. Checked on the channel."
+  CHANNEL_CREATE_THREAD
   "Delete a channel. Checked on the channel."
   CHANNEL_DELETE_CHANNEL
   "Delete a channel type. Checked on the channel type."

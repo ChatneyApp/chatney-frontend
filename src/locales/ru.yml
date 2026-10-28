@@ -252,6 +252,7 @@ admin:
       CHANNEL_ADD_REACTION: Добавление реакций
       CHANNEL_CREATE_CHANNEL: Создание каналов
       CHANNEL_CREATE_MESSAGE: Отправка сообщений
+      CHANNEL_CREATE_THREAD: Создание тредов
       CHANNEL_DELETE_CHANNEL: Удаление каналов
       CHANNEL_DELETE_CHANNEL_TYPE: Удаление типов каналов
       CHANNEL_DELETE_MESSAGE: Удаление любых сообщений

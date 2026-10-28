@@ -156,26 +156,42 @@ export function VideoRecorderModal({ onClose, onRecorded }: Props) {
                                     </Button>
                                     {stage === 'recording' && (
                                         <Button type="button" onClick={pause}>
-                                            <Pause size={16} className={styles.buttonIcon} />
+                                            <Pause
+                                                size={16}
+                                                strokeWidth={3}
+                                                className={styles.buttonIcon}
+                                            />
                                             {t('chat.recorder.pause')}
                                         </Button>
                                     )}
                                     {stage === 'paused' && (
                                         <Button type="button" onClick={resume}>
-                                            <Video size={16} className={styles.buttonIcon} />
+                                            <Video
+                                                size={16}
+                                                strokeWidth={3}
+                                                className={styles.buttonIcon}
+                                            />
                                             {t('chat.recorder.resume')}
                                         </Button>
                                     )}
                                     {(stage === 'recording' || stage === 'paused') && (
                                         <Button type="button" onClick={stop}>
-                                            <Square size={16} className={styles.buttonIcon} />
+                                            <Square
+                                                size={16}
+                                                strokeWidth={3}
+                                                className={styles.buttonIcon}
+                                            />
                                             {t('chat.recorder.stop')}
                                         </Button>
                                     )}
                                     {stage === 'preview' && (
                                         <>
                                             <Button type="button" onClick={() => void startRecording()}>
-                                                <RotateCcw size={16} className={styles.buttonIcon} />
+                                                <RotateCcw
+                                                    size={16}
+                                                    strokeWidth={3}
+                                                    className={styles.buttonIcon}
+                                                />
                                                 {t('chat.recorder.reRecord')}
                                             </Button>
                                             <Button type="button" onClick={handleAccept}>

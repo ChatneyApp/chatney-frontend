@@ -182,7 +182,7 @@ export const MessageEditorAttachment = (props: Props) => {
             case 'audio':
                 return (
                     <div className={styles.fallbackPreview}>
-                        <Music size={28} />
+                        <Music size={28} strokeWidth={3}/>
                         <span>{fileName ?? 'Audio'}</span>
                     </div>
                 );
@@ -211,7 +211,7 @@ export const MessageEditorAttachment = (props: Props) => {
             {preview}
             {props.onDelete && (
                 <button className={styles.deleteButton} type="button" onClick={handleDelete} aria-label={t('chat.attachments.delete')}>
-                    <X size={12} />
+                    <X size={12} strokeWidth={3}/>
                 </button>
             )}
             {conversionProgress != null && conversionProgress < 1 && (

@@ -95,7 +95,12 @@ export const ReactionSelectionDialog = ({ reactions, myReactions, onSelect }: Pr
                     align="start"
                 >
                     <div className={styles.searchField}>
-                        <Search className={styles.searchIcon} aria-hidden="true"/>
+                        <Search
+                            size={16}
+                            strokeWidth={3}
+                            className={styles.searchIcon}
+                            aria-hidden="true"
+                        />
                         <input
                             className={styles.searchInput}
                             value={searchValue}
@@ -124,7 +129,11 @@ export const ReactionSelectionDialog = ({ reactions, myReactions, onSelect }: Pr
                                         title={t(`chat.reactions.categories.${id}`)}
                                         aria-label={t(`chat.reactions.categories.${id}`)}
                                     >
-                                        <Icon size={18} aria-hidden="true"/>
+                                        <Icon
+                                            size={18}
+                                            strokeWidth={3}
+                                            aria-hidden="true"
+                                        />
                                     </Tabs.Trigger>
                                 ))}
                             </Tabs.List>

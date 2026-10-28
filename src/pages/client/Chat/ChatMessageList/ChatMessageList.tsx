@@ -366,7 +366,10 @@ export const ChatMessageList = ({
 
             {!isBottomVisible && (
                 <div className={classNames.scrollUpFab} onClick={handleScrollToBottom} title={t('chat.scrollToBottom')}>
-                    <ArrowDownToLine/>
+                    <ArrowDownToLine
+                        size={16}
+                        strokeWidth={3}
+                    />
                 </div>
             )}
             <div ref={messageInputRef}>

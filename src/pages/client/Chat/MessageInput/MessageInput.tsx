@@ -408,7 +408,10 @@ export function MessageInput({
             {isEditing && (
                 <div className={styles.editBanner}>
                     <span>{t('chat.messageInput.editingMessage')}</span>
-                    <X className={styles.replyPreviewClear} onClick={onCancelEdit} />
+                    <X
+                        size={16}
+                        strokeWidth={3}
+                        className={styles.replyPreviewClear} onClick={onCancelEdit} />
                 </div>
             )}
             {!isEditing && replyToMessage && (
@@ -427,7 +430,10 @@ export function MessageInput({
                         </div>
                         <div className={styles.replyPreviewText}>{replyToMessage.content}</div>
                     </div>
-                    <X className={styles.replyPreviewClear} onClick={onClearReply} />
+                    <X
+                        size={16}
+                        strokeWidth={3}
+                        className={styles.replyPreviewClear} onClick={onClearReply} />
                 </div>
             )}
             {attachments.length > 0 && (
@@ -504,7 +510,10 @@ export function MessageInput({
                     className={styles.sendButton}
                     title={isEditing ? t('chat.messageInput.save') : t('chat.messageInput.send')}
                 >
-                    {isEditing ? <Check /> : <SendHorizontal />}
+                    {isEditing
+                        ? <Check size={16} strokeWidth={3}/>
+                        : <SendHorizontal size={16} strokeWidth={3}/>
+                    }
                 </button>
             </form>
         </div>

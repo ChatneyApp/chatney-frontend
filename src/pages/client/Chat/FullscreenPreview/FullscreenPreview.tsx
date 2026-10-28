@@ -57,7 +57,7 @@ export const FullscreenPreview = ({
     return (
         <div className={styles.previewOverlay} onClick={onClose}>
             <button className={styles.previewClose} type="button" onClick={onClose} aria-label={t('chat.attachments.closePreview')}>
-                <X size={22} />
+                <X size={22} strokeWidth={3}/>
             </button>
             {attachmentType === 'video'
                 ? (

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { MessagesSquare, X } from 'lucide-react';
+import { MessageCircleText, X } from 'lucide-react';
 import { useApolloClient } from '@apollo/client/react';
 import { useTranslation } from 'react-i18next';
 
@@ -38,9 +38,15 @@ export const Thread = ({ rootMessage, isDm, eventEmitter, onCloseThread }: Props
 
     const header = (
         <>
-            <MessagesSquare className={styles.headerIcon} />
+            <MessageCircleText
+                size={16}
+                strokeWidth={3}
+                className={styles.headerIcon}
+            />
             <span className={styles.headerTitle}>{t('chat.thread.title')}</span>
             <X
+                size={16}
+                strokeWidth={3}
                 className={styles.closeButton}
                 onClick={onCloseThread}
             />

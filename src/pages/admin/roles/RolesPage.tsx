@@ -1,4 +1,5 @@
 import { Suspense, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { RolesListProvider, useRolesList } from '@/contexts/RolesListContext';
 
@@ -7,6 +8,7 @@ import { RolesTable } from './components/RolesTable';
 import styles from './RolesPage.module.css';
 
 function RolesPageContent() {
+    const { t } = useTranslation();
     const { roles } = useRolesList();
     const [createOpen, setCreateOpen] = useState(false);
 
@@ -14,9 +16,9 @@ function RolesPageContent() {
         <div className={styles.page}>
             <header className={styles.header}>
                 <div>
-                    <h1 className={styles.title}>Roles</h1>
+                    <h1 className={styles.title}>{t('admin.roles.title')}</h1>
                     <p className={styles.subtitle}>
-                        Manage access roles and their permissions
+                        {t('admin.roles.subtitle')}
                     </p>
                 </div>
                 <button
@@ -24,7 +26,7 @@ function RolesPageContent() {
                     className={styles.createButton}
                     onClick={() => setCreateOpen(true)}
                 >
-                    Create role
+                    {t('admin.roles.create')}
                 </button>
             </header>
 
@@ -36,8 +38,10 @@ function RolesPageContent() {
 }
 
 export function RolesPage() {
+    const { t } = useTranslation();
+
     return (
-        <Suspense fallback={<div className={styles.loading}>Loading roles...</div>}>
+        <Suspense fallback={<div className={styles.loading}>{t('admin.roles.loading')}</div>}>
             <RolesListProvider>
                 <RolesPageContent />
             </RolesListProvider>

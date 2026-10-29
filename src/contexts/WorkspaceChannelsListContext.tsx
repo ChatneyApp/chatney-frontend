@@ -9,6 +9,8 @@ import { ChannelDeletedPayload, ChannelPayload, WebSocketEvent, WebSocketEventTy
 
 interface WorkspaceChannelsListContextValue {
     channels: Channel[];
+    /** False until the active workspace's channels are known (the first request is in flight). */
+    loaded: boolean;
 }
 
 export const WorkspaceChannelsListContext = createContext<WorkspaceChannelsListContextValue>(null as unknown as WorkspaceChannelsListContextValue);
@@ -21,7 +23,7 @@ export function WorkspaceChannelsListProvider({ children }: PropsWithChildren) {
     const { eventEmitter } = useWebsocket();
 
     // The list lives in the Apollo cache: it renders from there at once and is re-checked against the server in the background.
-    const { data, previousData, refetch } = useQuery(
+    const { data, previousData, loading, refetch } = useQuery(
         GET_WORKSPACE_CHANNELS,
         activeWorkspaceId === null
             ? skipToken
@@ -29,6 +31,8 @@ export function WorkspaceChannelsListProvider({ children }: PropsWithChildren) {
     );
     // While another workspace is loading, keep showing the previous list.
     const channels = (data ?? previousData)?.channels.workspaceChannelList ?? noChannels;
+    // `data` is only set for the current workspace; a failed request counts as loaded, with no channels.
+    const loaded = data !== undefined || !loading;
 
     useEffect(() => {
         const controller = new AbortController();
@@ -70,7 +74,7 @@ export function WorkspaceChannelsListProvider({ children }: PropsWithChildren) {
     }, [eventEmitter, cache, refetch, activeWorkspaceId, channels]);
 
     return (
-        <WorkspaceChannelsListContext.Provider value={{ channels }}>
+        <WorkspaceChannelsListContext.Provider value={{ channels, loaded }}>
             {children}
         </WorkspaceChannelsListContext.Provider>
     );

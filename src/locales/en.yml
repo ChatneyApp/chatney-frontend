@@ -1,0 +1,584 @@
+common:
+  ok: OK
+  cancel: Cancel
+  edit: Edit
+  delete: Delete
+  saving: Saving...
+  saveChanges: Save changes
+  optional: Optional
+  comingSoon: Coming soon
+  close: Close
+  create: Create
+
+validation:
+  nicknameRequired: Nickname is required
+  nicknameTooLong_one: Nickname must be at most {{count}} character
+  nicknameTooLong_other: Nickname must be at most {{count}} characters
+  nicknameInvalid: Nickname can only contain letters, numbers, and underscores
+  nicknameTaken: This nickname is already taken
+  emailRequired: Email is required
+  loginRequired: Email or nickname is required
+  passwordRequired: Password is required
+  passwordTooShort_one: Password must be at least {{count}} character
+  passwordTooShort_other: Password must be at least {{count}} characters
+  confirmPasswordRequired: Please confirm your password
+  passwordsDoNotMatch: Passwords do not match
+  newPasswordsDoNotMatch: New passwords do not match
+  currentPasswordRequired: Current password is required
+
+userStatus:
+  active: Active
+  inactive: Inactive
+  verified: Verified
+  notVerified: Not verified
+  banned: Banned
+  muted: Muted
+
+auth:
+  signInTitle: Sign in to Chatney
+  registerTitle: Create your account
+  signInSubtitle: Connect with your team and workspaces.
+  registerSubtitle: Join your team and start collaborating.
+  socialOptions: Social sign-in options
+  orEmail: Or email
+  newHere: New here?
+  createAccountLink: Create an account
+  haveAccount: Already have an account?
+  signInLink: Sign in
+  footer:
+    privacy: Privacy Policy
+    terms: Terms of Service
+    support: Contact Support
+  workEmail: Work email
+  email: Email
+  emailOrNickname: Email or nickname
+  password: Password
+  confirmPassword: Confirm password
+  nickname: Nickname
+  fullNameOptional: Full name (optional)
+  fullNamePlaceholder: Jane Doe
+  forgot: Forgot?
+  signingIn: Signing in...
+  signInSubmit: Enter Chatney
+  loginError: "Login error: {{message}}"
+  creatingAccount: Creating account...
+  createAccount: Create account
+  registerError: "Error registering: {{message}}"
+  backToSignIn: Back to sign in
+  forgotPassword:
+    title: Forgot your password?
+    subtitle: Enter the email or nickname associated with your account.
+    submitted: If the email exists, you will get a password reset link.
+    failed: Unable to request a password reset. Please try again.
+    sending: Sending...
+    submit: Send reset link
+  resetPassword:
+    title: Reset your password
+    subtitle: Choose a new password for your Chatney account.
+    completed: Your password has been reset. You can now sign in.
+    invalidLink: This password reset link is invalid.
+    expiredLink: This password reset link is invalid or has expired.
+    failed: Unable to reset your password. Please try again.
+    resetting: Resetting...
+    submit: Reset password
+
+install:
+  starting: Starting Chatney...
+  eyebrow: First-time setup
+  heading: Make Chatney yours.
+  intro: A few details and your private team space will be ready.
+  secureNote: Settings stay on your server
+  stepCounter: Step {{current}} of {{total}}
+  completed: Setup complete
+  back: Back
+  continue: Continue
+  submit: Install
+  installing: Installing...
+  error: "System install error: {{message}}"
+  steps:
+    workspace:
+      title: Workspace
+      description: Domain and regional settings
+    email:
+      title: Email
+      description: Optional SMTP delivery
+    review:
+      title: Review
+      description: Confirm and install
+  workspace:
+    title: Workspace settings
+    description: Set the public address and local time for this installation.
+    domainName: Domain name
+    domainNameHint: Used for links in invitations and password reset emails.
+    domainNameRequired: Domain name is required
+    timeZone: Time zone
+    timeZoneHint: Dates and scheduled activity will use this time zone.
+    timeZoneRequired: Time zone is required
+    seedTestData: Add testing data
+    seedTestDataHint: Create two sample users so you can explore right away.
+  email:
+    title: Email delivery
+    description: Connect an SMTP server for password resets. You can skip this for now.
+    smtpEnabled: Configure SMTP server
+    smtpEnabledHint: Enable outgoing system email
+    host: SMTP host
+    hostRequired: SMTP host is required
+    port: Port
+    portRequired: Port is required
+    portInvalid: Use a valid port
+    username: Username
+    password: Password
+    fromAddress: From address
+    fromAddressRequired: From address is required
+    enableSsl: Use a secure TLS connection
+    skippedTitle: No email server
+    skippedDescription: Password reset emails will be unavailable until SMTP is configured.
+  review:
+    title: Review your settings
+    description: Check your choices before moving to the final installation step.
+    domain: Domain
+    timeZone: Time zone
+    email: Email
+    testData: Testing data
+    notConfigured: Not configured
+    included: Included
+    notIncluded: Not included
+    databaseTitle: Your database will be initialized
+    databaseDescription: This can take a few moments. Keep this page open until setup completes.
+  success:
+    eyebrow: Installation complete
+    title: Everything installed successfully!
+    description: Chatney is configured and ready for your team.
+    goToApp: Go to Chatney
+
+profile:
+  title: Profile
+  backToChat: Back to chat
+  loading: Loading profile...
+  updated: Profile updated successfully
+  noRole: No role assigned
+  accountDetails: Account details
+  nickname: Nickname
+  fullName: Full name
+  email: Email
+  avatarUrl: Avatar URL
+  avatarUrlHint: Optional image URL for your avatar
+  changePassword: Change password
+  currentPassword: Current password
+  newPassword: New password
+  confirmNewPassword: Confirm new password
+
+admin:
+  nav:
+    brand: Admin
+    roles: Roles
+    users: Users
+    workspaces: Workspaces
+    channelTypes: Channel types
+    config: Configuration
+    backToChat: Back to chat
+  roles:
+    title: Roles
+    subtitle: Manage access roles and their permissions
+    create: Create role
+    loading: Loading roles...
+    empty: No roles yet. Create the first role to get started.
+    id: ID {{id}}
+    columns:
+      role: Role
+      actions: Actions
+    form:
+      createTitle: Create role
+      editTitle: Edit role
+      name: Name
+      nameRequired: Role name is required
+      permissions: Permissions
+      loading: Loading permissions...
+    deleteDialog:
+      title: Delete role
+      description: Delete role "{{name}}"? This action cannot be undone.
+    errors:
+      createForbidden: You don't have permission to create roles.
+      createFailed: Couldn't create the role. Please try again.
+      editForbidden: You don't have permission to edit roles.
+      editNotFound: This role no longer exists.
+      editFailed: Couldn't save the role. Please try again.
+      deleteForbidden: You don't have permission to delete roles.
+      deleteNotFound: This role no longer exists.
+      deleteFailed: Couldn't delete the role. Please try again.
+      permissionsFailed: The role was saved, but some permissions couldn't be saved. Please try again.
+      permissionsLoadForbidden: You don't have permission to view role permissions.
+      permissionsLoadFailed: Couldn't load role permissions. Please try again.
+    permissionsBlock:
+      global: Global (system-wide)
+      channelName: "{{workspace}} / #{{channel}}"
+      unknownObject: "Unknown object #{{id}}"
+      empty: This role has no permissions yet. Add an object below to grant permissions on it.
+      selectedCount_one: "{{count}} permission"
+      selectedCount_other: "{{count}} permissions"
+      remove: Remove {{name}}
+      objectToAdd: Object to grant permissions on
+      chooseObject: Choose an object...
+      allAdded: All objects are already added
+      add: Add
+      kinds:
+        global: Global
+        workspace: Workspace
+        channelType: Channel type
+        channel: Channel
+        unknown: Unknown
+      groups:
+        workspaces: Workspaces
+        channelTypes: Channel types
+        channels: Channels
+        channelsIn: Channels in {{workspace}}
+    permissionGroups:
+      config: System config
+      workspace: Workspaces
+      channel: Channels
+      user: Users
+      role: Roles
+      attachment: Attachments
+    permissionNames:
+      ATTACHMENT_DELETE: Delete attachments
+      ATTACHMENT_READ: View attachments
+      ATTACHMENT_UPLOAD: Upload attachments
+      CHANNEL_ADD_REACTION: Add reactions
+      CHANNEL_CREATE_CHANNEL: Create channels
+      CHANNEL_CREATE_MESSAGE: Post messages
+      CHANNEL_CREATE_THREAD: Start threads
+      CHANNEL_DELETE_CHANNEL: Delete channels
+      CHANNEL_DELETE_CHANNEL_TYPE: Delete channel types
+      CHANNEL_DELETE_MESSAGE: Delete any message
+      CHANNEL_DELETE_OWN_MESSAGE: Delete own messages
+      CHANNEL_EDIT_CHANNEL: Edit channels
+      CHANNEL_EDIT_MESSAGE: Edit any message
+      CHANNEL_EDIT_OWN_MESSAGE: Edit own messages
+      CHANNEL_READ_CHANNEL: See channels
+      CHANNEL_READ_MESSAGE: Read messages
+      CHANNEL_REMOVE_REACTION: Remove reactions
+      CONFIG_READ_VALUE: View config values
+      CONFIG_UPDATE_VALUE: Update config values
+      ROLE_CREATE_ROLE: Create roles
+      ROLE_DELETE_ROLE: Delete roles
+      ROLE_EDIT_ROLE: Edit roles and their permissions
+      ROLE_READ_ROLE: View roles
+      USER_CREATE_USER: Create users
+      USER_DELETE_USER: Delete users
+      USER_EDIT_USER: Edit users and their permissions
+      USER_READ_USER: View users
+      WORKSPACE_CREATE_CHANNEL_GROUP: Create channel groups
+      WORKSPACE_CREATE_WORKSPACE: Create workspaces
+      WORKSPACE_DELETE_CHANNEL_GROUP: Delete channel groups
+      WORKSPACE_DELETE_WORKSPACE: Delete workspaces
+      WORKSPACE_READ_CHANNEL_GROUP: See channel groups
+      WORKSPACE_READ_WORKSPACE: See workspaces
+      WORKSPACE_UPDATE_CHANNEL_GROUP: Edit channel groups
+      WORKSPACE_UPDATE_WORKSPACE: Edit workspaces
+  users:
+    title: Users
+    subtitle: Manage user accounts, roles, and access status
+    create: Create user
+    loading: Loading users...
+    empty: No users found. Create the first user to get started.
+    deleteConfirm: Delete user "{{name}}"? This action cannot be undone.
+    you: (you)
+    cannotDeleteSelf: You cannot delete your own account
+    columns:
+      user: User
+      roles: Roles
+      status: Status
+      actions: Actions
+    form:
+      createTitle: Create user
+      editTitle: Edit user
+      nickname: Nickname
+      fullName: Full name
+      email: Email
+      password: Password
+      newPassword: New password
+      passwordHint: Leave blank to keep current password
+      roles: Roles
+      rolesCreateHint: Leave all unchecked to assign the default role
+    errors:
+      createForbidden: You don't have permission to create users.
+      createFailed: Couldn't create the user. Please try again.
+      editForbidden: You don't have permission to edit users.
+      editNotFound: This user no longer exists.
+      editFailed: Couldn't save the user. Please try again.
+      roleNotFound: One of the selected roles no longer exists. Check the roles and try again.
+  workspaces:
+    title: Workspaces
+    subtitle: Manage workspaces and their names
+    create: Create workspace
+    loading: Loading workspaces...
+    empty: No workspaces yet. Create the first workspace to get started.
+    id: ID {{id}}
+    channels: Channels
+    channelGroups: Channel groups
+    columns:
+      workspace: Workspace
+      created: Created
+      actions: Actions
+    form:
+      createTitle: Create workspace
+      editTitle: Edit workspace
+      name: Name
+      nameRequired: Workspace name is required
+    deleteDialog:
+      title: Delete workspace
+      description: Delete workspace "{{name}}" with all its channels? This action cannot be undone.
+    errors:
+      createForbidden: You don't have permission to create workspaces.
+      createFailed: Couldn't create the workspace. Please try again.
+      editForbidden: You don't have permission to edit this workspace.
+      editNotFound: This workspace no longer exists.
+      editFailed: Couldn't save the workspace. Please try again.
+      deleteForbidden: You don't have permission to delete this workspace.
+      deleteNotFound: This workspace no longer exists.
+      deleteFailed: Couldn't delete the workspace. Please try again.
+  channelTypes:
+    title: Channel types
+    subtitle: Manage channel types and their keys
+    create: Create channel type
+    loading: Loading channel types...
+    empty: No channel types yet. Create the first channel type to get started.
+    id: ID {{id}}
+    columns:
+      channelType: Channel type
+      key: Key
+      created: Created
+      actions: Actions
+    form:
+      createTitle: Create channel type
+      editTitle: Edit channel type
+      name: Name
+      nameRequired: Channel type name is required
+      key: Key
+      keyRequired: Channel type key is required
+      keyInvalid: Key can only contain English letters, digits, dashes and underscores
+      tooLong_one: Must be at most {{count}} character
+      tooLong_other: Must be at most {{count}} characters
+    deleteDialog:
+      title: Delete channel type
+      description: Delete channel type "{{name}}" with all its channels? This action cannot be undone.
+    errors:
+      createForbidden: You don't have permission to create channel types.
+      createFailed: Couldn't create the channel type. Please try again.
+      editForbidden: You don't have permission to edit this channel type.
+      editNotFound: This channel type no longer exists.
+      editFailed: Couldn't save the channel type. Please try again.
+      deleteForbidden: You don't have permission to delete this channel type.
+      deleteNotFound: This channel type no longer exists.
+      deleteFailed: Couldn't delete the channel type. Please try again.
+  workspaceChannels:
+    title: "{{workspace}} — Channels"
+    subtitle: Manage the channels of this workspace
+    back: Workspaces
+    create: Create channel
+    loading: Loading channels...
+    empty: No channels yet. Create the first channel to get started.
+    notFound: This workspace doesn't exist.
+    id: ID {{id}}
+    unknownType: Unknown type
+    columns:
+      channel: Channel
+      type: Type
+      created: Created
+      actions: Actions
+    form:
+      createTitle: Create channel
+      editTitle: Edit channel
+      name: Name
+      nameRequired: Channel name is required
+      type: Channel type
+      typeRequired: Channel type is required
+      tooLong_one: Must be at most {{count}} character
+      tooLong_other: Must be at most {{count}} characters
+    deleteDialog:
+      title: Delete channel
+      description: Delete channel "{{name}}" with all its messages? This action cannot be undone.
+    errors:
+      createForbidden: You don't have permission to create channels in this workspace.
+      createFailed: Couldn't create the channel. Please try again.
+      workspaceNotFound: This workspace no longer exists.
+      editForbidden: You don't have permission to edit this channel.
+      editNotFound: This channel no longer exists.
+      editFailed: Couldn't save the channel. Please try again.
+      deleteForbidden: You don't have permission to delete this channel.
+      deleteNotFound: This channel no longer exists.
+      deleteFailed: Couldn't delete the channel. Please try again.
+  workspaceChannelGroups:
+    title: "{{workspace}} — Channel groups"
+    subtitle: Group the channels of this workspace into sidebar sections
+    back: Workspaces
+    create: Create group
+    loading: Loading channel groups...
+    empty: No channel groups yet. Create the first group to get started.
+    notFound: This workspace doesn't exist.
+    id: ID {{id}}
+    noChannels: No channels
+    dragHandle: Drag to reorder
+    columns:
+      group: Group
+      order: Order
+      channels: Channels
+      created: Created
+      actions: Actions
+    form:
+      createTitle: Create channel group
+      editTitle: Edit channel group
+      name: Name
+      nameRequired: Group name is required
+      tooLong_one: Must be at most {{count}} character
+      tooLong_other: Must be at most {{count}} characters
+      channels: Channels
+      noAvailableChannels: All channels already belong to other groups.
+    deleteDialog:
+      title: Delete channel group
+      description: Delete channel group "{{name}}"? Its channels will not be deleted.
+    errors:
+      createForbidden: You don't have permission to create channel groups in this workspace.
+      createFailed: Couldn't create the channel group. Please try again.
+      workspaceNotFound: This workspace no longer exists.
+      editForbidden: You don't have permission to edit this channel group.
+      editNotFound: This channel group no longer exists.
+      editFailed: Couldn't save the channel group. Please try again.
+      deleteForbidden: You don't have permission to delete this channel group.
+      deleteNotFound: This channel group no longer exists.
+      deleteFailed: Couldn't delete the channel group. Please try again.
+      reorderForbidden: You don't have permission to reorder channel groups in this workspace.
+      reorderFailed: Couldn't save the new order of the groups. Please try again.
+  config:
+    title: Configuration
+    subtitle: Manage system-wide settings
+    loading: Loading configuration...
+    sections:
+      general: General
+      email: Email (SMTP)
+    missingFields:
+      general: Some settings weren't created during installation and can't be edited here.
+      email: Some SMTP settings weren't created during installation (SMTP was skipped), so they can't be edited here.
+    fields:
+      newUserDefaultRole: Default role for new users
+      domainName: Domain name
+      timeZone: Time zone
+      smtpEnabled: Send emails
+      smtpHost: SMTP host
+      smtpPort: SMTP port
+      smtpUsername: Username
+      smtpPassword: Password
+      smtpEnableSsl: Use SSL/TLS
+      smtpFromAddress: From address
+    hints:
+      newUserDefaultRole: Assigned to users who sign up themselves or are created without roles.
+      domainName: Address of the app with protocol, used for links in emails. For example, https://chat.example.com
+      timeZone: Dates and scheduled activity use this time zone.
+      smtpEnabled: Enables emails such as password reset links.
+    listHint: One value per line.
+    unknownRole: 'Unknown role (#{{id}})'
+    validation:
+      domainInvalid: 'Enter an address with http:// or https:// and no path, for example https://chat.example.com'
+      intInvalid: Enter a whole number
+      intOutOfRange: Enter a whole number from {{min}} to {{max}}
+      emailInvalid: Enter a valid email address
+    save: Save
+    saved: Settings saved
+    errors:
+      forbidden: You don't have permission to change the configuration.
+      notFound: Some settings no longer exist. Reload the page and try again.
+      failed: Couldn't save some settings. Please try again.
+
+chat:
+  emptyMessages: No messages here yet
+  scrollToBottom: Scroll to bottom
+  channels:
+    createChannel: Create channel
+    directMessages: Direct messages
+    newMessage: New message
+  createChannel:
+    title: Create Channel
+    name: Channel name
+    type: Channel type
+  createWorkspace:
+    button: Create workspace
+    title: Create Workspace
+    name: Workspace name
+  newDirectMessage:
+    title: New direct message
+    nickname: Nickname
+    searchPlaceholder: Search by nickname
+    to: To
+    searching: Searching…
+    noUsers: No users found
+    open: Open
+  userMenu:
+    admin: Admin
+    settings: Settings
+    profile: Profile
+    help: Help & Support
+    logout: Logout
+    yourProfile: Your Profile
+  thread:
+    title: Thread
+  message:
+    edited: (edited)
+  messageInput:
+    placeholder: Type a message...
+    editPlaceholder: Edit message…
+    editingMessage: Editing message
+    save: Save
+    send: Send
+    sendFileTitle: Send file
+    sendAsFile: Send as file
+    compress: Compress
+    fileBadge: FILE
+    unknownFileType: Unknown file type
+    unknownMimeType: Unknown MIME type
+    noPostPermission: You don't have permission to post in this channel
+  attachments:
+    delete: Delete attachment
+    convert: Convert
+    upload: Upload
+    uploadFailed: Couldn't process or upload the file.
+    playAudio: Play audio
+    pauseAudio: Pause audio
+    audioPosition: Audio position
+    closePreview: Close preview
+  recorder:
+    voiceTitle: Voice message
+    videoTitle: Video message
+    requestingMicrophone: Requesting microphone…
+    requestingCamera: Requesting camera…
+    recording: Recording…
+    paused: Paused
+    preview: Preview
+    microphoneUnavailable: Microphone is not available. Check the browser permissions and try again.
+    cameraUnavailable: Camera is not available. Check the browser permissions and try again.
+    playPreview: Play preview
+    pausePreview: Pause preview
+    pause: Pause
+    resume: Resume
+    stop: Stop
+    reRecord: Re-record
+    addToMessage: Add to message
+  reactions:
+    add: Add reaction
+    search: Search emojis
+    searchPlaceholder: Search emojis...
+    noMatches: No matching emojis
+    suggestions: Emoji suggestions
+    categoriesLabel: Emoji categories
+    countLabel_one: "{{code}} reaction, {{count}} person"
+    countLabel_other: "{{code}} reaction, {{count}} people"
+    categories:
+      smileys: Smileys & People
+      hearts: Hearts & Love
+      gestures: Gestures & Hands
+      animals: Animals & Nature
+      food: Food & Drink
+      activities: Activities & Sports
+      travel: Travel & Places
+      objects: Objects
+      symbols: Symbols
+      flags: Flags

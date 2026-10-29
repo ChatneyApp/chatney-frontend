@@ -1,6 +1,7 @@
 import { KeyboardEvent, Ref, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { Popover } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import { ALL_REACTION_CODES, REACTION_DETAILS } from '@/pages/client/Chat/emojis';
 
@@ -49,6 +50,7 @@ const searchEmojis = (query: string): EmojiSuggestion[] => {
 
 // anchored where it's rendered; flips below its anchor via Radix collision detection if there's no room above
 export function EmojiSuggestionsPopup({ query, onSelect, ref }: Props) {
+    const { t } = useTranslation();
     const suggestions = useMemo(() => (query ? searchEmojis(query) : []), [query]);
     const [highlighted, setHighlighted] = useState(0);
     const activeIndex = Math.min(highlighted, suggestions.length - 1);
@@ -90,7 +92,7 @@ export function EmojiSuggestionsPopup({ query, onSelect, ref }: Props) {
             <Popover.Portal>
                 <Popover.Content
                     role="listbox"
-                    aria-label="Emoji suggestions"
+                    aria-label={t('chat.reactions.suggestions')}
                     className={styles.container}
                     side="top"
                     align="start"

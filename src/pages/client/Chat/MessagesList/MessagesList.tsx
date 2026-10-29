@@ -44,8 +44,9 @@ export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCl
     return (
         <ChatMessageList
             channelId={activeChannel.id}
+            isDm={activeChannel.isDm}
             parentId={null}
-            header={`# ${activeChannel.name}`}
+            header={activeChannel.name}
             classNames={classNames}
             eventEmitter={eventEmitter}
             loadMessages={loadMessages}

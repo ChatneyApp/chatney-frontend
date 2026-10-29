@@ -60,7 +60,7 @@ export const DELETE_WORKSPACE = graphql(`
     }
 `);
 
-const GET_WORKSPACES = graphql(`
+export const GET_WORKSPACES = graphql(`
     query GetWorkspaces {
         workspaces {
             list {

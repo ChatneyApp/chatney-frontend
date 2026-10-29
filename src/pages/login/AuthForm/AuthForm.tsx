@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Github, Monitor } from 'lucide-react';
+import { RotateCwFadingClock, Monitor } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { LoginForm } from './LoginForm';
 import { RegisterForm } from './RegisterForm';
@@ -8,6 +9,7 @@ import styles from './AuthForm.module.css';
 type AuthMode = 'login' | 'register';
 
 export const AuthForm = () => {
+    const { t } = useTranslation();
     const [mode, setMode] = useState<AuthMode>('login');
     const isLogin = mode === 'login';
 
@@ -15,30 +17,30 @@ export const AuthForm = () => {
         <div className={styles.page}>
             <div className={styles.card}>
                 <h1 className={styles.title}>
-                    {isLogin ? 'Sign in to Chatney' : 'Create your account'}
+                    {isLogin ? t('auth.signInTitle') : t('auth.registerTitle')}
                 </h1>
                 <p className={styles.subtitle}>
                     {isLogin
-                        ? 'Connect with your team and workspaces.'
-                        : 'Join your team and start collaborating.'}
+                        ? t('auth.signInSubtitle')
+                        : t('auth.registerSubtitle')}
                 </p>
 
                 {isLogin && (
                     <>
-                        <div className={styles.socialRow} aria-label="Social sign-in options">
-                            <button type="button" className={styles.socialButton} disabled title="Coming soon">
-                                <Github size={20} strokeWidth={1.75} />
+                        <div className={styles.socialRow} aria-label={t('auth.socialOptions')}>
+                            <button type="button" className={styles.socialButton} disabled title={t('common.comingSoon')}>
+                                <RotateCwFadingClock size={20} strokeWidth={1.75} />
                             </button>
-                            <button type="button" className={styles.socialButton} disabled title="Coming soon">
+                            <button type="button" className={styles.socialButton} disabled title={t('common.comingSoon')}>
                                 <Monitor size={20} strokeWidth={1.75} />
                             </button>
-                            <button type="button" className={styles.socialButton} disabled title="Coming soon">
+                            <button type="button" className={styles.socialButton} disabled title={t('common.comingSoon')}>
                                 <span className="text-sm font-semibold tracking-tight">iOS</span>
                             </button>
                         </div>
 
                         <div className={styles.divider}>
-                            <span className={styles.dividerText}>Or email</span>
+                            <span className={styles.dividerText}>{t('auth.orEmail')}</span>
                         </div>
                     </>
                 )}
@@ -48,24 +50,24 @@ export const AuthForm = () => {
                 <p className={styles.switchMode}>
                     {isLogin ? (
                         <>
-                            New here?{' '}
+                            {t('auth.newHere')}{' '}
                             <button
                                 type="button"
                                 className={styles.switchLink}
                                 onClick={() => setMode('register')}
                             >
-                                Create an account
+                                {t('auth.createAccountLink')}
                             </button>
                         </>
                     ) : (
                         <>
-                            Already have an account?{' '}
+                            {t('auth.haveAccount')}{' '}
                             <button
                                 type="button"
                                 className={styles.switchLink}
                                 onClick={() => setMode('login')}
                             >
-                                Sign in
+                                {t('auth.signInLink')}
                             </button>
                         </>
                     )}
@@ -73,9 +75,9 @@ export const AuthForm = () => {
             </div>
 
             <footer className={styles.pageFooter}>
-                <a href="/privacy" className={styles.footerLink}>Privacy Policy</a>
-                <a href="/terms" className={styles.footerLink}>Terms of Service</a>
-                <a href="/support" className={styles.footerLink}>Contact Support</a>
+                <a href="/privacy" className={styles.footerLink}>{t('auth.footer.privacy')}</a>
+                <a href="/terms" className={styles.footerLink}>{t('auth.footer.terms')}</a>
+                <a href="/support" className={styles.footerLink}>{t('auth.footer.support')}</a>
             </footer>
         </div>
     );

@@ -1,4 +1,4 @@
-import type { UserFieldsFragment } from '@/graphql/generated/graphql';
+import type { AdminUserFieldsFragment, UserFieldsFragment } from '@/graphql/generated/graphql';
 
 export type UserId = string;
 export type UserAuthorization = {
@@ -6,3 +6,4 @@ export type UserAuthorization = {
     token: string;
 }
 export type User = UserFieldsFragment;
+export type AdminUser = AdminUserFieldsFragment;

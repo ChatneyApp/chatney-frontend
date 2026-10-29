@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import { X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { Attachment } from '@/types/attachments';
 
@@ -19,6 +20,7 @@ export const FullscreenPreview = ({
     fileName,
     onClose,
 }: Props) => {
+    const { t } = useTranslation();
     const videoRef = useRef<HTMLVideoElement | null>(null);
 
     useEffect(() => {
@@ -54,8 +56,8 @@ export const FullscreenPreview = ({
 
     return (
         <div className={styles.previewOverlay} onClick={onClose}>
-            <button className={styles.previewClose} type="button" onClick={onClose} aria-label="Close preview">
-                <X size={22} />
+            <button className={styles.previewClose} type="button" onClick={onClose} aria-label={t('chat.attachments.closePreview')}>
+                <X size={22} strokeWidth={3}/>
             </button>
             {attachmentType === 'video'
                 ? (

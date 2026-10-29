@@ -45,4 +45,4 @@ export const mockDirectMessage: Channel = {
 
 export const mockChannelsList: Channel[] = [mockChannel1, mockChannel2];
 
-export const mockChannelListItem1: ChannelListItem = { id: mockChannel1.id, name: mockChannel1.name };
+export const mockChannelListItem1: ChannelListItem = { id: mockChannel1.id, name: mockChannel1.name, isDm: mockChannel1.isDm };

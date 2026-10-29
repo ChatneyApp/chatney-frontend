@@ -14,7 +14,13 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...UserFields\n            }\n        }\n    }\n": typeof types.GetUsersListDocument,
+    "\n    fragment RoleAclFields on RoleAcl {\n        roleId\n        secObjId\n        permissions\n    }\n": typeof types.RoleAclFieldsFragmentDoc,
+    "\n    query GetRoleAcls($roleId: Int!) {\n        acls {\n            roleAcls(roleId: $roleId) {\n                ...RoleAclFields\n            }\n        }\n    }\n": typeof types.GetRoleAclsDocument,
+    "\n    query GetSecureObjects {\n        acls {\n            secureObjects {\n                workspaces {\n                    ...WorkspaceFields\n                }\n                channelTypes {\n                    ...ChannelTypeFields\n                }\n                channels {\n                    ...ChannelFields\n                }\n            }\n        }\n    }\n": typeof types.GetSecureObjectsDocument,
+    "\n    mutation SetRoleAcl($roleId: Int!, $secObjId: Int!, $permissions: [Permission!]!) {\n        acls {\n            setRoleAcl(roleId: $roleId, secObjId: $secObjId, permissions: $permissions) {\n                ...RoleAclFields\n            }\n        }\n    }\n": typeof types.SetRoleAclDocument,
+    "\n    mutation DeleteRoleAcl($roleId: Int!, $secObjId: Int!) {\n        acls {\n            deleteRoleAcl(roleId: $roleId, secObjId: $secObjId)\n        }\n    }\n": typeof types.DeleteRoleAclDocument,
+    "\n    fragment AdminUserFields on User {\n        ...UserFields\n        roleIds\n    }\n": typeof types.AdminUserFieldsFragmentDoc,
+    "\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...AdminUserFields\n            }\n        }\n    }\n": typeof types.GetUsersListDocument,
     "\n    mutation CreateUser($userDto: CreateUserDtoInput!) {\n        users {\n            createUser(userDto: $userDto) {\n                ...UserFields\n            }\n        }\n    }\n": typeof types.CreateUserDocument,
     "\n    mutation UpdateUser($userDto: UpdateUserDtoInput!) {\n        users {\n            updateUser(userDto: $userDto) {\n                ...UserFields\n            }\n        }\n    }\n": typeof types.UpdateUserDocument,
     "\n    mutation DeleteUser($id: UUID!) {\n        users {\n            deleteUser(id: $id)\n        }\n    }\n": typeof types.DeleteUserDocument,
@@ -27,6 +33,7 @@ type Documents = {
     "\n    fragment ChannelGroupFields on ChannelGroup {\n        id\n        name\n        workspaceId\n        channelIds\n        order\n        createdAt\n        updatedAt\n    }\n": typeof types.ChannelGroupFieldsFragmentDoc,
     "\n    mutation CreateChannelGroup($channelGroupDto: ChannelGroupDtoInput!) {\n        channels {\n            addChannelGroup(channelGroupDto: $channelGroupDto) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": typeof types.CreateChannelGroupDocument,
     "\n    mutation UpdateChannelGroup($channelGroup: ChannelGroupInput!) {\n        channels {\n            updateChannelGroup(channelGroup: $channelGroup) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": typeof types.UpdateChannelGroupDocument,
+    "\n    mutation UpdateChannelGroupsOrder($orders: IntMap!) {\n        channels {\n            updateChannelGroupsOrder(orders: $orders) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": typeof types.UpdateChannelGroupsOrderDocument,
     "\n    mutation DeleteChannelGroup($id: Int!) {\n        channels {\n            deleteChannelGroup(id: $id)\n        }\n    }\n": typeof types.DeleteChannelGroupDocument,
     "\n    query GetWorkspaceChannelGroups($workspaceId: Int!) {\n        channels {\n            workspaceChannelGroupList(workspaceId: $workspaceId) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": typeof types.GetWorkspaceChannelGroupsDocument,
     "\n    fragment ChannelTypeFields on ChannelType {\n        id\n        name\n        key\n        secObjId\n        createdAt\n        updatedAt\n    }\n": typeof types.ChannelTypeFieldsFragmentDoc,
@@ -55,6 +62,7 @@ type Documents = {
     "\n    query GetChannelMessages($channelId: Int!) {\n        messages {\n            listChannelMessages(channelId: $channelId) {\n                ...MessagesResultFields\n            }\n        }\n    }\n": typeof types.GetChannelMessagesDocument,
     "\n    query GetThreadMessages($threadId: Int!) {\n        messages {\n            listThreadMessages(threadId: $threadId) {\n                ...MessagesResultFields\n            }\n        }\n    }\n": typeof types.GetThreadMessagesDocument,
     "\n    query GetPermissionsList {\n        permissions {\n            list {\n                label\n                list\n            }\n        }\n    }\n": typeof types.GetPermissionsListDocument,
+    "\n    query GetMyPermissions {\n        users {\n            myPermissions {\n                channels {\n                    id\n                    permissions\n                }\n            }\n        }\n    }\n": typeof types.GetMyPermissionsDocument,
     "\n    query GetMyProfile {\n        users {\n            myProfile {\n                roleNames\n                user {\n                    ...UserFields\n                }\n            }\n        }\n    }\n": typeof types.GetMyProfileDocument,
     "\n    mutation UpdateMyProfile($profileDto: UpdateMyProfileDtoInput!) {\n        users {\n            updateMyProfile(profileDto: $profileDto) {\n                ...UserFields\n            }\n        }\n    }\n": typeof types.UpdateMyProfileDocument,
     "\n    fragment RoleFields on Role {\n        id\n        name\n        createdAt\n        updatedAt\n    }\n": typeof types.RoleFieldsFragmentDoc,
@@ -77,7 +85,13 @@ type Documents = {
     "\n    query GetWorkspaces {\n        workspaces {\n            list {\n                ...WorkspaceFields\n            }\n        }\n    }\n": typeof types.GetWorkspacesDocument,
 };
 const documents: Documents = {
-    "\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...UserFields\n            }\n        }\n    }\n": types.GetUsersListDocument,
+    "\n    fragment RoleAclFields on RoleAcl {\n        roleId\n        secObjId\n        permissions\n    }\n": types.RoleAclFieldsFragmentDoc,
+    "\n    query GetRoleAcls($roleId: Int!) {\n        acls {\n            roleAcls(roleId: $roleId) {\n                ...RoleAclFields\n            }\n        }\n    }\n": types.GetRoleAclsDocument,
+    "\n    query GetSecureObjects {\n        acls {\n            secureObjects {\n                workspaces {\n                    ...WorkspaceFields\n                }\n                channelTypes {\n                    ...ChannelTypeFields\n                }\n                channels {\n                    ...ChannelFields\n                }\n            }\n        }\n    }\n": types.GetSecureObjectsDocument,
+    "\n    mutation SetRoleAcl($roleId: Int!, $secObjId: Int!, $permissions: [Permission!]!) {\n        acls {\n            setRoleAcl(roleId: $roleId, secObjId: $secObjId, permissions: $permissions) {\n                ...RoleAclFields\n            }\n        }\n    }\n": types.SetRoleAclDocument,
+    "\n    mutation DeleteRoleAcl($roleId: Int!, $secObjId: Int!) {\n        acls {\n            deleteRoleAcl(roleId: $roleId, secObjId: $secObjId)\n        }\n    }\n": types.DeleteRoleAclDocument,
+    "\n    fragment AdminUserFields on User {\n        ...UserFields\n        roleIds\n    }\n": types.AdminUserFieldsFragmentDoc,
+    "\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...AdminUserFields\n            }\n        }\n    }\n": types.GetUsersListDocument,
     "\n    mutation CreateUser($userDto: CreateUserDtoInput!) {\n        users {\n            createUser(userDto: $userDto) {\n                ...UserFields\n            }\n        }\n    }\n": types.CreateUserDocument,
     "\n    mutation UpdateUser($userDto: UpdateUserDtoInput!) {\n        users {\n            updateUser(userDto: $userDto) {\n                ...UserFields\n            }\n        }\n    }\n": types.UpdateUserDocument,
     "\n    mutation DeleteUser($id: UUID!) {\n        users {\n            deleteUser(id: $id)\n        }\n    }\n": types.DeleteUserDocument,
@@ -90,6 +104,7 @@ const documents: Documents = {
     "\n    fragment ChannelGroupFields on ChannelGroup {\n        id\n        name\n        workspaceId\n        channelIds\n        order\n        createdAt\n        updatedAt\n    }\n": types.ChannelGroupFieldsFragmentDoc,
     "\n    mutation CreateChannelGroup($channelGroupDto: ChannelGroupDtoInput!) {\n        channels {\n            addChannelGroup(channelGroupDto: $channelGroupDto) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": types.CreateChannelGroupDocument,
     "\n    mutation UpdateChannelGroup($channelGroup: ChannelGroupInput!) {\n        channels {\n            updateChannelGroup(channelGroup: $channelGroup) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": types.UpdateChannelGroupDocument,
+    "\n    mutation UpdateChannelGroupsOrder($orders: IntMap!) {\n        channels {\n            updateChannelGroupsOrder(orders: $orders) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": types.UpdateChannelGroupsOrderDocument,
     "\n    mutation DeleteChannelGroup($id: Int!) {\n        channels {\n            deleteChannelGroup(id: $id)\n        }\n    }\n": types.DeleteChannelGroupDocument,
     "\n    query GetWorkspaceChannelGroups($workspaceId: Int!) {\n        channels {\n            workspaceChannelGroupList(workspaceId: $workspaceId) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n": types.GetWorkspaceChannelGroupsDocument,
     "\n    fragment ChannelTypeFields on ChannelType {\n        id\n        name\n        key\n        secObjId\n        createdAt\n        updatedAt\n    }\n": types.ChannelTypeFieldsFragmentDoc,
@@ -118,6 +133,7 @@ const documents: Documents = {
     "\n    query GetChannelMessages($channelId: Int!) {\n        messages {\n            listChannelMessages(channelId: $channelId) {\n                ...MessagesResultFields\n            }\n        }\n    }\n": types.GetChannelMessagesDocument,
     "\n    query GetThreadMessages($threadId: Int!) {\n        messages {\n            listThreadMessages(threadId: $threadId) {\n                ...MessagesResultFields\n            }\n        }\n    }\n": types.GetThreadMessagesDocument,
     "\n    query GetPermissionsList {\n        permissions {\n            list {\n                label\n                list\n            }\n        }\n    }\n": types.GetPermissionsListDocument,
+    "\n    query GetMyPermissions {\n        users {\n            myPermissions {\n                channels {\n                    id\n                    permissions\n                }\n            }\n        }\n    }\n": types.GetMyPermissionsDocument,
     "\n    query GetMyProfile {\n        users {\n            myProfile {\n                roleNames\n                user {\n                    ...UserFields\n                }\n            }\n        }\n    }\n": types.GetMyProfileDocument,
     "\n    mutation UpdateMyProfile($profileDto: UpdateMyProfileDtoInput!) {\n        users {\n            updateMyProfile(profileDto: $profileDto) {\n                ...UserFields\n            }\n        }\n    }\n": types.UpdateMyProfileDocument,
     "\n    fragment RoleFields on Role {\n        id\n        name\n        createdAt\n        updatedAt\n    }\n": types.RoleFieldsFragmentDoc,
@@ -157,7 +173,31 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...UserFields\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...UserFields\n            }\n        }\n    }\n"];
+export function graphql(source: "\n    fragment RoleAclFields on RoleAcl {\n        roleId\n        secObjId\n        permissions\n    }\n"): (typeof documents)["\n    fragment RoleAclFields on RoleAcl {\n        roleId\n        secObjId\n        permissions\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    query GetRoleAcls($roleId: Int!) {\n        acls {\n            roleAcls(roleId: $roleId) {\n                ...RoleAclFields\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetRoleAcls($roleId: Int!) {\n        acls {\n            roleAcls(roleId: $roleId) {\n                ...RoleAclFields\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    query GetSecureObjects {\n        acls {\n            secureObjects {\n                workspaces {\n                    ...WorkspaceFields\n                }\n                channelTypes {\n                    ...ChannelTypeFields\n                }\n                channels {\n                    ...ChannelFields\n                }\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetSecureObjects {\n        acls {\n            secureObjects {\n                workspaces {\n                    ...WorkspaceFields\n                }\n                channelTypes {\n                    ...ChannelTypeFields\n                }\n                channels {\n                    ...ChannelFields\n                }\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation SetRoleAcl($roleId: Int!, $secObjId: Int!, $permissions: [Permission!]!) {\n        acls {\n            setRoleAcl(roleId: $roleId, secObjId: $secObjId, permissions: $permissions) {\n                ...RoleAclFields\n            }\n        }\n    }\n"): (typeof documents)["\n    mutation SetRoleAcl($roleId: Int!, $secObjId: Int!, $permissions: [Permission!]!) {\n        acls {\n            setRoleAcl(roleId: $roleId, secObjId: $secObjId, permissions: $permissions) {\n                ...RoleAclFields\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation DeleteRoleAcl($roleId: Int!, $secObjId: Int!) {\n        acls {\n            deleteRoleAcl(roleId: $roleId, secObjId: $secObjId)\n        }\n    }\n"): (typeof documents)["\n    mutation DeleteRoleAcl($roleId: Int!, $secObjId: Int!) {\n        acls {\n            deleteRoleAcl(roleId: $roleId, secObjId: $secObjId)\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    fragment AdminUserFields on User {\n        ...UserFields\n        roleIds\n    }\n"): (typeof documents)["\n    fragment AdminUserFields on User {\n        ...UserFields\n        roleIds\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...AdminUserFields\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetUsersList($filter: UserFilterInput!) {\n        users {\n            list(filter: $filter) {\n                ...AdminUserFields\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -206,6 +246,10 @@ export function graphql(source: "\n    mutation CreateChannelGroup($channelGroup
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    mutation UpdateChannelGroup($channelGroup: ChannelGroupInput!) {\n        channels {\n            updateChannelGroup(channelGroup: $channelGroup) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n"): (typeof documents)["\n    mutation UpdateChannelGroup($channelGroup: ChannelGroupInput!) {\n        channels {\n            updateChannelGroup(channelGroup: $channelGroup) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation UpdateChannelGroupsOrder($orders: IntMap!) {\n        channels {\n            updateChannelGroupsOrder(orders: $orders) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n"): (typeof documents)["\n    mutation UpdateChannelGroupsOrder($orders: IntMap!) {\n        channels {\n            updateChannelGroupsOrder(orders: $orders) {\n                ...ChannelGroupFields\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -318,6 +362,10 @@ export function graphql(source: "\n    query GetThreadMessages($threadId: Int!) 
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    query GetPermissionsList {\n        permissions {\n            list {\n                label\n                list\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetPermissionsList {\n        permissions {\n            list {\n                label\n                list\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    query GetMyPermissions {\n        users {\n            myPermissions {\n                channels {\n                    id\n                    permissions\n                }\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetMyPermissions {\n        users {\n            myPermissions {\n                channels {\n                    id\n                    permissions\n                }\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

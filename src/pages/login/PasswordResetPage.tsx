@@ -4,6 +4,7 @@ import { useApolloClient } from '@apollo/client/react';
 import { AtSign, Lock } from 'lucide-react';
 import clsx from 'clsx';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import { requestPasswordReset, resetPassword } from '@/graphql/auth';
 import { loginPageUrl } from '@/infra/consts';
@@ -26,20 +27,25 @@ const PasswordPageLayout = ({
     title: string;
     subtitle: string;
     children: ReactNode;
-}) => (
-    <div className={styles.page}>
-        <div className={styles.card}>
-            <h1 className={styles.title}>{title}</h1>
-            <p className={styles.subtitle}>{subtitle}</p>
-            {children}
-            <p className={styles.switchMode}>
-                <a href={loginPageUrl} className={styles.switchLink}>Back to sign in</a>
-            </p>
+}) => {
+    const { t } = useTranslation();
+
+    return (
+        <div className={styles.page}>
+            <div className={styles.card}>
+                <h1 className={styles.title}>{title}</h1>
+                <p className={styles.subtitle}>{subtitle}</p>
+                {children}
+                <p className={styles.switchMode}>
+                    <a href={loginPageUrl} className={styles.switchLink}>{t('auth.backToSignIn')}</a>
+                </p>
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 export const ForgotPasswordPage = () => {
+    const { t } = useTranslation();
     const apollo = useApolloClient();
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
@@ -54,7 +60,7 @@ export const ForgotPasswordPage = () => {
             await requestPasswordReset({ client: apollo, login });
             setSubmitted(true);
         } catch {
-            setErrorMessage('Unable to request a password reset. Please try again.');
+            setErrorMessage(t('auth.forgotPassword.failed'));
         } finally {
             setLoading(false);
         }
@@ -62,12 +68,12 @@ export const ForgotPasswordPage = () => {
 
     return (
         <PasswordPageLayout
-            title="Forgot your password?"
-            subtitle="Enter the email or nickname associated with your account."
+            title={t('auth.forgotPassword.title')}
+            subtitle={t('auth.forgotPassword.subtitle')}
         >
             {submitted ? (
                 <div className={clsx(styles.alert, styles.alertSuccess, 'mt-6')}>
-                    If email exists, you will get password reset link.
+                    {t('auth.forgotPassword.submitted')}
                 </div>
             ) : (
                 <>
@@ -78,7 +84,7 @@ export const ForgotPasswordPage = () => {
                     )}
                     <form className={clsx(styles.form, 'mt-7')} onSubmit={handleSubmit(onSubmit)}>
                         <div className={styles.field}>
-                            <label htmlFor="login" className={styles.label}>Email or nickname</label>
+                            <label htmlFor="login" className={styles.label}>{t('auth.emailOrNickname')}</label>
                             <div className={clsx(styles.inputWrapper, errors.login && styles.inputWrapperError)}>
                                 <AtSign size={16} className={styles.inputIcon} aria-hidden />
                                 <input
@@ -86,14 +92,14 @@ export const ForgotPasswordPage = () => {
                                     type="text"
                                     autoComplete="username"
                                     placeholder="name@company.com"
-                                    {...register('login', { required: 'Email or nickname is required' })}
+                                    {...register('login', { required: t('validation.loginRequired') })}
                                     className={styles.input}
                                 />
                             </div>
                             {errors.login && <span className={styles.errorText}>{errors.login.message}</span>}
                         </div>
                         <button type="submit" className={styles.submitButton} disabled={loading}>
-                            {loading ? 'Sending...' : 'Send reset link'}
+                            {loading ? t('auth.forgotPassword.sending') : t('auth.forgotPassword.submit')}
                         </button>
                     </form>
                 </>
@@ -103,12 +109,13 @@ export const ForgotPasswordPage = () => {
 };
 
 export const ResetPasswordPage = () => {
+    const { t } = useTranslation();
     const apollo = useApolloClient();
     const code = new URLSearchParams(window.location.search).get('code');
     const [loading, setLoading] = useState(false);
     const [completed, setCompleted] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(
-        code ? null : 'This password reset link is invalid.',
+        code ? null : t('auth.resetPassword.invalidLink'),
     );
     const {
         register,
@@ -128,12 +135,12 @@ export const ResetPasswordPage = () => {
         try {
             const succeeded = await resetPassword({ client: apollo, code, password });
             if (!succeeded) {
-                setErrorMessage('This password reset link is invalid or has expired.');
+                setErrorMessage(t('auth.resetPassword.expiredLink'));
                 return;
             }
             setCompleted(true);
         } catch {
-            setErrorMessage('Unable to reset your password. Please try again.');
+            setErrorMessage(t('auth.resetPassword.failed'));
         } finally {
             setLoading(false);
         }
@@ -141,12 +148,12 @@ export const ResetPasswordPage = () => {
 
     return (
         <PasswordPageLayout
-            title="Reset your password"
-            subtitle="Choose a new password for your Chatney account."
+            title={t('auth.resetPassword.title')}
+            subtitle={t('auth.resetPassword.subtitle')}
         >
             {completed ? (
                 <div className={clsx(styles.alert, styles.alertSuccess, 'mt-6')}>
-                    Your password has been reset. You can now sign in.
+                    {t('auth.resetPassword.completed')}
                 </div>
             ) : (
                 <>
@@ -157,21 +164,21 @@ export const ResetPasswordPage = () => {
                     )}
                     <form className={clsx(styles.form, 'mt-7')} onSubmit={handleSubmit(onSubmit)}>
                         <div className={styles.field}>
-                            <label htmlFor="password" className={styles.label}>Password</label>
+                            <label htmlFor="password" className={styles.label}>{t('auth.password')}</label>
                             <div className={clsx(styles.inputWrapper, errors.password && styles.inputWrapperError)}>
                                 <Lock size={16} className={styles.inputIcon} aria-hidden />
                                 <input
                                     id="password"
                                     type="password"
                                     autoComplete="new-password"
-                                    {...register('password', { required: 'Password is required' })}
+                                    {...register('password', { required: t('validation.passwordRequired') })}
                                     className={styles.input}
                                 />
                             </div>
                             {errors.password && <span className={styles.errorText}>{errors.password.message}</span>}
                         </div>
                         <div className={styles.field}>
-                            <label htmlFor="confirmPassword" className={styles.label}>Confirm password</label>
+                            <label htmlFor="confirmPassword" className={styles.label}>{t('auth.confirmPassword')}</label>
                             <div className={clsx(styles.inputWrapper, errors.confirmPassword && styles.inputWrapperError)}>
                                 <Lock size={16} className={styles.inputIcon} aria-hidden />
                                 <input
@@ -179,8 +186,8 @@ export const ResetPasswordPage = () => {
                                     type="password"
                                     autoComplete="new-password"
                                     {...register('confirmPassword', {
-                                        required: 'Please confirm your password',
-                                        validate: value => value === watch('password') || 'Passwords do not match',
+                                        required: t('validation.confirmPasswordRequired'),
+                                        validate: value => value === watch('password') || t('validation.passwordsDoNotMatch'),
                                     })}
                                     className={styles.input}
                                 />
@@ -190,7 +197,7 @@ export const ResetPasswordPage = () => {
                             )}
                         </div>
                         <button type="submit" className={styles.submitButton} disabled={loading || !code}>
-                            {loading ? 'Resetting...' : 'Reset password'}
+                            {loading ? t('auth.resetPassword.resetting') : t('auth.resetPassword.submit')}
                         </button>
                     </form>
                 </>

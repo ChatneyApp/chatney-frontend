@@ -29,3 +29,14 @@ export const Mine: Story = {
         onDeleteReaction: action('onDeleteReaction'),
     },
 };
+
+/** The current user's reaction in a channel where they can't remove reactions: not clickable. */
+export const Disabled: Story = {
+    args: {
+        reaction: { code: 'heart', count: 1 },
+        isMine: true,
+        disabled: true,
+        onAddReaction: action('onAddReaction'),
+        onDeleteReaction: action('onDeleteReaction'),
+    },
+};

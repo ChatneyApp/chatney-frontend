@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 import { useWorkspacesList } from '@/contexts/WorkspacesListContext';
 import { Workspace } from '@/types/workspaces';
@@ -9,6 +10,7 @@ import { UserSettingsPopup } from '../UserSettingsPopup';
 import styles from './WorkspacesList.module.css';
 
 export function WorkspacesList() {
+    const { t } = useTranslation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const workspacesList = useWorkspacesList();
 
@@ -39,7 +41,7 @@ export function WorkspacesList() {
                 })}
                 <div
                     onClick={() => setIsModalOpen(true)}
-                    title="Create workspace"
+                    title={t('chat.createWorkspace.button')}
                     className={styles.createWorkspaceButton}
                 >
                     +

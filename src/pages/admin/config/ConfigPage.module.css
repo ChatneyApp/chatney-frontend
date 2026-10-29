@@ -1,0 +1,53 @@
+@reference "tailwindcss";
+
+.page {
+    @apply flex flex-col p-6;
+}
+
+.header {
+    @apply mb-6;
+}
+
+.title {
+    @apply m-0 text-2xl font-semibold text-white;
+}
+
+.subtitle {
+    @apply mt-1 text-sm text-gray-400;
+}
+
+.form {
+    @apply flex max-w-2xl flex-col gap-6;
+}
+
+.section {
+    @apply flex flex-col gap-4 rounded-md border border-gray-700 bg-gray-800 p-5;
+}
+
+.sectionTitle {
+    @apply m-0 text-lg font-semibold text-white;
+}
+
+.note {
+    @apply m-0 rounded border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200;
+}
+
+.errorMessage {
+    @apply rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300;
+}
+
+.actions {
+    @apply flex items-center justify-end gap-3;
+}
+
+.savedText {
+    @apply text-sm text-green-400;
+}
+
+.saveButton {
+    @apply cursor-pointer rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400;
+}
+
+.loading {
+    @apply flex flex-1 items-center justify-center p-6 text-gray-400;
+}

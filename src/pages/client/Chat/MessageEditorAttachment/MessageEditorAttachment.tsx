@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Music, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import { uploadFileWithProgress } from '@/graphql/attachments';
 import { getAttachmentType, getFileIcon } from '@/helpers/attachments/attachmentDisplay';
@@ -14,7 +15,8 @@ import styles from './MessageEditorAttachment.module.css';
 
 type UploadedProps = {
     attachment: Attachment;
-    onDelete(attachmentId: AttachmentId): void;
+    // without it there's no delete button
+    onDelete?(attachmentId: AttachmentId): void;
 };
 
 type PendingProps = {
@@ -23,7 +25,7 @@ type PendingProps = {
     compress: boolean;
     asFile: boolean;
     onUploaded(draftId: string, attachment: Attachment): void;
-    onDelete(draftId: string): void;
+    onDelete?(draftId: string): void;
 };
 
 type Props = UploadedProps | PendingProps;
@@ -57,6 +59,7 @@ const getUploadMimeType = (file: File, shouldProcessFile: boolean) => {
 };
 
 export const MessageEditorAttachment = (props: Props) => {
+    const { t } = useTranslation();
     const isPending = isPendingAttachment(props);
     const pendingFile = isPending ? props.file : null;
     const pendingDraftId = isPending ? props.draftId : null;
@@ -179,7 +182,7 @@ export const MessageEditorAttachment = (props: Props) => {
             case 'audio':
                 return (
                     <div className={styles.fallbackPreview}>
-                        <Music size={28} />
+                        <Music size={28} strokeWidth={3}/>
                         <span>{fileName ?? 'Audio'}</span>
                     </div>
                 );
@@ -196,26 +199,28 @@ export const MessageEditorAttachment = (props: Props) => {
 
     const handleDelete = () => {
         if (isPending) {
-            props.onDelete(props.draftId);
+            props.onDelete?.(props.draftId);
             return;
         }
 
-        props.onDelete(props.attachment.id);
+        props.onDelete?.(props.attachment.id);
     };
 
     return (
         <div className={styles.container}>
             {preview}
-            <button className={styles.deleteButton} type="button" onClick={handleDelete} aria-label="Delete attachment">
-                <X size={12} />
-            </button>
+            {props.onDelete && (
+                <button className={styles.deleteButton} type="button" onClick={handleDelete} aria-label={t('chat.attachments.delete')}>
+                    <X size={12} strokeWidth={3}/>
+                </button>
+            )}
             {conversionProgress != null && conversionProgress < 1 && (
-                <ProgressBar label="Convert" progress={conversionProgress} />
+                <ProgressBar label={t('chat.attachments.convert')} progress={conversionProgress} />
             )}
             {uploadProgress != null && uploadProgress < 1 && (
-                <ProgressBar label="Upload" progress={uploadProgress} />
+                <ProgressBar label={t('chat.attachments.upload')} progress={uploadProgress} />
             )}
-            {error && <div className={styles.error}>{error}</div>}
+            {error && <div className={styles.error} title={error}>{t('chat.attachments.uploadFailed')}</div>}
         </div>
     );
 };

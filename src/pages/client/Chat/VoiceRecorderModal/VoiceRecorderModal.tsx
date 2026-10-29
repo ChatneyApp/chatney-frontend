@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Mic, Pause, Play, RotateCcw, Square } from 'lucide-react';
 import { Dialog } from 'radix-ui';
+import { useTranslation } from 'react-i18next';
 
 import { Button } from '@/components/Button';
 import { useRecordingSession } from '@/hooks/useRecordingSession';
@@ -84,6 +85,7 @@ const peakToBarHeight = (peak: number) => {
 };
 
 export function VoiceRecorderModal({ onClose, onRecorded }: Props) {
+    const { t } = useTranslation();
     const [previewWaveform, setPreviewWaveform] = useState(EMPTY_WAVEFORM);
     const [currentTime, setCurrentTime] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -228,23 +230,23 @@ export function VoiceRecorderModal({ onClose, onRecorded }: Props) {
     const renderStatus = () => {
         switch (stage) {
             case 'requesting':
-                return <span>Requesting microphone…</span>;
+                return <span>{t('chat.recorder.requestingMicrophone')}</span>;
             case 'recording':
                 return (
                     <>
                         <span className={styles.recordingDot} />
-                        <span>Recording…</span>
+                        <span>{t('chat.recorder.recording')}</span>
                     </>
                 );
             case 'paused':
                 return (
                     <>
                         <span className={styles.pausedDot} />
-                        <span>Paused</span>
+                        <span>{t('chat.recorder.paused')}</span>
                     </>
                 );
             case 'preview':
-                return <span>Preview</span>;
+                return <span>{t('chat.recorder.preview')}</span>;
             default:
                 return null;
         }
@@ -255,16 +257,16 @@ export function VoiceRecorderModal({ onClose, onRecorded }: Props) {
             <Dialog.Portal>
                 <Dialog.Overlay className={dialogStyles.overlay} />
                 <Dialog.Content className={dialogStyles.container} aria-describedby={undefined}>
-                    <Dialog.Title className={dialogStyles.title}>Voice message</Dialog.Title>
+                    <Dialog.Title className={dialogStyles.title}>{t('chat.recorder.voiceTitle')}</Dialog.Title>
                     {stage === 'error'
                         ? (
                             <>
                                 <p className={styles.errorMessage}>
-                                    Microphone is not available. Check the browser permissions and try again.
+                                    {t('chat.recorder.microphoneUnavailable')}
                                 </p>
                                 <div className={dialogStyles.bottomButtons}>
                                     <Button type="button" onClick={handleCancel}>
-                                        Close
+                                        {t('common.close')}
                                     </Button>
                                 </div>
                             </>
@@ -277,9 +279,18 @@ export function VoiceRecorderModal({ onClose, onRecorded }: Props) {
                                             type="button"
                                             className={styles.playButton}
                                             onClick={() => void togglePreviewPlayback()}
-                                            aria-label={isPlaying ? 'Pause preview' : 'Play preview'}
+                                            aria-label={isPlaying ? t('chat.recorder.pausePreview') : t('chat.recorder.playPreview')}
                                         >
-                                            {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+                                            {isPlaying
+                                                ? <Pause
+                                                    size={18}
+                                                    strokeWidth={3}
+                                                />
+                                                : <Play
+                                                    size={18}
+                                                    strokeWidth={3}
+                                                />
+                                            }
                                         </button>
                                     )}
                                     <canvas className={styles.waveformCanvas} ref={canvasRef} />
@@ -305,34 +316,50 @@ export function VoiceRecorderModal({ onClose, onRecorded }: Props) {
                                 )}
                                 <div className={dialogStyles.bottomButtons}>
                                     <Button type="button" onClick={handleCancel}>
-                                        Cancel
+                                        {t('common.cancel')}
                                     </Button>
                                     {stage === 'recording' && (
                                         <Button type="button" onClick={pause}>
-                                            <Pause size={16} className={styles.buttonIcon} />
-                                            Pause
+                                            <Pause
+                                                size={16}
+                                                strokeWidth={3}
+                                                className={styles.buttonIcon}
+                                            />
+                                            {t('chat.recorder.pause')}
                                         </Button>
                                     )}
                                     {stage === 'paused' && (
                                         <Button type="button" onClick={resume}>
-                                            <Mic size={16} className={styles.buttonIcon} />
-                                            Resume
+                                            <Mic
+                                                size={16}
+                                                strokeWidth={3}
+                                                className={styles.buttonIcon}
+                                            />
+                                            {t('chat.recorder.resume')}
                                         </Button>
                                     )}
                                     {(stage === 'recording' || stage === 'paused') && (
                                         <Button type="button" onClick={stop}>
-                                            <Square size={16} className={styles.buttonIcon} />
-                                            Stop
+                                            <Square
+                                                size={16}
+                                                strokeWidth={3}
+                                                className={styles.buttonIcon}
+                                            />
+                                            {t('chat.recorder.stop')}
                                         </Button>
                                     )}
                                     {stage === 'preview' && (
                                         <>
                                             <Button type="button" onClick={() => void startRecording()}>
-                                                <RotateCcw size={16} className={styles.buttonIcon} />
-                                                Re-record
+                                                <RotateCcw
+                                                    size={16}
+                                                    strokeWidth={3}
+                                                    className={styles.buttonIcon}
+                                                />
+                                                {t('chat.recorder.reRecord')}
                                             </Button>
                                             <Button type="button" onClick={handleAccept}>
-                                                Add to message
+                                                {t('chat.recorder.addToMessage')}
                                             </Button>
                                         </>
                                     )}

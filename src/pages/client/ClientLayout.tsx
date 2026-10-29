@@ -2,18 +2,22 @@ import { Outlet } from 'react-router';
 
 import { WorkspacesListProvider } from '@/contexts/WorkspacesListContext';
 import { WorkspaceChannelsListProvider } from '@/contexts/WorkspaceChannelsListContext';
+import { WorkspaceChannelGroupsListProvider } from '@/contexts/WorkspaceChannelGroupsListContext';
 import { composeProviders } from '@/infra/composeProviders';
 import { WebSocketContextProvider } from '@/contexts/WebSocketProvider';
 import { ChannelTypesListProvider } from '@/contexts/ChannelTypesListContext';
 import { DirectMessagesListProvider } from '@/contexts/DirectMessagesListContext';
 import { RolesListProvider } from '@/contexts/RolesListContext.tsx';
+import { MyPermissionsProvider } from '@/contexts/MyPermissionsContext';
 
 const providers = [
     WebSocketContextProvider,
     RolesListProvider,
+    MyPermissionsProvider,
     ChannelTypesListProvider,
     WorkspacesListProvider,
     WorkspaceChannelsListProvider,
+    WorkspaceChannelGroupsListProvider,
     DirectMessagesListProvider,
 ];
 const ComposedProviders = composeProviders(providers);

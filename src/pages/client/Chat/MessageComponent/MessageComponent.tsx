@@ -1,5 +1,6 @@
-import { CornerUpLeft, Pencil, XCircle } from 'lucide-react';
+import { Pencil, Reply, Trash } from 'lucide-react';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
 import { isDev } from '@/helpers/env';
 import { MessageReactions } from '@/pages/client/Chat/MessageReactions';
@@ -7,6 +8,7 @@ import { MessageThreadButton } from '@/pages/client/Chat/MessageThreadButton';
 import { MessageUrlPreviewsComponent } from '@/pages/client/Chat/MessageUrlPreviewsComponent';
 import { UserId } from '@/types/users';
 import { formatTimestamp } from '@/helpers/formatTimestamp';
+import { isMessageEdited } from '@/helpers/messages';
 import { MessageAttachments } from '@/pages/client/Chat/MessageAttachments';
 
 import styles from './MessageComponent.module.css';
@@ -15,6 +17,12 @@ type Props = {
     message: MessageWithUser;
     currentUserId?: UserId;
     replyRef?: ReplyToMessage;
+    canReply: boolean;
+    canEdit: boolean;
+    canDelete: boolean;
+    canAddReaction: boolean;
+    canRemoveReaction: boolean;
+    canCreateThread: boolean;
     onDelete(id: MessageId): void;
     onReply(message: MessageWithUser): void;
     onEdit(message: MessageWithUser): void;
@@ -22,9 +30,12 @@ type Props = {
     onDeleteReaction(messageId: MessageId, code: string): void;
     onOpenThread?(parentId: MessageWithUser): void;
 };
-export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, onReply, onEdit, onAddReaction, onDeleteReaction, onOpenThread }: Props) => {
+export const MessageComponent = ({ message, currentUserId, replyRef, canReply, canEdit, canDelete, canAddReaction, canRemoveReaction, canCreateThread, onDelete, onReply, onEdit, onAddReaction, onDeleteReaction, onOpenThread }: Props) => {
+    const { t } = useTranslation();
     const isMine = message.userId === currentUserId;
     const avatarUrl = message.user.avatarUrl ?? `https://i.pravatar.cc/?img=${message.userId}`;
+    // without the permission, existing threads can still be opened to read
+    const showThreadButton = canCreateThread || (message.childrenCount ?? 0) > 0;
     const handleToggleThread = () => {
         onOpenThread?.(message);
     };
@@ -51,24 +62,34 @@ export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, o
                     )}
                     <span className={styles.timestamp}>
                         {formatTimestamp(new Date(message.updatedAt))}
-                        {new Date(message.updatedAt).getTime() !== new Date(message.createdAt).getTime() && (
-                            <span className={styles.editedLabel}> (edited)</span>
+                        {isMessageEdited(message) && (
+                            <span className={styles.editedLabel}> {t('chat.message.edited')}</span>
                         )}
                     </span>
-                    <CornerUpLeft
-                        className={styles.replyButton}
-                        onClick={() => onReply(message)}
-                    />
-                    {isMine && (
+                    {canReply && (
+                        <Reply
+                            size={16}
+                            strokeWidth={3}
+                            className={styles.replyButton}
+                            onClick={() => onReply(message)}
+                        />
+                    )}
+                    {canEdit && (
                         <Pencil
+                            size={16}
+                            strokeWidth={3}
                             className={styles.editButton}
                             onClick={() => onEdit(message)}
                         />
                     )}
-                    <XCircle
-                        className={styles.deleteButton}
-                        onClick={() => onDelete(message.id)}
-                    />
+                    {canDelete && (
+                        <Trash
+                            size={16}
+                            strokeWidth={3}
+                            className={styles.deleteButton}
+                            onClick={() => onDelete(message.id)}
+                        />
+                    )}
                 </div>
                 {replyRef && (
                     <div className={styles.replyQuote}>
@@ -83,11 +104,13 @@ export const MessageComponent = ({ message, currentUserId, replyRef, onDelete, o
                 <MessageReactions
                     reactions={message.reactions}
                     myReactions={message.myReactions}
+                    canAddReaction={canAddReaction}
+                    canRemoveReaction={canRemoveReaction}
                     onAddReaction={(code) => onAddReaction(message.id, code)}
                     onDeleteReaction={code => onDeleteReaction(message.id, code)}
                 />
 
-                {onOpenThread && (
+                {onOpenThread && showThreadButton && (
                     <MessageThreadButton
                         count={message.childrenCount ?? 0}
                         onToggleThread={handleToggleThread}

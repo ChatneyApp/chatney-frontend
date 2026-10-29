@@ -28,11 +28,6 @@ type Query {
   workspaces: WorkspaceQueries!
 }
 
-type InstallWizardQueries {
-  "Whether the system installation completed successfully."
-  isInstalled: Boolean!
-}
-
 type Mutation {
   "Channels, channel types, channel groups and direct messages."
   channels: ChannelMutations!
@@ -207,6 +202,8 @@ type AclQueries {
     "Secure object id (from a workspace, channel type or channel)."
     secObjId: Int!
   ): ObjectAcls! @authorize @cost(weight: "10")
+  "All workspaces, channel types and non-DM channels. Requires RoleReadRole."
+  secureObjects: SecureObjectList! @authorize @cost(weight: "10")
 }
 
 "An uploaded file's metadata."
@@ -335,12 +332,12 @@ type ChannelMutations {
   True if it existed and was deleted.
   """
   deleteChannel(id: Int!): Boolean! @authorize @cost(weight: "10")
-  "Creates a channel group (sidebar section). Requires ChannelAddChannelGroup on the workspace."
+  "Creates a channel group (sidebar section). Requires WorkspaceCreateChannelGroup on the workspace."
   addChannelGroup(channelGroupDto: ChannelGroupDtoInput!): ChannelGroup!
     @authorize
     @cost(weight: "10")
   """
-  Updates a channel group, matched by id. Requires ChannelEditChannelGroup on its workspace.
+  Updates a channel group, matched by id. Requires WorkspaceUpdateChannelGroup on its workspace.
   
   **Returns:**
   The saved group, or null if it or its workspace doesn't exist.
@@ -349,7 +346,19 @@ type ChannelMutations {
     @authorize
     @cost(weight: "10")
   """
-  Deletes a channel group. Requires ChannelDeleteChannelGroup on its workspace.
+  Sets the order of several channel groups in one request. Requires WorkspaceUpdateChannelGroup on each group's
+  workspace. Ids that don't exist are ignored.
+  
+  
+  **Returns:**
+  The updated groups.
+  """
+  updateChannelGroupsOrder(
+    "Object keyed by channel group id, valued by its new order, e.g. {\"5\": 0, \"7\": 1}."
+    orders: IntMap!
+  ): [ChannelGroup!]! @authorize @cost(weight: "10")
+  """
+  Deletes a channel group. Requires WorkspaceDeleteChannelGroup on its workspace.
   
   **Returns:**
   True if it existed and was deleted.
@@ -379,7 +388,7 @@ type ChannelQueries {
   directMessageList: [DirectMessage!]! @authorize @cost(weight: "10")
   "All channel types."
   channelTypeList: [ChannelType!]! @authorize @cost(weight: "10")
-  "Channel groups (sidebar sections) of a workspace. Requires ChannelReadChannel on the workspace."
+  "Channel groups (sidebar sections) of a workspace. Requires WorkspaceReadChannelGroup on the workspace."
   workspaceChannelGroupList(workspaceId: Int!): [ChannelGroup!]!
     @authorize
     @cost(weight: "10")
@@ -488,8 +497,9 @@ type InstallSystemResult {
 type InstallWizardMutations {
   """
   Runs migrations and seeds a fresh system: admin and user roles, a default workspace with
-  public/private channels, an admin user, optional test users and default config. Safe to call
-  again: returns status "installed" if the system is already installed.
+  public/private/readonly channel types, channels and channel groups, an admin user, optional
+  test users and default config. Safe to call again: returns status "installed" if the system
+  is already installed.
   """
   installSystem(options: InstallSystemInput!): InstallSystemResult!
     @cost(weight: "10")
@@ -497,10 +507,16 @@ type InstallWizardMutations {
   unInstallSystem: InstallSystemResult! @cost(weight: "10")
 }
 
+type InstallWizardQueries {
+  "Whether the system installation completed successfully."
+  isInstalled: Boolean! @cost(weight: "10")
+}
+
 type MessageMutations {
   """
   Posts a message, optionally as a thread reply (parentId) or a quote-reply (replyTo).
-  Requires ChannelCreateMessage on the channel. URL previews are generated from the content.
+  Requires ChannelCreateMessage on the channel, plus ChannelCreateThread for thread replies outside DMs.
+  URL previews are generated from the content.
   """
   addMessage(messageDto: MessageDtoInput!): MessageWithUser
     @authorize
@@ -527,14 +543,20 @@ type MessageMutations {
   deleteMessage("Message to delete." id: Int!): Boolean!
     @authorize
     @cost(weight: "10")
-  "Adds the current user's reaction to a message. No-op if it already exists."
+  """
+  Adds the current user's reaction to a message. No-op if it already exists.
+  Requires ChannelAddReaction on the message's channel.
+  """
   addReaction(
     "Reaction code (e.g. an emoji shortcode)."
     code: String!
     "Message to react to."
     messageId: Int!
   ): ReactionEndpointOutput! @authorize @cost(weight: "10")
-  "Removes the current user's reaction from a message. Returns status \"error\" if it didn't exist."
+  """
+  Removes the current user's reaction from a message. Returns status "error" if it didn't exist.
+  Requires ChannelRemoveReaction on the message's channel.
+  """
   deleteReaction(
     "Reaction code to remove."
     code: String!
@@ -702,6 +724,13 @@ type RoleQueries {
   list: [Role!]! @authorize @cost(weight: "10")
 }
 
+"Every object a role ACL can target, for the admin role editor. Direct messages are left out."
+type SecureObjectList {
+  workspaces: [Workspace!]!
+  channelTypes: [ChannelType!]!
+  channels: [Channel!]!
+}
+
 "Link preview metadata scraped from a URL in a message (OpenGraph/oEmbed)."
 type UrlPreview {
   id: Int!
@@ -736,6 +765,8 @@ type User {
   muted: Boolean!
   email: String!
   avatarUrl: String
+  "Ids of the user's roles. Filled only by users.list for callers with UserEditUser; empty otherwise."
+  roleIds: [Int!]!
 }
 
 "The permissions one user has on one secure object."
@@ -816,7 +847,7 @@ type UserQueries {
   userById(id: UUID!): User @authorize @cost(weight: "10")
   "A user by nickname (case-insensitive), or null. Requires UserReadUser unless it's the current user."
   userByNickname(nickname: String!): User @authorize @cost(weight: "10")
-  "All users matching the filter. Requires UserReadUser."
+  "All users matching the filter. Requires UserReadUser. roleIds is filled only if the caller also has UserEditUser."
   list(filter: UserFilterInput!): [User!]! @authorize @cost(weight: "10")
   "Nickname autocomplete for starting direct messages: up to 20 active, non-banned users, excluding yourself."
   searchByNickname(
@@ -1121,16 +1152,16 @@ enum Permission {
   ATTACHMENT_READ
   "Upload attachments. Checked globally."
   ATTACHMENT_UPLOAD
-  "Create channel groups in a workspace. Checked on the workspace."
-  CHANNEL_ADD_CHANNEL_GROUP
+  "Add your reactions to messages in a channel. Checked on the channel."
+  CHANNEL_ADD_REACTION
   "Create channels in a workspace (checked on the workspace); granted globally, also allows creating channel types."
   CHANNEL_CREATE_CHANNEL
   "Post messages in a channel. Checked on the channel."
   CHANNEL_CREATE_MESSAGE
+  "Start threads (reply under a message) in a channel. Checked on the channel."
+  CHANNEL_CREATE_THREAD
   "Delete a channel. Checked on the channel."
   CHANNEL_DELETE_CHANNEL
-  "Delete channel groups in a workspace. Checked on the workspace."
-  CHANNEL_DELETE_CHANNEL_GROUP
   "Delete a channel type. Checked on the channel type."
   CHANNEL_DELETE_CHANNEL_TYPE
   "Delete anyone's messages in a channel. Checked on the channel."
@@ -1139,8 +1170,6 @@ enum Permission {
   CHANNEL_DELETE_OWN_MESSAGE
   "Edit a channel (checked on the channel) or a channel type (checked on the channel type)."
   CHANNEL_EDIT_CHANNEL
-  "Edit channel groups in a workspace. Checked on the workspace."
-  CHANNEL_EDIT_CHANNEL_GROUP
   "Edit anyone's messages in a channel. Checked on the channel."
   CHANNEL_EDIT_MESSAGE
   "Edit your own messages in a channel. Checked on the channel."
@@ -1149,6 +1178,8 @@ enum Permission {
   CHANNEL_READ_CHANNEL
   "Read messages in a channel. Checked on the channel."
   CHANNEL_READ_MESSAGE
+  "Remove your reactions from messages in a channel. Checked on the channel."
+  CHANNEL_REMOVE_REACTION
   "Read system configuration values. Checked globally."
   CONFIG_READ_VALUE
   "Update system configuration values. Checked globally."
@@ -1159,6 +1190,8 @@ enum Permission {
   ROLE_DELETE_ROLE
   "Edit roles and role ACLs. Checked globally."
   ROLE_EDIT_ROLE
+  "View roles and the objects role ACLs can target. Checked globally."
+  ROLE_READ_ROLE
   "Create users as an admin. Checked globally."
   USER_CREATE_USER
   "Delete users. Checked globally."
@@ -1167,12 +1200,20 @@ enum Permission {
   USER_EDIT_USER
   "List and look up users. Checked globally."
   USER_READ_USER
+  "Create channel groups in a workspace. Checked on the workspace."
+  WORKSPACE_CREATE_CHANNEL_GROUP
   "Create workspaces. Checked globally."
   WORKSPACE_CREATE_WORKSPACE
+  "Delete channel groups in a workspace. Checked on the workspace."
+  WORKSPACE_DELETE_CHANNEL_GROUP
   "Delete a workspace. Checked on the workspace."
   WORKSPACE_DELETE_WORKSPACE
+  "See channel groups of a workspace. Checked on the workspace."
+  WORKSPACE_READ_CHANNEL_GROUP
   "See a workspace. Checked on the workspace."
   WORKSPACE_READ_WORKSPACE
+  "Edit channel groups in a workspace, including their order. Checked on the workspace."
+  WORKSPACE_UPDATE_CHANNEL_GROUP
   "Edit a workspace. Checked on the workspace."
   WORKSPACE_UPDATE_WORKSPACE
 }
@@ -1180,6 +1221,9 @@ enum Permission {
 "The `DateTime` scalar type represents a date and time with time zone offset information."
 scalar DateTime
   @specifiedBy(url: "https://scalars.graphql.org/chillicream/date-time.html")
+
+"A JSON object with integer keys and integer values, e.g. {\"5\": 0, \"7\": 1}."
+scalar IntMap
 
 "The `Long` scalar type represents a signed 64-bit integer."
 scalar Long

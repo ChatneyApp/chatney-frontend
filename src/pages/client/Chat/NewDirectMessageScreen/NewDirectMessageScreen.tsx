@@ -1,6 +1,7 @@
 import { FormEventHandler, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useApolloClient } from '@apollo/client/react';
+import { useTranslation } from 'react-i18next';
 
 import { openDirectMessage } from '@/graphql/channels';
 import { searchUsersByNickname } from '@/graphql/users';
@@ -14,6 +15,7 @@ interface NewDirectMessageScreenProps {
 }
 
 export function NewDirectMessageScreen({ onCancel, onOpened }: NewDirectMessageScreenProps) {
+    const { t } = useTranslation();
     const client = useApolloClient();
     const [prefix, setPrefix] = useState('');
     const [results, setResults] = useState<DirectMessageUser[]>([]);
@@ -94,23 +96,23 @@ export function NewDirectMessageScreen({ onCancel, onOpened }: NewDirectMessageS
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>New direct message</div>
+            <div className={styles.header}>{t('chat.newDirectMessage.title')}</div>
             <div className={styles.body}>
                 <form className={styles.form} onSubmit={handleSubmit}>
                     <label className={styles.field}>
-                        <span className={styles.label}>Nickname</span>
+                        <span className={styles.label}>{t('chat.newDirectMessage.nickname')}</span>
                         <input
                             type="text"
                             value={prefix}
                             onChange={(event) => setPrefix(event.target.value)}
                             className={styles.input}
-                            placeholder="Search by nickname"
+                            placeholder={t('chat.newDirectMessage.searchPlaceholder')}
                             autoFocus
                         />
                     </label>
                     {selected.length > 0 && (
                         <div className={styles.field}>
-                            <span className={styles.label}>To</span>
+                            <span className={styles.label}>{t('chat.newDirectMessage.to')}</span>
                             <div className={styles.selectedList}>
                                 {selected.map(user => (
                                     <button
@@ -126,9 +128,9 @@ export function NewDirectMessageScreen({ onCancel, onOpened }: NewDirectMessageS
                         </div>
                     )}
                     <div className={styles.field}>
-                        {isSearching && <span className={styles.label}>Searching…</span>}
+                        {isSearching && <span className={styles.label}>{t('chat.newDirectMessage.searching')}</span>}
                         {!isSearching && prefix.trim() && results.length === 0 && (
-                            <span className={styles.label}>No users found</span>
+                            <span className={styles.label}>{t('chat.newDirectMessage.noUsers')}</span>
                         )}
                         <div className={styles.results}>
                             {results.map((user) => {
@@ -154,14 +156,14 @@ export function NewDirectMessageScreen({ onCancel, onOpened }: NewDirectMessageS
                             onClick={onCancel}
                             className={styles.cancelButton}
                         >
-                            Cancel
+                            {t('common.cancel')}
                         </button>
                         <button
                             type="submit"
                             disabled={selected.length === 0 || isOpening}
                             className={styles.openButton}
                         >
-                            Open
+                            {t('chat.newDirectMessage.open')}
                         </button>
                     </div>
                 </form>

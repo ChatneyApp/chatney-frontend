@@ -19,6 +19,7 @@ const config: CodegenConfig = {
                     DateTime: 'string',
                     Long: 'number',
                     Upload: 'File',
+                    IntMap: 'Record<string, number>',
                 },
             },
         },

@@ -1,6 +1,7 @@
 import { Suspense, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useSuspenseQuery } from '@apollo/client/react';
+import { useTranslation } from 'react-i18next';
 
 import { GET_MY_PROFILE, UPDATE_MY_PROFILE } from '@/graphql/profile';
 import { useUser } from '@/contexts/UserContext';
@@ -37,6 +38,7 @@ function StatusBadge({
 }
 
 function ProfilePageContent() {
+    const { t } = useTranslation();
     const { data, refetch } = useSuspenseQuery(GET_MY_PROFILE, { fetchPolicy: 'no-cache' });
     const { refreshUser } = useUser()!;
     const profile = data.users.myProfile;
@@ -73,7 +75,7 @@ function ProfilePageContent() {
         setErrorMessage(null);
 
         if (formData.newPassword && formData.newPassword !== formData.confirmPassword) {
-            setErrorMessage('New passwords do not match');
+            setErrorMessage(t('validation.newPasswordsDoNotMatch'));
             return;
         }
 
@@ -91,7 +93,7 @@ function ProfilePageContent() {
                 },
             });
 
-            setSuccessMessage('Profile updated successfully');
+            setSuccessMessage(t('profile.updated'));
             const refreshed = await refetch();
             await refreshUser();
             const refreshedUser = refreshed.data!.users.myProfile.user;
@@ -127,26 +129,26 @@ function ProfilePageContent() {
                     <h1 className={styles.profileName}>{displayName}</h1>
                     <div className={styles.profileRole}>@{user.nickname}</div>
                     <div className={styles.profileRole}>
-                        {profile.roleNames?.join(' / ') ?? 'No role assigned'}
+                        {profile.roleNames?.join(' / ') ?? t('profile.noRole')}
                     </div>
                     <div className={styles.badges}>
                         <StatusBadge
-                            label={user.active ? 'Active' : 'Inactive'}
+                            label={user.active ? t('userStatus.active') : t('userStatus.inactive')}
                             active={user.active}
                             activeClass={styles.badgePositive}
                             inactiveClass={styles.badgeNeutral}
                         />
                         <StatusBadge
-                            label={user.verified ? 'Verified' : 'Not verified'}
+                            label={user.verified ? t('userStatus.verified') : t('userStatus.notVerified')}
                             active={user.verified}
                             activeClass={styles.badgePositive}
                             inactiveClass={styles.badgeWarning}
                         />
                         {user.muted && (
-                            <span className={`${styles.badge} ${styles.badgeWarning}`}>Muted</span>
+                            <span className={`${styles.badge} ${styles.badgeWarning}`}>{t('userStatus.muted')}</span>
                         )}
                         {user.banned && (
-                            <span className={`${styles.badge} ${styles.badgeDanger}`}>Banned</span>
+                            <span className={`${styles.badge} ${styles.badgeDanger}`}>{t('userStatus.banned')}</span>
                         )}
                     </div>
                 </div>
@@ -161,13 +163,13 @@ function ProfilePageContent() {
 
             <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                 <section className={styles.card}>
-                    <h2 className={styles.cardTitle}>Account details</h2>
+                    <h2 className={styles.cardTitle}>{t('profile.accountDetails')}</h2>
                     <div className={styles.field}>
-                        <label className={styles.label} htmlFor="profile-nickname">Nickname</label>
+                        <label className={styles.label} htmlFor="profile-nickname">{t('profile.nickname')}</label>
                         <input
                             id="profile-nickname"
                             className={styles.input}
-                            {...register('nickname', { validate: validateNickname })}
+                            {...register('nickname', { validate: (value) => validateNickname(value, t) })}
                             maxLength={MAX_NICKNAME_LENGTH}
                         />
                         {errors.nickname && (
@@ -176,22 +178,22 @@ function ProfilePageContent() {
                     </div>
 
                     <div className={styles.field}>
-                        <label className={styles.label} htmlFor="profile-full-name">Full name</label>
+                        <label className={styles.label} htmlFor="profile-full-name">{t('profile.fullName')}</label>
                         <input
                             id="profile-full-name"
                             className={styles.input}
-                            placeholder="Optional"
+                            placeholder={t('common.optional')}
                             {...register('fullName')}
                         />
                     </div>
 
                     <div className={styles.field}>
-                        <label className={styles.label} htmlFor="profile-email">Email</label>
+                        <label className={styles.label} htmlFor="profile-email">{t('profile.email')}</label>
                         <input
                             id="profile-email"
                             type="email"
                             className={styles.input}
-                            {...register('email', { required: 'Email is required' })}
+                            {...register('email', { required: t('validation.emailRequired') })}
                         />
                         {errors.email && (
                             <span className={styles.errorText}>{errors.email.message}</span>
@@ -199,7 +201,7 @@ function ProfilePageContent() {
                     </div>
 
                     <div className={styles.field}>
-                        <label className={styles.label} htmlFor="profile-avatar">Avatar URL</label>
+                        <label className={styles.label} htmlFor="profile-avatar">{t('profile.avatarUrl')}</label>
                         <input
                             id="profile-avatar"
                             type="url"
@@ -207,15 +209,15 @@ function ProfilePageContent() {
                             placeholder="https://..."
                             {...register('avatarUrl')}
                         />
-                        <span className={styles.hint}>Optional image URL for your avatar</span>
+                        <span className={styles.hint}>{t('profile.avatarUrlHint')}</span>
                     </div>
                 </section>
 
                 <section className={styles.card}>
-                    <h2 className={styles.cardTitle}>Change password</h2>
+                    <h2 className={styles.cardTitle}>{t('profile.changePassword')}</h2>
                     <div className={styles.field}>
                         <label className={styles.label} htmlFor="current-password">
-                            Current password
+                            {t('profile.currentPassword')}
                         </label>
                         <input
                             id="current-password"
@@ -223,7 +225,7 @@ function ProfilePageContent() {
                             autoComplete="current-password"
                             className={styles.input}
                             {...register('currentPassword', {
-                                required: newPassword ? 'Current password is required' : false,
+                                required: newPassword ? t('validation.currentPasswordRequired') : false,
                             })}
                         />
                         {errors.currentPassword && (
@@ -234,7 +236,7 @@ function ProfilePageContent() {
                     </div>
 
                     <div className={styles.field}>
-                        <label className={styles.label} htmlFor="new-password">New password</label>
+                        <label className={styles.label} htmlFor="new-password">{t('profile.newPassword')}</label>
                         <input
                             id="new-password"
                             type="password"
@@ -242,7 +244,7 @@ function ProfilePageContent() {
                             className={styles.input}
                             {...register('newPassword', {
                                 minLength: newPassword
-                                    ? { value: 6, message: 'Password must be at least 6 characters' }
+                                    ? { value: 6, message: t('validation.passwordTooShort', { count: 6 }) }
                                     : undefined,
                             })}
                         />
@@ -253,7 +255,7 @@ function ProfilePageContent() {
 
                     <div className={styles.field}>
                         <label className={styles.label} htmlFor="confirm-password">
-                            Confirm new password
+                            {t('profile.confirmNewPassword')}
                         </label>
                         <input
                             id="confirm-password"
@@ -271,7 +273,7 @@ function ProfilePageContent() {
                         className={styles.submitButton}
                         disabled={loading}
                     >
-                        {loading ? 'Saving...' : 'Save changes'}
+                        {loading ? t('common.saving') : t('common.saveChanges')}
                     </button>
                 </div>
             </form>
@@ -280,8 +282,10 @@ function ProfilePageContent() {
 }
 
 export function ProfilePage() {
+    const { t } = useTranslation();
+
     return (
-        <Suspense fallback={<div className={styles.loading}>Loading profile...</div>}>
+        <Suspense fallback={<div className={styles.loading}>{t('profile.loading')}</div>}>
             <ProfilePageContent />
         </Suspense>
     );

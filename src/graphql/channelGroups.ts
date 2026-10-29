@@ -32,6 +32,16 @@ export const UPDATE_CHANNEL_GROUP = graphql(`
     }
 `);
 
+export const UPDATE_CHANNEL_GROUPS_ORDER = graphql(`
+    mutation UpdateChannelGroupsOrder($orders: IntMap!) {
+        channels {
+            updateChannelGroupsOrder(orders: $orders) {
+                ...ChannelGroupFields
+            }
+        }
+    }
+`);
+
 export const DELETE_CHANNEL_GROUP = graphql(`
     mutation DeleteChannelGroup($id: Int!) {
         channels {

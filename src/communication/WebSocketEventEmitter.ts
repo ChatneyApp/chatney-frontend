@@ -4,6 +4,7 @@ import { Channel, ChannelId } from '@/types/channels';
 import { ChannelType, ChannelTypeId } from '@/types/channelTypes';
 import { Workspace, WorkspaceId } from '@/types/workspaces';
 import { RoleId } from '@/types/roles';
+import { Permission } from '@/types/acls';
 
 export type MessageDeletedPayload = {
     messageId: MessageId;
@@ -47,6 +48,24 @@ export type UserRoleDeletedPayload = {
     channelTypeId: number | null;
     workspaceId: number | null;
 };
+export type RoleAclPayload = {
+    roleId: RoleId;
+    secObjId: number;
+    permissions: Permission[];
+};
+export type RoleAclDeletedPayload = {
+    roleId: RoleId;
+    secObjId: number;
+};
+export type UserAclPayload = {
+    userId: UserId;
+    secObjId: number;
+    permissions: Permission[];
+};
+export type UserAclDeletedPayload = {
+    userId: UserId;
+    secObjId: number;
+};
 export type ChannelPayload = Pick<Channel, 'id' | 'name' | 'channelTypeId' | 'workspaceId' | 'isDm'> & {
     memberUserIds: UserId[];
 };
@@ -78,6 +97,10 @@ export type WebSocketMessagePayload =
     RoleDeletedPayload |
     UserRolePayload |
     UserRoleDeletedPayload |
+    RoleAclPayload |
+    RoleAclDeletedPayload |
+    UserAclPayload |
+    UserAclDeletedPayload |
     ChannelPayload |
     ChannelDeletedPayload |
     ChannelTypePayload |
@@ -98,6 +121,10 @@ export enum WebSocketEventType {
     NEW_USER_ROLE = 'newUserRole',
     UPDATED_USER_ROLE = 'updatedUserRole',
     DELETED_USER_ROLE = 'deletedUserRole',
+    ROLE_ACL_CHANGED = 'roleAclChanged',
+    ROLE_ACL_DELETED = 'roleAclDeleted',
+    USER_ACL_CHANGED = 'userAclChanged',
+    USER_ACL_DELETED = 'userAclDeleted',
     NEW_CHANNEL = 'newChannel',
     UPDATED_CHANNEL = 'updatedChannel',
     DELETED_CHANNEL = 'deletedChannel',
@@ -136,6 +163,18 @@ export type WebSocketEventRaw = {
 } | {
     type: WebSocketEventType.DELETED_USER_ROLE;
     payload: UserRoleDeletedPayload;
+} | {
+    type: WebSocketEventType.ROLE_ACL_CHANGED;
+    payload: RoleAclPayload;
+} | {
+    type: WebSocketEventType.ROLE_ACL_DELETED;
+    payload: RoleAclDeletedPayload;
+} | {
+    type: WebSocketEventType.USER_ACL_CHANGED;
+    payload: UserAclPayload;
+} | {
+    type: WebSocketEventType.USER_ACL_DELETED;
+    payload: UserAclDeletedPayload;
 } | {
     type: WebSocketEventType.NEW_CHANNEL | WebSocketEventType.UPDATED_CHANNEL;
     payload: ChannelPayload;

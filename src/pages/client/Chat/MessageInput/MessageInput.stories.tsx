@@ -60,3 +60,30 @@ export const EditingWithPendingReply: Story = {
         onClearReply: action('onClearReply'),
     },
 };
+
+/** The current user can't post in this channel: the input is disabled and attachment buttons are hidden. */
+export const Disabled: Story = {
+    args: {
+        disabled: true,
+        onSend: action('onSend'),
+    },
+};
+
+/** The current user can post but not upload attachments: the clip, mic and camera buttons are hidden. */
+export const NoUploadPermission: Story = {
+    args: {
+        canUploadAttachments: false,
+        onSend: action('onSend'),
+    },
+};
+
+/** Editing a message without permission to delete attachments: the attachment has no delete button. */
+export const EditingNoDeleteAttachmentPermission: Story = {
+    args: {
+        editingMessage: { id: 1, content: 'Original text before the edit', attachments: [mockImageAttachment] },
+        canDeleteAttachments: false,
+        onSend: action('onSend'),
+        onSaveEdit: action('onSaveEdit'),
+        onCancelEdit: action('onCancelEdit'),
+    },
+};

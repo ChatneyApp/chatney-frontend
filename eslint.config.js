@@ -8,7 +8,7 @@ import stylistic from '@stylistic/eslint-plugin';
 
 export default [
     {
-        ignores: [ 'dist', 'node_modules', 'public', 'src/graphql/generated', 'storybook-static' ]
+        ignores: [ 'dist', 'node_modules', 'public', 'src/communication/generated', 'src/graphql/generated', 'storybook-static' ]
     },
     js.configs.recommended,
     ...tseslint.configs.recommended,

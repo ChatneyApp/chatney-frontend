@@ -1,248 +1,47 @@
-import { MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
-import { UserId } from '@/types/users';
-import { Channel, ChannelId } from '@/types/channels';
-import { ChannelType, ChannelTypeId } from '@/types/channelTypes';
-import { Workspace, WorkspaceId } from '@/types/workspaces';
-import { RoleId } from '@/types/roles';
-import { Permission } from '@/types/acls';
+import type { WebSocketEvents } from './generated/websocket';
 
-export type MessageDeletedPayload = {
-    messageId: MessageId;
-    channelId: ChannelId;
-};
-
-export type ReactionChangedPayload = {
-    code: string;
-    messageId: MessageId;
-    channelId: ChannelId;
-    userId: UserId;
-}
-export type MessageChildrenCountUpdatedPayload = {
-    messageId: MessageId;
-    childrenCount: number;
-}
-export type EditedMessagePayload = {
-    message: MessageWithUser;
-};
-export type RolePayload = {
-    id: RoleId;
-    name: string;
-    permissions: string[];
-    isProtected: boolean;
-};
-export type RoleDeletedPayload = {
-    id: RoleId;
-};
-export type UserRolePayload = {
-    userId: UserId;
-    roleId: RoleId;
-    channelId: ChannelId | null;
-    channelTypeId: number | null;
-    workspaceId: number | null;
-    allowlist: string[];
-    denylist: string[];
-};
-export type UserRoleDeletedPayload = {
-    userId: UserId;
-    channelId: ChannelId | null;
-    channelTypeId: number | null;
-    workspaceId: number | null;
-};
-export type RoleAclPayload = {
-    roleId: RoleId;
-    secObjId: number;
-    permissions: Permission[];
-};
-export type RoleAclDeletedPayload = {
-    roleId: RoleId;
-    secObjId: number;
-};
-export type UserAclPayload = {
-    userId: UserId;
-    secObjId: number;
-    permissions: Permission[];
-};
-export type UserAclDeletedPayload = {
-    userId: UserId;
-    secObjId: number;
-};
-export type ChannelPayload = Pick<Channel, 'id' | 'name' | 'channelTypeId' | 'workspaceId' | 'isDm'> & {
-    memberUserIds: UserId[];
-};
-export type ChannelDeletedPayload = {
-    id: ChannelId;
-    workspaceId: WorkspaceId | null;
-    isDm?: boolean;
-};
-export type ChannelTypePayload = ChannelType;
-export type ChannelTypeDeletedPayload = {
-    id: ChannelTypeId;
-};
-export type WorkspacePayload = Workspace;
-export type WorkspaceDeletedPayload = {
-    id: WorkspaceId;
-};
-export type NewMessagePayload = {
-    message: MessageWithUser;
-    replyTo: ReplyToMessage | null;
-};
-
-export type WebSocketMessagePayload =
-    NewMessagePayload |
-    MessageDeletedPayload |
-    ReactionChangedPayload |
-    MessageChildrenCountUpdatedPayload |
-    EditedMessagePayload |
-    RolePayload |
-    RoleDeletedPayload |
-    UserRolePayload |
-    UserRoleDeletedPayload |
-    RoleAclPayload |
-    RoleAclDeletedPayload |
-    UserAclPayload |
-    UserAclDeletedPayload |
-    ChannelPayload |
-    ChannelDeletedPayload |
-    ChannelTypePayload |
-    ChannelTypeDeletedPayload |
-    WorkspacePayload |
-    WorkspaceDeletedPayload;
-
-export enum WebSocketEventType {
-    NEW_MESSAGE = 'newMessage',
-    DELETED_MESSAGE = 'deletedMessage',
-    NEW_REACTION = 'newReaction',
-    DELETED_REACTION = 'deletedReaction',
-    MESSAGE_CHILDREN_COUNT_UPDATED = 'messageChildrenCountUpdated',
-    EDITED_MESSAGE = 'editedMessage',
-    NEW_ROLE = 'newRole',
-    UPDATED_ROLE = 'updatedRole',
-    DELETED_ROLE = 'deletedRole',
-    NEW_USER_ROLE = 'newUserRole',
-    UPDATED_USER_ROLE = 'updatedUserRole',
-    DELETED_USER_ROLE = 'deletedUserRole',
-    ROLE_ACL_CHANGED = 'roleAclChanged',
-    ROLE_ACL_DELETED = 'roleAclDeleted',
-    USER_ACL_CHANGED = 'userAclChanged',
-    USER_ACL_DELETED = 'userAclDeleted',
-    NEW_CHANNEL = 'newChannel',
-    UPDATED_CHANNEL = 'updatedChannel',
-    DELETED_CHANNEL = 'deletedChannel',
-    NEW_CHANNEL_TYPE = 'newChannelType',
-    UPDATED_CHANNEL_TYPE = 'updatedChannelType',
-    DELETED_CHANNEL_TYPE = 'deletedChannelType',
-    NEW_WORKSPACE = 'newWorkspace',
-    UPDATED_WORKSPACE = 'updatedWorkspace',
-    DELETED_WORKSPACE = 'deletedWorkspace',
-}
+export type WebSocketEventType = keyof WebSocketEvents;
 
 export type WebSocketEventRaw = {
-    type: WebSocketEventType.NEW_MESSAGE;
-    payload: NewMessagePayload;
-} | {
-    type: WebSocketEventType.DELETED_MESSAGE;
-    payload: MessageDeletedPayload;
-} | {
-    type: WebSocketEventType.NEW_REACTION | WebSocketEventType.DELETED_REACTION;
-    payload: ReactionChangedPayload;
-} | {
-    type: WebSocketEventType.MESSAGE_CHILDREN_COUNT_UPDATED;
-    payload: MessageChildrenCountUpdatedPayload;
-} | {
-    type: WebSocketEventType.EDITED_MESSAGE;
-    payload: EditedMessagePayload;
-} | {
-    type: WebSocketEventType.NEW_ROLE | WebSocketEventType.UPDATED_ROLE;
-    payload: RolePayload;
-} | {
-    type: WebSocketEventType.DELETED_ROLE;
-    payload: RoleDeletedPayload;
-} | {
-    type: WebSocketEventType.NEW_USER_ROLE | WebSocketEventType.UPDATED_USER_ROLE;
-    payload: UserRolePayload;
-} | {
-    type: WebSocketEventType.DELETED_USER_ROLE;
-    payload: UserRoleDeletedPayload;
-} | {
-    type: WebSocketEventType.ROLE_ACL_CHANGED;
-    payload: RoleAclPayload;
-} | {
-    type: WebSocketEventType.ROLE_ACL_DELETED;
-    payload: RoleAclDeletedPayload;
-} | {
-    type: WebSocketEventType.USER_ACL_CHANGED;
-    payload: UserAclPayload;
-} | {
-    type: WebSocketEventType.USER_ACL_DELETED;
-    payload: UserAclDeletedPayload;
-} | {
-    type: WebSocketEventType.NEW_CHANNEL | WebSocketEventType.UPDATED_CHANNEL;
-    payload: ChannelPayload;
-} | {
-    type: WebSocketEventType.DELETED_CHANNEL;
-    payload: ChannelDeletedPayload;
-} | {
-    type: WebSocketEventType.NEW_CHANNEL_TYPE | WebSocketEventType.UPDATED_CHANNEL_TYPE;
-    payload: ChannelTypePayload;
-} | {
-    type: WebSocketEventType.DELETED_CHANNEL_TYPE;
-    payload: ChannelTypeDeletedPayload;
-} | {
-    type: WebSocketEventType.NEW_WORKSPACE | WebSocketEventType.UPDATED_WORKSPACE;
-    payload: WorkspacePayload;
-} | {
-    type: WebSocketEventType.DELETED_WORKSPACE;
-    payload: WorkspaceDeletedPayload;
-}
+    [K in WebSocketEventType]: { type: K; payload: WebSocketEvents[K] };
+}[WebSocketEventType];
 
-export class WebSocketEvent extends Event {
-    readonly payload: WebSocketMessagePayload;
-    constructor(type: WebSocketEventType, payload: WebSocketMessagePayload) {
+export class WebSocketEvent<K extends WebSocketEventType = WebSocketEventType> extends Event {
+    declare readonly type: K;
+    readonly payload: WebSocketEvents[K];
+
+    constructor(type: K, payload: WebSocketEvents[K]) {
         super(type);
         this.payload = payload;
     }
 }
 
-export class WebSocketEventEmitter extends EventTarget {
-    addEventListener(
-        type: WebSocketEventType,
-        callback: (ev: WebSocketEvent) => void,
-        options?: boolean | AddEventListenerOptions
-    ): void;
-    addEventListener(
-        type: string,
-        callback: EventListenerOrEventListenerObject,
-        options?: boolean | AddEventListenerOptions
-    ): void;
-    addEventListener(
-        type: WebSocketEventType | string,
-        callback: ((ev: WebSocketEvent) => void) | EventListenerOrEventListenerObject,
+// Spreads a union of event types into a union of events, so `switch (event.type)` narrows the payload.
+export type WebSocketEventOf<K extends WebSocketEventType> = { [P in K]: WebSocketEvent<P> }[K];
+
+export type ChannelChangedEvent = WebSocketEventOf<'newChannel' | 'updatedChannel' | 'deletedChannel'>;
+
+// Wraps EventTarget instead of extending it: its addEventListener takes any string, so unknown event names would compile.
+export class WebSocketEventEmitter {
+    private readonly target = new EventTarget();
+
+    addEventListener<K extends WebSocketEventType>(
+        type: K,
+        callback: (event: WebSocketEventOf<K>) => void,
         options?: boolean | AddEventListenerOptions
     ): void {
-        super.addEventListener(type, callback as EventListener, options);
+        this.target.addEventListener(type, callback as EventListener, options);
     }
 
-    removeEventListener(
-        type: WebSocketEventType,
-        callback: (ev: WebSocketEvent) => void,
-        options?: boolean | EventListenerOptions
-    ): void;
-    removeEventListener(
-        type: string,
-        callback: EventListenerOrEventListenerObject,
-        options?: boolean | EventListenerOptions
-    ): void;
-    removeEventListener(
-        type: WebSocketEventType | string,
-        callback: ((ev: WebSocketEvent) => void) | EventListenerOrEventListenerObject,
+    removeEventListener<K extends WebSocketEventType>(
+        type: K,
+        callback: (event: WebSocketEventOf<K>) => void,
         options?: boolean | EventListenerOptions
     ): void {
-        super.removeEventListener(type, callback as EventListener, options);
+        this.target.removeEventListener(type, callback as EventListener, options);
     }
 
-    // Convenience: ensures you pass an instance of the right Event subclass.
-    dispatchEvent(evt: WebSocketEvent): boolean {
-        // NOTE: the event must have the matching type set in its constructor (super(type))
-        return super.dispatchEvent(evt);
+    dispatchEvent(event: WebSocketEvent): boolean {
+        return this.target.dispatchEvent(event);
     }
 }

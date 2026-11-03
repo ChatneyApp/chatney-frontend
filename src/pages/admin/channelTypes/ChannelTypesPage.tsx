@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 
 import { GET_CHANNEL_TYPES } from '@/graphql/channelTypes';
 import { useWebsocket } from '@/contexts/WebSocketProvider';
-import { WebSocketEventType } from '@/communication/WebSocketEventEmitter';
 import { sortById } from '@/helpers/utils';
 
 import { ChannelTypeFormModal } from './components/ChannelTypeFormModal';
@@ -29,9 +28,9 @@ function ChannelTypesPageContent() {
         const controller = new AbortController();
         const { signal } = controller;
 
-        eventEmitter.addEventListener(WebSocketEventType.NEW_CHANNEL_TYPE, handleRefresh, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.UPDATED_CHANNEL_TYPE, handleRefresh, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.DELETED_CHANNEL_TYPE, handleRefresh, { signal });
+        eventEmitter.addEventListener('newChannelType', handleRefresh, { signal });
+        eventEmitter.addEventListener('updatedChannelType', handleRefresh, { signal });
+        eventEmitter.addEventListener('deletedChannelType', handleRefresh, { signal });
 
         return () => controller.abort();
     }, [eventEmitter, handleRefresh]);

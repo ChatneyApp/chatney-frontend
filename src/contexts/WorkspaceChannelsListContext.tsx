@@ -5,7 +5,7 @@ import { Channel } from '@/types/channels';
 import { WorkspacesListContext } from './WorkspacesListContext';
 import { GET_WORKSPACE_CHANNELS, patchChannelInCache, removeChannelFromCache } from '@/graphql/channels';
 import { useWebsocket } from '@/contexts/WebSocketProvider';
-import { ChannelDeletedPayload, ChannelPayload, WebSocketEvent, WebSocketEventType } from '@/communication/WebSocketEventEmitter';
+import { WebSocketEvent } from '@/communication/WebSocketEventEmitter';
 
 interface WorkspaceChannelsListContextValue {
     channels: Channel[];
@@ -38,8 +38,8 @@ export function WorkspaceChannelsListProvider({ children }: PropsWithChildren) {
         const controller = new AbortController();
         const { signal } = controller;
 
-        const onChannelCreated = (event: WebSocketEvent) => {
-            const channel = event.payload as ChannelPayload;
+        const onChannelCreated = (event: WebSocketEvent<'newChannel'>) => {
+            const channel = event.payload;
             if (channel.isDm || activeWorkspaceId === null || channel.workspaceId !== activeWorkspaceId) {
                 return;
             }
@@ -52,23 +52,23 @@ export function WorkspaceChannelsListProvider({ children }: PropsWithChildren) {
             });
         };
 
-        const onChannelUpdated = (event: WebSocketEvent) => {
-            const channel = event.payload as ChannelPayload;
+        const onChannelUpdated = (event: WebSocketEvent<'updatedChannel'>) => {
+            const channel = event.payload;
             if (!channel.isDm) {
                 patchChannelInCache(cache, channel);
             }
         };
 
-        const onChannelDeleted = (event: WebSocketEvent) => {
-            const channel = event.payload as ChannelDeletedPayload;
+        const onChannelDeleted = (event: WebSocketEvent<'deletedChannel'>) => {
+            const channel = event.payload;
             if (!channel.isDm) {
                 removeChannelFromCache(cache, channel.id);
             }
         };
 
-        eventEmitter.addEventListener(WebSocketEventType.NEW_CHANNEL, onChannelCreated, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.UPDATED_CHANNEL, onChannelUpdated, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.DELETED_CHANNEL, onChannelDeleted, { signal });
+        eventEmitter.addEventListener('newChannel', onChannelCreated, { signal });
+        eventEmitter.addEventListener('updatedChannel', onChannelUpdated, { signal });
+        eventEmitter.addEventListener('deletedChannel', onChannelDeleted, { signal });
 
         return () => controller.abort();
     }, [eventEmitter, cache, refetch, activeWorkspaceId, channels]);

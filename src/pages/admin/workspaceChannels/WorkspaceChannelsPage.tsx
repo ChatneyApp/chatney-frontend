@@ -8,12 +8,7 @@ import { GET_WORKSPACES } from '@/graphql/workspaces';
 import { GET_WORKSPACE_CHANNELS } from '@/graphql/channels';
 import { GET_CHANNEL_TYPES } from '@/graphql/channelTypes';
 import { useWebsocket } from '@/contexts/WebSocketProvider';
-import {
-    ChannelDeletedPayload,
-    ChannelPayload,
-    WebSocketEvent,
-    WebSocketEventType,
-} from '@/communication/WebSocketEventEmitter';
+import { ChannelChangedEvent } from '@/communication/WebSocketEventEmitter';
 import { Workspace } from '@/types/workspaces';
 import { sortById } from '@/helpers/utils';
 
@@ -69,19 +64,18 @@ function WorkspaceChannelsEditor({ workspace }: EditorProps) {
         const controller = new AbortController();
         const { signal } = controller;
 
-        const onChannelChanged = (event: WebSocketEvent) => {
-            const channel = event.payload as ChannelPayload | ChannelDeletedPayload;
-            if (channel.workspaceId === workspace.id) {
+        const onChannelChanged = (event: ChannelChangedEvent) => {
+            if (event.payload.workspaceId === workspace.id) {
                 handleChannelsRefresh();
             }
         };
 
-        eventEmitter.addEventListener(WebSocketEventType.NEW_CHANNEL, onChannelChanged, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.UPDATED_CHANNEL, onChannelChanged, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.DELETED_CHANNEL, onChannelChanged, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.NEW_CHANNEL_TYPE, handleChannelTypesRefresh, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.UPDATED_CHANNEL_TYPE, handleChannelTypesRefresh, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.DELETED_CHANNEL_TYPE, handleChannelTypesRefresh, { signal });
+        eventEmitter.addEventListener('newChannel', onChannelChanged, { signal });
+        eventEmitter.addEventListener('updatedChannel', onChannelChanged, { signal });
+        eventEmitter.addEventListener('deletedChannel', onChannelChanged, { signal });
+        eventEmitter.addEventListener('newChannelType', handleChannelTypesRefresh, { signal });
+        eventEmitter.addEventListener('updatedChannelType', handleChannelTypesRefresh, { signal });
+        eventEmitter.addEventListener('deletedChannelType', handleChannelTypesRefresh, { signal });
 
         return () => controller.abort();
     }, [eventEmitter, workspace.id, handleChannelsRefresh, handleChannelTypesRefresh]);
@@ -142,8 +136,8 @@ function WorkspaceChannelsPageContent({ workspaceId }: ContentProps) {
         const controller = new AbortController();
         const { signal } = controller;
 
-        eventEmitter.addEventListener(WebSocketEventType.UPDATED_WORKSPACE, handleRefresh, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.DELETED_WORKSPACE, handleRefresh, { signal });
+        eventEmitter.addEventListener('updatedWorkspace', handleRefresh, { signal });
+        eventEmitter.addEventListener('deletedWorkspace', handleRefresh, { signal });
 
         return () => controller.abort();
     }, [eventEmitter, handleRefresh]);

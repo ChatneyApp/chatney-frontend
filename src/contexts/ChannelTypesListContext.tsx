@@ -4,7 +4,6 @@ import { useSuspenseQuery } from '@apollo/client/react';
 import { ChannelType } from '@/types/channelTypes';
 import { GET_CHANNEL_TYPES } from '@/graphql/channelTypes';
 import { useWebsocket } from '@/contexts/WebSocketProvider';
-import { WebSocketEventType } from '@/communication/WebSocketEventEmitter';
 
 interface ChannelTypesListContextValue {
     channelTypes: ChannelType[];
@@ -35,9 +34,9 @@ export function ChannelTypesListProvider({ children }: PropsWithChildren) {
             });
         };
 
-        eventEmitter.addEventListener(WebSocketEventType.NEW_CHANNEL_TYPE, onChannelTypesChanged, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.UPDATED_CHANNEL_TYPE, onChannelTypesChanged, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.DELETED_CHANNEL_TYPE, onChannelTypesChanged, { signal });
+        eventEmitter.addEventListener('newChannelType', onChannelTypesChanged, { signal });
+        eventEmitter.addEventListener('updatedChannelType', onChannelTypesChanged, { signal });
+        eventEmitter.addEventListener('deletedChannelType', onChannelTypesChanged, { signal });
 
         return () => controller.abort();
     }, [eventEmitter, refetch]);

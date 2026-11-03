@@ -15,26 +15,25 @@ interface MyPermissionsContextValue {
 const MyPermissionsContext = createContext<MyPermissionsContextValue | null>(null);
 
 // effective permissions are resolved through the whole workspace → channel type → channel hierarchy
-const refetchEvents = [
-    WebSocketEventType.NEW_ROLE,
-    WebSocketEventType.UPDATED_ROLE,
-    WebSocketEventType.DELETED_ROLE,
-    WebSocketEventType.NEW_USER_ROLE,
-    WebSocketEventType.UPDATED_USER_ROLE,
-    WebSocketEventType.DELETED_USER_ROLE,
-    WebSocketEventType.ROLE_ACL_CHANGED,
-    WebSocketEventType.ROLE_ACL_DELETED,
-    WebSocketEventType.USER_ACL_CHANGED,
-    WebSocketEventType.USER_ACL_DELETED,
-    WebSocketEventType.NEW_CHANNEL,
-    WebSocketEventType.UPDATED_CHANNEL,
-    WebSocketEventType.DELETED_CHANNEL,
-    WebSocketEventType.NEW_CHANNEL_TYPE,
-    WebSocketEventType.UPDATED_CHANNEL_TYPE,
-    WebSocketEventType.DELETED_CHANNEL_TYPE,
-    WebSocketEventType.NEW_WORKSPACE,
-    WebSocketEventType.UPDATED_WORKSPACE,
-    WebSocketEventType.DELETED_WORKSPACE,
+const refetchEvents: WebSocketEventType[] = [
+    'newRole',
+    'updatedRole',
+    'deletedRole',
+    'newUserRole',
+    'deletedUserRole',
+    'roleAclChanged',
+    'roleAclDeleted',
+    'userAclChanged',
+    'userAclDeleted',
+    'newChannel',
+    'updatedChannel',
+    'deletedChannel',
+    'newChannelType',
+    'updatedChannelType',
+    'deletedChannelType',
+    'newWorkspace',
+    'updatedWorkspace',
+    'deletedWorkspace',
 ];
 
 const dmChannelPermissions = toChannelPermissions(DM_CHANNEL_PERMISSIONS);

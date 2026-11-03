@@ -1,0 +1,995 @@
+{
+  "title": "WebSocketEvents",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "channelGroupsOrderUpdated",
+    "deletedChannel",
+    "deletedChannelGroup",
+    "deletedChannelType",
+    "deletedMessage",
+    "deletedReaction",
+    "deletedRole",
+    "deletedUserRole",
+    "deletedWorkspace",
+    "editedMessage",
+    "messageChildrenCountUpdated",
+    "newChannel",
+    "newChannelGroup",
+    "newChannelType",
+    "newMessage",
+    "newReaction",
+    "newRole",
+    "newUserRole",
+    "newWorkspace",
+    "roleAclChanged",
+    "roleAclDeleted",
+    "updatedChannel",
+    "updatedChannelGroup",
+    "updatedChannelType",
+    "updatedConfig",
+    "updatedRole",
+    "updatedUserProfile",
+    "updatedWorkspace",
+    "userAclChanged",
+    "userAclDeleted"
+  ],
+  "properties": {
+    "channelGroupsOrderUpdated": {
+      "$ref": "#/$defs/WebsocketChannelGroupsOrderPayload"
+    },
+    "deletedChannel": {
+      "$ref": "#/$defs/WebsocketChannelDeletedPayload"
+    },
+    "deletedChannelGroup": {
+      "$ref": "#/$defs/WebsocketChannelGroupDeletedPayload"
+    },
+    "deletedChannelType": {
+      "$ref": "#/$defs/WebsocketChannelTypeDeletedPayload"
+    },
+    "deletedMessage": {
+      "$ref": "#/$defs/DeletedMessage"
+    },
+    "deletedReaction": {
+      "$ref": "#/$defs/WebsocketReactionPayload"
+    },
+    "deletedRole": {
+      "$ref": "#/$defs/WebsocketRoleDeletedPayload"
+    },
+    "deletedUserRole": {
+      "$ref": "#/$defs/WebsocketUserRoleDeletedPayload"
+    },
+    "deletedWorkspace": {
+      "$ref": "#/$defs/WebsocketWorkspaceDeletedPayload"
+    },
+    "editedMessage": {
+      "$ref": "#/$defs/EditedMessagePayload"
+    },
+    "messageChildrenCountUpdated": {
+      "$ref": "#/$defs/MessageChildrenCountUpdated"
+    },
+    "newChannel": {
+      "$ref": "#/$defs/WebsocketChannelPayload"
+    },
+    "newChannelGroup": {
+      "$ref": "#/$defs/WebsocketChannelGroupPayload"
+    },
+    "newChannelType": {
+      "$ref": "#/$defs/WebsocketChannelTypePayload"
+    },
+    "newMessage": {
+      "$ref": "#/$defs/NewMessagePayload"
+    },
+    "newReaction": {
+      "$ref": "#/$defs/WebsocketReactionPayload"
+    },
+    "newRole": {
+      "$ref": "#/$defs/WebsocketRolePayload"
+    },
+    "newUserRole": {
+      "$ref": "#/$defs/WebsocketUserRolePayload"
+    },
+    "newWorkspace": {
+      "$ref": "#/$defs/WebsocketWorkspacePayload"
+    },
+    "roleAclChanged": {
+      "$ref": "#/$defs/WebsocketRoleAclPayload"
+    },
+    "roleAclDeleted": {
+      "$ref": "#/$defs/WebsocketRoleAclDeletedPayload"
+    },
+    "updatedChannel": {
+      "$ref": "#/$defs/WebsocketChannelPayload"
+    },
+    "updatedChannelGroup": {
+      "$ref": "#/$defs/WebsocketChannelGroupPayload"
+    },
+    "updatedChannelType": {
+      "$ref": "#/$defs/WebsocketChannelTypePayload"
+    },
+    "updatedConfig": {
+      "$ref": "#/$defs/WebsocketConfigPayload"
+    },
+    "updatedRole": {
+      "$ref": "#/$defs/WebsocketRolePayload"
+    },
+    "updatedUserProfile": {
+      "$ref": "#/$defs/WebsocketUserProfilePayload"
+    },
+    "updatedWorkspace": {
+      "$ref": "#/$defs/WebsocketWorkspacePayload"
+    },
+    "userAclChanged": {
+      "$ref": "#/$defs/WebsocketUserAclPayload"
+    },
+    "userAclDeleted": {
+      "$ref": "#/$defs/WebsocketUserAclDeletedPayload"
+    }
+  },
+  "$defs": {
+    "Attachment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "userId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "urlPath": {
+          "type": "string"
+        },
+        "originalFileName": {
+          "type": "string"
+        },
+        "extension": {
+          "type": "string"
+        },
+        "mimeType": {
+          "type": "string"
+        },
+        "size": {
+          "type": "integer"
+        },
+        "width": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "height": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "duration": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "type": {
+          "type": "string"
+        },
+        "asFile": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "urlPath",
+        "originalFileName",
+        "extension",
+        "mimeType",
+        "size",
+        "width",
+        "height",
+        "duration",
+        "type",
+        "asFile",
+        "createdAt",
+        "updatedAt"
+      ],
+      "title": "Attachment",
+      "additionalProperties": false
+    },
+    "DeletedMessage": {
+      "type": "object",
+      "properties": {
+        "messageId": {
+          "type": "integer"
+        },
+        "channelId": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "messageId",
+        "channelId"
+      ],
+      "title": "DeletedMessage",
+      "additionalProperties": false
+    },
+    "EditedMessagePayload": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "$ref": "#/$defs/MessageWithUser"
+        }
+      },
+      "required": [
+        "message"
+      ],
+      "title": "EditedMessagePayload",
+      "additionalProperties": false
+    },
+    "MessageChildrenCountUpdated": {
+      "type": "object",
+      "properties": {
+        "messageId": {
+          "type": "integer"
+        },
+        "childrenCount": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "messageId",
+        "childrenCount"
+      ],
+      "title": "MessageChildrenCountUpdated",
+      "additionalProperties": false
+    },
+    "MessageUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "avatarUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "displayName": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "nickname",
+        "fullName",
+        "avatarUrl",
+        "displayName"
+      ],
+      "title": "MessageUser",
+      "additionalProperties": false
+    },
+    "MessageWithUser": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/$defs/MessageUser"
+        },
+        "myReactions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "urlPreviews": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/UrlPreview"
+          }
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Attachment"
+          }
+        },
+        "reactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ReactionInMessage"
+          }
+        },
+        "id": {
+          "type": "integer"
+        },
+        "channelId": {
+          "type": "integer"
+        },
+        "userId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "content": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "parentId": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "childrenCount": {
+          "type": "integer"
+        },
+        "replyTo": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "user",
+        "myReactions",
+        "urlPreviews",
+        "attachments",
+        "reactions",
+        "id",
+        "channelId",
+        "userId",
+        "content",
+        "status",
+        "createdAt",
+        "updatedAt",
+        "parentId",
+        "childrenCount",
+        "replyTo"
+      ],
+      "title": "MessageWithUser",
+      "additionalProperties": false
+    },
+    "NewMessagePayload": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "$ref": "#/$defs/MessageWithUser"
+        },
+        "replyTo": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ReplyToMessage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "message",
+        "replyTo"
+      ],
+      "title": "NewMessagePayload",
+      "additionalProperties": false
+    },
+    "Permission": {
+      "enum": [
+        "ATTACHMENT_DELETE",
+        "ATTACHMENT_READ",
+        "ATTACHMENT_UPLOAD",
+        "CHANNEL_ADD_REACTION",
+        "CHANNEL_CREATE_CHANNEL",
+        "CHANNEL_CREATE_MESSAGE",
+        "CHANNEL_CREATE_THREAD",
+        "CHANNEL_DELETE_CHANNEL",
+        "CHANNEL_DELETE_CHANNEL_TYPE",
+        "CHANNEL_DELETE_MESSAGE",
+        "CHANNEL_DELETE_OWN_MESSAGE",
+        "CHANNEL_EDIT_CHANNEL",
+        "CHANNEL_EDIT_MESSAGE",
+        "CHANNEL_EDIT_OWN_MESSAGE",
+        "CHANNEL_READ_CHANNEL",
+        "CHANNEL_READ_MESSAGE",
+        "CHANNEL_REMOVE_REACTION",
+        "CONFIG_READ_VALUE",
+        "CONFIG_UPDATE_VALUE",
+        "ROLE_CREATE_ROLE",
+        "ROLE_DELETE_ROLE",
+        "ROLE_EDIT_ROLE",
+        "ROLE_READ_ROLE",
+        "USER_CREATE_USER",
+        "USER_DELETE_USER",
+        "USER_EDIT_USER",
+        "USER_READ_USER",
+        "WORKSPACE_CREATE_CHANNEL_GROUP",
+        "WORKSPACE_CREATE_WORKSPACE",
+        "WORKSPACE_DELETE_CHANNEL_GROUP",
+        "WORKSPACE_DELETE_WORKSPACE",
+        "WORKSPACE_READ_CHANNEL_GROUP",
+        "WORKSPACE_READ_WORKSPACE",
+        "WORKSPACE_UPDATE_CHANNEL_GROUP",
+        "WORKSPACE_UPDATE_WORKSPACE"
+      ],
+      "title": "Permission"
+    },
+    "ReactionInMessage": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "count": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "code",
+        "count"
+      ],
+      "title": "ReactionInMessage",
+      "additionalProperties": false
+    },
+    "ReplyToMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "userId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "content": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "content"
+      ],
+      "title": "ReplyToMessage",
+      "additionalProperties": false
+    },
+    "UrlPreview": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "url": {
+          "type": "string"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thumbnailUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "videoThumbnailUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "siteName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "favIconUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "author": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thumbnailWidth": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "thumbnailHeight": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "createdAt",
+        "updatedAt",
+        "url",
+        "title",
+        "description",
+        "thumbnailUrl",
+        "videoThumbnailUrl",
+        "siteName",
+        "favIconUrl",
+        "type",
+        "author",
+        "thumbnailWidth",
+        "thumbnailHeight"
+      ],
+      "title": "UrlPreview",
+      "additionalProperties": false
+    },
+    "WebsocketChannelDeletedPayload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "workspaceId": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "isDm": {
+          "type": "boolean"
+        }
+      },
+      "title": "WebsocketChannelDeletedPayload",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "workspaceId",
+        "isDm"
+      ]
+    },
+    "WebsocketChannelGroupDeletedPayload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "workspaceId": {
+          "type": "integer"
+        }
+      },
+      "title": "WebsocketChannelGroupDeletedPayload",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "workspaceId"
+      ]
+    },
+    "WebsocketChannelGroupPayload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "workspaceId": {
+          "type": "integer"
+        },
+        "channelIds": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "order": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "workspaceId",
+        "channelIds",
+        "order"
+      ],
+      "title": "WebsocketChannelGroupPayload",
+      "additionalProperties": false
+    },
+    "WebsocketChannelGroupsOrderPayload": {
+      "type": "object",
+      "properties": {
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/WebsocketChannelGroupPayload"
+          }
+        }
+      },
+      "required": [
+        "groups"
+      ],
+      "title": "WebsocketChannelGroupsOrderPayload",
+      "additionalProperties": false
+    },
+    "WebsocketChannelPayload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "channelTypeId": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "workspaceId": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "isDm": {
+          "type": "boolean"
+        },
+        "memberUserIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "channelTypeId",
+        "workspaceId",
+        "isDm",
+        "memberUserIds"
+      ],
+      "title": "WebsocketChannelPayload",
+      "additionalProperties": false
+    },
+    "WebsocketChannelTypeDeletedPayload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        }
+      },
+      "title": "WebsocketChannelTypeDeletedPayload",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ]
+    },
+    "WebsocketChannelTypePayload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "key"
+      ],
+      "title": "WebsocketChannelTypePayload",
+      "additionalProperties": false
+    },
+    "WebsocketConfigPayload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "WebsocketConfigPayload",
+      "additionalProperties": false
+    },
+    "WebsocketReactionPayload": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "messageId": {
+          "type": "integer"
+        },
+        "channelId": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "code",
+        "userId",
+        "messageId",
+        "channelId"
+      ],
+      "title": "WebsocketReactionPayload",
+      "additionalProperties": false
+    },
+    "WebsocketRoleAclDeletedPayload": {
+      "type": "object",
+      "properties": {
+        "roleId": {
+          "type": "integer"
+        },
+        "secObjId": {
+          "type": "integer"
+        }
+      },
+      "title": "WebsocketRoleAclDeletedPayload",
+      "additionalProperties": false,
+      "required": [
+        "roleId",
+        "secObjId"
+      ]
+    },
+    "WebsocketRoleAclPayload": {
+      "type": "object",
+      "properties": {
+        "roleId": {
+          "type": "integer"
+        },
+        "secObjId": {
+          "type": "integer"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Permission"
+          }
+        }
+      },
+      "title": "WebsocketRoleAclPayload",
+      "additionalProperties": false,
+      "required": [
+        "roleId",
+        "secObjId",
+        "permissions"
+      ]
+    },
+    "WebsocketRoleDeletedPayload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        }
+      },
+      "title": "WebsocketRoleDeletedPayload",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ]
+    },
+    "WebsocketRolePayload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "WebsocketRolePayload",
+      "additionalProperties": false
+    },
+    "WebsocketUserAclDeletedPayload": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "secObjId": {
+          "type": "integer"
+        }
+      },
+      "title": "WebsocketUserAclDeletedPayload",
+      "additionalProperties": false,
+      "required": [
+        "userId",
+        "secObjId"
+      ]
+    },
+    "WebsocketUserAclPayload": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "secObjId": {
+          "type": "integer"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Permission"
+          }
+        }
+      },
+      "title": "WebsocketUserAclPayload",
+      "additionalProperties": false,
+      "required": [
+        "userId",
+        "secObjId",
+        "permissions"
+      ]
+    },
+    "WebsocketUserProfilePayload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "avatarUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "nickname",
+        "avatarUrl"
+      ],
+      "title": "WebsocketUserProfilePayload",
+      "additionalProperties": false
+    },
+    "WebsocketUserRoleDeletedPayload": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "roleId": {
+          "type": "integer"
+        }
+      },
+      "title": "WebsocketUserRoleDeletedPayload",
+      "additionalProperties": false,
+      "required": [
+        "userId",
+        "roleId"
+      ]
+    },
+    "WebsocketUserRolePayload": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "roleId": {
+          "type": "integer"
+        }
+      },
+      "title": "WebsocketUserRolePayload",
+      "additionalProperties": false,
+      "required": [
+        "userId",
+        "roleId"
+      ]
+    },
+    "WebsocketWorkspaceDeletedPayload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        }
+      },
+      "title": "WebsocketWorkspaceDeletedPayload",
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ]
+    },
+    "WebsocketWorkspacePayload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "WebsocketWorkspacePayload",
+      "additionalProperties": false
+    }
+  }
+}

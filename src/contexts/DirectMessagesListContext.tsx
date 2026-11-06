@@ -4,7 +4,7 @@ import { useApolloClient } from '@apollo/client/react';
 import { Channel } from '@/types/channels';
 import { getDirectMessages } from '@/graphql/channels';
 import { useWebsocket } from '@/contexts/WebSocketProvider';
-import { WebSocketEvent, WebSocketEventType } from '@/communication/WebSocketEventEmitter';
+import { ChannelChangedEvent } from '@/communication/WebSocketEventEmitter';
 
 interface DirectMessagesListContextValue {
     directMessages: Channel[];
@@ -35,20 +35,15 @@ export function DirectMessagesListProvider({ children }: PropsWithChildren) {
         const controller = new AbortController();
         const { signal } = controller;
 
-        const onDirectMessagesChanged = (event: WebSocketEvent) => {
-            const payload = event.payload;
-            if ('isDm' in payload && payload.isDm !== true) {
-                return;
+        const onDirectMessagesChanged = (event: ChannelChangedEvent) => {
+            if (event.payload.isDm) {
+                void handleRefresh();
             }
-            if (!('isDm' in payload) && 'workspaceId' in payload && payload.workspaceId != null) {
-                return;
-            }
-            void handleRefresh();
         };
 
-        eventEmitter.addEventListener(WebSocketEventType.NEW_CHANNEL, onDirectMessagesChanged, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.UPDATED_CHANNEL, onDirectMessagesChanged, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.DELETED_CHANNEL, onDirectMessagesChanged, { signal });
+        eventEmitter.addEventListener('newChannel', onDirectMessagesChanged, { signal });
+        eventEmitter.addEventListener('updatedChannel', onDirectMessagesChanged, { signal });
+        eventEmitter.addEventListener('deletedChannel', onDirectMessagesChanged, { signal });
 
         return () => controller.abort();
     }, [eventEmitter, handleRefresh]);

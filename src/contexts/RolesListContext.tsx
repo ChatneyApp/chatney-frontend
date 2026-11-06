@@ -4,7 +4,6 @@ import { useSuspenseQuery } from '@apollo/client/react';
 import { Role } from '@/types/roles';
 import { GET_ROLES } from '@/graphql/roles';
 import { useWebsocket } from '@/contexts/WebSocketProvider';
-import { WebSocketEventType } from '@/communication/WebSocketEventEmitter';
 
 interface RolesListContextValue {
     roles: Role[];
@@ -35,9 +34,9 @@ export function RolesListProvider({ children }: PropsWithChildren) {
             });
         };
 
-        eventEmitter.addEventListener(WebSocketEventType.NEW_ROLE, onRolesChanged, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.UPDATED_ROLE, onRolesChanged, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.DELETED_ROLE, onRolesChanged, { signal });
+        eventEmitter.addEventListener('newRole', onRolesChanged, { signal });
+        eventEmitter.addEventListener('updatedRole', onRolesChanged, { signal });
+        eventEmitter.addEventListener('deletedRole', onRolesChanged, { signal });
 
         return () => controller.abort();
     }, [eventEmitter, refetch]);

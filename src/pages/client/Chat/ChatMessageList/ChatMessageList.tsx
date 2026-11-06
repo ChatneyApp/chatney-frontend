@@ -3,14 +3,7 @@ import { ArrowDownToLine } from 'lucide-react';
 import { useApolloClient } from '@apollo/client/react';
 import { useTranslation } from 'react-i18next';
 
-import { WebSocketEvent, WebSocketEventEmitter, WebSocketEventType } from '@/communication/WebSocketEventEmitter';
-import {
-    EditedMessagePayload,
-    MessageChildrenCountUpdatedPayload,
-    MessageDeletedPayload,
-    NewMessagePayload,
-    ReactionChangedPayload,
-} from '@/communication/WebSocketEventEmitter';
+import { WebSocketEventEmitter, WebSocketEventOf } from '@/communication/WebSocketEventEmitter';
 import { useUser } from '@/contexts/UserContext';
 import { useChannelPermissions } from '@/contexts/MyPermissionsContext';
 import { canDeleteMessage, canEditMessage } from '@/helpers/channelPermissions';
@@ -43,13 +36,13 @@ type Props = {
 };
 
 const subscribedEvents = [
-    WebSocketEventType.NEW_MESSAGE,
-    WebSocketEventType.DELETED_MESSAGE,
-    WebSocketEventType.NEW_REACTION,
-    WebSocketEventType.DELETED_REACTION,
-    WebSocketEventType.MESSAGE_CHILDREN_COUNT_UPDATED,
-    WebSocketEventType.EDITED_MESSAGE,
-];
+    'newMessage',
+    'deletedMessage',
+    'newReaction',
+    'deletedReaction',
+    'messageChildrenCountUpdated',
+    'editedMessage',
+] as const;
 
 export const ChatMessageList = ({
     channelId,
@@ -154,11 +147,11 @@ export const ChatMessageList = ({
     }, [scrollToBottom]);
 
     useEffect(() => {
-        const handleWebSocketEvent = (event: WebSocketEvent) => {
+        const handleWebSocketEvent = (event: WebSocketEventOf<typeof subscribedEvents[number]>) => {
             const { type, payload } = event;
             switch (type) {
-                case WebSocketEventType.NEW_MESSAGE: {
-                    const { message, replyTo } = payload as NewMessagePayload;
+                case 'newMessage': {
+                    const { message, replyTo } = payload;
                     if (isMessageInContext(message)) {
                         shouldScrollAfterMessagesUpdate.current = isBottomVisibleRef.current;
                         setMessages((prev) => [...prev ?? [], message]);
@@ -168,19 +161,19 @@ export const ChatMessageList = ({
                     }
                 }
                     break;
-                case WebSocketEventType.DELETED_MESSAGE: {
-                    const { channelId: deletedFromChannelId, messageId } = payload as MessageDeletedPayload;
+                case 'deletedMessage': {
+                    const { channelId: deletedFromChannelId, messageId } = payload;
                     if (deletedFromChannelId === channelId) {
                         setMessages((prev) => prev?.filter(m => m.id !== messageId) ?? null);
                         onMessageDeleted?.(messageId);
                     }
                 }
                     break;
-                case WebSocketEventType.NEW_REACTION:
-                case WebSocketEventType.DELETED_REACTION: {
-                    const { messageId, channelId: reactionChannelId, code, userId } = payload as ReactionChangedPayload;
+                case 'newReaction':
+                case 'deletedReaction': {
+                    const { messageId, channelId: reactionChannelId, code, userId } = payload;
                     if (reactionChannelId === channelId) {
-                        const isNew = type === WebSocketEventType.NEW_REACTION;
+                        const isNew = type === 'newReaction';
                         setMessages(prev => prev?.map(msg => {
                             if (msg.id !== messageId) {
                                 return msg;
@@ -212,8 +205,8 @@ export const ChatMessageList = ({
                     }
                 }
                     break;
-                case WebSocketEventType.MESSAGE_CHILDREN_COUNT_UPDATED: {
-                    const { messageId, childrenCount } = payload as MessageChildrenCountUpdatedPayload;
+                case 'messageChildrenCountUpdated': {
+                    const { messageId, childrenCount } = payload;
                     setMessages(prev => prev?.map(msg => {
                         if (msg.id !== messageId) {
                             return msg;
@@ -226,8 +219,8 @@ export const ChatMessageList = ({
                     }) ?? null);
                 }
                     break;
-                case WebSocketEventType.EDITED_MESSAGE: {
-                    const { message } = payload as EditedMessagePayload;
+                case 'editedMessage': {
+                    const { message } = payload;
                     if (message.channelId === channelId) {
                         setMessages(prev => prev?.map(msg => msg.id === message.id ? { ...msg, ...message } : msg) ?? null);
                     }

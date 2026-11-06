@@ -4,7 +4,6 @@ import type { Workspace, WorkspaceId } from '@/types/workspaces';
 import { useApolloClient } from '@apollo/client/react';
 import { getWorkspacesQuery } from '@/graphql/workspaces';
 import { useWebsocket } from '@/contexts/WebSocketProvider';
-import { WebSocketEventType } from '@/communication/WebSocketEventEmitter';
 
 interface WorkspacesListContextValue {
     workspacesList: Workspace[];
@@ -54,9 +53,9 @@ export function WorkspacesListProvider({ children }: PropsWithChildren) {
             });
         };
 
-        eventEmitter.addEventListener(WebSocketEventType.NEW_WORKSPACE, onWorkspacesChanged, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.UPDATED_WORKSPACE, onWorkspacesChanged, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.DELETED_WORKSPACE, onWorkspacesChanged, { signal });
+        eventEmitter.addEventListener('newWorkspace', onWorkspacesChanged, { signal });
+        eventEmitter.addEventListener('updatedWorkspace', onWorkspacesChanged, { signal });
+        eventEmitter.addEventListener('deletedWorkspace', onWorkspacesChanged, { signal });
 
         return () => controller.abort();
     }, [eventEmitter, fetchData]);

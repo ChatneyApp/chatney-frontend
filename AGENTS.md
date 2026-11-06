@@ -16,13 +16,15 @@ npx jest -t 'name of the test'          # single test by name
 npm run storybook      # Storybook on :6006
 ```
 
-CI (`.github/workflows/ci.yml`) runs `graphql:check`, `lint`, `build`, `test`.
+CI (`.github/workflows/ci.yml`) runs `graphql:check`, `websocket:check`, `lint`, `build`, `test`.
 
 The pre-existing `/img/hero.jpg` unresolved and >500 kB chunk warnings in `npm run build` are known.
 
-## Generated GraphQL files: do not touch
+## Generated GraphQL and WebSocket files: do not touch
 
 Never edit `graphql/` (the backend's exported `schema.graphql`) or `src/graphql/generated/`, and do not run `npm run graphql:generate` / `graphql:check` (they rewrite the generated files). A developer regenerates them. Edit only the hand-written documents in `src/graphql/*.ts`, and tell the developer when codegen needs to be re-run. Stale extra entries in the generated files don't break the build.
+
+The same applies to `websocket/` (the backend's exported `schema.json`), `src/communication/generated/` and `npm run websocket:generate` / `websocket:check`. Don't hand-write WebSocket event names or payload types: they come from the generated `WebSocketEvents` interface.
 
 `GRAPHQL.md` documents the schema → codegen → types pipeline and conventions:
 - Operations are written with `graphql()` from `@/graphql/generated` (not `gql`); every operation/fragment needs a unique name.
@@ -39,7 +41,7 @@ Never edit `graphql/` (the backend's exported `schema.graphql`) or `src/graphql/
 
 **Auth.** The token and user id live in `localStorage` (`userAuthToken`, `userAuthId`). `GraphqlProvider` adds the `Authorization` header and redirects to `/login` on `AUTH_NOT_AUTHENTICATED`/`UNAUTHENTICATED` or HTTP 401. `UserProvider` loads the current user and renders nothing until it has.
 
-**Real-time updates.** `WebSocketContextProvider` opens `VITE_WEBSOCKET_URL` for the logged-in user and dispatches each `{ type, payload }` message on a typed `WebSocketEventEmitter` (`src/communication/WebSocketEventEmitter.ts`, which lists the event types and payloads). Contexts subscribe with `eventEmitter.addEventListener(type, handler, { signal })` and either patch the Apollo cache or refetch.
+**Real-time updates.** `WebSocketContextProvider` opens `VITE_WEBSOCKET_URL` for the logged-in user and dispatches each `{ type, payload }` message on a typed `WebSocketEventEmitter` (`src/communication/WebSocketEventEmitter.ts`; event types and payloads are generated into `src/communication/generated/websocket.ts`, see `GRAPHQL.md`). Contexts subscribe with `eventEmitter.addEventListener(type, handler, { signal })` and either patch the Apollo cache or refetch.
 
 **Backend errors.** The backend sets `extensions.code` (`FORBIDDEN_ACTION`, `NOT_FOUND`, …; see `chatney-backend/ChatneyBackend/Infra/ErrorCodes.cs`). Use `getGraphQLErrorCode()` from `src/helpers/graphqlErrors.ts` to map a caught mutation error to a translated message. `useMutation` rejects on GraphQL errors, so wrap calls in try/catch.
 

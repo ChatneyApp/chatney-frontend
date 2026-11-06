@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 
 import { GET_WORKSPACES } from '@/graphql/workspaces';
 import { useWebsocket } from '@/contexts/WebSocketProvider';
-import { WebSocketEventType } from '@/communication/WebSocketEventEmitter';
 import { sortById } from '@/helpers/utils';
 
 import { WorkspaceFormModal } from './components/WorkspaceFormModal';
@@ -29,9 +28,9 @@ function WorkspacesPageContent() {
         const controller = new AbortController();
         const { signal } = controller;
 
-        eventEmitter.addEventListener(WebSocketEventType.NEW_WORKSPACE, handleRefresh, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.UPDATED_WORKSPACE, handleRefresh, { signal });
-        eventEmitter.addEventListener(WebSocketEventType.DELETED_WORKSPACE, handleRefresh, { signal });
+        eventEmitter.addEventListener('newWorkspace', handleRefresh, { signal });
+        eventEmitter.addEventListener('updatedWorkspace', handleRefresh, { signal });
+        eventEmitter.addEventListener('deletedWorkspace', handleRefresh, { signal });
 
         return () => controller.abort();
     }, [eventEmitter, handleRefresh]);

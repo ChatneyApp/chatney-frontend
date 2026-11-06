@@ -15,7 +15,9 @@
     "graphql:watch": "graphql-codegen --watch",
     "graphql:check": "graphql-codegen && git diff --exit-code src/graphql/generated",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "websocket:generate": "json2ts -i websocket/schema.json -o src/communication/generated/websocket.ts",
+    "websocket:check": "npm run websocket:generate && git diff --exit-code src/communication/generated"
   },
   "dependencies": {
     "@apollo/client": "^4.3.5",
@@ -60,6 +62,7 @@
     "eslint-plugin-react-refresh": "^0.4.26",
     "jest": "^30.5.2",
     "js-yaml": "^5.5.0",
+    "json-schema-to-typescript": "^16.0.0",
     "msw": "^2.15.0",
     "msw-storybook-addon": "^2.0.7",
     "storybook": "^10.6.3",

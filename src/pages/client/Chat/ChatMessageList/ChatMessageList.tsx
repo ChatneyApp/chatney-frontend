@@ -367,6 +367,7 @@ export const ChatMessageList = ({
             )}
             <div ref={messageInputRef}>
                 <MessageInput
+                    channelId={channelId}
                     onSend={handleSend}
                     onSaveEdit={handleSaveEdit}
                     onCancelEdit={() => setEditingMessage(null)}

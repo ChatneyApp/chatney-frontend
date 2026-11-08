@@ -245,6 +245,7 @@ type AttachmentMutations {
   upload(
     "The file (multipart upload). Must not be empty."
     file: Upload!
+    channelId: Int!
     "Show as a downloadable file rather than inline media."
     asFile: Boolean!
     "Media width in pixels, if known by the client."

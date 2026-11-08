@@ -21,6 +21,7 @@ import { VideoRecorderModal } from '@/pages/client/Chat/VideoRecorderModal';
 import { VoiceRecorderModal } from '@/pages/client/Chat/VoiceRecorderModal';
 import { formatTimestamp } from '@/helpers/formatTimestamp';
 import { AttachmentId, Attachment } from '@/types/attachments';
+import { ChannelId } from '@/types/channels';
 import { MessageId, MessageWithUser } from '@/types/messages';
 
 import dialogStyles from '@/components/Popup/Popup.module.css';
@@ -33,6 +34,7 @@ type EditingMessage = {
 };
 
 type Props = {
+    channelId: ChannelId;
     editingMessage?: EditingMessage | null;
     replyToMessage?: MessageWithUser | null;
     disabled?: boolean;
@@ -87,6 +89,7 @@ const canUploadAsFile = (file: File) =>
     file.type.startsWith('image/') || file.type.startsWith('video/') || file.type.startsWith('audio/');
 
 export function MessageInput({
+    channelId,
     editingMessage,
     replyToMessage,
     disabled = false,
@@ -451,6 +454,7 @@ export function MessageInput({
                                 <MessageEditorAttachment
                                     key={attachment.draftId}
                                     draftId={attachment.draftId}
+                                    channelId={channelId}
                                     file={attachment.file}
                                     compress={attachment.compress}
                                     asFile={attachment.asFile}

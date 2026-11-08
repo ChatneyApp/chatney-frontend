@@ -12,6 +12,9 @@ import { mockOwnMessage } from '@/test-utils/fixtures/messages';
 const meta: Meta<typeof MessageInput> = {
     title: 'pages/client/Chat/MessageInput',
     component: MessageInput,
+    args: {
+        channelId: 1,
+    },
 };
 export default meta;
 

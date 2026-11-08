@@ -3,6 +3,7 @@ import { print } from 'graphql';
 import { graphql } from '@/graphql/generated';
 import type { UploadFileMutation } from '@/graphql/generated/graphql';
 import { Attachment, AttachmentUploadMetadata } from '@/types/attachments';
+import { ChannelId } from '@/types/channels';
 import { userAuthTokenName } from '@/infra/consts';
 
 export const AttachmentFieldsFragment = graphql(`
@@ -25,9 +26,9 @@ export const AttachmentFieldsFragment = graphql(`
 `);
 
 const UPLOAD_FILE_MUTATION = graphql(`
-    mutation UploadFile($file: Upload!, $asFile: Boolean!, $width: Int, $height: Int, $duration: Int) {
+    mutation UploadFile($file: Upload!, $channelId: Int!, $asFile: Boolean!, $width: Int, $height: Int, $duration: Int) {
         attachments {
-            upload(file: $file, asFile: $asFile, width: $width, height: $height, duration: $duration) {
+            upload(file: $file, channelId: $channelId, asFile: $asFile, width: $width, height: $height, duration: $duration) {
                 ...AttachmentFields
             }
         }
@@ -43,6 +44,7 @@ export const uploadFileWithProgress = async (
     data: Blob,
     fileName: string,
     mimeType: string,
+    channelId: ChannelId,
     asFile = false,
     metadata?: AttachmentUploadMetadata,
     onProgress?: (progress: number) => void,
@@ -56,6 +58,7 @@ export const uploadFileWithProgress = async (
         query: print(UPLOAD_FILE_MUTATION),
         variables: {
             file: null,
+            channelId,
             asFile,
             width: metadata?.width,
             height: metadata?.height,

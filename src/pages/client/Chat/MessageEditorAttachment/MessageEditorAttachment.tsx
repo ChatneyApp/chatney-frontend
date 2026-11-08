@@ -10,6 +10,7 @@ import { readAttachmentMetadata } from '@/helpers/attachments/readAttachmentMeta
 import { formatFileSize } from '@/helpers/utils';
 import { ProgressBar } from '@/pages/client/Chat/ProgressBar';
 import { Attachment, AttachmentId } from '@/types/attachments';
+import { ChannelId } from '@/types/channels';
 
 import styles from './MessageEditorAttachment.module.css';
 
@@ -21,6 +22,7 @@ type UploadedProps = {
 
 type PendingProps = {
     draftId: string;
+    channelId: ChannelId;
     file: globalThis.File;
     compress: boolean;
     asFile: boolean;
@@ -63,6 +65,7 @@ export const MessageEditorAttachment = (props: Props) => {
     const isPending = isPendingAttachment(props);
     const pendingFile = isPending ? props.file : null;
     const pendingDraftId = isPending ? props.draftId : null;
+    const pendingChannelId = isPending ? props.channelId : null;
     const pendingCompress = isPending ? props.compress : false;
     const inputAsFile = isPending ? props.asFile : props.attachment.asFile;
     const pendingOnUploaded = isPending ? props.onUploaded : null;
@@ -96,7 +99,7 @@ export const MessageEditorAttachment = (props: Props) => {
     }, [pendingFile, uploadedInput]);
 
     useEffect(() => {
-        if (!pendingFile || !pendingDraftId || !pendingOnUploaded) {
+        if (!pendingFile || !pendingDraftId || pendingChannelId == null || !pendingOnUploaded) {
             return;
         }
 
@@ -141,6 +144,7 @@ export const MessageEditorAttachment = (props: Props) => {
                     preprocessedBlob,
                     pendingFile.name,
                     uploadMimeType,
+                    pendingChannelId,
                     inputAsFile,
                     metadata,
                     setUploadProgress,
@@ -160,7 +164,7 @@ export const MessageEditorAttachment = (props: Props) => {
         void upload();
 
         return () => abortController.abort();
-    }, [inputAsFile, pendingCompress, pendingDraftId, pendingFile, pendingOnUploaded]);
+    }, [inputAsFile, pendingChannelId, pendingCompress, pendingDraftId, pendingFile, pendingOnUploaded]);
 
     const preview = useMemo(() => {
         if (!sourceUrl) {

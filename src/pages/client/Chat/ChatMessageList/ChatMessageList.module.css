@@ -1,5 +1,10 @@
 @reference "tailwindcss";
 
+/* the list restores its own scroll position, native anchoring would compensate twice */
+.scrollArea {
+    overflow-anchor: none;
+}
+
 .spinner {
     @apply self-center shrink-0 animate-spin text-indigo-300;
 }

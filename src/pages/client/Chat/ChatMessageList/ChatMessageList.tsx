@@ -82,8 +82,8 @@ export const ChatMessageList = ({
     const messagesStartRef = useRef<HTMLDivElement | null>(null);
     // aborted when the list switches to another channel or thread
     const listSignalRef = useRef<AbortSignal | null>(null);
-    // scroll height before older messages are prepended, to keep the viewport in place
-    const scrollHeightBeforePrepend = useRef<number | null>(null);
+    // distance from the bottom before the top of the list changes, to keep the viewport in place
+    const bottomOffsetToRestore = useRef<number | null>(null);
     const autoScrollDone = useRef(false);
     const isBottomVisibleRef = useRef(true);
     const shouldScrollAfterMessagesUpdate = useRef(false);
@@ -289,8 +289,14 @@ export const ChatMessageList = ({
             return;
         }
 
+        // call right before a state update that changes the content above the viewport
+        const keepScrollPosition = () => {
+            bottomOffsetToRestore.current = scrollArea.scrollHeight - scrollArea.scrollTop;
+        };
+
         const loadOlder = async () => {
             const signal = listSignalRef.current;
+            keepScrollPosition();
             setIsLoadingOlder(true);
             try {
                 const listRes = await loadMessages(messagesChunkSize, oldestMessageId);
@@ -298,15 +304,19 @@ export const ChatMessageList = ({
                     return;
                 }
 
+                keepScrollPosition();
                 if (listRes.messages.length === 0) {
                     setHasReachedStart(true);
                 } else {
-                    scrollHeightBeforePrepend.current = scrollArea.scrollHeight;
                     setMessages(prev => [...sortByCreatedAt(listRes.messages), ...prev ?? []]);
                     setRefs(prev => new Map([...prev, ...listRes.refs.map(r => [r.id, r] as const)]));
                 }
             } catch (err) {
                 console.error('Failed to load older messages', err);
+                if (!signal?.aborted) {
+                    keepScrollPosition();
+                }
+
                 // no automatic retry: it would loop while the top of the list stays visible
                 setHasOlderLoadFailed(true);
             }
@@ -341,16 +351,16 @@ export const ChatMessageList = ({
         }
 
         const scrollArea = scrollAreaRef.current;
-        if (scrollArea && scrollHeightBeforePrepend.current !== null) {
-            scrollArea.scrollTop += scrollArea.scrollHeight - scrollHeightBeforePrepend.current;
-            scrollHeightBeforePrepend.current = null;
+        if (scrollArea && bottomOffsetToRestore.current !== null) {
+            scrollArea.scrollTop = scrollArea.scrollHeight - bottomOffsetToRestore.current;
+            bottomOffsetToRestore.current = null;
         }
 
         if (shouldScrollAfterMessagesUpdate.current) {
             shouldScrollAfterMessagesUpdate.current = false;
             scrollToBottom('smooth');
         }
-    }, [messages, scrollToBottom]);
+    }, [messages, isLoadingOlder, hasReachedStart, hasOlderLoadFailed, scrollToBottom]);
 
     useEffect(() => {
         const scrollArea = scrollAreaRef.current;
@@ -413,7 +423,7 @@ export const ChatMessageList = ({
     return (
         <div className={classNames.container}>
             <div className={classNames.header}>{header}</div>
-            <div className={classNames.scrollArea} ref={scrollAreaRef}>
+            <div className={`${classNames.scrollArea} ${styles.scrollArea}`} ref={scrollAreaRef}>
                 <div ref={messagesStartRef} />
                 {(messages === null || isLoadingOlder) && (
                     <LoaderCircle className={styles.spinner} size={20} aria-label={t('chat.loadingMessages')} />

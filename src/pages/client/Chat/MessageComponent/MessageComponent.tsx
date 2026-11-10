@@ -1,14 +1,15 @@
-import { Pencil, Reply, Trash } from 'lucide-react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
 import { isDev } from '@/helpers/env';
+import { MessageActions } from '@/pages/client/Chat/MessageActions';
 import { MessageReactions } from '@/pages/client/Chat/MessageReactions';
 import { MessageThreadButton } from '@/pages/client/Chat/MessageThreadButton';
 import { MessageUrlPreviewsComponent } from '@/pages/client/Chat/MessageUrlPreviewsComponent';
 import { UserId } from '@/types/users';
 import { formatTimestamp } from '@/helpers/formatTimestamp';
 import { isMessageEdited } from '@/helpers/messages';
+import { getUserColor } from '@/helpers/userColor';
 import { MessageAttachments } from '@/pages/client/Chat/MessageAttachments';
 
 import styles from './MessageComponent.module.css';
@@ -46,6 +47,15 @@ export const MessageComponent = ({ message, currentUserId, replyRef, canReply, c
             key={message.id}
             className={clsx(styles.container, { [styles.isMine]: isMine })}
         >
+            <MessageActions
+                className={styles.actions}
+                canReply={canReply}
+                canEdit={canEdit}
+                canDelete={canDelete}
+                onReply={() => onReply(message)}
+                onEdit={() => onEdit(message)}
+                onDelete={() => onDelete(message.id)}
+            />
             {!isMine && (
                 <img
                     src={avatarUrl}
@@ -56,7 +66,7 @@ export const MessageComponent = ({ message, currentUserId, replyRef, canReply, c
             <div className={styles.innerContainer}>
                 <div className={styles.header}>
                     {!isMine && (
-                        <span className={styles.userName}>
+                        <span className={styles.userName} style={{ color: getUserColor(message.userId) }}>
                             {message.user?.displayName ?? message.userId}
                         </span>
                     )}
@@ -66,30 +76,6 @@ export const MessageComponent = ({ message, currentUserId, replyRef, canReply, c
                             <span className={styles.editedLabel}> {t('chat.message.edited')}</span>
                         )}
                     </span>
-                    {canReply && (
-                        <Reply
-                            size={16}
-                            strokeWidth={3}
-                            className={styles.replyButton}
-                            onClick={() => onReply(message)}
-                        />
-                    )}
-                    {canEdit && (
-                        <Pencil
-                            size={16}
-                            strokeWidth={3}
-                            className={styles.editButton}
-                            onClick={() => onEdit(message)}
-                        />
-                    )}
-                    {canDelete && (
-                        <Trash
-                            size={16}
-                            strokeWidth={3}
-                            className={styles.deleteButton}
-                            onClick={() => onDelete(message.id)}
-                        />
-                    )}
                 </div>
                 {replyRef && (
                     <div className={styles.replyQuote}>
@@ -101,21 +87,23 @@ export const MessageComponent = ({ message, currentUserId, replyRef, canReply, c
                 </div>
                 <MessageAttachments attachments={message.attachments}/>
                 <MessageUrlPreviewsComponent urlPreviews={message.urlPreviews}/>
-                <MessageReactions
-                    reactions={message.reactions}
-                    myReactions={message.myReactions}
-                    canAddReaction={canAddReaction}
-                    canRemoveReaction={canRemoveReaction}
-                    onAddReaction={(code) => onAddReaction(message.id, code)}
-                    onDeleteReaction={code => onDeleteReaction(message.id, code)}
-                />
-
-                {onOpenThread && showThreadButton && (
-                    <MessageThreadButton
-                        count={message.childrenCount ?? 0}
-                        onToggleThread={handleToggleThread}
+                <div className={styles.actionsRow}>
+                    <MessageReactions
+                        reactions={message.reactions}
+                        myReactions={message.myReactions}
+                        canAddReaction={canAddReaction}
+                        canRemoveReaction={canRemoveReaction}
+                        onAddReaction={(code) => onAddReaction(message.id, code)}
+                        onDeleteReaction={code => onDeleteReaction(message.id, code)}
                     />
-                )}
+
+                    {onOpenThread && showThreadButton && (
+                        <MessageThreadButton
+                            count={message.childrenCount ?? 0}
+                            onToggleThread={handleToggleThread}
+                        />
+                    )}
+                </div>
             </div>
         </div>
     );

@@ -1,5 +1,5 @@
 import { ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ArrowDownToLine } from 'lucide-react';
+import { ArrowDownToLine, LoaderCircle } from 'lucide-react';
 import { useApolloClient } from '@apollo/client/react';
 import { useTranslation } from 'react-i18next';
 
@@ -7,12 +7,15 @@ import { WebSocketEventEmitter, WebSocketEventOf } from '@/communication/WebSock
 import { useUser } from '@/contexts/UserContext';
 import { useChannelPermissions } from '@/contexts/MyPermissionsContext';
 import { canDeleteMessage, canEditMessage } from '@/helpers/channelPermissions';
+import { messagesChunkSize, messagesInitialCount } from '@/infra/consts';
 import { addReaction, deleteMessage, deleteReaction, postNewMessage, updateMessage } from '@/graphql/messages';
 import { MessageComponent } from '@/pages/client/Chat/MessageComponent';
 import { MessageInput } from '@/pages/client/Chat/MessageInput';
 import { Attachment, AttachmentId } from '@/types/attachments';
 import { ChannelId } from '@/types/channels';
 import { CreateMessageDto, MessageId, MessagesResult, MessageWithUser, ReplyToMessage } from '@/types/messages';
+
+import styles from './ChatMessageList.module.css';
 
 type ClassNames = {
     container: string;
@@ -28,7 +31,8 @@ type Props = {
     header: ReactNode;
     classNames: ClassNames;
     eventEmitter: WebSocketEventEmitter;
-    loadMessages(): Promise<MessagesResult>;
+    /** Loads `limit` newest messages, or the ones older than `beforeId` when it is given. */
+    loadMessages(limit: number, beforeId?: MessageId): Promise<MessagesResult>;
     isMessageInContext(message: MessageWithUser): boolean;
     emptyState?: ReactNode;
     onOpenThread?(parentId: MessageWithUser): void;
@@ -43,6 +47,9 @@ const subscribedEvents = [
     'messageChildrenCountUpdated',
     'editedMessage',
 ] as const;
+
+const sortByCreatedAt = (list: readonly MessageWithUser[]) =>
+    [...list].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
 export const ChatMessageList = ({
     channelId,
@@ -64,11 +71,19 @@ export const ChatMessageList = ({
     const [messages, setMessages] = useState<MessageWithUser[] | null>(null);
     const [refs, setRefs] = useState<Map<number, ReplyToMessage>>(new Map());
     const [isBottomVisible, setIsBottomVisible] = useState(true);
+    const [isLoadingOlder, setIsLoadingOlder] = useState(false);
+    const [hasReachedStart, setHasReachedStart] = useState(false);
+    const [hasOlderLoadFailed, setHasOlderLoadFailed] = useState(false);
     const [replyingTo, setReplyingTo] = useState<MessageWithUser | null>(null);
     const [editingMessage, setEditingMessage] = useState<{ id: MessageId; content: string; attachments: Attachment[] } | null>(null);
     const scrollAreaRef = useRef<HTMLDivElement | null>(null);
     const messageInputRef = useRef<HTMLDivElement | null>(null);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const messagesStartRef = useRef<HTMLDivElement | null>(null);
+    // aborted when the list switches to another channel or thread
+    const listSignalRef = useRef<AbortSignal | null>(null);
+    // distance from the bottom before the top of the list changes, to keep the viewport in place
+    const bottomOffsetToRestore = useRef<number | null>(null);
     const autoScrollDone = useRef(false);
     const isBottomVisibleRef = useRef(true);
     const shouldScrollAfterMessagesUpdate = useRef(false);
@@ -234,11 +249,17 @@ export const ChatMessageList = ({
                 autoScrollDone.current = false;
                 setMessages(null);
                 setRefs(new Map());
-                const listRes = await loadMessages();
-                const list = [...listRes.messages];
-                list.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-                setMessages(list);
+                setIsLoadingOlder(false);
+                setHasReachedStart(false);
+                setHasOlderLoadFailed(false);
+                const listRes = await loadMessages(messagesInitialCount);
+                if (signal.aborted) {
+                    return;
+                }
+
+                setMessages(sortByCreatedAt(listRes.messages));
                 setRefs(new Map(listRes.refs.map(r => [r.id, r])));
+                setHasReachedStart(listRes.messages.length === 0);
             } catch (err) {
                 console.error('Failed to load messages', err);
             }
@@ -246,6 +267,7 @@ export const ChatMessageList = ({
 
         const abortController = new AbortController();
         const { signal } = abortController;
+        listSignalRef.current = signal;
         subscribedEvents.forEach(eventType => {
             eventEmitter.addEventListener(eventType, handleWebSocketEvent, { signal });
         });
@@ -256,6 +278,71 @@ export const ChatMessageList = ({
         };
     }, [apolloClient, channelId, eventEmitter, isMessageInContext, loadMessages, onMessageDeleted, userCtx?.user?.id]);
 
+    const oldestMessageId = messages?.[0]?.id;
+    const canLoadOlder = oldestMessageId !== undefined && !isLoadingOlder && !hasReachedStart && !hasOlderLoadFailed;
+
+    // loads the next chunk of older messages whenever the top of the list is visible
+    useEffect(() => {
+        const scrollArea = scrollAreaRef.current;
+        const target = messagesStartRef.current;
+        if (!scrollArea || !target || !canLoadOlder) {
+            return;
+        }
+
+        // call right before a state update that changes the content above the viewport
+        const keepScrollPosition = () => {
+            bottomOffsetToRestore.current = scrollArea.scrollHeight - scrollArea.scrollTop;
+        };
+
+        const loadOlder = async () => {
+            const signal = listSignalRef.current;
+            keepScrollPosition();
+            setIsLoadingOlder(true);
+            try {
+                const listRes = await loadMessages(messagesChunkSize, oldestMessageId);
+                if (signal?.aborted) {
+                    return;
+                }
+
+                keepScrollPosition();
+                if (listRes.messages.length === 0) {
+                    setHasReachedStart(true);
+                } else {
+                    setMessages(prev => [...sortByCreatedAt(listRes.messages), ...prev ?? []]);
+                    setRefs(prev => new Map([...prev, ...listRes.refs.map(r => [r.id, r] as const)]));
+                }
+            } catch (err) {
+                console.error('Failed to load older messages', err);
+                if (!signal?.aborted) {
+                    keepScrollPosition();
+                }
+
+                // no automatic retry: it would loop while the top of the list stays visible
+                setHasOlderLoadFailed(true);
+            }
+
+            if (!signal?.aborted) {
+                setIsLoadingOlder(false);
+            }
+        };
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0]?.isIntersecting) {
+                    observer.disconnect();
+                    loadOlder();
+                }
+            },
+            { root: scrollArea, threshold: 0.0 }
+        );
+
+        observer.observe(target);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [canLoadOlder, loadMessages, oldestMessageId]);
+
     useLayoutEffect(() => {
         if (messages !== null && !autoScrollDone.current) {
             autoScrollDone.current = true;
@@ -263,11 +350,17 @@ export const ChatMessageList = ({
             return;
         }
 
+        const scrollArea = scrollAreaRef.current;
+        if (scrollArea && bottomOffsetToRestore.current !== null) {
+            scrollArea.scrollTop = scrollArea.scrollHeight - bottomOffsetToRestore.current;
+            bottomOffsetToRestore.current = null;
+        }
+
         if (shouldScrollAfterMessagesUpdate.current) {
             shouldScrollAfterMessagesUpdate.current = false;
             scrollToBottom('smooth');
         }
-    }, [messages, scrollToBottom]);
+    }, [messages, isLoadingOlder, hasReachedStart, hasOlderLoadFailed, scrollToBottom]);
 
     useEffect(() => {
         const scrollArea = scrollAreaRef.current;
@@ -330,7 +423,14 @@ export const ChatMessageList = ({
     return (
         <div className={classNames.container}>
             <div className={classNames.header}>{header}</div>
-            <div className={classNames.scrollArea} ref={scrollAreaRef}>
+            <div className={`${classNames.scrollArea} ${styles.scrollArea}`} ref={scrollAreaRef}>
+                <div ref={messagesStartRef} />
+                {(messages === null || isLoadingOlder) && (
+                    <LoaderCircle className={styles.spinner} size={20} aria-label={t('chat.loadingMessages')} />
+                )}
+                {hasReachedStart && !!messages?.length && (
+                    <div className={styles.historyStart}>{t('chat.historyStart')}</div>
+                )}
                 {messages?.length ? messages.map(message => {
                     const isMine = message.userId === userCtx?.user?.id;
                     return (

@@ -1,20 +1,31 @@
 @reference "tailwindcss";
 
 .container {
-    @apply flex flex-row items-center mt-1;
+    @apply flex flex-row items-center;
 }
 
 .button {
-    @apply inline-flex flex-row items-center gap-1.5 rounded-full border border-[#2b3760] bg-[#111a30] px-3 py-1
-        text-xs font-semibold text-indigo-300 cursor-pointer
-        hover:border-indigo-400 hover:text-indigo-200 hover:bg-[#17213a];
+    /* same box and hover as a reaction (MessageReaction.module.css) */
+    @apply inline-flex h-9 min-w-16 flex-row items-center justify-center gap-1 rounded-full bg-[#111a30] px-3
+        text-sm text-indigo-300 cursor-pointer transition
+        hover:bg-[#24314d];
 }
 
 .button svg {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
 }
 
 .counter {
-    @apply px-1.5 text-xs font-bold text-[#9ca6ff];
+    @apply min-w-4 text-center text-base leading-none text-[#9ca6ff];
+}
+
+/* a thread without messages: dimmed until hovered */
+.isEmpty .button {
+    @apply bg-transparent text-[#5f6a8c]
+        hover:bg-[#24314d] hover:text-indigo-300;
+}
+
+.isEmpty .counter {
+    @apply text-[#5f6a8c];
 }

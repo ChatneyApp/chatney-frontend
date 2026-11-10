@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search } from 'lucide-react';
+import { FaceSlightlySmilingPlus, Search } from 'lucide-react';
 import { Popover, Tabs } from 'radix-ui';
 import { useTranslation } from 'react-i18next';
 
@@ -85,7 +85,7 @@ export const ReactionSelectionDialog = ({ reactions, myReactions, onSelect }: Pr
                     className={styles.triggerButton}
                     aria-label={t('chat.reactions.add')}
                 >
-                    🙂
+                    <FaceSlightlySmilingPlus size={18} aria-hidden="true" />
                 </button>
             </Popover.Trigger>
             <Popover.Portal>

@@ -27,8 +27,8 @@ type Props = {
 export function MessagesList({ activeChannel, activeThreadId, eventEmitter, onCloseThread, onOpenThread }: Props) {
     const apolloClient = useApolloClient();
 
-    const loadMessages = useCallback(() => {
-        return getChannelMessagesList(apolloClient, activeChannel.id);
+    const loadMessages = useCallback((limit: number, beforeId?: MessageId) => {
+        return getChannelMessagesList(apolloClient, activeChannel.id, limit, beforeId);
     }, [activeChannel.id, apolloClient]);
 
     const isMessageInContext = useCallback((message: MessageWithUser) => {

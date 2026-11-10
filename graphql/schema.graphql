@@ -567,14 +567,31 @@ type MessageMutations {
 }
 
 type MessageQueries {
-  "Top-level messages of a channel (thread replies excluded). Requires ChannelReadMessage on the channel."
-  listChannelMessages(channelId: Int!): MessagesResult!
-    @authorize
-    @cost(weight: "10")
-  "Replies in a thread. Requires ChannelReadMessage on the thread's channel."
-  listThreadMessages("Id of the thread's root message." threadId: Int!): MessagesResult!
-    @authorize
-    @cost(weight: "10")
+  """
+  A page of top-level messages of a channel (thread replies excluded), newest first.
+  An empty messages list means the beginning of the channel history is reached.
+  Requires ChannelReadMessage on the channel.
+  """
+  listChannelMessages(
+    channelId: Int!
+    "Maximum number of messages to return (capped at 100)."
+    limit: Int!
+    "Return only messages older than the message with this id. Omit to get the newest messages."
+    beforeId: Int
+  ): MessagesResult! @authorize @cost(weight: "10")
+  """
+  A page of replies in a thread, newest first.
+  An empty messages list means the beginning of the thread is reached.
+  Requires ChannelReadMessage on the thread's channel.
+  """
+  listThreadMessages(
+    "Id of the thread's root message."
+    threadId: Int!
+    "Maximum number of messages to return (capped at 100)."
+    limit: Int!
+    "Return only messages older than the message with this id. Omit to get the newest messages."
+    beforeId: Int
+  ): MessagesResult! @authorize @cost(weight: "10")
 }
 
 "A list of messages plus previews of the messages they quote-reply to."

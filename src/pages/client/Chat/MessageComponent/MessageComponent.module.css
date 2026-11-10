@@ -1,9 +1,19 @@
 @reference "tailwindcss";
 
 .container {
-    @apply box-border rounded-2xl p-4 flex items-start gap-3 max-w-[36em]
+    @apply relative box-border rounded-2xl p-4 flex items-start gap-3 max-w-[36em]
         bg-[#151d33] border border-[#232e4d]
         shadow-[0_8px_24px_rgba(2,8,23,0.35)];
+}
+
+/* floats above the message, shown while the message is hovered or keyboard-focused */
+.actions {
+    @apply absolute right-2 bottom-full z-10 opacity-0 pointer-events-none transition-opacity;
+}
+
+.container:hover .actions,
+.container:has(:focus-visible) .actions {
+    @apply opacity-100 pointer-events-auto;
 }
 
 .innerContainer {
@@ -22,20 +32,8 @@
     @apply ml-auto text-xs text-[#7d87a8];
 }
 
-.replyButton {
-    @apply w-4 h-4 cursor-pointer text-[#5f6a8c] hover:text-indigo-300;
-}
-
-.editButton {
-    @apply w-4 h-4 cursor-pointer text-[#5f6a8c] hover:text-indigo-300;
-}
-
 .editedLabel {
     @apply text-xs text-[#7d87a8] italic;
-}
-
-.deleteButton {
-    @apply w-4 h-4 cursor-pointer text-[#5f6a8c] hover:text-red-400;
 }
 
 .replyQuote {
@@ -46,6 +44,10 @@
 .textContent {
     @apply text-[#dbe1f4] leading-relaxed py-2 whitespace-pre-wrap [overflow-wrap:anywhere];
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
+}
+
+.actionsRow {
+    @apply flex flex-row flex-wrap items-center gap-1 my-1 empty:hidden;
 }
 
 .isMine {

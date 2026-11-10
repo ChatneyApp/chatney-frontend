@@ -5,9 +5,8 @@
 }
 
 .triggerButton {
-    @apply inline-flex size-9 cursor-pointer items-center justify-center rounded-full text-lg transition hover:bg-[#24314d];
-    font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
-    line-height: 1;
+    @apply inline-flex size-9 cursor-pointer items-center justify-center rounded-full text-[#5f6a8c] transition
+        hover:bg-[#24314d] hover:text-indigo-300 data-[state=open]:text-indigo-300;
 }
 
 .popoverContent {

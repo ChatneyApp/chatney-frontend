@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { Reaction } from '@/types/messages';
 
@@ -27,7 +26,7 @@ export const MessageReaction = ({ reaction, isMine, disabled, onAddReaction, onD
         <button
             type="button"
             key={reaction.code}
-            className={clsx(styles.reaction, { [styles.mine]: isMine })}
+            className={styles.reaction}
             onClick={handleClick}
             disabled={disabled}
             aria-label={t('chat.reactions.countLabel', { code: reaction.code, count: reaction.count })}

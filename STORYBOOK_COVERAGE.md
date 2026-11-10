@@ -11,6 +11,7 @@ All components under `src/pages/client/Chat` (plus `ChatPage.tsx` and `ClientLay
 | Component | Story file | Notes |
 |---|---|---|
 | ProgressBar | `ProgressBar/ProgressBar.stories.tsx` | 3 variants: mid-upload, just started, complete |
+| MessageActions | `MessageActions/MessageActions.stories.tsx` | 3 variants: all actions, reply only, delete only |
 | MessageThreadButton | `MessageThreadButton/MessageThreadButton.stories.tsx` | 3 variants: default, no replies, many replies |
 | MessageReaction | `MessageReaction/MessageReaction.stories.tsx` | Own vs. others' reaction, disabled |
 | MessageReactions | `MessageReactions/MessageReactions.stories.tsx` | With reactions, empty, without add permission, without remove permission |

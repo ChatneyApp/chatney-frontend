@@ -502,6 +502,8 @@ admin:
       failed: Не вдалося зберегти деякі налаштування. Спробуйте ще раз.
 
 chat:
+  loadingMessages: Завантаження повідомлень...
+  historyStart: Це початок історії
   emptyMessages: Тут ще немає повідомлень
   scrollToBottom: Прокрутити донизу
   channels:
@@ -535,6 +537,7 @@ chat:
     title: Тред
   message:
     edited: (змінено)
+    reply: Відповісти
   messageInput:
     placeholder: Введіть повідомлення...
     editPlaceholder: Змініть повідомлення…

@@ -1,0 +1,16 @@
+@reference "tailwindcss";
+
+.panel {
+    @apply inline-flex flex-row items-center gap-0.5 rounded-lg border border-[#2f3c66] bg-[#0f1526] p-1
+        shadow-[0_6px_16px_rgba(2,8,23,0.4)];
+}
+
+.button {
+    @apply inline-flex size-7 cursor-pointer items-center justify-center rounded-md text-[#7d87a8] transition
+        hover:bg-[#24314d] hover:text-indigo-300
+        focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#8f96ff];
+}
+
+.deleteButton {
+    @apply hover:text-red-400;
+}

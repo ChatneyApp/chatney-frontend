@@ -9,6 +9,7 @@ import { MessageUrlPreviewsComponent } from '@/pages/client/Chat/MessageUrlPrevi
 import { UserId } from '@/types/users';
 import { formatTimestamp } from '@/helpers/formatTimestamp';
 import { isMessageEdited } from '@/helpers/messages';
+import { getUserColor } from '@/helpers/userColor';
 import { MessageAttachments } from '@/pages/client/Chat/MessageAttachments';
 
 import styles from './MessageComponent.module.css';
@@ -56,7 +57,7 @@ export const MessageComponent = ({ message, currentUserId, replyRef, canReply, c
             <div className={styles.innerContainer}>
                 <div className={styles.header}>
                     {!isMine && (
-                        <span className={styles.userName}>
+                        <span className={styles.userName} style={{ color: getUserColor(message.userId) }}>
                             {message.user?.displayName ?? message.userId}
                         </span>
                     )}

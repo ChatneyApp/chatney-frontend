@@ -525,6 +525,7 @@ chat:
     title: Thread
   message:
     edited: (edited)
+    reply: Reply
   messageInput:
     placeholder: Type a message...
     editPlaceholder: Edit message…

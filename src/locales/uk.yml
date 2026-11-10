@@ -537,6 +537,7 @@ chat:
     title: Тред
   message:
     edited: (змінено)
+    reply: Відповісти
   messageInput:
     placeholder: Введіть повідомлення...
     editPlaceholder: Змініть повідомлення…

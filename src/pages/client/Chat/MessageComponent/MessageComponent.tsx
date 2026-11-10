@@ -1,8 +1,8 @@
-import { Pencil, Reply, Trash } from 'lucide-react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { MessageId, MessageWithUser, ReplyToMessage } from '@/types/messages';
 import { isDev } from '@/helpers/env';
+import { MessageActions } from '@/pages/client/Chat/MessageActions';
 import { MessageReactions } from '@/pages/client/Chat/MessageReactions';
 import { MessageThreadButton } from '@/pages/client/Chat/MessageThreadButton';
 import { MessageUrlPreviewsComponent } from '@/pages/client/Chat/MessageUrlPreviewsComponent';
@@ -47,6 +47,15 @@ export const MessageComponent = ({ message, currentUserId, replyRef, canReply, c
             key={message.id}
             className={clsx(styles.container, { [styles.isMine]: isMine })}
         >
+            <MessageActions
+                className={styles.actions}
+                canReply={canReply}
+                canEdit={canEdit}
+                canDelete={canDelete}
+                onReply={() => onReply(message)}
+                onEdit={() => onEdit(message)}
+                onDelete={() => onDelete(message.id)}
+            />
             {!isMine && (
                 <img
                     src={avatarUrl}
@@ -67,30 +76,6 @@ export const MessageComponent = ({ message, currentUserId, replyRef, canReply, c
                             <span className={styles.editedLabel}> {t('chat.message.edited')}</span>
                         )}
                     </span>
-                    {canReply && (
-                        <Reply
-                            size={16}
-                            strokeWidth={3}
-                            className={styles.replyButton}
-                            onClick={() => onReply(message)}
-                        />
-                    )}
-                    {canEdit && (
-                        <Pencil
-                            size={16}
-                            strokeWidth={3}
-                            className={styles.editButton}
-                            onClick={() => onEdit(message)}
-                        />
-                    )}
-                    {canDelete && (
-                        <Trash
-                            size={16}
-                            strokeWidth={3}
-                            className={styles.deleteButton}
-                            onClick={() => onDelete(message.id)}
-                        />
-                    )}
                 </div>
                 {replyRef && (
                     <div className={styles.replyQuote}>

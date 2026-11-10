@@ -48,6 +48,10 @@
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
 }
 
+.actionsRow {
+    @apply flex flex-row flex-wrap items-center gap-1 my-1 empty:hidden;
+}
+
 .isMine {
     @apply self-end bg-[#1a2340] border-[#2f3c66];
 }

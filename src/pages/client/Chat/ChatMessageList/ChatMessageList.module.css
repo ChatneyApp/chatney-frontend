@@ -1,0 +1,9 @@
+@reference "tailwindcss";
+
+.spinner {
+    @apply self-center shrink-0 animate-spin text-indigo-300;
+}
+
+.historyStart {
+    @apply self-center text-xs text-slate-500;
+}

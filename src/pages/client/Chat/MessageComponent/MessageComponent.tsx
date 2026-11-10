@@ -101,21 +101,23 @@ export const MessageComponent = ({ message, currentUserId, replyRef, canReply, c
                 </div>
                 <MessageAttachments attachments={message.attachments}/>
                 <MessageUrlPreviewsComponent urlPreviews={message.urlPreviews}/>
-                <MessageReactions
-                    reactions={message.reactions}
-                    myReactions={message.myReactions}
-                    canAddReaction={canAddReaction}
-                    canRemoveReaction={canRemoveReaction}
-                    onAddReaction={(code) => onAddReaction(message.id, code)}
-                    onDeleteReaction={code => onDeleteReaction(message.id, code)}
-                />
-
-                {onOpenThread && showThreadButton && (
-                    <MessageThreadButton
-                        count={message.childrenCount ?? 0}
-                        onToggleThread={handleToggleThread}
+                <div className={styles.actionsRow}>
+                    <MessageReactions
+                        reactions={message.reactions}
+                        myReactions={message.myReactions}
+                        canAddReaction={canAddReaction}
+                        canRemoveReaction={canRemoveReaction}
+                        onAddReaction={(code) => onAddReaction(message.id, code)}
+                        onDeleteReaction={code => onDeleteReaction(message.id, code)}
                     />
-                )}
+
+                    {onOpenThread && showThreadButton && (
+                        <MessageThreadButton
+                            count={message.childrenCount ?? 0}
+                            onToggleThread={handleToggleThread}
+                        />
+                    )}
+                </div>
             </div>
         </div>
     );

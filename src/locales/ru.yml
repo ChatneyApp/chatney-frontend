@@ -502,6 +502,8 @@ admin:
       failed: Не удалось сохранить некоторые настройки. Попробуйте ещё раз.
 
 chat:
+  loadingMessages: Загрузка сообщений...
+  historyStart: Это начало истории
   emptyMessages: Здесь пока нет сообщений
   scrollToBottom: Прокрутить вниз
   channels:

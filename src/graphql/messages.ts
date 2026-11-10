@@ -214,20 +214,27 @@ export const deleteReaction = async (client: ApolloClient, messageId: MessageId,
 };
 
 const GET_CHANNEL_MESSAGES = graphql(`
-    query GetChannelMessages($channelId: Int!) {
+    query GetChannelMessages($channelId: Int!, $limit: Int!, $beforeId: Int) {
         messages {
-            listChannelMessages(channelId: $channelId) {
+            listChannelMessages(channelId: $channelId, limit: $limit, beforeId: $beforeId) {
                 ...MessagesResultFields
             }
         }
     }
 `);
 
-export const getChannelMessagesList = async (client: ApolloClient, channelId: ChannelId): Promise<MessagesResult> => {
+/** Loads `limit` newest channel messages, or the ones older than `beforeId` when it is given. */
+export const getChannelMessagesList = async (
+    client: ApolloClient,
+    channelId: ChannelId,
+    limit: number,
+    beforeId?: MessageId,
+): Promise<MessagesResult> => {
     try {
         const { data } = await client.query({
             query: GET_CHANNEL_MESSAGES,
-            variables: { channelId },
+            variables: { channelId, limit, beforeId },
+            fetchPolicy: 'no-cache',
         });
         return data?.messages?.listChannelMessages ?? { messages: [], refs: [] };
     } catch (error) {
@@ -236,20 +243,27 @@ export const getChannelMessagesList = async (client: ApolloClient, channelId: Ch
 };
 
 const GET_THREAD_MESSAGES = graphql(`
-    query GetThreadMessages($threadId: Int!) {
+    query GetThreadMessages($threadId: Int!, $limit: Int!, $beforeId: Int) {
         messages {
-            listThreadMessages(threadId: $threadId) {
+            listThreadMessages(threadId: $threadId, limit: $limit, beforeId: $beforeId) {
                 ...MessagesResultFields
             }
         }
     }
 `);
 
-export const getThreadMessagesList = async (client: ApolloClient, threadId: MessageId): Promise<MessagesResult> => {
+/** Loads `limit` newest thread replies, or the ones older than `beforeId` when it is given. */
+export const getThreadMessagesList = async (
+    client: ApolloClient,
+    threadId: MessageId,
+    limit: number,
+    beforeId?: MessageId,
+): Promise<MessagesResult> => {
     try {
         const { data } = await client.query({
             query: GET_THREAD_MESSAGES,
-            variables: { threadId },
+            variables: { threadId, limit, beforeId },
+            fetchPolicy: 'no-cache',
         });
         return data?.messages?.listThreadMessages ?? { messages: [], refs: [] };
     } catch (error) {

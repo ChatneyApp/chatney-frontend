@@ -1,5 +1,5 @@
 @reference "tailwindcss";
 
 .reactionsList {
-    @apply flex flex-row gap-1 my-1;
+    @apply flex flex-row flex-wrap items-center gap-1 empty:hidden;
 }

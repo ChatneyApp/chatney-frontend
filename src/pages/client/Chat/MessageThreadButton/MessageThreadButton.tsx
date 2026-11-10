@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { MessageCircleText } from 'lucide-react';
 
 import styles from './MessageThreadButton.module.css';
@@ -8,14 +9,14 @@ type Props = {
 }
 
 export const MessageThreadButton = ({ count, onToggleThread }: Props) => (
-    <div className={styles.container}>
+    <div className={clsx(styles.container, { [styles.isEmpty]: count === 0 })}>
         <div className={styles.button}>
             <MessageCircleText
-                size={16}
+                size={18}
                 strokeWidth={3}
                 onClick={onToggleThread}
             />
+            <div className={styles.counter}>{count}</div>
         </div>
-        <div className={styles.counter}>{count}</div>
     </div>
 );

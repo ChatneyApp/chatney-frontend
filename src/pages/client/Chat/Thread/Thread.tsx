@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { WebSocketEventEmitter } from '@/communication/WebSocketEventEmitter';
 import { getThreadMessagesList } from '@/graphql/messages';
 import { ChatMessageList } from '@/pages/client/Chat/ChatMessageList';
-import { MessageWithUser } from '@/types/messages';
+import { MessageId, MessageWithUser } from '@/types/messages';
 
 import styles from './Thread.module.css';
 
@@ -28,8 +28,8 @@ export const Thread = ({ rootMessage, isDm, eventEmitter, onCloseThread }: Props
     const { t } = useTranslation();
     const apolloClient = useApolloClient();
 
-    const loadMessages = useCallback(() => {
-        return getThreadMessagesList(apolloClient, rootMessage.id);
+    const loadMessages = useCallback((limit: number, beforeId?: MessageId) => {
+        return getThreadMessagesList(apolloClient, rootMessage.id, limit, beforeId);
     }, [apolloClient, rootMessage.id]);
 
     const isMessageInContext = useCallback((message: MessageWithUser) => {

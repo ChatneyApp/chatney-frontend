@@ -490,6 +490,8 @@ admin:
       failed: Couldn't save some settings. Please try again.
 
 chat:
+  loadingMessages: Loading messages...
+  historyStart: This is the beginning of the history
   emptyMessages: No messages here yet
   scrollToBottom: Scroll to bottom
   channels:

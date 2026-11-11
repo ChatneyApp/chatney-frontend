@@ -1,41 +1,47 @@
 {
-  "version": 1,
+  "version": 2,
   "skills": {
     "frontend-design": {
       "source": "anthropics/skills",
       "sourceType": "github",
       "skillPath": "skills/frontend-design/SKILL.md",
-      "computedHash": "4eabc66183767153e404b39d1b839b1c37f2d82d86f0a0d7e880a579d8d62336"
+      "computedHash": "e1481fcd7484d1bc55f2ca7170b788d7357821f5595d27e7132ec7df6841b0cf"
     },
     "graphql-operations": {
       "source": "apollographql/skills",
       "sourceType": "github",
       "skillPath": "skills/graphql-operations/SKILL.md",
-      "computedHash": "d0532171706cbba72112a6f3ffdc49d5d15b22fdd092de7324099e767bf1cbf1"
+      "computedHash": "be202657f3d644fccf592b3854006f4a903c3e1d2e73b305f4dd8088b4397682"
+    },
+    "ponytail": {
+      "source": "DietrichGebert/ponytail",
+      "sourceType": "github",
+      "skillPath": "skills/ponytail/SKILL.md",
+      "computedHash": "56d72677aca02689ac89bd48734e8c19b40ab86716d1257eaf5f1238b43cda6b"
     },
     "storybook-setup": {
       "source": "patricio0312rev/skills",
       "sourceType": "github",
       "skillPath": "foundation/storybook-setup/SKILL.md",
-      "computedHash": "fafd159d7a60ca872eddd2d5561cfedefa509cecfaeb87ad1a24fa3dc64afc59"
+      "computedHash": "d68fe4719f1d8ebbf7d4f081ed54f39e94583241b70addf2cfe53ed7ec3aa28e"
     },
     "storybook-stories": {
       "source": "pedronauck/skills",
       "sourceType": "github",
       "skillPath": "skills/mine/storybook-stories/SKILL.md",
-      "computedHash": "9978ee12cc47c35da310ebb95edceff6e2f5fcc5bea3b2ba32d6552c0da71ba2"
+      "computedHash": "cea3255b0ae1bc18736b0bebb076e5bc5c094b033b641bf1f6a27293fb573225"
     },
     "tailwindcss": {
       "source": "hairyf/skills",
       "sourceType": "github",
       "skillPath": "skills/tailwindcss/SKILL.md",
-      "computedHash": "676d95536c3c4a64215535ff09128d6e8d5163eb3fc204ed2cfde61e87b5d892"
+      "computedHash": "a7ad5b9be2a266f7f7c972bdc1d167c82088b1e11b64127ebe3037f0597d25c3"
     },
     "tailwindcss-advanced-layouts": {
       "source": "josiahsiegel/claude-plugin-marketplace",
       "sourceType": "github",
       "skillPath": "plugins/tailwindcss-master/skills/tailwindcss-advanced-layouts/SKILL.md",
-      "computedHash": "159d8a8f9eb20136492a9971633fd8658be1e34d5f8dc3bcf1afe7bbb4511bdf"
+      "computedHash": "6ba028067c497c60f6963d84e91613031a1d5ca2e3c935ddc00ff4d3e406dedf"
     }
   }
 }

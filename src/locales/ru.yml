@@ -167,6 +167,9 @@ profile:
   email: Email
   avatarUrl: URL аватара
   avatarUrlHint: Необязательная ссылка на изображение для аватара
+  bio: О себе
+  bioPlaceholder: Расскажите немного о себе
+  bioHint: Переносы строк сохраняются.
   changePassword: Смена пароля
   currentPassword: Текущий пароль
   newPassword: Новый пароль

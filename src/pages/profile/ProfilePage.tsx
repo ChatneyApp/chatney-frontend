@@ -1,4 +1,4 @@
-import { Suspense, useState } from 'react';
+import { Suspense, useLayoutEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useSuspenseQuery } from '@apollo/client/react';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ type ProfileFormInputs = {
     fullName: string;
     email: string;
     avatarUrl: string;
+    bio: string;
     currentPassword: string;
     newPassword: string;
     confirmPassword: string;
@@ -59,6 +60,7 @@ function ProfilePageContent() {
             fullName: user.fullName ?? '',
             email: user.email,
             avatarUrl: user.avatarUrl ?? '',
+            bio: user.bio,
             currentPassword: '',
             newPassword: '',
             confirmPassword: '',
@@ -69,6 +71,20 @@ function ProfilePageContent() {
 
     const newPassword = watch('newPassword');
     const avatarUrl = watch('avatarUrl').trim();
+    const bio = watch('bio');
+
+    const bioRef = useRef<HTMLTextAreaElement | null>(null);
+    const { ref: registerBioRef, ...bioField } = register('bio');
+
+    // grow with the content, capped by the max-height on the textarea
+    useLayoutEffect(() => {
+        const el = bioRef.current;
+        if (!el) {
+            return;
+        }
+        el.style.height = 'auto';
+        el.style.height = `${el.scrollHeight}px`;
+    }, [bio]);
 
     const onSubmit = async (formData: ProfileFormInputs) => {
         setSuccessMessage(null);
@@ -87,6 +103,7 @@ function ProfilePageContent() {
                         fullName: formData.fullName.trim() || null,
                         email: formData.email.trim(),
                         avatarUrl: formData.avatarUrl.trim() || null,
+                        bio: formData.bio.trim(),
                         currentPassword: formData.newPassword ? formData.currentPassword : null,
                         newPassword: formData.newPassword || null,
                     },
@@ -103,6 +120,7 @@ function ProfilePageContent() {
                 fullName: refreshedUser.fullName ?? '',
                 email: refreshedUser.email,
                 avatarUrl: refreshedUser.avatarUrl ?? '',
+                bio: refreshedUser.bio,
                 currentPassword: '',
                 newPassword: '',
                 confirmPassword: '',
@@ -210,6 +228,27 @@ function ProfilePageContent() {
                             {...register('avatarUrl')}
                         />
                         <span className={styles.hint}>{t('profile.avatarUrlHint')}</span>
+                    </div>
+
+                    <div className={styles.field}>
+                        <label className={styles.label} htmlFor="profile-bio">{t('profile.bio')}</label>
+                        <div className={styles.bioBox}>
+                            <textarea
+                                id="profile-bio"
+                                rows={3}
+                                className={styles.bioTextarea}
+                                placeholder={t('profile.bioPlaceholder')}
+                                aria-describedby="profile-bio-hint"
+                                {...bioField}
+                                ref={(el) => {
+                                    registerBioRef(el);
+                                    bioRef.current = el;
+                                }}
+                            />
+                            <div id="profile-bio-hint" className={styles.bioFooter}>
+                                {t('profile.bioHint')}
+                            </div>
+                        </div>
                     </div>
                 </section>
 

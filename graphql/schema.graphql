@@ -783,6 +783,8 @@ type User {
   muted: Boolean!
   email: String!
   avatarUrl: String
+  "Free-form multiline text the user wrote about themselves. Empty if not set."
+  bio: String!
   "Ids of the user's roles. Filled only by users.list for callers with UserEditUser; empty otherwise."
   roleIds: [Int!]!
 }
@@ -1095,6 +1097,8 @@ input UpdateMyProfileDtoInput {
   email: String
   "Empty string clears it."
   avatarUrl: String
+  "Multiline text. Empty string clears it."
+  bio: String
   "Required when changing the password. FORBIDDEN_ACTION if missing or wrong."
   currentPassword: String
   "New password. Requires currentPassword."

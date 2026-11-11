@@ -7,6 +7,7 @@ export const GET_MY_PROFILE = graphql(`
                 roleNames
                 user {
                     ...UserFields
+                    bio
                 }
             }
         }
@@ -18,6 +19,7 @@ export const UPDATE_MY_PROFILE = graphql(`
         users {
             updateMyProfile(profileDto: $profileDto) {
                 ...UserFields
+                bio
             }
         }
     }

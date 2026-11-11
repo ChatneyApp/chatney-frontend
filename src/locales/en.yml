@@ -163,6 +163,9 @@ profile:
   email: Email
   avatarUrl: Avatar URL
   avatarUrlHint: Optional image URL for your avatar
+  bio: About me
+  bioPlaceholder: Tell others a little about yourself
+  bioHint: Line breaks are kept.
   changePassword: Change password
   currentPassword: Current password
   newPassword: New password

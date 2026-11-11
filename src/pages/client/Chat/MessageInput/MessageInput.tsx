@@ -19,6 +19,7 @@ import { EmojiSuggestion, EmojiSuggestionsPopup, EmojiSuggestionsPopupHandle } f
 import { MessageEditorAttachment } from '@/pages/client/Chat/MessageEditorAttachment';
 import { VideoRecorderModal } from '@/pages/client/Chat/VideoRecorderModal';
 import { VoiceRecorderModal } from '@/pages/client/Chat/VoiceRecorderModal';
+import { UserAvatar } from '@/components/UserAvatar';
 import { formatTimestamp } from '@/helpers/formatTimestamp';
 import { AttachmentId, Attachment } from '@/types/attachments';
 import { ChannelId } from '@/types/channels';
@@ -419,11 +420,7 @@ export function MessageInput({
             )}
             {!isEditing && replyToMessage && (
                 <div className={styles.replyPreview}>
-                    <img
-                        className={styles.replyPreviewAvatar}
-                        src={replyToMessage.user.avatarUrl ?? `https://i.pravatar.cc/?img=${replyToMessage.userId}`}
-                        alt={replyToMessage.user.displayName}
-                    />
+                    <UserAvatar user={replyToMessage.user} className={styles.replyPreviewAvatar} />
                     <div className={styles.replyPreviewQuote}>
                         <div className={styles.replyPreviewHeader}>
                             <span className={styles.replyPreviewAuthor}>{replyToMessage.user.displayName}</span>

@@ -161,8 +161,32 @@ profile:
   nickname: Nickname
   fullName: Full name
   email: Email
-  avatarUrl: Avatar URL
-  avatarUrlHint: Optional image URL for your avatar
+  avatar:
+    title: Avatar
+    alt: Your avatar
+    noImage: No image
+    upload: Upload image
+    change: Change image
+    remove: Remove avatar
+    hint: Pick any image. You'll crop it to a square before it's uploaded.
+    uploading: Uploading...
+    crop:
+      title: Crop your avatar
+      description: Drag the image to position it and use the slider to zoom.
+      areaLabel: Crop area. Use the arrow keys to move the image, plus and minus to zoom.
+      zoom: Zoom
+      confirm: Upload
+    removeDialog:
+      title: Remove avatar
+      description: Remove your avatar? Others will see your initial instead.
+    errors:
+      unreadable: This file couldn't be read as an image. Pick another one.
+      invalid: The server didn't accept this image. Try another one.
+      uploadFailed: Couldn't upload the avatar. Please try again.
+      removeFailed: Couldn't remove the avatar. Please try again.
+  bio: About me
+  bioPlaceholder: Tell others a little about yourself
+  bioHint: Line breaks are kept.
   changePassword: Change password
   currentPassword: Current password
   newPassword: New password

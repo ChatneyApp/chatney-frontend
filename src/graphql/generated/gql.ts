@@ -63,8 +63,10 @@ type Documents = {
     "\n    query GetThreadMessages($threadId: Int!, $limit: Int!, $beforeId: Int) {\n        messages {\n            listThreadMessages(threadId: $threadId, limit: $limit, beforeId: $beforeId) {\n                ...MessagesResultFields\n            }\n        }\n    }\n": typeof types.GetThreadMessagesDocument,
     "\n    query GetPermissionsList {\n        permissions {\n            list {\n                label\n                list\n            }\n        }\n    }\n": typeof types.GetPermissionsListDocument,
     "\n    query GetMyPermissions {\n        users {\n            myPermissions {\n                channels {\n                    id\n                    permissions\n                }\n            }\n        }\n    }\n": typeof types.GetMyPermissionsDocument,
-    "\n    query GetMyProfile {\n        users {\n            myProfile {\n                roleNames\n                user {\n                    ...UserFields\n                }\n            }\n        }\n    }\n": typeof types.GetMyProfileDocument,
-    "\n    mutation UpdateMyProfile($profileDto: UpdateMyProfileDtoInput!) {\n        users {\n            updateMyProfile(profileDto: $profileDto) {\n                ...UserFields\n            }\n        }\n    }\n": typeof types.UpdateMyProfileDocument,
+    "\n    query GetMyProfile {\n        users {\n            myProfile {\n                roleNames\n                user {\n                    ...UserFields\n                    bio\n                }\n            }\n        }\n    }\n": typeof types.GetMyProfileDocument,
+    "\n    mutation UploadAvatar($file: Upload!) {\n        users {\n            uploadAvatar(file: $file) {\n                ...UserFields\n            }\n        }\n    }\n": typeof types.UploadAvatarDocument,
+    "\n    mutation ClearAvatar {\n        users {\n            clearAvatar {\n                ...UserFields\n            }\n        }\n    }\n": typeof types.ClearAvatarDocument,
+    "\n    mutation UpdateMyProfile($profileDto: UpdateMyProfileDtoInput!) {\n        users {\n            updateMyProfile(profileDto: $profileDto) {\n                ...UserFields\n                bio\n            }\n        }\n    }\n": typeof types.UpdateMyProfileDocument,
     "\n    fragment RoleFields on Role {\n        id\n        name\n        createdAt\n        updatedAt\n    }\n": typeof types.RoleFieldsFragmentDoc,
     "\n    mutation CreateRole($roleDto: RoleCreateDtoInput!) {\n        roles {\n            addRole(roleDto: $roleDto) {\n                ...RoleFields\n            }\n        }\n    }\n": typeof types.CreateRoleDocument,
     "\n    mutation UpdateRole($roleDto: RoleUpdateDtoInput!) {\n        roles {\n            updateRole(roleDto: $roleDto) {\n                ...RoleFields\n            }\n        }\n    }\n": typeof types.UpdateRoleDocument,
@@ -134,8 +136,10 @@ const documents: Documents = {
     "\n    query GetThreadMessages($threadId: Int!, $limit: Int!, $beforeId: Int) {\n        messages {\n            listThreadMessages(threadId: $threadId, limit: $limit, beforeId: $beforeId) {\n                ...MessagesResultFields\n            }\n        }\n    }\n": types.GetThreadMessagesDocument,
     "\n    query GetPermissionsList {\n        permissions {\n            list {\n                label\n                list\n            }\n        }\n    }\n": types.GetPermissionsListDocument,
     "\n    query GetMyPermissions {\n        users {\n            myPermissions {\n                channels {\n                    id\n                    permissions\n                }\n            }\n        }\n    }\n": types.GetMyPermissionsDocument,
-    "\n    query GetMyProfile {\n        users {\n            myProfile {\n                roleNames\n                user {\n                    ...UserFields\n                }\n            }\n        }\n    }\n": types.GetMyProfileDocument,
-    "\n    mutation UpdateMyProfile($profileDto: UpdateMyProfileDtoInput!) {\n        users {\n            updateMyProfile(profileDto: $profileDto) {\n                ...UserFields\n            }\n        }\n    }\n": types.UpdateMyProfileDocument,
+    "\n    query GetMyProfile {\n        users {\n            myProfile {\n                roleNames\n                user {\n                    ...UserFields\n                    bio\n                }\n            }\n        }\n    }\n": types.GetMyProfileDocument,
+    "\n    mutation UploadAvatar($file: Upload!) {\n        users {\n            uploadAvatar(file: $file) {\n                ...UserFields\n            }\n        }\n    }\n": types.UploadAvatarDocument,
+    "\n    mutation ClearAvatar {\n        users {\n            clearAvatar {\n                ...UserFields\n            }\n        }\n    }\n": types.ClearAvatarDocument,
+    "\n    mutation UpdateMyProfile($profileDto: UpdateMyProfileDtoInput!) {\n        users {\n            updateMyProfile(profileDto: $profileDto) {\n                ...UserFields\n                bio\n            }\n        }\n    }\n": types.UpdateMyProfileDocument,
     "\n    fragment RoleFields on Role {\n        id\n        name\n        createdAt\n        updatedAt\n    }\n": types.RoleFieldsFragmentDoc,
     "\n    mutation CreateRole($roleDto: RoleCreateDtoInput!) {\n        roles {\n            addRole(roleDto: $roleDto) {\n                ...RoleFields\n            }\n        }\n    }\n": types.CreateRoleDocument,
     "\n    mutation UpdateRole($roleDto: RoleUpdateDtoInput!) {\n        roles {\n            updateRole(roleDto: $roleDto) {\n                ...RoleFields\n            }\n        }\n    }\n": types.UpdateRoleDocument,
@@ -369,11 +373,19 @@ export function graphql(source: "\n    query GetMyPermissions {\n        users {
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query GetMyProfile {\n        users {\n            myProfile {\n                roleNames\n                user {\n                    ...UserFields\n                }\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetMyProfile {\n        users {\n            myProfile {\n                roleNames\n                user {\n                    ...UserFields\n                }\n            }\n        }\n    }\n"];
+export function graphql(source: "\n    query GetMyProfile {\n        users {\n            myProfile {\n                roleNames\n                user {\n                    ...UserFields\n                    bio\n                }\n            }\n        }\n    }\n"): (typeof documents)["\n    query GetMyProfile {\n        users {\n            myProfile {\n                roleNames\n                user {\n                    ...UserFields\n                    bio\n                }\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    mutation UpdateMyProfile($profileDto: UpdateMyProfileDtoInput!) {\n        users {\n            updateMyProfile(profileDto: $profileDto) {\n                ...UserFields\n            }\n        }\n    }\n"): (typeof documents)["\n    mutation UpdateMyProfile($profileDto: UpdateMyProfileDtoInput!) {\n        users {\n            updateMyProfile(profileDto: $profileDto) {\n                ...UserFields\n            }\n        }\n    }\n"];
+export function graphql(source: "\n    mutation UploadAvatar($file: Upload!) {\n        users {\n            uploadAvatar(file: $file) {\n                ...UserFields\n            }\n        }\n    }\n"): (typeof documents)["\n    mutation UploadAvatar($file: Upload!) {\n        users {\n            uploadAvatar(file: $file) {\n                ...UserFields\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation ClearAvatar {\n        users {\n            clearAvatar {\n                ...UserFields\n            }\n        }\n    }\n"): (typeof documents)["\n    mutation ClearAvatar {\n        users {\n            clearAvatar {\n                ...UserFields\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation UpdateMyProfile($profileDto: UpdateMyProfileDtoInput!) {\n        users {\n            updateMyProfile(profileDto: $profileDto) {\n                ...UserFields\n                bio\n            }\n        }\n    }\n"): (typeof documents)["\n    mutation UpdateMyProfile($profileDto: UpdateMyProfileDtoInput!) {\n        users {\n            updateMyProfile(profileDto: $profileDto) {\n                ...UserFields\n                bio\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

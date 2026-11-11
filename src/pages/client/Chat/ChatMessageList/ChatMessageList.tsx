@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { WebSocketEventEmitter, WebSocketEventOf } from '@/communication/WebSocketEventEmitter';
 import { useUser } from '@/contexts/UserContext';
 import { useChannelPermissions } from '@/contexts/MyPermissionsContext';
+import { markAvatarChanged } from '@/helpers/avatar';
 import { canDeleteMessage, canEditMessage } from '@/helpers/channelPermissions';
 import { messagesChunkSize, messagesInitialCount } from '@/infra/consts';
 import { addReaction, deleteMessage, deleteReaction, postNewMessage, updateMessage } from '@/graphql/messages';
@@ -46,6 +47,7 @@ const subscribedEvents = [
     'deletedReaction',
     'messageChildrenCountUpdated',
     'editedMessage',
+    'updatedUserProfile',
 ] as const;
 
 const sortByCreatedAt = (list: readonly MessageWithUser[]) =>
@@ -239,6 +241,16 @@ export const ChatMessageList = ({
                     if (message.channelId === channelId) {
                         setMessages(prev => prev?.map(msg => msg.id === message.id ? { ...msg, ...message } : msg) ?? null);
                     }
+                }
+                    break;
+                case 'updatedUserProfile': {
+                    const { id, nickname, avatarUrl } = payload;
+                    const withProfile = <T extends MessageWithUser>(msg: T): T => (
+                        msg.userId === id ? { ...msg, user: { ...msg.user, nickname, avatarUrl } } : msg
+                    );
+                    markAvatarChanged(avatarUrl);
+                    setMessages(prev => prev?.map(withProfile) ?? null);
+                    setReplyingTo(prev => prev && withProfile(prev));
                 }
                     break;
             }

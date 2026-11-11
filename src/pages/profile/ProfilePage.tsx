@@ -1,19 +1,21 @@
-import { Suspense, useState } from 'react';
+import { Suspense, useLayoutEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useSuspenseQuery } from '@apollo/client/react';
 import { useTranslation } from 'react-i18next';
 
 import { GET_MY_PROFILE, UPDATE_MY_PROFILE } from '@/graphql/profile';
 import { useUser } from '@/contexts/UserContext';
+import { getAvatarSrc } from '@/helpers/avatar';
 import { getUserAvatarInitial, getUserDisplayName, validateNickname, MAX_NICKNAME_LENGTH } from '@/helpers/nickname';
 
+import { AvatarCard } from './AvatarCard';
 import styles from './ProfilePage.module.css';
 
 type ProfileFormInputs = {
     nickname: string;
     fullName: string;
     email: string;
-    avatarUrl: string;
+    bio: string;
     currentPassword: string;
     newPassword: string;
     confirmPassword: string;
@@ -46,6 +48,8 @@ function ProfilePageContent() {
 
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    // The avatar is saved on its own (see AvatarCard), so it is not part of the form below.
+    const [avatarSrc, setAvatarSrc] = useState(() => getAvatarSrc(user.avatarUrl));
 
     const {
         register,
@@ -58,7 +62,7 @@ function ProfilePageContent() {
             nickname: user.nickname,
             fullName: user.fullName ?? '',
             email: user.email,
-            avatarUrl: user.avatarUrl ?? '',
+            bio: user.bio,
             currentPassword: '',
             newPassword: '',
             confirmPassword: '',
@@ -68,7 +72,20 @@ function ProfilePageContent() {
     const [updateProfile, { loading }] = useMutation(UPDATE_MY_PROFILE);
 
     const newPassword = watch('newPassword');
-    const avatarUrl = watch('avatarUrl').trim();
+    const bio = watch('bio');
+
+    const bioRef = useRef<HTMLTextAreaElement | null>(null);
+    const { ref: registerBioRef, ...bioField } = register('bio');
+
+    // grow with the content, capped by the max-height on the textarea
+    useLayoutEffect(() => {
+        const el = bioRef.current;
+        if (!el) {
+            return;
+        }
+        el.style.height = 'auto';
+        el.style.height = `${el.scrollHeight}px`;
+    }, [bio]);
 
     const onSubmit = async (formData: ProfileFormInputs) => {
         setSuccessMessage(null);
@@ -86,7 +103,7 @@ function ProfilePageContent() {
                         nickname: formData.nickname.trim(),
                         fullName: formData.fullName.trim() || null,
                         email: formData.email.trim(),
-                        avatarUrl: formData.avatarUrl.trim() || null,
+                        bio: formData.bio.trim(),
                         currentPassword: formData.newPassword ? formData.currentPassword : null,
                         newPassword: formData.newPassword || null,
                     },
@@ -102,7 +119,7 @@ function ProfilePageContent() {
                 nickname: refreshedUser.nickname,
                 fullName: refreshedUser.fullName ?? '',
                 email: refreshedUser.email,
-                avatarUrl: refreshedUser.avatarUrl ?? '',
+                bio: refreshedUser.bio,
                 currentPassword: '',
                 newPassword: '',
                 confirmPassword: '',
@@ -119,8 +136,8 @@ function ProfilePageContent() {
         <div className={styles.page}>
             <div className={styles.profileHeader}>
                 <div className={styles.avatar}>
-                    {avatarUrl ? (
-                        <img src={avatarUrl} alt="" className={styles.avatarImage} />
+                    {avatarSrc ? (
+                        <img src={avatarSrc} alt="" className={styles.avatarImage} />
                     ) : (
                         avatarInitial
                     )}
@@ -160,6 +177,14 @@ function ProfilePageContent() {
             {errorMessage && (
                 <div className={styles.errorMessage}>{errorMessage}</div>
             )}
+
+            <AvatarCard
+                avatarSrc={avatarSrc}
+                onChange={(src) => {
+                    setAvatarSrc(src);
+                    void refreshUser();
+                }}
+            />
 
             <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                 <section className={styles.card}>
@@ -201,15 +226,24 @@ function ProfilePageContent() {
                     </div>
 
                     <div className={styles.field}>
-                        <label className={styles.label} htmlFor="profile-avatar">{t('profile.avatarUrl')}</label>
-                        <input
-                            id="profile-avatar"
-                            type="url"
-                            className={styles.input}
-                            placeholder="https://..."
-                            {...register('avatarUrl')}
-                        />
-                        <span className={styles.hint}>{t('profile.avatarUrlHint')}</span>
+                        <label className={styles.label} htmlFor="profile-bio">{t('profile.bio')}</label>
+                        <div className={styles.bioBox}>
+                            <textarea
+                                id="profile-bio"
+                                rows={3}
+                                className={styles.bioTextarea}
+                                placeholder={t('profile.bioPlaceholder')}
+                                aria-describedby="profile-bio-hint"
+                                {...bioField}
+                                ref={(el) => {
+                                    registerBioRef(el);
+                                    bioRef.current = el;
+                                }}
+                            />
+                            <div id="profile-bio-hint" className={styles.bioFooter}>
+                                {t('profile.bioHint')}
+                            </div>
+                        </div>
                     </div>
                 </section>
 

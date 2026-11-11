@@ -829,6 +829,19 @@ type UserMutations {
     @authorize
     @cost(weight: "10")
   """
+  Uploads the current user's avatar to storage and sets avatarUrl to its storage path
+  ("/avatars/{userId}.{ext}"), replacing any previous avatar. INVALID_AVATAR unless the file is
+  a GIF, JPG or PNG of exactly 128x128 pixels and at most 2 MB.
+  """
+  uploadAvatar("The image (multipart upload)." file: Upload!): User!
+    @authorize
+    @cost(weight: "10")
+  """
+  Removes the current user's avatar: sets avatarUrl to null and deletes the uploaded file from storage.
+  Does nothing if the user has no avatar.
+  """
+  clearAvatar: User! @authorize @cost(weight: "10")
+  """
   Exchanges credentials for a JWT. No auth required.
   
   **Returns:**

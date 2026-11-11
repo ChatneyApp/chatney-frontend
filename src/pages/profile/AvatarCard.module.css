@@ -1,0 +1,53 @@
+@reference "tailwindcss";
+
+.card {
+    @apply rounded-lg border border-gray-700 bg-gray-800/60 p-5;
+}
+
+.cardTitle {
+    @apply m-0 mb-4 text-base font-semibold text-white;
+}
+
+.content {
+    @apply flex items-center gap-5;
+}
+
+.preview {
+    @apply flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-full border border-dashed border-gray-600 bg-gray-700/60;
+}
+
+.preview:has(.previewImage) {
+    @apply border-solid;
+}
+
+.previewImage {
+    @apply h-full w-full object-cover;
+}
+
+.noImage {
+    @apply px-2 text-center text-xs text-gray-400;
+}
+
+.controls {
+    @apply flex min-w-0 flex-col gap-2;
+}
+
+.buttons {
+    @apply flex flex-wrap items-center gap-2;
+}
+
+.uploadButton {
+    @apply cursor-pointer rounded-md border border-gray-600 bg-gray-700 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-gray-600;
+}
+
+.removeButton {
+    @apply cursor-pointer rounded-md px-3 py-1.5 text-sm text-red-300 transition-colors hover:bg-red-500/10 hover:text-red-200;
+}
+
+.hint {
+    @apply text-xs text-gray-500;
+}
+
+.fileInput {
+    @apply hidden;
+}

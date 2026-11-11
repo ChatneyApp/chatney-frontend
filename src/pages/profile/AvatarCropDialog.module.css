@@ -1,0 +1,63 @@
+@reference "tailwindcss";
+
+.overlay {
+    @apply fixed inset-0;
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.container {
+    @apply fixed left-1/2 top-1/2 max-h-[90vh] w-[90vw] max-w-[360px] -translate-x-1/2 -translate-y-1/2
+    overflow-y-auto rounded-md bg-gray-800 p-5 text-white shadow-xl focus:outline-none;
+}
+
+.title {
+    @apply m-0 text-lg font-semibold;
+}
+
+.description {
+    @apply mt-1 text-sm text-gray-400;
+}
+
+/* 240px: keep in sync with VIEWPORT_SIZE in AvatarCropDialog.tsx */
+.viewport {
+    @apply relative mx-auto mt-4 h-[240px] w-[240px] cursor-grab touch-none select-none overflow-hidden rounded-md bg-gray-900
+    focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 active:cursor-grabbing;
+}
+
+.image {
+    @apply pointer-events-none absolute left-0 top-0 max-w-none origin-top-left;
+}
+
+/* Avatars are shown round, so everything outside the circle is dimmed. */
+.mask {
+    @apply pointer-events-none absolute inset-0 rounded-full border border-white/70;
+    box-shadow: 0 0 0 9999px rgba(17, 24, 39, 0.65);
+}
+
+.zoomRow {
+    @apply mt-4 flex items-center gap-3;
+}
+
+.zoomLabel {
+    @apply text-sm font-medium text-gray-300;
+}
+
+.zoomSlider {
+    @apply min-w-0 flex-1 cursor-pointer accent-indigo-500 disabled:cursor-not-allowed;
+}
+
+.errorMessage {
+    @apply mt-4 rounded border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300;
+}
+
+.bottomButtons {
+    @apply mt-5 flex justify-end gap-2;
+}
+
+.cancelButton {
+    @apply cursor-pointer rounded px-3 py-1.5 text-sm text-gray-300 hover:text-white;
+}
+
+.submitButton {
+    @apply cursor-pointer rounded bg-indigo-600 px-4 py-1.5 text-sm text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400;
+}

@@ -7,6 +7,7 @@ import { MessageReactions } from '@/pages/client/Chat/MessageReactions';
 import { MessageThreadButton } from '@/pages/client/Chat/MessageThreadButton';
 import { MessageUrlPreviewsComponent } from '@/pages/client/Chat/MessageUrlPreviewsComponent';
 import { UserId } from '@/types/users';
+import { UserAvatar } from '@/components/UserAvatar';
 import { formatTimestamp } from '@/helpers/formatTimestamp';
 import { isMessageEdited } from '@/helpers/messages';
 import { getUserColor } from '@/helpers/userColor';
@@ -34,7 +35,6 @@ type Props = {
 export const MessageComponent = ({ message, currentUserId, replyRef, canReply, canEdit, canDelete, canAddReaction, canRemoveReaction, canCreateThread, onDelete, onReply, onEdit, onAddReaction, onDeleteReaction, onOpenThread }: Props) => {
     const { t } = useTranslation();
     const isMine = message.userId === currentUserId;
-    const avatarUrl = message.user.avatarUrl ?? `https://i.pravatar.cc/?img=${message.userId}`;
     // without the permission, existing threads can still be opened to read
     const showThreadButton = canCreateThread || (message.childrenCount ?? 0) > 0;
     const handleToggleThread = () => {
@@ -57,11 +57,7 @@ export const MessageComponent = ({ message, currentUserId, replyRef, canReply, c
                 onDelete={() => onDelete(message.id)}
             />
             {!isMine && (
-                <img
-                    src={avatarUrl}
-                    alt={message.user.displayName}
-                    className={styles.avatar}
-                />
+                <UserAvatar user={message.user} className={styles.avatar} />
             )}
             <div className={styles.innerContainer}>
                 <div className={styles.header}>

@@ -5,15 +5,16 @@ import { useTranslation } from 'react-i18next';
 
 import { GET_MY_PROFILE, UPDATE_MY_PROFILE } from '@/graphql/profile';
 import { useUser } from '@/contexts/UserContext';
+import { getAvatarSrc } from '@/helpers/avatar';
 import { getUserAvatarInitial, getUserDisplayName, validateNickname, MAX_NICKNAME_LENGTH } from '@/helpers/nickname';
 
+import { AvatarCard } from './AvatarCard';
 import styles from './ProfilePage.module.css';
 
 type ProfileFormInputs = {
     nickname: string;
     fullName: string;
     email: string;
-    avatarUrl: string;
     bio: string;
     currentPassword: string;
     newPassword: string;
@@ -47,6 +48,8 @@ function ProfilePageContent() {
 
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    // The avatar is saved on its own (see AvatarCard), so it is not part of the form below.
+    const [avatarSrc, setAvatarSrc] = useState(() => getAvatarSrc(user.avatarUrl));
 
     const {
         register,
@@ -59,7 +62,6 @@ function ProfilePageContent() {
             nickname: user.nickname,
             fullName: user.fullName ?? '',
             email: user.email,
-            avatarUrl: user.avatarUrl ?? '',
             bio: user.bio,
             currentPassword: '',
             newPassword: '',
@@ -70,7 +72,6 @@ function ProfilePageContent() {
     const [updateProfile, { loading }] = useMutation(UPDATE_MY_PROFILE);
 
     const newPassword = watch('newPassword');
-    const avatarUrl = watch('avatarUrl').trim();
     const bio = watch('bio');
 
     const bioRef = useRef<HTMLTextAreaElement | null>(null);
@@ -102,7 +103,6 @@ function ProfilePageContent() {
                         nickname: formData.nickname.trim(),
                         fullName: formData.fullName.trim() || null,
                         email: formData.email.trim(),
-                        avatarUrl: formData.avatarUrl.trim() || null,
                         bio: formData.bio.trim(),
                         currentPassword: formData.newPassword ? formData.currentPassword : null,
                         newPassword: formData.newPassword || null,
@@ -119,7 +119,6 @@ function ProfilePageContent() {
                 nickname: refreshedUser.nickname,
                 fullName: refreshedUser.fullName ?? '',
                 email: refreshedUser.email,
-                avatarUrl: refreshedUser.avatarUrl ?? '',
                 bio: refreshedUser.bio,
                 currentPassword: '',
                 newPassword: '',
@@ -137,8 +136,8 @@ function ProfilePageContent() {
         <div className={styles.page}>
             <div className={styles.profileHeader}>
                 <div className={styles.avatar}>
-                    {avatarUrl ? (
-                        <img src={avatarUrl} alt="" className={styles.avatarImage} />
+                    {avatarSrc ? (
+                        <img src={avatarSrc} alt="" className={styles.avatarImage} />
                     ) : (
                         avatarInitial
                     )}
@@ -179,6 +178,14 @@ function ProfilePageContent() {
                 <div className={styles.errorMessage}>{errorMessage}</div>
             )}
 
+            <AvatarCard
+                avatarSrc={avatarSrc}
+                onChange={(src) => {
+                    setAvatarSrc(src);
+                    void refreshUser();
+                }}
+            />
+
             <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                 <section className={styles.card}>
                     <h2 className={styles.cardTitle}>{t('profile.accountDetails')}</h2>
@@ -216,18 +223,6 @@ function ProfilePageContent() {
                         {errors.email && (
                             <span className={styles.errorText}>{errors.email.message}</span>
                         )}
-                    </div>
-
-                    <div className={styles.field}>
-                        <label className={styles.label} htmlFor="profile-avatar">{t('profile.avatarUrl')}</label>
-                        <input
-                            id="profile-avatar"
-                            type="url"
-                            className={styles.input}
-                            placeholder="https://..."
-                            {...register('avatarUrl')}
-                        />
-                        <span className={styles.hint}>{t('profile.avatarUrlHint')}</span>
                     </div>
 
                     <div className={styles.field}>

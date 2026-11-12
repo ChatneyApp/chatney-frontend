@@ -12,7 +12,6 @@ import {
     Globe2,
     LoaderCircle,
     Mail,
-    MessageCircle,
     ShieldCheck,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -108,7 +107,7 @@ export const InstallSystemPage = () => {
             <div className={styles.shell}>
                 <aside className={styles.sidebar}>
                     <div className={styles.brand}>
-                        <span className={styles.logo}><MessageCircle size={22} /></span>
+                        <span className={styles.logo}><img src="/favicon.svg" alt="" /></span>
                         <span>Chatney</span>
                     </div>
                     <div className={styles.intro}>

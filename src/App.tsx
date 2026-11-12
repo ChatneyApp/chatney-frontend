@@ -1,4 +1,4 @@
-import { LoaderCircle, MessageCircle } from 'lucide-react';
+import { LoaderCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -38,7 +38,7 @@ const AppLoadingScreen = () => {
 
     return (
         <main className={styles.loadingPage}>
-            <span className={styles.loadingLogo}><MessageCircle size={24} /></span>
+            <span className={styles.loadingLogo}><img src="/favicon.svg" alt="" /></span>
             <LoaderCircle className={styles.spinner} size={20} />
             <span>{t('install.starting')}</span>
         </main>

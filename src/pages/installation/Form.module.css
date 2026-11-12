@@ -25,7 +25,7 @@
 }
 
 .logo {
-    @apply flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-400 text-slate-950 shadow-lg shadow-indigo-500/20;
+    @apply flex h-10 w-10 items-center justify-center rounded-xl bg-white p-1.5 shadow-lg shadow-indigo-500/20;
 }
 
 .intro {

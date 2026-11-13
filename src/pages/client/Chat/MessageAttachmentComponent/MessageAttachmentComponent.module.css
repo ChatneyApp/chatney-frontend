@@ -1,4 +1,4 @@
-@reference "tailwindcss";
+@reference "@/index.css";
 
 .mediaButton {
     @apply block max-w-full rounded-xl border-0 bg-transparent p-0 text-left;
@@ -14,7 +14,7 @@
 
 .binary {
     @apply inline-flex max-w-full items-center gap-3 rounded-xl border border-[#28345a] bg-[#1b2440] px-3 py-2.5
-        hover:border-[#3a4a7d] hover:bg-[#212c4e] transition-colors;
+        hover:border-border-hover hover:bg-[#212c4e] transition-colors;
 }
 
 .binaryIconTile {
@@ -22,7 +22,7 @@
 }
 
 .binaryIcon {
-    @apply text-indigo-300;
+    @apply text-accent-text;
 }
 
 .binaryInfo {

@@ -1,8 +1,7 @@
-@reference "tailwindcss";
+@reference "@/index.css";
 
 .container {
-    @apply relative w-48 space-y-2 border-r border-gray-700 p-4 text-gray-400;
-    background-color: #17202d;
+    @apply relative w-48 space-y-2 border-r border-gray-700 bg-sidebar p-4 text-gray-400;
 }
 
 .workspaceTitle {

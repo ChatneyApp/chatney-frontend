@@ -1,13 +1,13 @@
-@reference "tailwindcss";
+@reference "@/index.css";
 
 .container {
     @apply w-full p-3 flex flex-col items-center bg-transparent;
 }
 
 .sendForm {
-    @apply w-full flex flex-row items-end gap-1 rounded-2xl border border-[#232e4d] bg-[#141c33] px-3 py-2
-        shadow-[0_8px_24px_rgba(2,8,23,0.35)]
-        focus-within:border-[#3a4a7d];
+    @apply w-full flex flex-row items-end gap-1 rounded-2xl border border-border bg-[#141c33] px-3 py-2
+        shadow-surface
+        focus-within:border-border-hover;
 }
 
 .sendButton {
@@ -18,7 +18,7 @@
     }
 
     &:disabled {
-        @apply bg-[#232e4d] text-[#5f6a8c] cursor-not-allowed;
+        @apply bg-border text-text-dim cursor-not-allowed;
     }
 }
 
@@ -28,15 +28,15 @@
 }
 
 .voiceRecordIcon {
-    @apply mx-1.5 mb-2.5 w-5 h-5 text-[#7d87a8] cursor-pointer hover:text-indigo-300;
+    @apply mx-1.5 mb-2.5 w-5 h-5 text-text-muted cursor-pointer hover:text-accent-text;
 }
 
 .videoRecordIcon {
-    @apply mx-1.5 mb-2.5 w-5 h-5 text-[#7d87a8] cursor-pointer hover:text-indigo-300;
+    @apply mx-1.5 mb-2.5 w-5 h-5 text-text-muted cursor-pointer hover:text-accent-text;
 }
 
 .fileAttachmentIcon {
-    @apply mx-1.5 mb-2.5 w-5 h-5 text-[#7d87a8] cursor-pointer hover:text-indigo-300;
+    @apply mx-1.5 mb-2.5 w-5 h-5 text-text-muted cursor-pointer hover:text-accent-text;
 }
 
 .fileDropArea {
@@ -72,11 +72,11 @@
 }
 
 .replyPreviewAuthor {
-    @apply text-xs font-bold uppercase tracking-wider text-indigo-300;
+    @apply text-xs font-bold uppercase tracking-wider text-accent-text;
 }
 
 .replyPreviewTime {
-    @apply text-xs text-[#7d87a8];
+    @apply text-xs text-text-muted;
 }
 
 .replyPreviewText {

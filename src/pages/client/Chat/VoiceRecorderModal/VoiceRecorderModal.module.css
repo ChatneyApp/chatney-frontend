@@ -1,4 +1,4 @@
-@reference "tailwindcss";
+@reference "@/index.css";
 
 .body {
     @apply mt-4 flex flex-col gap-3;
@@ -37,5 +37,5 @@
 }
 
 .errorMessage {
-    @apply mt-4 text-sm text-red-400;
+    @apply mt-4 text-sm text-danger-text;
 }

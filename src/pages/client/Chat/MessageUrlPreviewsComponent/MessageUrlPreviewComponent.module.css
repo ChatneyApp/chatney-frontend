@@ -1,12 +1,12 @@
-@reference "tailwindcss";
+@reference "@/index.css";
 
 .container {
-    @apply block p-4 bg-[#101830] border border-[#232e4d] rounded-xl
-        hover:border-[#3a4a7d] transition-colors;
+    @apply block p-4 bg-[#101830] border border-border rounded-xl
+        hover:border-border-hover transition-colors;
 }
 
 .siteName {
-    @apply text-xs font-bold uppercase tracking-wider text-indigo-300;
+    @apply text-xs font-bold uppercase tracking-wider text-accent-text;
 }
 
 .title {

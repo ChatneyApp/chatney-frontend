@@ -1,4 +1,4 @@
-@reference "tailwindcss";
+@reference "@/index.css";
 
 .anchor {
     @apply absolute inset-0 pointer-events-none;
@@ -19,7 +19,7 @@
 
 .emoji {
     @apply text-lg;
-    font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
+    @apply font-emoji;
     line-height: 1;
 }
 

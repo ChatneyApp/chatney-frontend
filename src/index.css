@@ -1,5 +1,76 @@
 @import "tailwindcss";
 
+/*
+ * Chatney design tokens. Names and values mirror the Chatney design system.
+ * They become utilities: bg-surface, text-text-muted, border-border-strong, shadow-surface, font-emoji...
+ * Values are literal (not var(--color-indigo-600)) so that CSS modules, which only @reference this file, get a working fallback.
+ * Spacing and radii are Tailwind's defaults and are not repeated here.
+ */
+@theme {
+    /* surfaces */
+    --color-canvas: #0b1122;
+    --color-surface: #151d33;
+    --color-surface-own: #1a2340;
+    --color-surface-panel: #131a30;
+    --color-surface-sunken: #0f1526;
+    --color-surface-hover: #24314d;
+    --color-sidebar: #17202d;
+    --color-overlay: rgba(0, 0, 0, 0.75);
+
+    /* borders */
+    --color-border: #232e4d;
+    --color-border-strong: #2f3c66;
+    --color-border-hover: #3a4a7d;
+
+    /* text */
+    --color-text: #ffffff;
+    --color-text-body: #dbe1f4;
+    --color-text-secondary: #9aa3c0;
+    --color-text-muted: #7d87a8;
+    --color-text-dim: #5f6a8c;
+
+    /* accent */
+    --color-accent: oklch(51.1% 0.262 276.966); /* indigo-600 */
+    --color-accent-hover: oklch(58.5% 0.233 277.117); /* indigo-500 */
+    --color-accent-text: oklch(78.5% 0.115 274.713); /* indigo-300 */
+    --color-accent-tint: color-mix(in oklab, oklch(58.5% 0.233 277.117) 20%, transparent); /* indigo-500 at 20% */
+    --color-accent-counter: #9ca6ff;
+    --color-on-accent: #ffffff;
+    --color-link: oklch(67.3% 0.182 276.935); /* indigo-400 */
+    --color-focus: #8f96ff;
+
+    /* status */
+    --color-danger: oklch(57.7% 0.245 27.325); /* red-600 */
+    --color-danger-hover: oklch(63.7% 0.237 25.331); /* red-500 */
+    --color-danger-text: oklch(70.4% 0.191 22.216); /* red-400 */
+    --color-danger-wash: color-mix(in oklab, oklch(63.7% 0.237 25.331) 10%, transparent); /* red-500 at 10% */
+    --color-danger-tint: color-mix(in oklab, oklch(63.7% 0.237 25.331) 20%, transparent); /* red-500 at 20% */
+    --color-danger-line: color-mix(in oklab, oklch(63.7% 0.237 25.331) 40%, transparent); /* red-500 at 40% */
+    --color-success-text: oklch(84.5% 0.143 164.978); /* emerald-300 */
+    --color-success-wash: color-mix(in oklab, oklch(69.6% 0.17 162.48) 10%, transparent); /* emerald-500 at 10% */
+    --color-success-tint: color-mix(in oklab, oklch(69.6% 0.17 162.48) 20%, transparent); /* emerald-500 at 20% */
+    --color-success-line: color-mix(in oklab, oklch(69.6% 0.17 162.48) 40%, transparent); /* emerald-500 at 40% */
+    --color-warning-text: oklch(87.9% 0.169 91.605); /* amber-300 */
+    --color-warning-wash: color-mix(in oklab, oklch(76.9% 0.188 70.08) 10%, transparent); /* amber-500 at 10% */
+    --color-warning-tint: color-mix(in oklab, oklch(76.9% 0.188 70.08) 20%, transparent); /* amber-500 at 20% */
+    --color-warning-line: color-mix(in oklab, oklch(76.9% 0.188 70.08) 40%, transparent); /* amber-500 at 40% */
+
+    /* logo only, never for interface elements */
+    --color-logo-blue: #2f5bff;
+    --color-logo-coral: #ff7a59;
+    --color-logo-tile: #ffffff;
+
+    /* elevation (dialogs use shadow-xl) */
+    --shadow-surface: 0 8px 24px rgba(2, 8, 23, 0.35);
+    --shadow-popover: 0 6px 16px rgba(2, 8, 23, 0.4);
+    --shadow-picker: 0 24px 70px rgba(3, 8, 23, 0.5);
+    --shadow-panel-edge: inset 1px 0 0 rgba(129, 140, 248, 0.08);
+
+    /* type */
+    --font-sans: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    --font-emoji: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
+}
+
 @font-face {
     font-family: 'Noto Color Emoji';
     src: url('/NotoColorEmoji-Regular.ttf') format('truetype');

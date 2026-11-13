@@ -1,17 +1,17 @@
-@reference "tailwindcss";
+@reference "@/index.css";
 
 .container {
-    @apply relative flex flex-col bg-[#131a30] border-l border-[#2a3557]
-        shadow-[inset_1px_0_0_rgba(129,140,248,0.08)];
+    @apply relative flex flex-col bg-surface-panel border-l border-[#2a3557]
+        shadow-panel-edge;
     flex: 0 1 30%;
 }
 
 .header {
-    @apply flex flex-row items-center gap-2 m-0 mb-2 px-4 py-3 border-b border-[#232e4d];
+    @apply flex flex-row items-center gap-2 m-0 mb-2 px-4 py-3 border-b border-border;
 }
 
 .headerIcon {
-    @apply w-5 h-5 text-indigo-300;
+    @apply w-5 h-5 text-accent-text;
 }
 
 .headerTitle {
@@ -19,7 +19,7 @@
 }
 
 .closeButton {
-    @apply ml-auto w-5 h-5 cursor-pointer text-[#7d87a8] hover:text-white;
+    @apply ml-auto w-5 h-5 cursor-pointer text-text-muted hover:text-white;
 }
 
 .scrollArea {

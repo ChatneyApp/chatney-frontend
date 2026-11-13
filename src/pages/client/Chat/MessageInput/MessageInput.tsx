@@ -496,7 +496,7 @@ export function MessageInput({
                         placeholder={isEditing
                             ? t('chat.messageInput.editPlaceholder')
                             : isDisabled ? t('chat.messageInput.noPostPermission') : t('chat.messageInput.placeholder')}
-                        className="block w-full resize-none max-h-40 overflow-y-auto bg-transparent text-white placeholder-[#5f6a8c] p-2 focus:outline-none disabled:cursor-not-allowed"
+                        className="block w-full resize-none max-h-40 overflow-y-auto bg-transparent text-white placeholder-text-dim p-2 focus:outline-none disabled:cursor-not-allowed"
                         disabled={isDisabled}
                         value={text}
                         onChange={handleTextChange}

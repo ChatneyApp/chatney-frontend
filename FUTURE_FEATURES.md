@@ -4,7 +4,7 @@ What Chatney's chat lacks compared with a typical messenger (Telegram, Discord, 
 
 - The list was derived from the frontend only. The backend was not checked, so it may already support some of this.
 - Nothing here is committed work or ordered by date. It is a backlog of candidates.
-- `DESIGN_GUIDES.md` section 11 tells the designer not to draw these as working features. Section 12 reserves space in the layouts for twelve of them.
+- `MARKET_COMPARISON.md` compares Chatney with Telegram, WhatsApp, Discord and Snapchat.
 
 ## Do first
 

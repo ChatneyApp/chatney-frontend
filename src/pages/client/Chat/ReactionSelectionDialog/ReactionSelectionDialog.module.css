@@ -1,16 +1,16 @@
-@reference "tailwindcss";
+@reference "@/index.css";
 
 .popupArrow {
     @apply fill-[#1d2a44];
 }
 
 .triggerButton {
-    @apply inline-flex size-9 cursor-pointer items-center justify-center rounded-full text-[#5f6a8c] transition
-        hover:bg-[#24314d] hover:text-indigo-300 data-[state=open]:text-indigo-300;
+    @apply inline-flex size-9 cursor-pointer items-center justify-center rounded-full text-text-dim transition
+        hover:bg-surface-hover hover:text-accent-text data-[state=open]:text-accent-text;
 }
 
 .popoverContent {
-    @apply flex max-h-[min(42rem,calc(100vh-2rem))] w-[min(82vw,29rem)] flex-col overflow-hidden rounded-[1.35rem] border border-white/5 bg-[#1d2a44] p-0 text-[#e9edff] shadow-[0_24px_70px_rgba(3,8,23,0.5)] will-change-[transform,opacity];
+    @apply flex max-h-[min(42rem,calc(100vh-2rem))] w-[min(82vw,29rem)] flex-col overflow-hidden rounded-[1.35rem] border border-white/5 bg-[#1d2a44] p-0 text-[#e9edff] shadow-picker will-change-[transform,opacity];
 }
 
 .searchField {
@@ -51,7 +51,7 @@
 
 .reaction {
     @apply flex aspect-square items-center justify-center rounded-xl border border-transparent bg-transparent text-[1.45rem] transition hover:-translate-y-0.5 hover:border-white/10 hover:bg-[#273653] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9aa6ff];
-    font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
+    @apply font-emoji;
     line-height: 1;
 }
 

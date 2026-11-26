@@ -1,8 +1,7 @@
-@reference "tailwindcss";
+@reference "@/index.css";
 
 .overlay {
-    @apply fixed inset-0;
-    background-color: rgba(0, 0, 0, 0.75);
+    @apply fixed inset-0 bg-overlay;
 }
 
 .container {

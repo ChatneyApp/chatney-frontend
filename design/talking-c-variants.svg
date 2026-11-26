@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="640" viewBox="0 0 1600 640" xmlns:c2pa="http://c2pa.org/manifest">
+<title>Talking Letter C — Shortlist</title>
+<g id="waves-solid">
+<g id="waves-solid-white-on-navy">
+<rect x="0" y="0" width="320" height="320" fill="#1B1B3A"/>
+<g transform="translate(30 30) scale(0.65)"><path d="M88 268 L50 354 L142 320 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="10" stroke-linejoin="round"/><path d="M281.9 122.9 A120 120 0 1 0 281.9 277.1" fill="none" stroke="#FFFFFF" stroke-width="70" stroke-linecap="round"/><path d="M322.8 177.1 A40 40 0 0 1 322.8 222.9" fill="none" stroke="#FF5A36" stroke-width="14" stroke-linecap="round"/><path d="M347.3 159.8 A70 70 0 0 1 347.3 240.2" fill="none" stroke="#FF5A36" stroke-width="14" stroke-linecap="round"/></g>
+</g>
+<g id="waves-solid-white-on-orange">
+<rect x="320" y="0" width="320" height="320" fill="#FF5A36"/>
+<g transform="translate(350 30) scale(0.65)"><path d="M88 268 L50 354 L142 320 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="10" stroke-linejoin="round"/><path d="M281.9 122.9 A120 120 0 1 0 281.9 277.1" fill="none" stroke="#FFFFFF" stroke-width="70" stroke-linecap="round"/><path d="M322.8 177.1 A40 40 0 0 1 322.8 222.9" fill="none" stroke="#1B1B3A" stroke-width="14" stroke-linecap="round"/><path d="M347.3 159.8 A70 70 0 0 1 347.3 240.2" fill="none" stroke="#1B1B3A" stroke-width="14" stroke-linecap="round"/></g>
+</g>
+<g id="waves-solid-navy-on-offwhite">
+<rect x="640" y="0" width="320" height="320" fill="#FFF4EE"/>
+<g transform="translate(670 30) scale(0.65)"><path d="M88 268 L50 354 L142 320 Z" fill="#1B1B3A" stroke="#1B1B3A" stroke-width="10" stroke-linejoin="round"/><path d="M281.9 122.9 A120 120 0 1 0 281.9 277.1" fill="none" stroke="#1B1B3A" stroke-width="70" stroke-linecap="round"/><path d="M322.8 177.1 A40 40 0 0 1 322.8 222.9" fill="none" stroke="#FF5A36" stroke-width="14" stroke-linecap="round"/><path d="M347.3 159.8 A70 70 0 0 1 347.3 240.2" fill="none" stroke="#FF5A36" stroke-width="14" stroke-linecap="round"/></g>
+</g>
+<g id="waves-solid-cream-on-teal">
+<rect x="960" y="0" width="320" height="320" fill="#0E7C7B"/>
+<g transform="translate(990 30) scale(0.65)"><path d="M88 268 L50 354 L142 320 Z" fill="#FFF4EE" stroke="#FFF4EE" stroke-width="10" stroke-linejoin="round"/><path d="M281.9 122.9 A120 120 0 1 0 281.9 277.1" fill="none" stroke="#FFF4EE" stroke-width="70" stroke-linecap="round"/><path d="M322.8 177.1 A40 40 0 0 1 322.8 222.9" fill="none" stroke="#FFC857" stroke-width="14" stroke-linecap="round"/><path d="M347.3 159.8 A70 70 0 0 1 347.3 240.2" fill="none" stroke="#FFC857" stroke-width="14" stroke-linecap="round"/></g>
+</g>
+<g id="waves-solid-yellow-on-navy">
+<rect x="1280" y="0" width="320" height="320" fill="#1B1B3A"/>
+<g transform="translate(1310 30) scale(0.65)"><path d="M88 268 L50 354 L142 320 Z" fill="#FFD23F" stroke="#FFD23F" stroke-width="10" stroke-linejoin="round"/><path d="M281.9 122.9 A120 120 0 1 0 281.9 277.1" fill="none" stroke="#FFD23F" stroke-width="70" stroke-linecap="round"/><path d="M322.8 177.1 A40 40 0 0 1 322.8 222.9" fill="none" stroke="#FF7A80" stroke-width="14" stroke-linecap="round"/><path d="M347.3 159.8 A70 70 0 0 1 347.3 240.2" fill="none" stroke="#FF7A80" stroke-width="14" stroke-linecap="round"/></g>
+</g>
+</g>
+<g id="typing-dots-solid" transform="translate(0 320)">
+<g id="typing-dots-solid-white-on-navy">
+<rect x="0" y="0" width="320" height="320" fill="#1B1B3A"/>
+<g transform="translate(30 30) scale(0.65)"><path d="M88 268 L50 354 L142 320 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="10" stroke-linejoin="round"/><path d="M281.9 122.9 A120 120 0 1 0 281.9 277.1" fill="none" stroke="#FFFFFF" stroke-width="70" stroke-linecap="round"/><circle cx="150" cy="200" r="17" fill="#FF5A36"/><circle cx="194" cy="200" r="17" fill="#FF5A36"/><circle cx="238" cy="200" r="17" fill="#FF5A36"/></g>
+</g>
+<g id="typing-dots-solid-white-on-orange">
+<rect x="320" y="0" width="320" height="320" fill="#FF5A36"/>
+<g transform="translate(350 30) scale(0.65)"><path d="M88 268 L50 354 L142 320 Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="10" stroke-linejoin="round"/><path d="M281.9 122.9 A120 120 0 1 0 281.9 277.1" fill="none" stroke="#FFFFFF" stroke-width="70" stroke-linecap="round"/><circle cx="150" cy="200" r="17" fill="#1B1B3A"/><circle cx="194" cy="200" r="17" fill="#1B1B3A"/><circle cx="238" cy="200" r="17" fill="#1B1B3A"/></g>
+</g>
+<g id="typing-dots-solid-navy-on-offwhite">
+<rect x="640" y="0" width="320" height="320" fill="#FFF4EE"/>
+<g transform="translate(670 30) scale(0.65)"><path d="M88 268 L50 354 L142 320 Z" fill="#1B1B3A" stroke="#1B1B3A" stroke-width="10" stroke-linejoin="round"/><path d="M281.9 122.9 A120 120 0 1 0 281.9 277.1" fill="none" stroke="#1B1B3A" stroke-width="70" stroke-linecap="round"/><circle cx="150" cy="200" r="17" fill="#FF5A36"/><circle cx="194" cy="200" r="17" fill="#FF5A36"/><circle cx="238" cy="200" r="17" fill="#FF5A36"/></g>
+</g>
+<g id="typing-dots-solid-cream-on-teal">
+<rect x="960" y="0" width="320" height="320" fill="#0E7C7B"/>
+<g transform="translate(990 30) scale(0.65)"><path d="M88 268 L50 354 L142 320 Z" fill="#FFF4EE" stroke="#FFF4EE" stroke-width="10" stroke-linejoin="round"/><path d="M281.9 122.9 A120 120 0 1 0 281.9 277.1" fill="none" stroke="#FFF4EE" stroke-width="70" stroke-linecap="round"/><circle cx="150" cy="200" r="17" fill="#FFC857"/><circle cx="194" cy="200" r="17" fill="#FFC857"/><circle cx="238" cy="200" r="17" fill="#FFC857"/></g>
+</g>
+<g id="typing-dots-solid-yellow-on-navy">
+<rect x="1280" y="0" width="320" height="320" fill="#1B1B3A"/>
+<g transform="translate(1310 30) scale(0.65)"><path d="M88 268 L50 354 L142 320 Z" fill="#FFD23F" stroke="#FFD23F" stroke-width="10" stroke-linejoin="round"/><path d="M281.9 122.9 A120 120 0 1 0 281.9 277.1" fill="none" stroke="#FFD23F" stroke-width="70" stroke-linecap="round"/><circle cx="150" cy="200" r="17" fill="#FF7A80"/><circle cx="194" cy="200" r="17" fill="#FF7A80"/><circle cx="238" cy="200" r="17" fill="#FF7A80"/></g>
+</g>
+</g>
+</svg>

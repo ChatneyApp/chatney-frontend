@@ -1,4 +1,4 @@
-@reference "tailwindcss";
+@reference "@/index.css";
 
 /* the list restores its own scroll position, native anchoring would compensate twice */
 .scrollArea {
@@ -6,7 +6,7 @@
 }
 
 .spinner {
-    @apply self-center shrink-0 animate-spin text-indigo-300;
+    @apply self-center shrink-0 animate-spin text-accent-text;
 }
 
 .historyStart {

@@ -1,9 +1,9 @@
-@reference "tailwindcss";
+@reference "@/index.css";
 
 .container {
     @apply relative box-border rounded-2xl p-4 flex items-start gap-3 max-w-[36em]
-        bg-[#151d33] border border-[#232e4d]
-        shadow-[0_8px_24px_rgba(2,8,23,0.35)];
+        bg-surface border border-border
+        shadow-surface;
 }
 
 /* floats above the message, shown while the message is hovered or keyboard-focused */
@@ -29,20 +29,20 @@
 }
 
 .timestamp {
-    @apply ml-auto text-xs text-[#7d87a8];
+    @apply ml-auto text-xs text-text-muted;
 }
 
 .editedLabel {
-    @apply text-xs text-[#7d87a8] italic;
+    @apply text-xs text-text-muted italic;
 }
 
 .replyQuote {
-    @apply mt-2 px-3 py-1.5 text-xs text-[#9aa3c0] border-l-2 border-indigo-400 bg-[#0f1526] rounded-md [overflow-wrap:anywhere];
+    @apply mt-2 px-3 py-1.5 text-xs text-text-secondary border-l-2 border-indigo-400 bg-surface-sunken rounded-md [overflow-wrap:anywhere];
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
 }
 
 .textContent {
-    @apply text-[#dbe1f4] leading-relaxed py-2 whitespace-pre-wrap [overflow-wrap:anywhere];
+    @apply text-text-body leading-relaxed py-2 whitespace-pre-wrap [overflow-wrap:anywhere];
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
 }
 
@@ -51,7 +51,7 @@
 }
 
 .isMine {
-    @apply self-end bg-[#1a2340] border-[#2f3c66];
+    @apply self-end bg-surface-own border-border-strong;
 }
 
 .avatar {

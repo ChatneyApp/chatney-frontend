@@ -1,15 +1,15 @@
-@reference "tailwindcss";
+@reference "@/index.css";
 
 .reaction {
-    @apply inline-flex h-9 min-w-16 cursor-pointer items-center justify-center gap-1 rounded-full bg-transparent px-3 text-sm transition enabled:hover:bg-[#24314d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8f96ff] disabled:cursor-default;
+    @apply inline-flex h-9 min-w-16 cursor-pointer items-center justify-center gap-1 rounded-full bg-transparent px-3 text-sm transition enabled:hover:bg-surface-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-default;
 }
 
 .reactionBody {
     @apply flex size-5 shrink-0 items-center justify-center text-[1.15rem];
-    font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Twemoji Mozilla', sans-serif;
+    @apply font-emoji;
     line-height: 1;
 }
 
 .counter {
-    @apply min-w-4 text-center text-base leading-none text-[#9ca6ff];
+    @apply min-w-4 text-center text-base leading-none text-accent-counter;
 }
